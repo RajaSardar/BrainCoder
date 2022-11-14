@@ -50,9 +50,10 @@
     <h2 style="text-align: center;">Notepad</h2>
     <div id="container">
         <div id="menu">
-            <a href="#">Open</a> |
+            <!-- <a href="#">Open</a> | -->
             <!-- <a href="#">Save</a> | -->
-            <button id="copytext" onclick="download()">Save</button>
+            <button id="open" onclick="importData()">Open</button>
+            <button id="download" onclick="download()">Save</button>
             <!-- <a href="#">File</a> |
             <a href="#">Edit</a> |
             <a href="#">Format</a> |
@@ -71,6 +72,7 @@
             localStorage.setItem('notepad', e.target.value);
         });
 
+
         //a function to copy the text
         function copyText() {
             var copyText = document.getElementById("notepad");
@@ -78,6 +80,34 @@
             copyText.setSelectionRange(0, 99999);
             document.execCommand("copy");
             alert("Copied the text: " + copyText.value);
+        }
+        //Function to open a file
+        function importData() {
+            let input = document.createElement('input');
+            input.type = 'file';
+            input.onchange = _ => {
+                // you can use this method to get file and perform respective operations
+                let files = Array.from(input.files);
+                console.log(files)
+                readTextFile(files);
+            };
+            input.click();
+
+        }
+
+        // A function to Open a text file
+        function readTextFile(file) {
+            var rawFile = new XMLHttpRequest();
+            rawFile.open("GET", file, false);
+            rawFile.onreadystatechange = function () {
+                if (rawFile.readyState === 4) {
+                    if (rawFile.status === 200 || rawFile.status == 0) {
+                        var allText = rawFile.responseText;
+                        document.getElementById("textarea").value = allText;
+                    }
+                }
+            }
+            rawFile.send(null);
         }
 
         // Function to download the text as txt file
