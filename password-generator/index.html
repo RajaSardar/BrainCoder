@@ -1,1 +1,75 @@
+<!DOCTYPE html>
+<HTML>
+<head>
+<meta charset=utf-8 />
+<title>Password Generator</title>
+</head>
+<body>
+  
+<h1>Password Generator</h1>
+  
+<form>
+  <p>
+    <label>Number of Characters:</label>
+    <input type="number" id="num" value="12" />
+  </p>
+  <p>
+    <label>Include Symbols:</label>
+    <input type="checkbox" id="sym" checked />
+  </p>
+  <p>
+    <label>Include Numbers:</label>
+    <input type="checkbox" id="num" checked />
+  </p>
+  <p>
+    <label>Include Uppercase Letters:</label>
+    <input type="checkbox" id="up" checked />
+  </p>
+  <p>
+    <label>Include Lowercase Letters:</label>
+    <input type="checkbox" id="low" checked />
+  </p>
+  <p>
+    <input type="button" value="Generate Password" onclick="generate()" />
+  </p>
+  <p>
+    <label>Password:</label>
+    <input type="text" id="display" />
+  </p>
+  <p>
+    <input type="button" value="Copy" onclick="copy()" />
+  </p>
+</form>
+  
+<script>
+function generate() {
+  var n = document.getElementById("num").value;
+  var syms = document.getElementById("sym").checked;
+  var numbers = document.getElementById("num").checked;
+  var uppers = document.getElementById("up").checked;
+  var lowers = document.getElementById("low").checked;
+    
+  var chars = "";
+  if (syms) chars += "!@#$%^&*()";
+  if (numbers) chars += "0123456789";
+  if (uppers) chars += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  if (lowers) chars += "abcdefghijklmnopqrstuvwxyz";
+    
+  var pass = "";
+  for (var i=0; i<n; i++) {
+    var rnd = Math.floor(Math.random() * chars.length);
+    pass += chars.substring(rnd,rnd+1);
+  }
+  
+  document.getElementById("display").value = pass;
+}
+// Copy password to clipboard
+function copy() {
+  var copyText = document.getElementById("display");
+  copyText.select();
+  document.execCommand("copy");
+}
+</script>
 
+</body>
+</html>
