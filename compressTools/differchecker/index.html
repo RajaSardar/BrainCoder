@@ -4,77 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Text Difference Checker</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            padding: 0;
-            background-color: #f4f4f9;
-        }
-        textarea {
-            width: 45%;
-            height: 200px;
-            margin: 10px;
-            padding: 10px;
-            font-size: 16px;
-        }
-        button {
-            padding: 10px 20px;
-            margin: 20px 10px;
-            font-size: 16px;
-            cursor: pointer;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-        }
-        .result {
-            margin-top: 20px;
-            white-space: pre-wrap; /* Preserve whitespace */
-        }
-        .added {
-            background-color: #c6ffcc; /* Light green for additions */
-        }
-        .removed {
-            background-color: #ffcccc; /* Light red for removals */
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Text Difference Checker</h1>
-    <textarea id="text1" placeholder="Enter first text here..."></textarea>
-    <textarea id="text2" placeholder="Enter second text here..."></textarea>
-    <br>
-    <button onclick="compareTexts()">Compare</button>
-    <div id="result" class="result"></div>
-
-    <script>
-        function compareTexts() {
-            const text1 = document.getElementById('text1').value.split('\n');
-            const text2 = document.getElementById('text2').value.split('\n');
-            const resultDiv = document.getElementById('result');
-
-            let resultHTML = '';
-            const maxLength = Math.max(text1.length, text2.length);
-
-            for (let i = 0; i < maxLength; i++) {
-                const line1 = text1[i] || '';
-                const line2 = text2[i] || '';
-
-                if (line1 === line2) {
-                    resultHTML += line1 + '\n'; // No change
-                } else {
-                    if (line1) {
-                        resultHTML += `<span class="removed">${line1}</span>\n`; // Removed line
-                    }
-                    if (line2) {
-                        resultHTML += `<span class="added">${line2}</span>\n`; // Added line
-                    }
-                }
-            }
-
-            resultDiv.innerHTML = resultHTML;
-        }
-    </script>
+    <div class="container">
+        <h1>Text Difference Checker</h1>
+        <textarea id="text1" placeholder="Enter first text here..."></textarea>
+        <textarea id="text2" placeholder="Enter second text here..."></textarea>
+        <button onclick="compareTexts()">Compare</button>
+        <div id="result"></div>
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>
