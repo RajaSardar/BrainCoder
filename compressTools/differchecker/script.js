@@ -1,7 +1,8 @@
 function compareTexts() {
     const text1 = document.getElementById('text1').value.split('\n');
     const text2 = document.getElementById('text2').value.split('\n');
-    let result = '';
+    let result1 = '';
+    let result2 = '';
 
     const maxLength = Math.max(text1.length, text2.length);
 
@@ -10,11 +11,20 @@ function compareTexts() {
         const line2 = text2[i] || '';
 
         if (line1 === line2) {
-            result += line1 + '\n';
+            result1 += line1 + '\n';
+            result2 += line2 + '\n';
         } else {
-            result += `- ${line1}\n+ ${line2}\n`;
+            if (line1) {
+                result1 += `<span class="removed">${line1}</span>\n`;
+            }
+            if (line2) {
+                result2 += `<span class="added">${line2}</span>\n`;
+            }
         }
     }
 
-    document.getElementById('result').innerText = result || 'No differences found.';
+    document.getElementById('result').innerHTML = `
+        <div class="result-column">${result1 || 'No differences found.'}</div>
+        <div class="result-column">${result2 || 'No differences found.'}</div>
+    `;
 }

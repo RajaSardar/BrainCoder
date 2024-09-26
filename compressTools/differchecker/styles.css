@@ -6,7 +6,7 @@ body {
 }
 
 .container {
-    max-width: 600px;
+    max-width: 800px;
     margin: auto;
     background: white;
     padding: 20px;
@@ -14,8 +14,13 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+.text-area-container {
+    display: flex;
+    justify-content: space-between;
+}
+
 textarea {
-    width: 100%;
+    width: 48%;
     height: 150px;
     margin-bottom: 10px;
     padding: 10px;
@@ -24,7 +29,7 @@ textarea {
 }
 
 button {
-    background: #28a745;
+    background: #007bff;
     color: white;
     border: none;
     padding: 10px 15px;
@@ -33,10 +38,28 @@ button {
 }
 
 button:hover {
-    background: #218838;
+    background: #0056b3;
 }
 
-#result {
+.result-container {
     margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.result-column {
+    width: 48%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px;
+    background: #f9f9f9;
     white-space: pre-wrap;
+}
+
+.added {
+    background-color: #d4edda; /* Light green */
+}
+
+.removed {
+    background-color: #f8d7da; /* Light red */
 }

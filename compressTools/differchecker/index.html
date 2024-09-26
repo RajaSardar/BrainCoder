@@ -9,10 +9,12 @@
 <body>
     <div class="container">
         <h1>Text Difference Checker</h1>
-        <textarea id="text1" placeholder="Enter first text here..."></textarea>
-        <textarea id="text2" placeholder="Enter second text here..."></textarea>
+        <div class="text-area-container">
+            <textarea id="text1" placeholder="Enter first text here..."></textarea>
+            <textarea id="text2" placeholder="Enter second text here..."></textarea>
+        </div>
         <button onclick="compareTexts()">Compare</button>
-        <div id="result"></div>
+        <div id="result" class="result-container"></div>
     </div>
     <script src="script.js"></script>
 </body>
