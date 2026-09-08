@@ -23,25 +23,25 @@ export default async function ToolPage(props: PageProps<'/tools/[slug]'>) {
   if (!tool) notFound();
 
   return (
-    <div className="max-w-4xl mx-auto px-5 py-10 w-full">
+    <div className="max-w-[90rem] mx-auto px-5 py-6 w-full">
       <Link
         href="/#tools"
-        className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-900 transition mb-6"
+        className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-900 transition mb-4"
       >
         <ArrowLeft className="w-4 h-4" /> All tools
       </Link>
 
-      <div className="flex items-start gap-4 mb-8">
+      <div className="flex items-start gap-4 mb-5">
         <div
-          className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${tool.gradient} flex items-center justify-center shadow-lg shrink-0`}
+          className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${tool.gradient} flex items-center justify-center shadow-lg shrink-0`}
         >
-          <tool.icon className="w-7 h-7 text-white" />
+          <tool.icon className="w-6 h-6 text-white" />
         </div>
         <div>
-          <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">
+          <h1 className="text-2xl font-extrabold tracking-tight text-slate-900">
             {tool.name}
           </h1>
-          <p className="mt-1 text-slate-600">{tool.description}</p>
+          <p className="mt-0.5 text-slate-600">{tool.description}</p>
         </div>
       </div>
 

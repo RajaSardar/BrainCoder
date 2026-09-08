@@ -253,14 +253,14 @@ export default function GzipTool() {
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-2 gap-4">
-        <div>
+      <div className="grid lg:grid-cols-2 gap-4 lg:gap-5 lg:h-[calc(100vh-25rem)]">
+        <div className="flex flex-col min-h-[28rem]">
           <p className="text-xs font-medium text-slate-500 mb-2">Input (text)</p>
           <StyledTextarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            rows={10}
-            className="min-h-[240px]"
+            rows={12}
+            className="flex-1 min-h-[0] resize-y"
             placeholder={'Paste text to compress, or a {"key":true,"data":"…"} payload / base64 to decompress…'}
           />
           <div className="mt-2 flex flex-wrap gap-2">
@@ -275,9 +275,9 @@ export default function GzipTool() {
             </Button>
           </div>
         </div>
-        <div>
+        <div className="flex flex-col min-h-[28rem]">
           <p className="text-xs font-medium text-slate-500 mb-2">Output ({outputKind})</p>
-          <div className="min-h-[240px] rounded-xl border border-slate-200 bg-white p-4 text-sm font-mono text-slate-700 whitespace-pre-wrap break-all overflow-auto">
+          <div className="flex-1 min-h-[0] rounded-xl border border-slate-200 bg-white p-4 text-sm font-mono text-slate-700 whitespace-pre-wrap break-all overflow-auto">
             {output || <span className="text-slate-300">Output appears here…</span>}
           </div>
           <div className="mt-2 flex flex-wrap items-center gap-2">
