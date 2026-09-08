@@ -49,6 +49,11 @@ import {
   Boxes,
   ShieldCheck,
   Lock,
+  BoxSelect,
+  Squircle,
+  ChartSpline,
+  Blend,
+  ArrowLeftRight,
 } from "lucide-react";
 
 export type Category =
@@ -631,6 +636,61 @@ export const TOOLS: ToolConfig[] = [
     icon: Lock,
     accent: "text-rose-600",
     gradient: "from-rose-500 to-pink-600",
+  },
+  {
+    slug: "box-shadow-generator",
+    name: "Box Shadow Generator",
+    tagline: "CSS box-shadow builder",
+    description:
+      "Design layered CSS box shadows with offset, blur, spread, opacity and color controls, then copy the generated rule.",
+    category: "Media & Design",
+    icon: BoxSelect,
+    accent: "text-violet-600",
+    gradient: "from-violet-500 to-purple-600",
+  },
+  {
+    slug: "border-radius-generator",
+    name: "Border Radius Generator",
+    tagline: "CSS border-radius builder",
+    description:
+      "Round any element corner-by-corner with live preview and presets, and copy the generated border-radius rule.",
+    category: "Media & Design",
+    icon: Squircle,
+    accent: "text-indigo-600",
+    gradient: "from-indigo-500 to-violet-600",
+  },
+  {
+    slug: "cubic-bezier-editor",
+    name: "Cubic Bézier Editor",
+    tagline: "Visual CSS easing curve builder",
+    description:
+      "Shape CSS easing curves with draggable-style sliders, presets, a live animated preview and a rendered curve.",
+    category: "Media & Design",
+    icon: ChartSpline,
+    accent: "text-sky-600",
+    gradient: "from-sky-500 to-blue-600",
+  },
+  {
+    slug: "gradient-generator",
+    name: "Gradient Generator",
+    tagline: "CSS linear & radial gradients",
+    description:
+      "Build linear or radial CSS gradients with direction control and multiple color stops, with instant preview and copyable output.",
+    category: "Media & Design",
+    icon: Blend,
+    accent: "text-cyan-600",
+    gradient: "from-cyan-500 to-sky-600",
+  },
+  {
+    slug: "css-unit-converter",
+    name: "CSS Unit Converter",
+    tagline: "px, em, rem, pt, % and viewport units",
+    description:
+      "Convert between CSS px, em, rem, pt, percent and viewport units with browser defaults or a configurable base context.",
+    category: "Convert",
+    icon: ArrowLeftRight,
+    accent: "text-teal-600",
+    gradient: "from-teal-500 to-emerald-600",
   },
 ];
 

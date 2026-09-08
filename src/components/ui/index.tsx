@@ -83,3 +83,36 @@ export function StyledTextarea({
     />
   );
 }
+
+interface SliderFieldProps {
+  label: string;
+  value: number;
+  min?: number;
+  max?: number;
+  step?: number;
+  onChange: (v: number) => void;
+  unit?: string;
+}
+
+export function SliderField({ label, value, min = 0, max = 100, step = 1, onChange, unit = "" }: SliderFieldProps) {
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-1">
+        <label className="text-xs font-medium text-slate-500">{label}</label>
+        <span className="text-xs font-mono text-slate-600">
+          {value}
+          {unit}
+        </span>
+      </div>
+      <input
+        type="range"
+        min={min}
+        max={max}
+        step={step}
+        value={value}
+        onChange={(e) => onChange(Number(e.target.value))}
+        className="w-full accent-indigo-600"
+      />
+    </div>
+  );
+}

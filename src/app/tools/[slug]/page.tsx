@@ -105,6 +105,11 @@ const mountMap: Record<string, ReturnType<typeof dynamic>> = {
   base32: dynamic(() => import("@/features/base32/Base32")),
   "checksum-calculator": dynamic(() => import("@/features/checksum-calculator/ChecksumCalculator")),
   "aes-encryption": dynamic(() => import("@/features/aes-encryption/AesEncryption")),
+  "box-shadow-generator": dynamic(() => import("@/features/box-shadow-generator/BoxShadowGenerator")),
+  "border-radius-generator": dynamic(() => import("@/features/border-radius-generator/BorderRadiusGenerator")),
+  "cubic-bezier-editor": dynamic(() => import("@/features/cubic-bezier-editor/CubicBezierEditor")),
+  "gradient-generator": dynamic(() => import("@/features/gradient-generator/GradientGenerator")),
+  "css-unit-converter": dynamic(() => import("@/features/css-unit-converter/CssUnitConverter")),
 };
 
 function ToolMount({ slug }: { slug: string }) {
