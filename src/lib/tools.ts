@@ -63,6 +63,9 @@ import {
   Repeat2,
   Repeat,
   Eraser,
+  Dices,
+  UserCheck,
+  Coins,
 } from "lucide-react";
 
 export type Category =
@@ -810,6 +813,39 @@ export const TOOLS: ToolConfig[] = [
     icon: Eraser,
     accent: "text-emerald-600",
     gradient: "from-emerald-500 to-green-600",
+  },
+  {
+    slug: "random-number-generator",
+    name: "Random Number Generator",
+    tagline: "Pick random numbers in a range",
+    description:
+      "Generate random integers or decimals within any range, with counts, uniqueness and instant statistics.",
+    category: "Generate",
+    icon: Dices,
+    accent: "text-amber-600",
+    gradient: "from-amber-500 to-orange-600",
+  },
+  {
+    slug: "random-name-picker",
+    name: "Random Name Picker",
+    tagline: "Pick winners from a list",
+    description:
+      "Enter names one per line and pick one or several winners at random — great for giveaways and classroom games.",
+    category: "Generate",
+    icon: UserCheck,
+    accent: "text-sky-600",
+    gradient: "from-sky-500 to-blue-600",
+  },
+  {
+    slug: "coin-dice-roller",
+    name: "Coin Flip & Dice Roller",
+    tagline: "Flip coins, roll polyhedral dice",
+    description:
+      "Flip a coin (with tallies and ratios) or roll any die from d4 to d20, with totals and a classic emoji face display.",
+    category: "Generate",
+    icon: Coins,
+    accent: "text-yellow-600",
+    gradient: "from-yellow-500 to-amber-600",
   },
 ];
 

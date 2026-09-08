@@ -120,6 +120,9 @@ const mountMap: Record<string, ReturnType<typeof dynamic>> = {
   "upside-down-text": dynamic(() => import("@/features/upside-down-text/UpsideDownText")),
   "text-repeater": dynamic(() => import("@/features/text-repeater/TextRepeater")),
   "text-cleaner": dynamic(() => import("@/features/text-cleaner/TextCleaner")),
+  "random-number-generator": dynamic(() => import("@/features/random-number-generator/RandomNumberGenerator")),
+  "random-name-picker": dynamic(() => import("@/features/random-name-picker/RandomNamePicker")),
+  "coin-dice-roller": dynamic(() => import("@/features/coin-dice-roller/CoinDiceRoller")),
 };
 
 function ToolMount({ slug }: { slug: string }) {
