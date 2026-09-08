@@ -74,6 +74,14 @@ import {
   WandSparkles,
   Grid3x3,
   Gauge,
+  Tag,
+  Palette,
+  SquareCode,
+  Table2,
+  DatabaseBackup,
+  Container,
+  Layers,
+  Scissors,
 } from "lucide-react";
 
 export type Category =
@@ -942,6 +950,94 @@ export const TOOLS: ToolConfig[] = [
     icon: Gauge,
     accent: "text-lime-600",
     gradient: "from-lime-500 to-green-600",
+  },
+  {
+    slug: "html-formatter",
+    name: "HTML Formatter",
+    tagline: "Beautifully indent HTML markup",
+    description:
+      "Format ragged HTML into clean, consistent indentation with configurable print and tab widths — powered by Prettier.",
+    category: "Developer",
+    icon: Tag,
+    accent: "text-orange-600",
+    gradient: "from-orange-500 to-red-600",
+  },
+  {
+    slug: "css-formatter",
+    name: "CSS Beautifier",
+    tagline: "Readable, consistent CSS",
+    description:
+      "Expand minified or messy CSS (and Sass/SCSS) into readable rules with configurable widths — powered by Prettier.",
+    category: "Developer",
+    icon: Palette,
+    accent: "text-sky-600",
+    gradient: "from-sky-500 to-blue-600",
+  },
+  {
+    slug: "javascript-formatter",
+    name: "JavaScript Beautifier",
+    tagline: "Format & validate JS instantly",
+    description:
+      "Turn minified or messy JavaScript into clean, idiomatic code with semicolon and quote controls — powered by Prettier.",
+    category: "Developer",
+    icon: SquareCode,
+    accent: "text-yellow-600",
+    gradient: "from-yellow-500 to-amber-600",
+  },
+  {
+    slug: "csv-formatter",
+    name: "CSV Formatter",
+    tagline: "Table view & normalized CSV",
+    description:
+      "Paste CSV in any separator and view it as a clean table, ready to copy or download as normalized comma-separated output.",
+    category: "Developer",
+    icon: Table2,
+    accent: "text-emerald-600",
+    gradient: "from-emerald-500 to-teal-600",
+  },
+  {
+    slug: "csv-to-sql",
+    name: "CSV ⇄ SQL Converter",
+    tagline: "CSV ↔ INSERT statements",
+    description:
+      "Turn CSV data into CREATE TABLE plus INSERT statements (batch or per-row), or convert INSERT listings back into CSV.",
+    category: "Developer",
+    icon: DatabaseBackup,
+    accent: "text-blue-600",
+    gradient: "from-blue-500 to-indigo-600",
+  },
+  {
+    slug: "sqlite-viewer",
+    name: "SQLite Viewer",
+    tagline: "Open .db files & run queries",
+    description:
+      "Browse SQLite databases in the browser: list tables, preview rows, export CSV, and run arbitrary SQL on your file.",
+    category: "Developer",
+    icon: Container,
+    accent: "text-violet-600",
+    gradient: "from-violet-500 to-purple-600",
+  },
+  {
+    slug: "pdf-merge",
+    name: "PDF Merger",
+    tagline: "Combine PDFs in one file",
+    description:
+      "Add several PDFs, re-arrange their order with up/down controls, and merge them into a single PDF right in your browser.",
+    category: "Convert",
+    icon: Layers,
+    accent: "text-rose-600",
+    gradient: "from-rose-500 to-pink-600",
+  },
+  {
+    slug: "pdf-split",
+    name: "PDF Splitter",
+    tagline: "Extract pages from a PDF",
+    description:
+      "Preview every page, tick the ones you need, then export them as one combined PDF or download each page separately.",
+    category: "Convert",
+    icon: Scissors,
+    accent: "text-cyan-600",
+    gradient: "from-cyan-500 to-sky-600",
   },
 ];
 

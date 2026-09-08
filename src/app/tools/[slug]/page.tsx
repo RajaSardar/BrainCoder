@@ -131,6 +131,14 @@ const mountMap: Record<string, ReturnType<typeof dynamic>> = {
   "image-filters": dynamic(() => import("@/features/image-filters/ImageFilters")),
   "image-splitter": dynamic(() => import("@/features/image-splitter/ImageSplitter")),
   "unit-converter": dynamic(() => import("@/features/unit-converter/UnitConverter")),
+  "html-formatter": dynamic(() => import("@/features/html-formatter/HtmlFormatter")),
+  "css-formatter": dynamic(() => import("@/features/css-formatter/CssFormatter")),
+  "javascript-formatter": dynamic(() => import("@/features/javascript-formatter/JavascriptFormatter")),
+  "csv-formatter": dynamic(() => import("@/features/csv-formatter/CsvFormatter")),
+  "csv-to-sql": dynamic(() => import("@/features/csv-to-sql/CsvToSql")),
+  "sqlite-viewer": dynamic(() => import("@/features/sqlite-viewer/SqliteViewer")),
+  "pdf-merge": dynamic(() => import("@/features/pdf-merge/PdfMerge")),
+  "pdf-split": dynamic(() => import("@/features/pdf-split/PdfSplit")),
 };
 
 function ToolMount({ slug }: { slug: string }) {

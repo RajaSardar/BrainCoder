@@ -85,8 +85,104 @@ export function crc16CcittHex(bytes: Uint8Array<ArrayBuffer>): string {
   return (crc & 0xffff).toString(16).padStart(4, "0").toUpperCase();
 }
 
-function bytesToHex(bytes: Uint8Array<ArrayBuffer>): string {
+function bytesToHex(bytes: Uint8Array<ArrayBufferLike>): string {
   return Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+const ROUND_CONSTANTS = [
+  0x0000000000000001n, 0x0000000000008082n, 0x800000000000808an, 0x8000000080008000n,
+  0x000000000000808bn, 0x0000000080000001n, 0x8000000080008081n, 0x8000000000008009n,
+  0x000000000000008an, 0x0000000000000088n, 0x0000000080008009n, 0x000000008000000an,
+  0x000000008000808bn, 0x800000000000008bn, 0x8000000000008089n, 0x8000000000008003n,
+  0x8000000000008002n, 0x8000000000000080n, 0x000000000000800an, 0x800000008000000an,
+  0x8000000080008081n, 0x8000000000008080n, 0x0000000080000001n, 0x8000000080008008n,
+];
+
+const MASK64 = 0xffffffffffffffffn;
+
+const ROTATIONS = [
+  [0, 36, 3, 41, 18],
+  [1, 44, 10, 45, 2],
+  [62, 6, 43, 15, 61],
+  [28, 55, 25, 21, 56],
+  [27, 20, 39, 8, 14],
+];
+
+function rotl64(x: bigint, n: number): bigint {
+  return (n === 0 ? x : (x << BigInt(n)) | (x >> BigInt(64 - n))) & MASK64;
+}
+
+function keccakF(state: bigint[][]): void {
+  for (let round = 0; round < 24; round++) {
+    const c: bigint[] = [];
+    for (let x = 0; x < 5; x++) c[x] = state[x][0] ^ state[x][1] ^ state[x][2] ^ state[x][3] ^ state[x][4];
+    const d: bigint[] = [];
+    for (let x = 0; x < 5; x++) d[x] = c[(x + 4) % 5] ^ rotl64(c[(x + 1) % 5], 1);
+    for (let x = 0; x < 5; x++) for (let y = 0; y < 5; y++) state[x][y] = (state[x][y] ^ d[x]) & MASK64;
+
+    const b: bigint[][] = Array.from({ length: 5 }, () => Array<bigint>(5).fill(0n));
+    for (let x = 0; x < 5; x++) {
+      for (let y = 0; y < 5; y++) {
+        b[y][(2 * x + 3 * y) % 5] = rotl64(state[x][y], ROTATIONS[x][y]) & MASK64;
+      }
+    }
+    for (let x = 0; x < 5; x++) {
+      for (let y = 0; y < 5; y++) state[x][y] = (b[x][y] ^ (~b[(x + 1) % 5][y] & b[(x + 2) % 5][y])) & MASK64;
+    }
+    state[0][0] = (state[0][0] ^ ROUND_CONSTANTS[round]) & MASK64;
+  }
+}
+
+function freshState(): bigint[][] {
+  return Array.from({ length: 5 }, () => Array<bigint>(5).fill(0n));
+}
+
+function keccak(input: Uint8Array, rateBytes: number, outputBytes: number, suffix: number): Uint8Array {
+  const state = freshState();
+  const m = input.length;
+  const padded = new Uint8Array(m + (rateBytes - (m % rateBytes)));
+  padded.set(input);
+  padded[m] = suffix;
+  padded[padded.length - 1] |= 0x80;
+
+  for (let off = 0; off < padded.length; off += rateBytes) {
+    for (let i = 0; i < rateBytes; i++) {
+      const lane = Math.floor(i / 8);
+      const x = lane % 5;
+      const y = Math.floor(lane / 5);
+      state[x][y] = (state[x][y] ^ (BigInt(padded[off + i]) << BigInt(8 * (i % 8)))) & MASK64;
+    }
+    keccakF(state);
+  }
+
+  const out = new Uint8Array(outputBytes);
+  let written = 0;
+  while (written < outputBytes) {
+    const block = new Uint8Array(rateBytes);
+    for (let i = 0; i < rateBytes; i++) {
+      const lane = Math.floor(i / 8);
+      const x = lane % 5;
+      const y = Math.floor(lane / 5);
+      block[i] = Number((state[x][y] >> BigInt(8 * (i % 8))) & 0xffn);
+    }
+    const take = Math.min(rateBytes, outputBytes - written);
+    out.set(block.subarray(0, take), written);
+    written += take;
+    if (written < outputBytes) keccakF(state);
+  }
+  return out;
+}
+
+function sha3Hex(input: string, bits: 224 | 256 | 384 | 512): string {
+  const rateBytes = { 224: 144, 256: 136, 384: 104, 512: 72 }[bits];
+  const digest = keccak(new TextEncoder().encode(input), rateBytes, bits / 8, 0x06);
+  return bytesToHex(digest);
+}
+
+function shakeHex(input: string, bits: 128 | 256): string {
+  const rateBytes = bits === 128 ? 168 : 136;
+  const digest = keccak(new TextEncoder().encode(input), rateBytes, 32, 0x1f);
+  return bytesToHex(digest);
 }
 
 async function shaHex(input: string, algo: AlgorithmIdentifier): Promise<string> {
@@ -127,6 +223,12 @@ export default function ChecksumCalculator() {
         { label: "SHA-256", value: await shaHex(input, "SHA-256") },
         { label: "SHA-384", value: await shaHex(input, "SHA-384") },
         { label: "SHA-512", value: await shaHex(input, "SHA-512") },
+        { label: "SHA3-224", value: sha3Hex(input, 224) },
+        { label: "SHA3-256", value: sha3Hex(input, 256) },
+        { label: "SHA3-384", value: sha3Hex(input, 384) },
+        { label: "SHA3-512", value: sha3Hex(input, 512) },
+        { label: "Shake-128 (256-bit)", value: shakeHex(input, 128) },
+        { label: "Shake-256 (256-bit)", value: shakeHex(input, 256) },
       ];
       if (secret) {
         list.push(

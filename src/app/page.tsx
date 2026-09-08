@@ -2,8 +2,18 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { Search, Lock, Shield, Zap, MousePointerClick } from "lucide-react";
-import { CATEGORIES, getToolsByCategory, type ToolConfig } from "@/lib/tools";
+import {
+  Search,
+  Lock,
+  Shield,
+  Zap,
+  MousePointerClick,
+  ChevronsLeft,
+  ChevronsRight,
+  ListFilter,
+  LayoutGrid,
+} from "lucide-react";
+import { CATEGORIES, getToolsByCategory, TOOLS, type ToolConfig } from "@/lib/tools";
 
 function ToolCard({ tool }: { tool: ToolConfig }) {
   const Icon = tool.icon;
@@ -29,18 +39,67 @@ function ToolCard({ tool }: { tool: ToolConfig }) {
 
 export default function Home() {
   const [query, setQuery] = useState("");
+  const [category, setCategory] = useState<string | null>(null);
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
+
+  const counts = useMemo(() => {
+    const map = new Map<string, number>();
+    for (const t of TOOLS) map.set(t.category, (map.get(t.category) ?? 0) + 1);
+    return map;
+  }, []);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return null;
-    return CATEGORIES.flatMap(getToolsByCategory).filter(
-      (t) =>
+    return CATEGORIES.flatMap((c) => getToolsByCategory(c)).filter((t) => {
+      const matchQ =
+        !q ||
         t.name.toLowerCase().includes(q) ||
         t.tagline.toLowerCase().includes(q) ||
         t.description.toLowerCase().includes(q) ||
-        t.category.toLowerCase().includes(q)
-    );
-  }, [query]);
+        t.category.toLowerCase().includes(q);
+      const matchC = !category || t.category === category;
+      return matchQ && matchC;
+    });
+  }, [query, category]);
+
+  const categoriesToShow = useMemo(
+    () => CATEGORIES.filter((c) => getToolsByCategory(c).length > 0),
+    []
+  );
+
+  const sidebar = (
+    <nav className="space-y-1">
+      <button
+        type="button"
+        onClick={() => setCategory(null)}
+        className={`w-full text-left px-3 py-2 rounded-lg text-sm flex items-center gap-2 transition ${
+          category === null
+            ? "bg-indigo-50 text-indigo-700 font-medium"
+            : "text-slate-600 hover:bg-slate-100"
+        }`}
+      >
+        <LayoutGrid className="w-4 h-4 shrink-0" />
+        <span className="flex-1">All tools</span>
+        <span className="text-xs text-slate-400">{TOOLS.length}</span>
+      </button>
+      {categoriesToShow.map((c) => (
+        <button
+          key={c}
+          type="button"
+          onClick={() => setCategory(category === c ? null : c)}
+          className={`w-full text-left px-3 py-2 rounded-lg text-sm flex items-center gap-2 transition ${
+            category === c
+              ? "bg-indigo-50 text-indigo-700 font-medium"
+              : "text-slate-600 hover:bg-slate-100"
+          }`}
+        >
+          <span className="flex-1 truncate">{c}</span>
+          <span className="text-xs text-slate-400">{counts.get(c) ?? 0}</span>
+        </button>
+      ))}
+    </nav>
+  );
 
   return (
     <>
@@ -86,39 +145,84 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Tools grid */}
+      {/* Tools */}
       <section className="max-w-6xl mx-auto px-5 pb-20 w-full">
-        {filtered ? (
-          <div>
-            <p className="text-sm text-slate-500 mb-4">
-              {filtered.length} result{filtered.length === 1 ? "" : "s"} for{" "}
-              <span className="font-medium text-slate-700">&quot;{query}&quot;</span>
-            </p>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {filtered.map((t) => (
-                <ToolCard key={t.slug} tool={t} />
-              ))}
-            </div>
+        {/* Mobile filter toggle */}
+        <button
+          type="button"
+          onClick={() => setFiltersOpen((o) => !o)}
+          className="lg:hidden flex items-center gap-2 text-sm text-slate-600 bg-white border border-slate-200 rounded-xl px-4 py-2.5 shadow-sm hover:border-slate-300 transition mb-4"
+        >
+          <ListFilter className="w-4 h-4" />
+          Filter by category
+          <span className="text-xs text-slate-400 ml-1">
+            {category ? CATEGORIES.find((c) => c === category) : "All"} · {TOOLS.length} tools
+          </span>
+        </button>
+        {filtersOpen && (
+          <div className="lg:hidden mb-6 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
+            {sidebar}
           </div>
-        ) : (
-          CATEGORIES.map((category) => {
-            const tools = getToolsByCategory(category);
-            if (tools.length === 0) return null;
-            return (
-              <div key={category} className="mb-12">
-                <h2 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
-                  <span className="w-1.5 h-5 rounded-full bg-gradient-to-b from-indigo-500 to-purple-600" />
-                  {category}
-                </h2>
-                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {tools.map((t) => (
-                    <ToolCard key={t.slug} tool={t} />
-                  ))}
-                </div>
-              </div>
-            );
-          })
         )}
+
+        <div className="lg:grid lg:grid-cols-[15rem_1fr] lg:gap-8">
+          {/* Desktop sidebar */}
+          <aside className="hidden lg:flex flex-col gap-2 self-start sticky top-6">
+            {collapsed ? (
+              <button
+                type="button"
+                onClick={() => setCollapsed(false)}
+                className="flex items-center justify-center w-10 h-10 rounded-xl border border-slate-200 bg-white text-slate-500 hover:text-indigo-600 hover:border-indigo-200 transition"
+                aria-label="Show filters"
+              >
+                <ChevronsRight className="w-5 h-5" />
+              </button>
+            ) : (
+              <div className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
+                <div className="flex items-center justify-between px-1 pb-2 mb-1 border-b border-slate-100">
+                  <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
+                    Categories
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setCollapsed(true)}
+                    className="p-1 rounded-md text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition"
+                    aria-label="Collapse filters"
+                  >
+                    <ChevronsLeft className="w-4 h-4" />
+                  </button>
+                </div>
+                {sidebar}
+              </div>
+            )}
+          </aside>
+
+          <div>
+            {query.trim() !== "" && (
+              <p className="text-sm text-slate-500 mb-4">
+                {filtered.length} result{filtered.length === 1 ? "" : "s"} for{" "}
+                <span className="font-medium text-slate-700">&quot;{query.trim()}&quot;</span>
+                {category && (
+                  <>
+                    {" "}in{" "}
+                    <span className="font-medium text-slate-700">{category}</span>
+                  </>
+                )}
+              </p>
+            )}
+            {filtered.length === 0 ? (
+              <div className="rounded-2xl border border-slate-200 bg-white p-10 text-center text-sm text-slate-500">
+                No tools match your filter. Try a different search or clear the category.
+              </div>
+            ) : (
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {filtered.map((t) => (
+                  <ToolCard key={t.slug} tool={t} />
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
       </section>
     </>
   );
