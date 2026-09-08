@@ -43,7 +43,7 @@ export function CopyButton({ text, label = "Copy", className = "", disabled = fa
 }
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "secondary";
+  variant?: "primary" | "secondary" | "danger";
 }
 
 export function Button({ variant = "primary", className = "", ...rest }: ButtonProps) {
@@ -52,7 +52,9 @@ export function Button({ variant = "primary", className = "", ...rest }: ButtonP
   const styles =
     variant === "primary"
       ? "bg-indigo-600 text-white hover:bg-indigo-700 shadow-md shadow-indigo-500/20"
-      : "border border-slate-300 bg-white text-slate-700 hover:bg-slate-50";
+      : variant === "danger"
+        ? "border border-red-200 bg-white text-red-600 hover:bg-red-50"
+        : "border border-slate-300 bg-white text-slate-700 hover:bg-slate-50";
   return <button className={`${base} ${styles} ${className}`} {...rest} />;
 }
 

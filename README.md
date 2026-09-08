@@ -2,6 +2,8 @@
 
 A free, private collection of developer tools — one Next.js app, everything runs in your browser with no uploads or servers involved.
 
+**Try it live:** [https://braincoder.vercel.app/](https://braincoder.vercel.app/)
+
 ## Tools
 
 - **Compress**: PDF compressor, Image compressor, Image resizer
