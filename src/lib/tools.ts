@@ -58,6 +58,11 @@ import {
   FileJson2,
   BookMarked,
   ListTree,
+  Slash,
+  Type,
+  Repeat2,
+  Repeat,
+  Eraser,
 } from "lucide-react";
 
 export type Category =
@@ -750,6 +755,61 @@ export const TOOLS: ToolConfig[] = [
     icon: ListTree,
     accent: "text-slate-700",
     gradient: "from-slate-600 to-slate-800",
+  },
+  {
+    slug: "slug-generator",
+    name: "URL Slug Generator",
+    tagline: "Clean, SEO-friendly slugs",
+    description:
+      "Turn any text into a clean lowercase URL slug — strips accents, punctuation and spaces with dash/underscore separators.",
+    category: "Text Tools",
+    icon: Slash,
+    accent: "text-sky-600",
+    gradient: "from-sky-500 to-cyan-600",
+  },
+  {
+    slug: "unicode-styles",
+    name: "Fancy Unicode Text",
+    tagline: "Bold, script, fraktur & more",
+    description:
+      "Convert plain text into bold, italic, script, fraktur, double-struck, sans-serif and monospace Unicode styles.",
+    category: "Text Tools",
+    icon: Type,
+    accent: "text-fuchsia-600",
+    gradient: "from-fuchsia-500 to-pink-600",
+  },
+  {
+    slug: "upside-down-text",
+    name: "Upside Down Text",
+    tagline: "Flip and reverse any text",
+    description:
+      "Flip text 180° with Unicode upside-down glyphs and reversed reading order — great for memes and comments.",
+    category: "Text Tools",
+    icon: Repeat2,
+    accent: "text-violet-600",
+    gradient: "from-violet-500 to-purple-600",
+  },
+  {
+    slug: "text-repeater",
+    name: "Text Repeater",
+    tagline: "Duplicate text N times",
+    description:
+      "Repeat any text an exact number of times with optional space or newline separators, then copy the result.",
+    category: "Text Tools",
+    icon: Repeat,
+    accent: "text-rose-600",
+    gradient: "from-rose-500 to-red-600",
+  },
+  {
+    slug: "text-cleaner",
+    name: "Text Cleaner",
+    tagline: "Strip tags, tidy whitespace",
+    description:
+      "Clean noisy text: strip HTML tags, collapse extra whitespace, remove empty lines, trim each line or join everything onto one line.",
+    category: "Text Tools",
+    icon: Eraser,
+    accent: "text-emerald-600",
+    gradient: "from-emerald-500 to-green-600",
   },
 ];
 

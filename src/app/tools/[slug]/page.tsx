@@ -115,6 +115,11 @@ const mountMap: Record<string, ReturnType<typeof dynamic>> = {
   "toml-json": dynamic(() => import("@/features/toml-json/TomlJson")),
   "html-markdown": dynamic(() => import("@/features/html-markdown/HtmlMarkdown")),
   "json-viewer": dynamic(() => import("@/features/json-viewer/JsonViewer")),
+  "slug-generator": dynamic(() => import("@/features/slug-generator/SlugGenerator")),
+  "unicode-styles": dynamic(() => import("@/features/unicode-styles/UnicodeStyles")),
+  "upside-down-text": dynamic(() => import("@/features/upside-down-text/UpsideDownText")),
+  "text-repeater": dynamic(() => import("@/features/text-repeater/TextRepeater")),
+  "text-cleaner": dynamic(() => import("@/features/text-cleaner/TextCleaner")),
 };
 
 function ToolMount({ slug }: { slug: string }) {
