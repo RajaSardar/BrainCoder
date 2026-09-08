@@ -39,6 +39,37 @@ function formatBytes(n: number): string {
   return `${(n / (1024 * 1024)).toFixed(2)} MB`;
 }
 
+function prettify(text: string): { formatted: string; wasJson: boolean } {
+  const t = text.trim();
+  if (t && (t[0] === "{" || t[0] === "[")) {
+    try {
+      return { formatted: JSON.stringify(JSON.parse(t), null, 2), wasJson: true };
+    } catch {
+      /* fall through */
+    }
+  }
+  return { formatted: text, wasJson: false };
+}
+
+function extractPayloadData(input: string): { b64: string; key: string | null } | null {
+  const trimmed = input.trim();
+  if (trimmed.startsWith("{")) {
+    try {
+      const obj = JSON.parse(trimmed) as Record<string, unknown>;
+      if (obj && typeof obj === "object" && typeof obj.data === "string" && obj.data.trim()) {
+        const key = Object.keys(obj).find((k) => k !== "data") ?? null;
+        return { b64: obj.data, key };
+      }
+    } catch {
+      return null;
+    }
+  }
+  if (trimmed.length >= 20 && /^[A-Za-z0-9+/=\s]+$/.test(trimmed)) {
+    return { b64: trimmed, key: null };
+  }
+  return null;
+}
+
 async function compressBytes(bytes: Uint8Array<ArrayBuffer>, format: GzipFormat): Promise<Uint8Array<ArrayBuffer>> {
   const stream = new Blob([bytes]).stream().pipeThrough(new CompressionStream(format));
   return new Uint8Array(await new Response(stream).arrayBuffer());
@@ -68,6 +99,7 @@ export default function GzipTool() {
   const [inputSize, setInputSize] = useState<number | null>(null);
   const [outputSize, setOutputSize] = useState<number | null>(null);
   const [fileName, setFileName] = useState("");
+  const [payloadKey, setPayloadKey] = useState("zlib");
   const [error, setError] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -92,32 +124,66 @@ export default function GzipTool() {
     }
   };
 
-  const compressText = () =>
-    run(async () => {
-      const bytes = new TextEncoder().encode(input);
-      const out = await compressBytes(bytes, format);
-      setInputSize(bytes.length);
-      setOutputSize(out.length);
-      setOutputKind("base64");
-      setOutput(bytesToBase64(out));
+  const compressAs = (kind: "base64" | "json") =>
+  run(async () => {
+    const bytes = new TextEncoder().encode(input);
+    const out = await compressBytes(bytes, format);
+    const b64 = bytesToBase64(out);
+    setInputSize(bytes.length);
+    setOutputSize(out.length);
+    setOutputKind("base64");
+    if (kind === "base64") {
+      setOutput(b64);
       setMessage(`Compressed to ${formatBytes(out.length)} (download available).`);
-    });
+    } else {
+      setOutput(JSON.stringify({ [payloadKey]: true, data: b64 }, null, 2));
+      setMessage(
+        `Compressed to ${formatBytes(out.length)}, wrapped as {"${payloadKey}":true,"data":…}. To rebuild with another key, use the file download or select a different output.`
+      );
+    }
+  });
 
   const decompressText = () =>
     run(async () => {
-      const maybeBase64 = outputKind === "base64" && output ? base64ToBytes(output) : null;
-      const bytes = maybeBase64 ?? base64ToBytes(input.trim()) ?? new TextEncoder().encode(input);
-      const dec = new TextDecoder("utf-8", { fatal: false });
-      const out = await decompressBytes(bytes, format);
-      const text = dec.decode(out);
+      const payload = extractPayloadData(input) ?? (outputKind === "base64" && output ? { b64: output, key: null } : null);
+      let bytes: Uint8Array<ArrayBuffer> | null = null;
+      let sourceLabel = "text";
+      if (payload) {
+        const decoded = base64ToBytes(payload.b64);
+        if (decoded) {
+          bytes = decoded;
+          sourceLabel = payload.key ? `“${payload.key}” payload` : "base64";
+          if (payload.key && payload.key !== "data") setPayloadKey(payload.key);
+        }
+      } else {
+        bytes = new TextEncoder().encode(input);
+      }
+      if (!bytes || bytes.length === 0) throw new Error("Nothing to decompress.");
+
+      const order = [format, ...FORMATS.map((f) => f.id).filter((id) => id !== format)];
+      let out: Uint8Array<ArrayBuffer> | null = null;
+      let usedFormat = "";
+      for (const id of order) {
+        try {
+          out = await decompressBytes(bytes, id);
+          usedFormat = id;
+          break;
+        } catch {
+          /* try next */
+        }
+      }
+      if (!out) throw new Error("Could not decompress. The data isn’t valid gzip/deflate.");
+
+      const text = new TextDecoder("utf-8", { fatal: false }).decode(out);
+      const { formatted, wasJson } = prettify(text);
       setInputSize(bytes.length);
       setOutputSize(out.length);
       setOutputKind("text");
-      setOutput(text);
-      if (text.length > 200000) {
-        setOutput(text.slice(0, 200000) + `\n\n… truncated (${formatBytes(text.length)})`);
-      }
-      setMessage(`Decompressed to ${formatBytes(out.length)}.`);
+      setOutput(formatted.length > 200000 ? formatted.slice(0, 200000) + `\n\n… truncated (${formatBytes(text.length)})` : formatted);
+      setMessage(
+        `Decompressed ${sourceLabel} with ${usedFormat} (${formatBytes(bytes.length)} → ${formatBytes(out.length)}).` +
+          (wasJson ? " Output pretty-formatted as JSON." : "")
+      );
     });
 
   const handleFile = async (wantCompress: boolean) => {
@@ -141,10 +207,14 @@ export default function GzipTool() {
       } else {
         const out = await decompressBytes(bytes, format);
         const text = new TextDecoder("utf-8", { fatal: false }).decode(out);
+        const { formatted, wasJson } = prettify(text);
         setOutputSize(out.length);
         setOutputKind("text");
-        setOutput(text.length > 200000 ? text.slice(0, 200000) + `\n\n… truncated` : text);
-        setMessage(`Decompressed "${file.name}" into ${formatBytes(out.length)} of text.`);
+        setOutput(formatted.length > 200000 ? formatted.slice(0, 200000) + `\n\n… truncated` : formatted);
+        setMessage(
+          `Decompressed "${file.name}" into ${formatBytes(out.length)} of text.` +
+            (wasJson ? " Output pretty-formatted as JSON." : "")
+        );
       }
     });
   };
@@ -191,14 +261,17 @@ export default function GzipTool() {
             onChange={(e) => setInput(e.target.value)}
             rows={10}
             className="min-h-[240px]"
-            placeholder="Paste text to compress, or base64 to decompress…"
+            placeholder={'Paste text to compress, or a {"key":true,"data":"…"} payload / base64 to decompress…'}
           />
           <div className="mt-2 flex flex-wrap gap-2">
-            <Button type="button" disabled={busy} onClick={compressText}>
+            <Button type="button" disabled={busy} onClick={() => compressAs("base64")}>
               {busy && <Loader2 className="w-4 h-4 animate-spin" />} Compress → base64
             </Button>
+            <Button type="button" disabled={busy} onClick={() => compressAs("json")}>
+              Compress → JSON payload
+            </Button>
             <Button type="button" variant="secondary" disabled={busy} onClick={decompressText}>
-              Decompress → text
+              Decompress → formatted text
             </Button>
           </div>
         </div>
@@ -237,6 +310,8 @@ export default function GzipTool() {
           {fileName && <span className="text-xs text-slate-500">Saved as {fileName}</span>}
         </div>
         <p className="text-xs text-slate-400 mt-3">
+          Decompression auto-detects JSON payloads like {"{“zlib”:true,“data”:“H4sI…”}"} (reads the base64 in `data`),
+          plain base64, or raw .{fmt.fileExt} bytes — and auto-tries gzip → deflate → deflate-raw, pretty-printing JSON results.
           Compress any file to {fmt.fileExt} (auto-download) or decompress a .{fmt.fileExt} file back to text.
         </p>
       </div>
