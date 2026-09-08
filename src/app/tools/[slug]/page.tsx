@@ -139,6 +139,8 @@ const mountMap: Record<string, ReturnType<typeof dynamic>> = {
   "sqlite-viewer": dynamic(() => import("@/features/sqlite-viewer/SqliteViewer")),
   "pdf-merge": dynamic(() => import("@/features/pdf-merge/PdfMerge")),
   "pdf-split": dynamic(() => import("@/features/pdf-split/PdfSplit")),
+  "svg-formatter": dynamic(() => import("@/features/svg-formatter/SvgFormatter")),
+  "svg-to-png": dynamic(() => import("@/features/svg-to-png/SvgToPng")),
 };
 
 function ToolMount({ slug }: { slug: string }) {

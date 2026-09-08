@@ -42,6 +42,7 @@ export default function Home() {
   const [category, setCategory] = useState<string | null>(null);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
+  const [categoryQuery, setCategoryQuery] = useState("");
 
   const counts = useMemo(() => {
     const map = new Map<string, number>();
@@ -147,23 +148,58 @@ export default function Home() {
 
       {/* Tools */}
       <section className="max-w-6xl mx-auto px-5 pb-20 w-full">
-        {/* Mobile filter toggle */}
+{/* Mobile filter toggle */}
+      <div className="lg:hidden mb-4 relative">
         <button
           type="button"
           onClick={() => setFiltersOpen((o) => !o)}
-          className="lg:hidden flex items-center gap-2 text-sm text-slate-600 bg-white border border-slate-200 rounded-xl px-4 py-2.5 shadow-sm hover:border-slate-300 transition mb-4"
+          className="flex items-center gap-2 text-sm text-slate-600 bg-white border border-slate-200 rounded-xl px-4 py-2.5 shadow-sm hover:border-slate-300 transition w-full"
         >
           <ListFilter className="w-4 h-4" />
           Filter by category
-          <span className="text-xs text-slate-400 ml-1">
-            {category ? CATEGORIES.find((c) => c === category) : "All"} · {TOOLS.length} tools
+          <span className="text-xs text-slate-400 ml-auto">
+            {category ?? "All"} · {TOOLS.length} tools
           </span>
         </button>
         {filtersOpen && (
-          <div className="lg:hidden mb-6 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
-            {sidebar}
+          <div className="mt-2 rounded-2xl border border-slate-200 bg-white p-3 shadow-md">
+            <div className="relative mb-2">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <input
+                type="text"
+                value={categoryQuery}
+                onChange={(e) => setCategoryQuery(e.target.value)}
+                placeholder="Search categories…"
+                className="w-full rounded-lg border border-slate-200 bg-slate-50 pl-9 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              />
+            </div>
+            <div className="max-h-56 overflow-auto space-y-1">
+              {categoriesToShow
+                .filter((c) => c.toLowerCase().includes(categoryQuery.trim().toLowerCase()))
+                .map((c) => (
+                  <button
+                    key={c}
+                    type="button"
+                    onClick={() => {
+                      setCategory(category === c ? null : c);
+                      setFiltersOpen(false);
+                      setCategoryQuery("");
+                    }}
+                    className={`w-full text-left px-3 py-2 rounded-lg text-sm flex items-center gap-2 transition ${
+                      category === c ? "bg-indigo-50 text-indigo-700 font-medium" : "text-slate-600 hover:bg-slate-100"
+                    }`}
+                  >
+                    <span className="flex-1 truncate">{c}</span>
+                    <span className="text-xs text-slate-400">{counts.get(c) ?? 0}</span>
+                  </button>
+                ))}
+              {categoriesToShow.every((c) => !c.toLowerCase().includes(categoryQuery.trim().toLowerCase())) && (
+                <p className="text-xs text-slate-400 px-3 py-2">No categories match.</p>
+              )}
+            </div>
           </div>
         )}
+      </div>
 
         <div className="lg:grid lg:grid-cols-[15rem_1fr] lg:gap-8">
           {/* Desktop sidebar */}

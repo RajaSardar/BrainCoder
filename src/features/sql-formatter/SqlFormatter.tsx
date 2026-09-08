@@ -31,15 +31,23 @@ export default function SqlFormatter() {
   const [input, setInput] = useState(SAMPLE);
   const [language, setLanguage] = useState<SqlLanguage>("sql");
   const [keywordCase, setKeywordCase] = useState<"upper" | "lower" | "preserve">("upper");
+  const [indent, setIndent] = useState<"  " | "    " | "\t">("  ");
+  const [linesBetween, setLinesBetween] = useState(1);
 
   const result = useMemo(() => {
     try {
-      const out = format(input, { language, keywordCase });
+      const out = format(input, {
+        language,
+        keywordCase,
+        tabWidth: indent === "\t" ? 1 : indent.length,
+        useTabs: indent === "\t",
+        linesBetweenQueries: linesBetween,
+      });
       return { ok: true, value: out };
     } catch (err) {
       return { ok: false, value: err instanceof Error ? err.message : "Formatting failed" };
     }
-  }, [input, language, keywordCase]);
+  }, [input, language, keywordCase, indent, linesBetween]);
 
   return (
     <div className="space-y-5 w-full">
@@ -63,6 +71,24 @@ export default function SqlFormatter() {
           <option value="upper">UPPERCASE keywords</option>
           <option value="lower">lowercase keywords</option>
           <option value="preserve">Preserve keywords</option>
+        </select>
+        <select
+          value={indent}
+          onChange={(e) => setIndent(e.target.value as typeof indent)}
+          className="rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+        >
+          <option value="  ">2-space indent</option>
+          <option value="    ">4-space indent</option>
+          <option value="\t">Tab indent</option>
+        </select>
+        <select
+          value={linesBetween}
+          onChange={(e) => setLinesBetween(Number(e.target.value))}
+          className="rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+        >
+          <option value={0}>No line between queries</option>
+          <option value={1}>1 line between queries</option>
+          <option value={2}>2 lines between queries</option>
         </select>
         <span className="flex items-center gap-1.5 text-sm pb-2">
           {result.ok ? (

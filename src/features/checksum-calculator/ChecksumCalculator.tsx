@@ -174,8 +174,7 @@ function keccak(input: Uint8Array, rateBytes: number, outputBytes: number, suffi
 }
 
 function sha3Hex(input: string, bits: 224 | 256 | 384 | 512): string {
-  const rateBytes = { 224: 144, 256: 136, 384: 104, 512: 72 }[bits];
-  const digest = keccak(new TextEncoder().encode(input), rateBytes, bits / 8, 0x06);
+  const digest = keccak(new TextEncoder().encode(input), RATES[bits], bits / 8, 0x06);
   return bytesToHex(digest);
 }
 
@@ -183,6 +182,72 @@ function shakeHex(input: string, bits: 128 | 256): string {
   const rateBytes = bits === 128 ? 168 : 136;
   const digest = keccak(new TextEncoder().encode(input), rateBytes, 32, 0x1f);
   return bytesToHex(digest);
+}
+
+const RATES = { 224: 144, 256: 136, 384: 104, 512: 72 };
+
+function keccakHex(input: string, bits: 224 | 256 | 384 | 512): string {
+  const digest = keccak(new TextEncoder().encode(input), RATES[bits], bits / 8, 0x01);
+  return bytesToHex(digest);
+}
+
+const SHA2_K = new Uint32Array([
+  0x1428a2f98, 0x171374491, 0x1b5c0fbcf, 0x1e9b5dba5, 0x23956c25b, 0x259f111f1, 0x2923f82a4,
+  0x2ab1c5ed5, 0x2d807aa98, 0x312835b01, 0x3243185be, 0x3550c7dc3, 0x372be5d74, 0x380deb1fe,
+  0x39bdc06a7, 0x3c19bf174, 0x3e49b69c1, 0x3efbe4786, 0x40fc19dc6, 0x4240ca1cc, 0x42de92c6f,
+  0x44a7484aa, 0x45cb0a9dc, 0x476f988da, 0x4983e5152, 0x4a831c66d, 0x4b00327c8, 0x4bf597fc7,
+  0x4c6e00bf3, 0x4d5a79147, 0x506ca6351, 0x514292967, 0x527b70a85, 0x52e1b2138, 0x54d2c6dfc,
+  0x553380d13, 0x5650a7354, 0x5766a0abb, 0x581c2c92e, 0x592722c85, 0x5a2bfe8a1, 0x5a81a664b,
+  0x5c24b8b70, 0x5c76c51a3, 0x5d192e819, 0x5d6990624, 0x5f40e3585, 0x6106aa070, 0x619a4c116,
+  0x61e376c08, 0x62748774c, 0x634b0bcb5, 0x6391c0cb3, 0x64ed8aa4a, 0x65b9cca4f, 0x6682e6ff3,
+  0x6748f82ee, 0x678a5636f, 0x684c87814, 0x68cc70208, 0x690befffa, 0x6a4506ceb, 0x6bef9a3f7,
+  0x6c67178f2,
+]);
+
+const rotr32 = (x: number, n: number) => (x >>> n) | (x << (32 - n));
+
+function sha2Hex(input: string, bits: 224 | 256): string {
+  const bytes = new TextEncoder().encode(input);
+  const bitLen = bytes.length * 8;
+  const paddedLen = (((bytes.length + 8) >> 6) + 1) << 6;
+  const data = new Uint8Array(paddedLen);
+  data.set(bytes);
+  data[bytes.length] = 0x80;
+  const dv = new DataView(data.buffer);
+  dv.setUint32(paddedLen - 8, Math.floor(bitLen / 0x100000000));
+  dv.setUint32(paddedLen - 4, bitLen >>> 0);
+
+  let [h0, h1, h2, h3, h4, h5, h6, h7] =
+    bits === 224
+      ? [0xc1059ed8, 0x367cd507, 0x3070dd17, 0xf70e5939, 0xffc00b31, 0x68581511, 0x64f98fa7, 0xbefa4fa4]
+      : [0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19];
+
+  for (let off = 0; off < data.length; off += 64) {
+    const w = new Uint32Array(64);
+    for (let i = 0; i < 16; i++) w[i] = dv.getUint32(off + i * 4);
+    for (let i = 16; i < 64; i++) {
+      const s0 = rotr32(w[i - 15], 7) ^ rotr32(w[i - 15], 18) ^ (w[i - 15] >>> 3);
+      const s1 = rotr32(w[i - 2], 17) ^ rotr32(w[i - 2], 19) ^ (w[i - 2] >>> 10);
+      w[i] = (w[i - 16] + s0 + w[i - 7] + s1) | 0;
+    }
+    let a = h0, b = h1, c = h2, d = h3, e = h4, f = h5, g = h6, h = h7;
+    for (let i = 0; i < 64; i++) {
+      const S1 = rotr32(e, 6) ^ rotr32(e, 11) ^ rotr32(e, 25);
+      const ch = (e & f) ^ (~e & g);
+      const t1 = (h + S1 + ch + SHA2_K[i] + w[i]) | 0;
+      const S0 = rotr32(a, 2) ^ rotr32(a, 13) ^ rotr32(a, 22);
+      const maj = (a & b) ^ (a & c) ^ (b & c);
+      const t2 = (S0 + maj) | 0;
+      h = g; g = f; f = e; e = (d + t1) | 0; d = c; c = b; b = a; a = (t1 + t2) | 0;
+    }
+    h0 = (h0 + a) | 0; h1 = (h1 + b) | 0; h2 = (h2 + c) | 0; h3 = (h3 + d) | 0;
+    h4 = (h4 + e) | 0; h5 = (h5 + f) | 0; h6 = (h6 + g) | 0; h7 = (h7 + h) | 0;
+  }
+
+  const digits = [h0, h1, h2, h3, h4, h5, h6, h7]
+    .map((w) => (w >>> 0).toString(16).padStart(8, "0"))
+    .join("");
+  return bits === 224 ? digits.slice(0, 56) : digits;
 }
 
 async function shaHex(input: string, algo: AlgorithmIdentifier): Promise<string> {
@@ -220,6 +285,7 @@ export default function ChecksumCalculator() {
         { label: "CRC-16 (CCITT)", value: crc16CcittHex(bytes) },
         { label: "CRC-32", value: crc32Hex(bytes) },
         { label: "SHA-1", value: await shaHex(input, "SHA-1") },
+        { label: "SHA-224", value: sha2Hex(input, 224) },
         { label: "SHA-256", value: await shaHex(input, "SHA-256") },
         { label: "SHA-384", value: await shaHex(input, "SHA-384") },
         { label: "SHA-512", value: await shaHex(input, "SHA-512") },
@@ -227,6 +293,10 @@ export default function ChecksumCalculator() {
         { label: "SHA3-256", value: sha3Hex(input, 256) },
         { label: "SHA3-384", value: sha3Hex(input, 384) },
         { label: "SHA3-512", value: sha3Hex(input, 512) },
+        { label: "Keccak-224", value: keccakHex(input, 224) },
+        { label: "Keccak-256", value: keccakHex(input, 256) },
+        { label: "Keccak-384", value: keccakHex(input, 384) },
+        { label: "Keccak-512", value: keccakHex(input, 512) },
         { label: "Shake-128 (256-bit)", value: shakeHex(input, 128) },
         { label: "Shake-256 (256-bit)", value: shakeHex(input, 256) },
       ];

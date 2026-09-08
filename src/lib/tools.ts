@@ -82,6 +82,8 @@ import {
   Container,
   Layers,
   Scissors,
+  Shapes,
+  MoveDiagonal,
 } from "lucide-react";
 
 export type Category =
@@ -1038,6 +1040,28 @@ export const TOOLS: ToolConfig[] = [
     icon: Scissors,
     accent: "text-cyan-600",
     gradient: "from-cyan-500 to-sky-600",
+  },
+  {
+    slug: "svg-formatter",
+    name: "SVG Formatter",
+    tagline: "Beautify or minify SVG markup",
+    description:
+      "Indent and align SVG markup into clean, readable XML — or shrink it back down — with adjustable print and indent widths.",
+    category: "Developer",
+    icon: Shapes,
+    accent: "text-rose-600",
+    gradient: "from-rose-500 to-orange-600",
+  },
+  {
+    slug: "svg-to-png",
+    name: "SVG to PNG Converter",
+    tagline: "Rasterize SVG in your browser",
+    description:
+      "Render any SVG into a PNG, WebP or JPEG at 0.5× to 4× scale and download it — no uploads, all rendered client-side.",
+    category: "Convert",
+    icon: MoveDiagonal,
+    accent: "text-fuchsia-600",
+    gradient: "from-fuchsia-500 to-purple-600",
   },
 ];
 
