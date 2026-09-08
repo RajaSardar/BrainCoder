@@ -110,6 +110,11 @@ const mountMap: Record<string, ReturnType<typeof dynamic>> = {
   "cubic-bezier-editor": dynamic(() => import("@/features/cubic-bezier-editor/CubicBezierEditor")),
   "gradient-generator": dynamic(() => import("@/features/gradient-generator/GradientGenerator")),
   "css-unit-converter": dynamic(() => import("@/features/css-unit-converter/CssUnitConverter")),
+  "json-xml": dynamic(() => import("@/features/json-xml/JsonXml")),
+  "json-yaml": dynamic(() => import("@/features/json-yaml/JsonYaml")),
+  "toml-json": dynamic(() => import("@/features/toml-json/TomlJson")),
+  "html-markdown": dynamic(() => import("@/features/html-markdown/HtmlMarkdown")),
+  "json-viewer": dynamic(() => import("@/features/json-viewer/JsonViewer")),
 };
 
 function ToolMount({ slug }: { slug: string }) {

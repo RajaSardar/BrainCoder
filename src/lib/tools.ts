@@ -54,6 +54,10 @@ import {
   ChartSpline,
   Blend,
   ArrowLeftRight,
+  CodeXml,
+  FileJson2,
+  BookMarked,
+  ListTree,
 } from "lucide-react";
 
 export type Category =
@@ -691,6 +695,61 @@ export const TOOLS: ToolConfig[] = [
     icon: ArrowLeftRight,
     accent: "text-teal-600",
     gradient: "from-teal-500 to-emerald-600",
+  },
+  {
+    slug: "json-xml",
+    name: "JSON ⇄ XML Converter",
+    tagline: "Convert between JSON and XML",
+    description:
+      "Convert JSON to XML and back, with a reversible convention for arrays, attributes and mixed text content.",
+    category: "Convert",
+    icon: CodeXml,
+    accent: "text-indigo-600",
+    gradient: "from-indigo-500 to-violet-600",
+  },
+  {
+    slug: "json-yaml",
+    name: "JSON ⇄ YAML Converter",
+    tagline: "RFC 9512 YAML support",
+    description:
+      "Convert JSON to YAML and YAML to JSON with full js-yaml parsing, anchors, aliases and inline structures.",
+    category: "Convert",
+    icon: FileJson2,
+    accent: "text-amber-600",
+    gradient: "from-amber-500 to-orange-600",
+  },
+  {
+    slug: "toml-json",
+    name: "TOML ⇄ JSON Converter",
+    tagline: "Tom's Obvious Minimal Language",
+    description:
+      "Convert TOML to JSON and back, including array-of-tables ([[servers]]) and datetime values.",
+    category: "Convert",
+    icon: FileCog,
+    accent: "text-orange-600",
+    gradient: "from-orange-500 to-red-500",
+  },
+  {
+    slug: "html-markdown",
+    name: "HTML ⇄ Markdown Converter",
+    tagline: "marked + Turndown",
+    description:
+      "Render Markdown to clean HTML or convert HTML back to Markdown, right in your browser.",
+    category: "Convert",
+    icon: BookMarked,
+    accent: "text-emerald-600",
+    gradient: "from-emerald-500 to-teal-600",
+  },
+  {
+    slug: "json-viewer",
+    name: "JSON Tree Viewer",
+    tagline: "Collapsible JSON explorer",
+    description:
+      "Pretty-print any JSON into an expandable, color-coded tree so you can explore nested structures at a glance.",
+    category: "Developer",
+    icon: ListTree,
+    accent: "text-slate-700",
+    gradient: "from-slate-600 to-slate-800",
   },
 ];
 

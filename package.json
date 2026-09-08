@@ -11,6 +11,7 @@
   "dependencies": {
     "cron-parser": "^5.10.0",
     "html2canvas": "^1.4.1",
+    "js-yaml": "^5.4.1",
     "lucide-react": "^1.40.0",
     "marked": "^18.0.12",
     "next": "16.3.4",
@@ -19,15 +20,19 @@
     "qrcode": "^1.5.4",
     "react": "19.2.8",
     "react-dom": "19.2.8",
+    "smol-toml": "^1.8.0",
     "sql-formatter": "^15.8.2",
-    "tesseract.js": "^7.0.0"
+    "tesseract.js": "^7.0.0",
+    "turndown": "^7.2.4"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/js-yaml": "^4.0.9",
     "@types/node": "^20",
     "@types/qrcode": "^1.5.6",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/turndown": "^5.0.6",
     "eslint": "^9",
     "eslint-config-next": "16.3.4",
     "tailwindcss": "^4",
