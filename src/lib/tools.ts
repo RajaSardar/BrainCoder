@@ -70,6 +70,9 @@ import {
   Landmark,
   Network,
   Radar,
+  ImageDown,
+  WandSparkles,
+  Grid3x3,
 } from "lucide-react";
 
 export type Category =
@@ -894,6 +897,39 @@ export const TOOLS: ToolConfig[] = [
     icon: Radar,
     accent: "text-cyan-600",
     gradient: "from-cyan-500 to-sky-600",
+  },
+  {
+    slug: "image-format-converter",
+    name: "Image Format Converter",
+    tagline: "PNG ⇄ JPEG ⇄ WebP",
+    description:
+      "Convert images between PNG, JPEG and WebP with adjustable quality, entirely in your browser.",
+    category: "Media & Design",
+    icon: ImageDown,
+    accent: "text-violet-600",
+    gradient: "from-violet-500 to-purple-600",
+  },
+  {
+    slug: "image-filters",
+    name: "Image Filters",
+    tagline: "Grayscale, invert, blur & more",
+    description:
+      "Apply grayscale, invert, sepia, blur, contrast, brightness or hue-rotate filters with live preview, then download the result.",
+    category: "Media & Design",
+    icon: WandSparkles,
+    accent: "text-fuchsia-600",
+    gradient: "from-fuchsia-500 to-pink-600",
+  },
+  {
+    slug: "image-splitter",
+    name: "Image Splitter",
+    tagline: "Slice images into tiles",
+    description:
+      "Split any image into a grid of columns × rows and download every tile individually or all at once as PNGs.",
+    category: "Media & Design",
+    icon: Grid3x3,
+    accent: "text-sky-600",
+    gradient: "from-sky-500 to-blue-600",
   },
 ];
 

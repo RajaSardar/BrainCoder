@@ -127,6 +127,9 @@ const mountMap: Record<string, ReturnType<typeof dynamic>> = {
   "roman-numerals": dynamic(() => import("@/features/roman-numerals/RomanNumerals")),
   "ipv4-converter": dynamic(() => import("@/features/ipv4-converter/Ipv4Converter")),
   "cidr-calculator": dynamic(() => import("@/features/cidr-calculator/CidrCalculator")),
+  "image-format-converter": dynamic(() => import("@/features/image-format-converter/ImageFormatConverter")),
+  "image-filters": dynamic(() => import("@/features/image-filters/ImageFilters")),
+  "image-splitter": dynamic(() => import("@/features/image-splitter/ImageSplitter")),
 };
 
 function ToolMount({ slug }: { slug: string }) {
