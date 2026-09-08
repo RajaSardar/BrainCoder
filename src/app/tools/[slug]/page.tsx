@@ -130,6 +130,7 @@ const mountMap: Record<string, ReturnType<typeof dynamic>> = {
   "image-format-converter": dynamic(() => import("@/features/image-format-converter/ImageFormatConverter")),
   "image-filters": dynamic(() => import("@/features/image-filters/ImageFilters")),
   "image-splitter": dynamic(() => import("@/features/image-splitter/ImageSplitter")),
+  "unit-converter": dynamic(() => import("@/features/unit-converter/UnitConverter")),
 };
 
 function ToolMount({ slug }: { slug: string }) {

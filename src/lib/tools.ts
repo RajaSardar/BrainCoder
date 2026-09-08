@@ -73,6 +73,7 @@ import {
   ImageDown,
   WandSparkles,
   Grid3x3,
+  Gauge,
 } from "lucide-react";
 
 export type Category =
@@ -930,6 +931,17 @@ export const TOOLS: ToolConfig[] = [
     icon: Grid3x3,
     accent: "text-sky-600",
     gradient: "from-sky-500 to-blue-600",
+  },
+  {
+    slug: "unit-converter",
+    name: "Unit Converter",
+    tagline: "Temperature, length, weight & more",
+    description:
+      "Convert between temperature, length, weight, volume, area, speed and data units with full per-category conversion tables.",
+    category: "Convert",
+    icon: Gauge,
+    accent: "text-lime-600",
+    gradient: "from-lime-500 to-green-600",
   },
 ];
 
