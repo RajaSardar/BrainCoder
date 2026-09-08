@@ -103,6 +103,8 @@ const mountMap: Record<string, ReturnType<typeof dynamic>> = {
   "morse-code": dynamic(() => import("@/features/morse-code/MorseCode")),
   "utf8-converter": dynamic(() => import("@/features/utf8-converter/Utf8Converter")),
   base32: dynamic(() => import("@/features/base32/Base32")),
+  "checksum-calculator": dynamic(() => import("@/features/checksum-calculator/ChecksumCalculator")),
+  "aes-encryption": dynamic(() => import("@/features/aes-encryption/AesEncryption")),
 };
 
 function ToolMount({ slug }: { slug: string }) {

@@ -47,6 +47,8 @@ import {
   Radio,
   Languages,
   Boxes,
+  ShieldCheck,
+  Lock,
 } from "lucide-react";
 
 export type Category =
@@ -607,6 +609,28 @@ export const TOOLS: ToolConfig[] = [
     icon: Boxes,
     accent: "text-indigo-600",
     gradient: "from-indigo-500 to-violet-600",
+  },
+  {
+    slug: "checksum-calculator",
+    name: "Checksum & HMAC Calculator",
+    tagline: "MD5, CRC-16, CRC-32, SHA & HMAC",
+    description:
+      "Compute MD5, CRC-16/CRC-32, SHA-1/256/384/512 checksums and HMAC signatures for any text — all locally in your browser.",
+    category: "Developer",
+    icon: ShieldCheck,
+    accent: "text-teal-600",
+    gradient: "from-teal-500 to-emerald-600",
+  },
+  {
+    slug: "aes-encryption",
+    name: "AES Encrypt / Decrypt",
+    tagline: "AES-256-GCM encryption",
+    description:
+      "Encrypt and decrypt text with AES-256-GCM and PBKDF2 key derivation. Produces a portable JSON envelope you can decrypt on any device.",
+    category: "Encode & Decode",
+    icon: Lock,
+    accent: "text-rose-600",
+    gradient: "from-rose-500 to-pink-600",
   },
 ];
 
