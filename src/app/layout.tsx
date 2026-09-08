@@ -2,6 +2,11 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
 import { LogoMark } from "@/components/Logo";
+import {
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SITE_URL,
+} from "@/lib/seo";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -15,12 +20,48 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "BrainCoder — Free dev tools for everyone",
+    default: `${SITE_NAME} — Free dev tools for everyone`,
     template: "%s · BrainCoder",
   },
-  description:
-    "A free, private collection of developer tools — compress PDFs & images, encode, convert, format and more. All in your browser, no uploads.",
+  description: SITE_DESCRIPTION,
+  keywords: [
+    "online tools",
+    "developer tools",
+    "dev utilities",
+    "free online toolbox",
+    "file converter",
+    "code formatter",
+    "hash generator",
+    "json formatter",
+  ],
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: `${SITE_NAME} — Free dev tools for everyone`,
+    description: SITE_DESCRIPTION,
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    type: "website",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary",
+    title: `${SITE_NAME} — Free dev tools for everyone`,
+    description: SITE_DESCRIPTION,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
 
 export default function RootLayout(props: LayoutProps<"/">) {

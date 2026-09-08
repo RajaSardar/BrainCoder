@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { getTool, TOOLS } from "@/lib/tools";
+import { buildToolMetadata, toolJsonLd } from "@/lib/seo";
 import { notFound } from "next/navigation";
 
 export function generateStaticParams() {
@@ -11,10 +12,7 @@ export async function generateMetadata(props: PageProps<'/tools/[slug]'>) {
   const { slug } = await props.params;
   const tool = getTool(slug);
   if (!tool) return {};
-  return {
-    title: tool.name,
-    description: tool.description,
-  };
+  return buildToolMetadata(tool);
 }
 
 export default async function ToolPage(props: PageProps<'/tools/[slug]'>) {
@@ -24,6 +22,10 @@ export default async function ToolPage(props: PageProps<'/tools/[slug]'>) {
 
   return (
     <div className="max-w-[90rem] mx-auto px-5 py-6 w-full">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(toolJsonLd(tool)) }}
+      />
       <Link
         href="/#tools"
         className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-900 transition mb-4"

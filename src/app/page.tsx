@@ -14,6 +14,7 @@ import {
   LayoutGrid,
 } from "lucide-react";
 import { CATEGORIES, getToolsByCategory, TOOLS, type ToolConfig } from "@/lib/tools";
+import { siteJsonLd } from "@/lib/seo";
 
 function ToolCard({ tool }: { tool: ToolConfig }) {
   const Icon = tool.icon;
@@ -104,6 +105,10 @@ export default function Home() {
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(siteJsonLd()) }}
+      />
       {/* Hero */}
       <section className="max-w-4xl mx-auto px-5 pt-16 pb-10 text-center">
         <span className="inline-flex items-center gap-1.5 text-xs font-medium text-indigo-700 bg-indigo-50 border border-indigo-200 rounded-full px-3 py-1 mb-6">
