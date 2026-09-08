@@ -66,6 +66,10 @@ import {
   Dices,
   UserCheck,
   Coins,
+  CircuitBoard,
+  Landmark,
+  Network,
+  Radar,
 } from "lucide-react";
 
 export type Category =
@@ -846,6 +850,50 @@ export const TOOLS: ToolConfig[] = [
     icon: Coins,
     accent: "text-yellow-600",
     gradient: "from-yellow-500 to-amber-600",
+  },
+  {
+    slug: "bitwise-calculator",
+    name: "Bitwise Calculator",
+    tagline: "Bitwise AND, OR, XOR & more",
+    description:
+      "Compute bitwise AND, OR, XOR, NAND and NOR of two 32-bit values with binary, hex and decimal output.",
+    category: "Developer",
+    icon: CircuitBoard,
+    accent: "text-lime-600",
+    gradient: "from-lime-500 to-green-600",
+  },
+  {
+    slug: "roman-numerals",
+    name: "Roman Numerals Converter",
+    tagline: "Decimal ⇄ Roman numerals",
+    description:
+      "Convert between decimal numbers (1–3999) and Roman numerals with strict subtractive-notation validation.",
+    category: "Convert",
+    icon: Landmark,
+    accent: "text-amber-600",
+    gradient: "from-amber-500 to-yellow-600",
+  },
+  {
+    slug: "ipv4-converter",
+    name: "IPv4 Converter",
+    tagline: "IP ↔ binary, hex, octal, integer",
+    description:
+      "Convert any IPv4 address to binary, hexadecimal, octal and decimal-integer forms — and back again.",
+    category: "Developer",
+    icon: Network,
+    accent: "text-blue-600",
+    gradient: "from-blue-500 to-indigo-600",
+  },
+  {
+    slug: "cidr-calculator",
+    name: "CIDR Calculator",
+    tagline: "Network, hosts & subnet masks",
+    description:
+      "Enter an IP with any /prefix and get the network, broadcast, host range, subnet/wildcard mask and host counts.",
+    category: "Developer",
+    icon: Radar,
+    accent: "text-cyan-600",
+    gradient: "from-cyan-500 to-sky-600",
   },
 ];
 

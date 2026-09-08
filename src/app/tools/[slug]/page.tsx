@@ -123,6 +123,10 @@ const mountMap: Record<string, ReturnType<typeof dynamic>> = {
   "random-number-generator": dynamic(() => import("@/features/random-number-generator/RandomNumberGenerator")),
   "random-name-picker": dynamic(() => import("@/features/random-name-picker/RandomNamePicker")),
   "coin-dice-roller": dynamic(() => import("@/features/coin-dice-roller/CoinDiceRoller")),
+  "bitwise-calculator": dynamic(() => import("@/features/bitwise-calculator/BitwiseCalculator")),
+  "roman-numerals": dynamic(() => import("@/features/roman-numerals/RomanNumerals")),
+  "ipv4-converter": dynamic(() => import("@/features/ipv4-converter/Ipv4Converter")),
+  "cidr-calculator": dynamic(() => import("@/features/cidr-calculator/CidrCalculator")),
 };
 
 function ToolMount({ slug }: { slug: string }) {
