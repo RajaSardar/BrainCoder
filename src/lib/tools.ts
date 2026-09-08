@@ -42,6 +42,11 @@ import {
   Rows3,
   Globe,
   Archive,
+  Image,
+  RotateCcw,
+  Radio,
+  Languages,
+  Boxes,
 } from "lucide-react";
 
 export type Category =
@@ -536,6 +541,72 @@ export const TOOLS: ToolConfig[] = [
     icon: Globe,
     accent: "text-cyan-600",
     gradient: "from-cyan-500 to-sky-600",
+  },
+  {
+    slug: "image-base64",
+    name: "Image ↔ Base64",
+    tagline: "Convert images to Base64 and back",
+    description:
+      "Turn PNG, JPG, GIF, SVG, WEBP and BMP files into base64 data, or paste base64 to preview and download the image.",
+    category: "Encode & Decode",
+    icon: Image,
+    accent: "text-violet-600",
+    gradient: "from-violet-500 to-purple-600",
+  },
+  {
+    slug: "binary-text",
+    name: "Binary ↔ Text Converter",
+    tagline: "Convert text to binary and back",
+    description:
+      "Encode any Unicode text as binary and decode it back — supports emoji and multibyte characters.",
+    category: "Encode & Decode",
+    icon: Binary,
+    accent: "text-cyan-600",
+    gradient: "from-cyan-500 to-teal-600",
+  },
+  {
+    slug: "rot13",
+    name: "ROT13 & Caesar Cipher",
+    tagline: "Rotate letters by any shift",
+    description:
+      "Apply ROT13 or any Caesar shift to text, with an optional ROT47 mode for the full printable ASCII range.",
+    category: "Encode & Decode",
+    icon: RotateCcw,
+    accent: "text-teal-600",
+    gradient: "from-teal-500 to-emerald-600",
+  },
+  {
+    slug: "morse-code",
+    name: "Morse Code Translator",
+    tagline: "Text ↔ Morse code",
+    description:
+      "Translate text to Morse code and back, with configurable word separators and full punctuation support.",
+    category: "Encode & Decode",
+    icon: Radio,
+    accent: "text-fuchsia-600",
+    gradient: "from-fuchsia-500 to-purple-600",
+  },
+  {
+    slug: "utf8-converter",
+    name: "UTF-8 & Unicode Converter",
+    tagline: "Text ↔ hex bytes ↔ \\u escapes",
+    description:
+      "Encode text to UTF-8 hex bytes, decode hex back, or switch between text and JavaScript \\u unicode escapes.",
+    category: "Encode & Decode",
+    icon: Languages,
+    accent: "text-sky-600",
+    gradient: "from-sky-500 to-blue-600",
+  },
+  {
+    slug: "base32",
+    name: "Base32 Encoder & Decoder",
+    tagline: "RFC 4648 Base32 encoding",
+    description:
+      "Encode text to Base32 (A–Z, 2–7) and decode it back, with optional padding and full Unicode support.",
+    category: "Encode & Decode",
+    icon: Boxes,
+    accent: "text-indigo-600",
+    gradient: "from-indigo-500 to-violet-600",
   },
 ];
 

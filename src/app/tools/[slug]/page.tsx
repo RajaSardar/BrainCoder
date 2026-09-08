@@ -97,6 +97,12 @@ const mountMap: Record<string, ReturnType<typeof dynamic>> = {
   "html-entities": dynamic(() => import("@/features/html-entities/HtmlEntities")),
   "text-lines": dynamic(() => import("@/features/text-lines/TextLines")),
   "url-parser": dynamic(() => import("@/features/url-parser/UrlParser")),
+  "image-base64": dynamic(() => import("@/features/image-base64/ImageBase64")),
+  "binary-text": dynamic(() => import("@/features/binary-text/BinaryText")),
+  rot13: dynamic(() => import("@/features/rot13/Rot13")),
+  "morse-code": dynamic(() => import("@/features/morse-code/MorseCode")),
+  "utf8-converter": dynamic(() => import("@/features/utf8-converter/Utf8Converter")),
+  base32: dynamic(() => import("@/features/base32/Base32")),
 };
 
 function ToolMount({ slug }: { slug: string }) {
