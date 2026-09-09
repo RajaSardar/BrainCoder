@@ -97,7 +97,6 @@ export default function PdfCompressor() {
         <div
           role="button"
           tabIndex={0}
-          aria-label="Drop your PDF here or click to browse for a PDF file"
           onClick={() => !file && fileInputRef.current?.click()}
           onKeyDown={(e) => {
             if (e.key === "Enter" && !file) fileInputRef.current?.click();

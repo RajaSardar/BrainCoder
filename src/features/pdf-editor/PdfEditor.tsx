@@ -437,7 +437,6 @@ export default function PdfEditor() {
         <div
           role="button"
           tabIndex={0}
-          aria-label="Drop your PDF here or click to browse for a PDF file"
           onClick={() => inputRef.current?.click()}
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") inputRef.current?.click();
