@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, BookOpen } from "lucide-react";
 import { getTool, TOOLS } from "@/lib/tools";
+import { getGuidesByTool } from "@/lib/guides";
 import { buildToolMetadata, toolJsonLd } from "@/lib/seo";
 import { notFound } from "next/navigation";
 
@@ -19,6 +20,7 @@ export default async function ToolPage(props: PageProps<'/tools/[slug]'>) {
   const { slug } = await props.params;
   const tool = getTool(slug);
   if (!tool) notFound();
+  const relatedGuides = getGuidesByTool(slug);
 
   return (
     <div className="max-w-[90rem] mx-auto px-5 py-6 w-full">
@@ -50,6 +52,27 @@ export default async function ToolPage(props: PageProps<'/tools/[slug]'>) {
       <div className="rounded-3xl border border-slate-200 bg-white/70 p-3 shadow-xl shadow-slate-900/5">
         <ToolMount slug={slug} />
       </div>
+
+      {relatedGuides.length > 0 && (
+        <div className="mt-6 rounded-2xl border border-indigo-100 bg-gradient-to-br from-indigo-50 to-purple-50 p-5">
+          <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wide flex items-center gap-2">
+            <BookOpen className="w-4 h-4 text-indigo-500" />
+            How-to guide
+          </h2>
+          <ul className="mt-3 space-y-2">
+            {relatedGuides.map((guide) => (
+              <li key={guide.slug}>
+                <Link
+                  href={`/guides/${guide.slug}`}
+                  className="inline-flex items-center gap-1.5 text-sm text-indigo-700 hover:text-indigo-900 hover:underline font-medium"
+                >
+                  {guide.title}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }

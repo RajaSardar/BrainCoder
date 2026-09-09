@@ -231,3 +231,113 @@ export function siteJsonLd() {
     ],
   };
 }
+
+export function guideKeywords(guide: {
+  title: string;
+  keywords: string[];
+}): string[] {
+  return [...guide.keywords, ...GENERIC_KEYWORDS];
+}
+
+export function buildGuideMetadata(guide: {
+  slug: string;
+  title: string;
+  description: string;
+  keywords: string[];
+}): Metadata {
+  const url = `${SITE_URL}/guides/${guide.slug}`;
+  return {
+    title: guide.title,
+    description: guide.description,
+    keywords: guideKeywords(guide),
+    alternates: {
+      canonical: `/guides/${guide.slug}`,
+    },
+    openGraph: {
+      title: guide.title,
+      description: guide.description,
+      url,
+      siteName: SITE_NAME,
+      type: "article",
+      locale: "en_US",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: guide.title,
+      description: guide.description,
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
+    },
+  };
+}
+
+export function guideJsonLd(guide: {
+  slug: string;
+  title: string;
+  description: string;
+  published: string;
+  updated: string;
+}, tool: { slug: string; name: string }) {
+  const url = `${SITE_URL}/guides/${guide.slug}`;
+  const toolUrl = `${SITE_URL}/tools/${tool.slug}`;
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Article",
+        headline: guide.title,
+        description: guide.description,
+        datePublished: guide.published,
+        dateModified: guide.updated,
+        mainEntityOfPage: {
+          "@type": "WebPage",
+          "@id": url,
+        },
+        author: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+        publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+        about: { "@type": "WebApplication", name: tool.name, url: toolUrl },
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "Home",
+            item: SITE_URL,
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Guides",
+            item: `${SITE_URL}/guides`,
+          },
+          {
+            "@type": "ListItem",
+            position: 3,
+            name: guide.title,
+            item: url,
+          },
+        ],
+      },
+    ],
+  };
+}
+
+export function guidesIndexJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: `${SITE_NAME} Guides — how-to articles for online tools`,
+    url: `${SITE_URL}/guides`,
+    description: "Step-by-step guides for using free online tools: compress, merge and split PDFs.",
+  };
+}

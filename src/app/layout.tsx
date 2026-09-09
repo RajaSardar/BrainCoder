@@ -85,6 +85,9 @@ export default function RootLayout(props: LayoutProps<"/">) {
               <Link href="/#tools" className="px-3 py-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition">
                 Tools
               </Link>
+              <Link href="/guides" className="px-3 py-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition">
+                Guides
+              </Link>
               <a
                 href="https://braincoder.vercel.app/"
                 target="_blank"
