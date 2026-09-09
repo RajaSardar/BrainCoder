@@ -144,55 +144,175 @@ export const GUIDES: Guide[] = [
       },
     ],
   },
-  {
-    slug: "how-to-annotate-a-pdf-online",
-    title: "How to Edit and Annotate a PDF Online for Free",
-    description:
-      "Add text, draw, highlight and box a PDF right in your browser — then download it. No upload, no sign-up, entirely private.",
-    keywords: [
-      "edit pdf online",
-      "annotate pdf free",
-      "add text to pdf",
-      "highlight pdf pages",
-      "draw on pdf",
-      "pdf editor online",
-    ],
-    toolSlug: "pdf-editor",
-    published: "2026-09-09",
-    updated: "2026-09-09",
-    readMinutes: 4,
-    sections: [
-      {
-        heading: "What 'editing' a PDF actually means",
-        paragraphs: [
-          "PDFs are a fixed-layout format: pages are rendered, then locked. You can't easily change the words a PDF contains the way you would a Word document. What you can do is mark it up — add text, draw, highlight, and box important areas — and save that as a new file.",
-          "That covers the vast majority of real use: signing approvals, annotating feedback on a design, marking up a scan of a contract, or highlighting key passages to send to a colleague.",
+{
+        slug: "how-to-annotate-a-pdf-online",
+        title: "How to Edit and Annotate a PDF Online for Free",
+        description:
+          "Add text, draw, highlight and box a PDF right in your browser — then download it. No upload, no sign-up, entirely private.",
+        keywords: [
+          "edit pdf online",
+          "annotate pdf free",
+          "add text to pdf",
+          "highlight pdf pages",
+          "draw on pdf",
+          "pdf editor online",
+        ],
+        toolSlug: "pdf-editor",
+        published: "2026-09-09",
+        updated: "2026-09-09",
+        readMinutes: 4,
+        sections: [
+          {
+            heading: "What 'editing' a PDF actually means",
+            paragraphs: [
+              "PDFs are a fixed-layout format: pages are rendered, then locked. You can't easily change the words a PDF contains the way you would a Word document. What you can do is mark it up — add text, draw, highlight, and box important areas — and save that as a new file.",
+              "That covers the vast majority of real use: signing approvals, annotating feedback on a design, marking up a scan of a contract, or highlighting key passages to send to a colleague.",
+            ],
+          },
+          {
+            heading: "Annotating without uploading your file",
+            paragraphs: [
+              "The PDF Editor runs entirely in your browser. It renders your document with the pdf.js engine and stores every annotation you add as resolution-independent page coordinates, so your marks stay crisp no matter how much you zoom.",
+              "Choose a tool from the toolbar — text, pen, box, or highlighter — pick a color and stroke width, then click or drag on the page. Because nothing is uploaded, the tool stays fast and is safe to use with confidential documents.",
+            ],
+          },
+          {
+            heading: "Saving your edited PDF",
+            paragraphs: [
+              "When you're done, hit Save PDF. The editor flattens every annotation onto the page at a high export resolution and embeds it into a fresh PDF matched to your original page size.",
+              "The result is a normal, shareable PDF that opens in any viewer — the text, highlights, and drawings are baked in as part of the page, not separate attachments that can mis-sync.",
+            ],
+          },
+          {
+            heading: "Undo, redo and precision",
+            paragraphs: [
+              "Mistakes happen. The editor keeps a full undo/redo history per page, and the select tool lets you click any annotation and delete it, so you can refine a mark-up until it's exactly right before saving.",
+              "You can also control font size for text and stroke width for drawing — the two controls people reach for most when polishing an annotation.",
+            ],
+          },
         ],
       },
       {
-        heading: "Annotating without uploading your file",
-        paragraphs: [
-          "The PDF Editor runs entirely in your browser. It renders your document with the pdf.js engine and stores every annotation you add as resolution-independent page coordinates, so your marks stay crisp no matter how much you zoom.",
-          "Choose a tool from the toolbar — text, pen, box, or highlighter — pick a color and stroke width, then click or drag on the page. Because nothing is uploaded, the tool stays fast and is safe to use with confidential documents.",
+        slug: "how-to-convert-images-to-pdf",
+        title: "How to Convert Images to PDF Online (JPG, PNG, WebP)",
+        description:
+          "Turn one or more photos or scans into a single PDF for free — choose page size, orientation and fit, all in your browser.",
+        keywords: [
+          "jpg to pdf",
+          "png to pdf",
+          "image to pdf online",
+          "convert images to pdf",
+          "combine images into pdf",
+        ],
+        toolSlug: "image-to-pdf",
+        published: "2026-09-09",
+        updated: "2026-09-09",
+        readMinutes: 3,
+        sections: [
+          {
+            heading: "Why convert images to PDF",
+            paragraphs: [
+              "PDF is the standard for sending and archiving documents that shouldn't be accidentally edited. Converting a set of photos, scans or screenshots into one PDF is the classic way to submit an application, an expense report, or a photo portfolio as a single clean file.",
+              "Unlike a zip folder, a PDF opens on every device without extra software, and the pages keep a predictable order.",
+            ],
+          },
+          {
+            heading: "Converting without uploading",
+            paragraphs: [
+              "The Image to PDF tool combines your images locally in the browser and lays each one out on its own page. Pick a page size (like A4 or Letter), choose how the image fits, and hit convert to download a single merged PDF.",
+              "Because everything runs on your device, converting scanned documents never sends them to a server — useful for confidential paperwork.",
+            ],
+          },
+          {
+            heading: "Order and page size matter",
+            paragraphs: [
+              "Images are processed in the order you add them, so add pages the way you want them to appear. Each image becomes one page, keeping the layout predictable.",
+              "If your images are large, the page fit settings keep edges from being cut off — choose 'fit' to scale the whole image onto the page.",
+            ],
+          },
         ],
       },
       {
-        heading: "Saving your edited PDF",
-        paragraphs: [
-          "When you're done, hit Save PDF. The editor flattens every annotation onto the page at a high export resolution and embeds it into a fresh PDF matched to your original page size.",
-          "The result is a normal, shareable PDF that opens in any viewer — the text, highlights, and drawings are baked in as part of the page, not separate attachments that can mis-sync.",
+        slug: "how-to-convert-pdf-to-image",
+        title: "How to Convert a PDF to Images Online for Free",
+        description:
+          "Render PDF pages as high-quality JPG or PNG images right in your browser. Pick the scale, choose the format, download.",
+        keywords: [
+          "pdf to jpg",
+          "pdf to png",
+          "convert pdf to image",
+          "pdf to image online",
+          "extract image from pdf",
+        ],
+        toolSlug: "pdf-to-image",
+        published: "2026-09-09",
+        updated: "2026-09-09",
+        readMinutes: 3,
+        sections: [
+          {
+            heading: "When PDF-to-image conversion is useful",
+            paragraphs: [
+              "Sometimes you need a PDF page as an image: sharing a single slide on social media, embedding a chart in a web page, attaching a readable preview to an email, or pulling content out of a document into a design tool.",
+              "Images are also easier to watermark, crop, or edit with filters than locked PDF pages.",
+            ],
+          },
+          {
+            heading: "Choosing quality and format",
+            paragraphs: [
+              "The PDF to Image tool renders each page at a scale you choose — higher scale means sharper output at the cost of a larger file. JPG gives the smallest files, while PNG is the pick when you need crisp text or transparency.",
+              "Each page is exported with the same settings, so a multi-page document becomes a consistent set of images you can show or archive side by side.",
+            ],
+          },
+          {
+            heading: "Private conversion in the browser",
+            paragraphs: [
+              "The pages are rendered locally with the pdf.js engine — your PDF never leaves the browser. That's a real advantage for documents you don't want floating around on a third-party server.",
+              "Download the pages you need, or grab the full set at once, and the originals are never stored anywhere.",
+            ],
+          },
         ],
       },
       {
-        heading: "Undo, redo and precision",
-        paragraphs: [
-          "Mistakes happen. The editor keeps a full undo/redo history per page, and the select tool lets you click any annotation and delete it, so you can refine a mark-up until it's exactly right before saving.",
-          "You can also control font size for text and stroke width for drawing — the two controls people reach for most when polishing an annotation.",
+        slug: "how-to-convert-html-to-pdf",
+        title: "How to Convert HTML to PDF Online for Free",
+        description:
+          "Turn pasted HTML into a clean, paginated A4 PDF right in your browser — perfect for reports, docs and printable pages.",
+        keywords: [
+          "html to pdf",
+          "convert html to pdf",
+          "html to pdf converter",
+          "web page to pdf",
+          "print page as pdf",
+        ],
+        toolSlug: "html-to-pdf",
+        published: "2026-09-09",
+        updated: "2026-09-09",
+        readMinutes: 3,
+        sections: [
+          {
+            heading: "Why convert HTML to PDF",
+            paragraphs: [
+              "PDF gives you a fixed, print-ready snapshot of content that stays identical on every device. Generating a PDF from HTML is a common way to produce invoices, reports, manuals, and documentation from markup that already exists.",
+              "HTML renders natively in the browser, so what you see while editing is very close to what lands in the final PDF.",
+            ],
+          },
+          {
+            heading: "Converting locally, without a server",
+            paragraphs: [
+              "The HTML to PDF tool renders your markup inside a hidden page that's sized to A4, applies normal CSS, and paginates the result before exporting it as a downloadable PDF.",
+              "This runs entirely in your browser, which keeps the conversion instant and private — nothing is sent to an external printing service.",
+            ],
+          },
+          {
+            heading: "Tips for clean page breaks",
+            paragraphs: [
+              "Print pagination divides long content across A4 pages automatically. For the most predictable output, keep your markup simple and avoid fixed-height containers that force content off-page.",
+              "The exported file is a standard PDF, so it opens in any viewer and prints at the size you styled for.",
+            ],
+          },
         ],
       },
-    ],
-  },
-];
+    ];
 
 const guideBySlug = new Map(GUIDES.map((g) => [g.slug, g]));
 
