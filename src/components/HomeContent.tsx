@@ -12,6 +12,7 @@ import {
   ChevronsRight,
   ListFilter,
   LayoutGrid,
+  FileText,
 } from "lucide-react";
 import { CATEGORIES, getToolsByCategory, TOOLS, type ToolConfig } from "@/lib/tools";
 
@@ -37,8 +38,16 @@ function ToolCard({ tool }: { tool: ToolConfig }) {
   );
 }
 
-export default function HomeContent() {
-  const [query, setQuery] = useState("");
+const PDF_TOOLS = [
+  "pdf-compressor",
+  "pdf-merge",
+  "pdf-split",
+  "image-to-pdf",
+  "pdf-to-image",
+  "html-to-pdf",
+];
+
+export default function HomeContent() {  const [query, setQuery] = useState("");
   const [category, setCategory] = useState<string | null>(null);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
@@ -129,6 +138,30 @@ export default function HomeContent() {
           <span className="flex items-center gap-1.5">
             <MousePointerClick className="w-4 h-4 text-purple-500" /> Works with any file type
           </span>
+        </div>
+      </section>
+
+      {/* Featured: PDF tools */}
+      <section className="max-w-6xl mx-auto px-5 pt-2 pb-8 w-full">
+        <div className="rounded-3xl border border-indigo-100 bg-gradient-to-br from-indigo-50 to-purple-50 p-6 sm:p-8">
+          <div className="flex items-center justify-between mb-5">
+            <div>
+              <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900">
+                PDF tools — free &amp; private
+              </h2>
+              <p className="text-sm text-slate-600 mt-1">
+                Compress, merge, split and convert PDFs. Nothing leaves your device.
+              </p>
+            </div>
+            <FileText className="w-8 h-8 text-indigo-500 shrink-0" />
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {PDF_TOOLS.map((t) => {
+              const tool = TOOLS.find((x) => x.slug === t);
+              if (!tool) return null;
+              return <ToolCard key={tool.slug} tool={tool} />;
+            })}
+          </div>
         </div>
       </section>
 
