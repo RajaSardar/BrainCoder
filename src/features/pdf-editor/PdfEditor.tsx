@@ -76,6 +76,8 @@ export default function PdfEditor() {
   const containerRef = useRef<HTMLDivElement>(null);
   const pageCanvasRef = useRef<HTMLCanvasElement>(null);
   const annCanvasRef = useRef<HTMLCanvasElement>(null);
+  const renderTask = useRef<{ cancel: () => void } | null>(null);
+  const renderGen = useRef(0);
   const drawingRef = useRef<
     | { kind: "pen"; points: Point[] }
     | { kind: "rect"; start: Point; current: Point }
@@ -91,6 +93,15 @@ export default function PdfEditor() {
 
   const loadPdf = useCallback(async (file: File) => {
     setBusy(true);
+    if (renderTask.current) {
+      try {
+        renderTask.current.cancel();
+      } catch {
+        // ignore
+      }
+      renderTask.current = null;
+    }
+    renderGen.current++;
     setError("");
     setMessage("");
     setSourceName("");
@@ -104,13 +115,14 @@ export default function PdfEditor() {
     setHistoryVersion((v) => v + 1);
     try {
       const data = await file.arrayBuffer();
+      const exportData = data.slice(0);
       const pdfjs = await import("pdfjs-dist");
       pdfjs.GlobalWorkerOptions.workerSrc = new URL(
         "pdfjs-dist/build/pdf.worker.min.mjs",
         import.meta.url
       ).toString();
       const doc = await pdfjs.getDocument({ data }).promise;
-      docRef.current = { doc, pdfjs, data };
+      docRef.current = { doc, pdfjs, data: exportData };
       const dims: PageDimensions[] = [];
       const t: string[] = [];
       const scale = 0.32;
@@ -170,9 +182,24 @@ export default function PdfEditor() {
     canvas.style.height = `${displayH}px`;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
+    const gen = ++renderGen.current;
+    if (renderTask.current) {
+      try {
+        renderTask.current.cancel();
+      } catch {
+        // task already completed or cancelled
+      }
+    }
     const page = await doc.getPage(active + 1);
     const vp = page.getViewport({ scale: scale * dpr });
-    await page.render({ canvas, viewport: vp }).promise;
+    const task = page.render({ canvas, viewport: vp });
+    renderTask.current = task;
+    try {
+      await task.promise;
+    } catch {
+      if (gen === renderGen.current) throw Error("page render failed");
+      return;
+    }
     page.cleanup();
   }, [active, dim, zoom]);
 
@@ -287,7 +314,11 @@ export default function PdfEditor() {
       }
 
       e.preventDefault();
-      canvas.setPointerCapture(e.pointerId);
+      try {
+        canvas.setPointerCapture(e.pointerId);
+      } catch {
+        // Synthetic or non-tracked pointers may reject capture; drawing still works.
+      }
 
       if (tool === "select") {
         const pageAnnotations = annotationsByPage[active] ?? [];
