@@ -109,6 +109,7 @@ const TOOL_KEYWORDS: Record<string, string[]> = {
   "sqlite-viewer": ["sqlite viewer online", "open sqlite file", "browse sqlite database", "sqlite to csv", "sqlite query tool"],
   "pdf-merge": ["merge pdf online", "combine pdf files", "merge pdf free", "join pdf documents"],
   "pdf-split": ["split pdf online", "separate pdf pages", "extract pages from pdf", "split pdf by page"],
+  "pdf-editor": ["edit pdf online", "annotate pdf free", "add text to pdf", "highlight pdf pages", "draw on pdf"],
   "svg-formatter": ["svg formatter online", "format svg code", "beautify svg", "pretty print svg", "indent svg"],
   "svg-to-png": ["svg to png converter", "convert svg to png online", "svg to png free", "rasterize svg"],
 };

@@ -3,7 +3,7 @@ import { TOOLS } from "@/lib/tools";
 import { GUIDES } from "@/lib/guides";
 import { SITE_URL } from "@/lib/seo";
 
-const HERO = new Set(["pdf-compressor", "pdf-merge", "pdf-split"]);
+const HERO = new Set(["pdf-compressor", "pdf-merge", "pdf-split", "pdf-editor"]);
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const toolUrls: MetadataRoute.Sitemap = TOOLS.map((tool) => ({

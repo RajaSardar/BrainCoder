@@ -97,7 +97,7 @@ export default function PdfCompressor() {
         <div
           role="button"
           tabIndex={0}
-          aria-label="Upload a PDF file"
+          aria-label="Drop your PDF here or click to browse for a PDF file"
           onClick={() => !file && fileInputRef.current?.click()}
           onKeyDown={(e) => {
             if (e.key === "Enter" && !file) fileInputRef.current?.click();
@@ -129,13 +129,13 @@ export default function PdfCompressor() {
             >
               <Upload className="w-8 h-8 text-white" />
             </div>
-            <h3 className="text-xl font-semibold text-slate-800">
+            <p className="text-xl font-semibold text-slate-800">
               {file ? file.name : "Drop your PDF here"}
-            </h3>
+            </p>
             <p className="text-sm text-slate-500">
               {file ? formatBytes(file.size) : "or click to browse — 100% free, no sign-up"}
             </p>
-            <div className="flex items-center gap-1.5 text-xs text-slate-400 mt-2">
+            <div className="flex items-center gap-1.5 text-xs text-slate-500 mt-2">
               <Lock className="w-3.5 h-3.5" />
               Files stay on your device. Nothing is uploaded.
             </div>

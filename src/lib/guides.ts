@@ -144,6 +144,54 @@ export const GUIDES: Guide[] = [
       },
     ],
   },
+  {
+    slug: "how-to-annotate-a-pdf-online",
+    title: "How to Edit and Annotate a PDF Online for Free",
+    description:
+      "Add text, draw, highlight and box a PDF right in your browser — then download it. No upload, no sign-up, entirely private.",
+    keywords: [
+      "edit pdf online",
+      "annotate pdf free",
+      "add text to pdf",
+      "highlight pdf pages",
+      "draw on pdf",
+      "pdf editor online",
+    ],
+    toolSlug: "pdf-editor",
+    published: "2026-09-09",
+    updated: "2026-09-09",
+    readMinutes: 4,
+    sections: [
+      {
+        heading: "What 'editing' a PDF actually means",
+        paragraphs: [
+          "PDFs are a fixed-layout format: pages are rendered, then locked. You can't easily change the words a PDF contains the way you would a Word document. What you can do is mark it up — add text, draw, highlight, and box important areas — and save that as a new file.",
+          "That covers the vast majority of real use: signing approvals, annotating feedback on a design, marking up a scan of a contract, or highlighting key passages to send to a colleague.",
+        ],
+      },
+      {
+        heading: "Annotating without uploading your file",
+        paragraphs: [
+          "The PDF Editor runs entirely in your browser. It renders your document with the pdf.js engine and stores every annotation you add as resolution-independent page coordinates, so your marks stay crisp no matter how much you zoom.",
+          "Choose a tool from the toolbar — text, pen, box, or highlighter — pick a color and stroke width, then click or drag on the page. Because nothing is uploaded, the tool stays fast and is safe to use with confidential documents.",
+        ],
+      },
+      {
+        heading: "Saving your edited PDF",
+        paragraphs: [
+          "When you're done, hit Save PDF. The editor flattens every annotation onto the page at a high export resolution and embeds it into a fresh PDF matched to your original page size.",
+          "The result is a normal, shareable PDF that opens in any viewer — the text, highlights, and drawings are baked in as part of the page, not separate attachments that can mis-sync.",
+        ],
+      },
+      {
+        heading: "Undo, redo and precision",
+        paragraphs: [
+          "Mistakes happen. The editor keeps a full undo/redo history per page, and the select tool lets you click any annotation and delete it, so you can refine a mark-up until it's exactly right before saving.",
+          "You can also control font size for text and stroke width for drawing — the two controls people reach for most when polishing an annotation.",
+        ],
+      },
+    ],
+  },
 ];
 
 const guideBySlug = new Map(GUIDES.map((g) => [g.slug, g]));

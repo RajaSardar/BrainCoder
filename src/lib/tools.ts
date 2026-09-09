@@ -84,6 +84,7 @@ import {
   Scissors,
   Shapes,
   MoveDiagonal,
+  PenTool,
 } from "lucide-react";
 
 export type Category =
@@ -1040,6 +1041,17 @@ export const TOOLS: ToolConfig[] = [
     icon: Scissors,
     accent: "text-cyan-600",
     gradient: "from-cyan-500 to-sky-600",
+  },
+  {
+    slug: "pdf-editor",
+    name: "PDF Editor",
+    tagline: "Annotate, draw and highlight PDFs",
+    description:
+      "Open a PDF and add text, drawings, highlights and boxes — then save it as an edited PDF, all in your browser with no upload.",
+    category: "Convert",
+    icon: PenTool,
+    accent: "text-emerald-600",
+    gradient: "from-emerald-500 to-teal-600",
   },
   {
     slug: "svg-formatter",
