@@ -1,4 +1,4 @@
-export type AnnotationKind = "pen" | "rect" | "highlight" | "text";
+export type AnnotationKind = "pen" | "rect" | "highlight" | "text" | "arrow";
 
 export interface Point {
   x: number;
@@ -17,6 +17,8 @@ export interface Annotation {
   height?: number;
   text?: string;
   fontSize?: number;
+  start?: Point;
+  end?: Point;
 }
 
 export function createId(): string {
@@ -79,6 +81,35 @@ export function drawAnnotation(
       lines.forEach((line, i) => {
         ctx.fillText(line, ann.x ?? 0, (ann.y ?? 0) + fontSize * (i + 1));
       });
+      break;
+    }
+    case "arrow": {
+      const start = ann.start ?? { x: 0, y: 0 };
+      const end = ann.end ?? { x: 0, y: 0 };
+      const dx = end.x - start.x;
+      const dy = end.y - start.y;
+      const len = Math.hypot(dx, dy);
+      if (len < 1) break;
+      const ux = dx / len;
+      const uy = dy / len;
+      const width = ann.lineWidth ?? 2;
+      const head = Math.max(10, width * 4);
+      ctx.strokeStyle = ann.color;
+      ctx.lineWidth = width;
+      ctx.globalAlpha = 1;
+      ctx.beginPath();
+      ctx.moveTo(start.x, start.y);
+      ctx.lineTo(end.x, end.y);
+      ctx.stroke();
+      const baseX = end.x - ux * head;
+      const baseY = end.y - uy * head;
+      const wing = head * 0.4;
+      ctx.beginPath();
+      ctx.moveTo(end.x, end.y);
+      ctx.lineTo(baseX - uy * wing, baseY + ux * wing);
+      ctx.moveTo(end.x, end.y);
+      ctx.lineTo(baseX + uy * wing, baseY - ux * wing);
+      ctx.stroke();
       break;
     }
   }
@@ -145,6 +176,14 @@ export function hitTestAnnotation(
       if (pts.length === 1) return Math.hypot(pt.x - pts[0].x, pt.y - pts[0].y) <= tol;
       return false;
     }
+    case "arrow": {
+      const start = ann.start ?? { x: 0, y: 0 };
+      const end = ann.end ?? { x: 0, y: 0 };
+      const tol = Math.max(pad, (ann.lineWidth ?? 2) / 2 + 3);
+      return (
+        distToSegment(pt, start, end) <= tol || Math.hypot(pt.x - end.x, pt.y - end.y) <= tol
+      );
+    }
   }
 }
 
@@ -191,6 +230,18 @@ export function getAnnotationBBox(ann: Annotation, ctx: CanvasRenderingContext2D
         height: Math.max(...ys, 0) - Math.min(...ys, 0),
       };
     }
+    case "arrow": {
+      const start = ann.start ?? { x: 0, y: 0 };
+      const end = ann.end ?? { x: 0, y: 0 };
+      const x = Math.min(start.x, end.x);
+      const y = Math.min(start.y, end.y);
+      return {
+        x,
+        y,
+        width: Math.abs(end.x - start.x),
+        height: Math.abs(end.y - start.y),
+      };
+    }
   }
 }
 
@@ -200,11 +251,72 @@ export function toTopLeft(ann: Annotation, ctx: CanvasRenderingContext2D): Annot
   if (ann.kind === "pen") {
     next.points = (ann.points ?? []).map((p) => ({ x: p.x - box.x, y: p.y - box.y }));
   }
+  if (ann.kind === "arrow") {
+    next.start = { x: (ann.start?.x ?? 0) - box.x, y: (ann.start?.y ?? 0) - box.y };
+    next.end = { x: (ann.end?.x ?? 0) - box.x, y: (ann.end?.y ?? 0) - box.y };
+  }
   next.x = box.x;
   next.y = box.y;
   next.width = box.width;
   next.height = box.height;
   return next;
+}
+
+export function translateAnnotation(ann: Annotation, dx: number, dy: number): Annotation {
+  const next: Annotation = { ...ann, id: ann.id };
+  if (ann.kind === "pen" && ann.points) {
+    next.points = ann.points.map((p) => ({ x: p.x + dx, y: p.y + dy }));
+  } else if (ann.kind === "arrow") {
+    next.start = { x: (ann.start?.x ?? 0) + dx, y: (ann.start?.y ?? 0) + dy };
+    next.end = { x: (ann.end?.x ?? 0) + dx, y: (ann.end?.y ?? 0) + dy };
+  } else if (ann.x !== undefined && ann.y !== undefined) {
+    next.x = ann.x + dx;
+    next.y = ann.y + dy;
+  }
+  return next;
+}
+
+export function resizeRect(
+  ann: Annotation,
+  handle: number,
+  pt: Point
+): Annotation {
+  const x = ann.x ?? 0;
+  const y = ann.y ?? 0;
+  const w = ann.width ?? 0;
+  const h = ann.height ?? 0;
+  const min = 6;
+  let nx = x;
+  let ny = y;
+  let nw = w;
+  let nh = h;
+  switch (handle) {
+    case 0:
+      nx = pt.x;
+      ny = pt.y;
+      nw = x + w - pt.x;
+      nh = y + h - pt.y;
+      break;
+    case 1:
+      ny = pt.y;
+      nw = pt.x - x;
+      nh = y + h - pt.y;
+      break;
+    case 2:
+      nw = pt.x - x;
+      nh = pt.y - y;
+      break;
+    case 3:
+      nx = pt.x;
+      nw = x + w - pt.x;
+      nh = pt.y - y;
+      break;
+  }
+  if (nw < min && (handle === 0 || handle === 3)) nx = x + w - min;
+  if (nh < min && (handle === 0 || handle === 1)) ny = y + h - min;
+  nw = Math.max(min, nw);
+  nh = Math.max(min, nh);
+  return { ...ann, x: nx, y: ny, width: nw, height: nh };
 }
 
 export function pointsToRect(a: Point, b: Point): { x: number; y: number; width: number; height: number } {

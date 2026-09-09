@@ -21,6 +21,21 @@ export default async function ToolPage(props: PageProps<'/tools/[slug]'>) {
   const tool = getTool(slug);
   if (!tool) notFound();
   const relatedGuides = getGuidesByTool(slug);
+  const isEditor = slug === "pdf-editor";
+
+  if (isEditor) {
+    return (
+      <div className="h-[calc(100dvh-4rem)] min-h-[640px] w-full flex flex-col">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(toolJsonLd(tool)) }}
+        />
+        <h1 className="sr-only">{tool.name}</h1>
+        <p className="sr-only">{tool.description}</p>
+        <ToolMount slug={slug} />
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-[90rem] mx-auto px-5 py-6 w-full">

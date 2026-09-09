@@ -173,7 +173,8 @@ export const GUIDES: Guide[] = [
             heading: "Annotating without uploading your file",
             paragraphs: [
               "The PDF Editor runs entirely in your browser. It renders your document with the pdf.js engine and stores every annotation you add as resolution-independent page coordinates, so your marks stay crisp no matter how much you zoom.",
-              "Choose a tool from the toolbar — text, pen, box, or highlighter — pick a color and stroke width, then click or drag on the page. Because nothing is uploaded, the tool stays fast and is safe to use with confidential documents.",
+              "Choose a tool from the toolbar — text, pen, box, highlight, or arrow — pick a color, stroke width, and font size, then click or drag on the page. Because nothing is uploaded, the tool stays fast and is safe to use with confidential documents.",
+              "Marks you place aren't permanent. Switch to the Select tool to click any annotation and edit, move, or resize it: text reopens for changes, drag moves it, and rect/highlight handles resize it. Keyboard shortcuts keep editing fast — Ctrl/Cmd+Z and Ctrl/Cmd+Shift+Z for undo/redo, and the Delete key to remove the selected mark.",
             ],
           },
           {
