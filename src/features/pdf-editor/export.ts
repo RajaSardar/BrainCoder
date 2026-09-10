@@ -6,7 +6,8 @@ import {
   loadWorkingDoc,
   type ExportOptions,
 } from "./pdf-ops";
-import { rgb } from "pdf-lib";
+import { rgb, StandardFonts } from "pdf-lib";
+import type { PageDecorationOptions } from "./pdf-ops";
 
 export interface PageDimensions {
   width: number;
@@ -44,7 +45,10 @@ export async function exportPdf(
 
     ctx.setTransform(EXPORT_SCALE, 0, 0, EXPORT_SCALE, 0, 0);
     for (const ann of annotations[i] ?? []) drawAnnotation(ctx, ann);
-    drawDecorations(ctx, options?.decorations ?? { enabled: false }, i, pages, dims);
+    drawDecorations(ctx, options?.decorations ?? { enabled: false }, i, pages, {
+      width: dims.width / EXPORT_SCALE,
+      height: dims.height / EXPORT_SCALE,
+    });
 
     const blob = await new Promise<Blob | null>((resolve) =>
       canvas.toBlob(resolve, "image/jpeg", 0.92)
@@ -80,7 +84,9 @@ export async function exportFilledPdf(
   if (options?.formValues) applyFormValues(doc, options.formValues);
   try {
     for (let i = 0; i < doc.getPageCount(); i++) {
-      await drawAnnotationsIntoPage(doc, doc.getPage(i), annotations[i] ?? []);
+      const page = doc.getPage(i);
+      await drawAnnotationsIntoPage(doc, page, annotations[i] ?? []);
+      drawDecorationsIntoPage(doc, page, options?.decorations, i, doc.getPageCount());
     }
   } catch (e) {
     console.error("[export-filled] drawAnnotationsIntoPage failed, fallback:", e instanceof Error ? e.message : String(e));
@@ -88,6 +94,57 @@ export async function exportFilledPdf(
   }
   const bytes = await doc.save();
   return encryptOutput(bytes, options);
+}
+
+async function drawDecorationsIntoPage(
+  doc: import("pdf-lib").PDFDocument,
+  page: import("pdf-lib").PDFPage,
+  opts?: Partial<PageDecorationOptions>,
+  pageIndex: number = 0,
+  pageCount: number = 1
+): Promise<void> {
+  if (!opts?.enabled || opts.kind === "header" || opts.kind === "footer") return;
+  const text = opts.text ?? "";
+  const rendered =
+    opts.kind === "pageNumber"
+      ? text.replace("{n}", String(pageIndex + 1)).replace("{N}", String(pageCount))
+      : text;
+  if (!rendered) return;
+  const font = await doc.embedFont(StandardFonts.Helvetica);
+  const fontSize = opts.fontSize ?? 18;
+  const opacity = opts.opacity ?? 0.35;
+  const color = hexToRgb(opts.color ?? "#2563eb");
+  const { width, height } = page.getSize();
+  const margin = 24;
+  const textWidth = font.widthOfTextAtSize(rendered, fontSize);
+  let x = width / 2 - textWidth / 2;
+  let y = height - margin - fontSize;
+  switch (opts.position) {
+    case "topLeft":
+      x = margin;
+      y = height - margin - fontSize;
+      break;
+    case "topRight":
+      x = width - textWidth - margin;
+      y = height - margin - fontSize;
+      break;
+    case "bottomLeft":
+      x = margin;
+      y = margin;
+      break;
+    case "bottomRight":
+      x = width - textWidth - margin;
+      y = margin;
+      break;
+    case "bottomCenter":
+      x = width / 2 - textWidth / 2;
+      y = margin;
+      break;
+    case "center":
+      y = height / 2;
+      break;
+  }
+  page.drawText(rendered, { x, y, size: fontSize, font, color, opacity });
 }
 
 async function encryptOutput(
@@ -294,7 +351,8 @@ export async function exportPageImage(
   data: ArrayBuffer,
   annotations: Record<number, Annotation[]>,
   pageIndex: number,
-  format: "png" | "jpeg"
+  format: "png" | "jpeg",
+  options?: ExportOptions
 ): Promise<Uint8Array> {
   const pdfjs = await import("pdfjs-dist");
   pdfjs.GlobalWorkerOptions.workerSrc = new URL(
@@ -312,6 +370,10 @@ export async function exportPageImage(
   await page.render({ canvas, viewport }).promise;
   ctx.setTransform(EXPORT_SCALE, 0, 0, EXPORT_SCALE, 0, 0);
   drawAnnotations(ctx, annotations[pageIndex] ?? []);
+  drawDecorations(ctx, options?.decorations ?? { enabled: false }, pageIndex, doc.numPages, {
+    width: viewport.width / EXPORT_SCALE,
+    height: viewport.height / EXPORT_SCALE,
+  });
   const blob = await new Promise<Blob | null>((resolve) =>
     canvas.toBlob(resolve, format === "png" ? "image/png" : "image/jpeg", 0.92)
   );

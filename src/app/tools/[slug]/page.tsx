@@ -25,7 +25,7 @@ export default async function ToolPage(props: PageProps<'/tools/[slug]'>) {
 
   if (isEditor) {
     return (
-      <div className="h-[calc(100dvh-4rem)] min-h-[640px] w-full flex flex-col">
+      <div className="h-dvh min-h-[640px] w-full flex flex-col">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(toolJsonLd(tool)) }}

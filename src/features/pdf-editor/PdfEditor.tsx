@@ -1044,7 +1044,9 @@ const undoCb = useCallback(() => {
       setError("");
       setMessage("");
       try {
-        const bytes = await exportPageImage(r.data, annotationsByPage, active, format);
+        const bytes = await exportPageImage(r.data, annotationsByPage, active, format, {
+          decorations: deco.enabled ? deco : undefined,
+        });
         if (bytes.length === 0) throw new Error("Image export failed.");
         const base = sourceName.replace(/\.pdf$/i, "") || "document";
         downloadBlob(bytes, `${base}-page-${active + 1}.${format === "png" ? "png" : "jpg"}`, format === "png" ? "image/png" : "image/jpeg");
@@ -1057,7 +1059,7 @@ const undoCb = useCallback(() => {
         setExporting(false);
       }
     },
-    [sourceName, annotationsByPage, active]
+    [sourceName, annotationsByPage, active, deco]
   );
 
   const selectTool = useCallback((t: Tool) => {
