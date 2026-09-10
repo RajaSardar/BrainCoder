@@ -9,6 +9,8 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@pdfsmaller/pdf-decrypt": "^1.0.1",
+    "@pdfsmaller/pdf-encrypt": "^1.2.0",
     "cron-parser": "^5.10.0",
     "html2canvas": "^1.4.1",
     "js-yaml": "^5.4.1",
