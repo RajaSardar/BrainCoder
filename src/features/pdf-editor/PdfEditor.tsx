@@ -1585,9 +1585,10 @@ const undoCb = useCallback(() => {
           disabled={!canUndo}
           aria-label="Undo"
           title="Undo (Ctrl/Cmd+Z)"
-          className="rounded-lg p-2 text-slate-600 hover:bg-slate-100 hover:text-slate-900 disabled:text-slate-300 disabled:cursor-not-allowed transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+          className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 disabled:text-slate-300 disabled:cursor-not-allowed ${!canUndo ? "text-slate-400" : "text-slate-600 hover:bg-slate-100"}`}
         >
           <Undo2 className="w-4 h-4" />
+          <span className="hidden sm:inline">Undo</span>
         </button>
         <button
           type="button"
@@ -1595,9 +1596,10 @@ const undoCb = useCallback(() => {
           disabled={!canRedo}
           aria-label="Redo"
           title="Redo (Ctrl/Cmd+Shift+Z)"
-          className="rounded-lg p-2 text-slate-600 hover:bg-slate-100 hover:text-slate-900 disabled:text-slate-300 disabled:cursor-not-allowed transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+          className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 disabled:text-slate-300 disabled:cursor-not-allowed ${!canRedo ? "text-slate-400" : "text-slate-600 hover:bg-slate-100"}`}
         >
           <Redo2 className="w-4 h-4" />
+          <span className="hidden sm:inline">Redo</span>
         </button>
         <button
           type="button"
