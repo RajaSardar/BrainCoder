@@ -628,6 +628,8 @@ export default function PdfEditor() {
     const existing = annotationsRef.current[active] ?? [];
     if (editTargetRef.current?.kind === "text") {
       const run = editTargetRef.current.run;
+      const enoughForNewText = text.length * 0.58 * run.fontSize;
+      const coverWidth = Math.max(run.width, enoughForNewText);
       push(
         active,
         [
@@ -638,7 +640,7 @@ export default function PdfEditor() {
             color: "#111827",
             x: run.x,
             y: run.y,
-            width: run.width,
+            width: coverWidth,
             height: run.height,
             baselineY: run.height - run.fontSize * 0.2,
             fontSize: run.fontSize,

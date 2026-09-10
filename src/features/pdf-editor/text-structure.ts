@@ -154,5 +154,117 @@ export async function extractContentRuns(
     }
   }
 
-  return { text, images };
+  const WORD_SPLIT_MIN_WIDTH = 3.2;
+const SPACE_WEIGHT = 0.45;
+const WORD_PAD_EM = 0.16;
+const WORD_RIGHT_EXTRA_EM = 0.07;
+
+function charWeight(ch: string): number {
+  if (ch === " " || ch === "\t" || ch === "\n" || ch === "\r" || ch === "\u00a0") return SPACE_WEIGHT;
+  switch (ch) {
+    case "W":
+    case "M":
+    case "O":
+    case "Q":
+    case "w":
+    case "m":
+    case "@":
+    case "#":
+    case "%":
+    case "A":
+    case "G":
+    case "o":
+    case "g":
+    case "d":
+    case "b":
+    case "q":
+    case "p":
+    case "u":
+      return 1.16;
+    case "i":
+    case "j":
+    case "l":
+    case "f":
+    case "t":
+    case "r":
+    case ".":
+    case ",":
+    case "'":
+    case "`":
+    case "|":
+    case "!":
+    case "I":
+    case ":":
+    case ";":
+    case ")":
+    case "(":
+      return 0.82;
+    default:
+      return 1;
+  }
+}
+
+function splitRunsIntoWords(text: TextRun[]): TextRun[] {
+  const out: TextRun[] = [];
+  for (const run of text) {
+    if (run.width < run.fontSize * WORD_SPLIT_MIN_WIDTH || !/\s/.test(run.text)) {
+      out.push(run);
+      continue;
+    }
+    const tokens: Array<{ text: string; weight: number }> = [];
+    let w = 0;
+    for (const ch of run.text) {
+      const cw = charWeight(ch);
+      tokens.push({ text: ch, weight: cw });
+      w += cw;
+    }
+    if (w <= 0) {
+      out.push(run);
+      continue;
+    }
+    const pad = run.fontSize * WORD_PAD_EM;
+    const extraRight = run.fontSize * WORD_RIGHT_EXTRA_EM;
+    const advancePerUnit = run.width / w;
+    const emitWord = (wordArr: Array<{ text: string; weight: number }>, start: number) => {
+      const wordWeight = wordArr.reduce((s, t) => s + t.weight, 0);
+      const wordChars = wordArr.reduce((s, t) => s + t.text.length, 0);
+      const wx = run.x + start * advancePerUnit;
+      const ww = Math.max(wordChars * run.fontSize * 0.28, wordWeight * advancePerUnit);
+      const x0 = Math.max(run.x, wx - pad);
+      const x1 = Math.min(run.x + run.width, wx + ww + pad + extraRight);
+      out.push({
+        id: createId(),
+        x: x0,
+        y: run.y,
+        width: Math.max(x1 - x0, run.fontSize * 0.5),
+        height: run.height,
+        fontSize: run.fontSize,
+        baseline: run.baseline,
+        text: wordArr.map((t) => t.text).join(""),
+      });
+    };
+    let cursor = 0;
+    let word: Array<{ text: string; weight: number }> = [];
+    let wordStart = 0;
+    for (const token of tokens) {
+      if (token.weight <= SPACE_WEIGHT + 1e-6) {
+        if (word.length) {
+          emitWord(word, wordStart);
+          word = [];
+          cursor += token.weight;
+          continue;
+        }
+        cursor += token.weight;
+        continue;
+      }
+      if (!word.length) wordStart = cursor;
+      word.push(token);
+      cursor += token.weight;
+    }
+    if (word.length) emitWord(word, wordStart);
+  }
+  return out;
+}
+
+return { text: splitRunsIntoWords(text), images };
 }
