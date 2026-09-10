@@ -13,6 +13,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Circle,
+  Combine,
   Copy,
   Download,
   Eraser,
@@ -30,6 +31,7 @@ import {
   PenTool,
   Redo2,
   RotateCw,
+  Scissors,
   Shield,
   Square,
   Stamp,
@@ -39,6 +41,7 @@ import {
   Type,
   Underline,
   Undo2,
+  Unlock,
   ZoomIn,
   ZoomOut,
 } from "lucide-react";
@@ -64,7 +67,9 @@ import {
   ExportOptions,
   detectFormWidgets,
   loadWorkingDoc,
+  mergeAdjacentPages,
   pageOps,
+  splitPage,
 } from "./pdf-ops";
 import { exportFilledPdf, exportPdf, exportPageImage, PageDimensions } from "./export";
 
@@ -207,6 +212,8 @@ export default function PdfEditor() {
   });
   const [decoOpen, setDecoOpen] = useState(false);
   const [protectOpen, setProtectOpen] = useState(false);
+  const [passwordPrompt, setPasswordPrompt] = useState<{ data: ArrayBuffer; name: string } | null>(null);
+  const [unlockedName, setUnlockedName] = useState<string | null>(null);
   const [signOpen, setSignOpen] = useState(false);
   const [signature, setSignature] = useState<SavedSignature | null>(() => {
     try {
@@ -287,6 +294,18 @@ export default function PdfEditor() {
     setProgress(0);
     try {
       const data = fileOrBuffer instanceof File ? await fileOrBuffer.arrayBuffer() : fileOrBuffer.data;
+      try {
+        const { isEncrypted } = await import("@pdfsmaller/pdf-decrypt");
+        const cryptoInfo = await isEncrypted(new Uint8Array(data));
+        if (cryptoInfo.encrypted) {
+          const name = fileOrBuffer instanceof File ? fileOrBuffer.name : "document";
+          setPasswordPrompt({ data: data.slice(0), name });
+          setBusy(false);
+          return;
+        }
+      } catch {
+        // Not a standard-encrypted PDF; pdfjs will attempt to read it normally.
+      }
       const exportData = data.slice(0);
       const pdfjs = await import("pdfjs-dist");
       pdfjs.GlobalWorkerOptions.workerSrc = new URL(
@@ -943,16 +962,23 @@ const undoCb = useCallback(() => {
   }, [undoCb, redoCb, deleteSelected, selectedId]);
 
   const applyPageOp = useCallback(
-    async (op: "rotate" | "deletePage" | "duplicatePage" | "moveLeft" | "moveRight") => {
+    async (op: "rotate" | "deletePage" | "duplicatePage" | "moveLeft" | "moveRight" | "splitH" | "splitV" | "mergeNext") => {
       const r = docRef.current;
       if (!r) return;
       setMenu(null);
       setBusy(true);
       setError("");
       try {
-        const bytes = await pageOps(r.data, op, active);
+        let bytes: Uint8Array | null = null;
+        if (op === "splitH" || op === "splitV") {
+          bytes = await splitPage(r.data, active, op === "splitH" ? "horizontal" : "vertical");
+        } else if (op === "mergeNext") {
+          bytes = await mergeAdjacentPages(r.data, active);
+        } else {
+          bytes = await pageOps(r.data, op as "rotate", active);
+        }
         if (!bytes) {
-          setError(op === "deletePage" ? "A PDF needs at least one page." : "That page move isn't possible.");
+          setError(op === "deletePage" ? "A PDF needs at least one page." : "That operation isn't possible on this page.");
           setBusy(false);
           return;
         }
@@ -965,7 +991,11 @@ const undoCb = useCallback(() => {
                 ? Math.max(0, active - 1)
                 : op === "moveRight"
                   ? Math.min(dimensions.length - 1, active + 1)
-                  : active;
+                  : op === "splitH" || op === "splitV"
+                    ? Math.min(active, dimensions.length)
+                    : op === "mergeNext"
+                      ? Math.max(0, active - 1)
+                      : active;
         setAnnotationsByPage({});
         void loadPdf({ data: bytes.slice(0).buffer as ArrayBuffer, name: sourceName || "document" }, target);
       } catch (err) {
@@ -1034,6 +1064,52 @@ const undoCb = useCallback(() => {
       setExporting(false);
     }
   }, [sourceName, dimensions.length, annotationsByPage, buildSecurity, deco, formValues]);
+
+  const removePassword = useCallback(async () => {
+    const r = docRef.current;
+    if (!r) return;
+    setMenu(null);
+    setExporting(true);
+    setError("");
+    setMessage("");
+    try {
+      const { isEncrypted } = await import("@pdfsmaller/pdf-decrypt");
+      const srcBytes = new Uint8Array(r.data);
+      const info = await isEncrypted(srcBytes);
+      if (info.encrypted) throw new Error("This PDF is still encrypted — use Unlock on upload.");
+      const base = sourceName.replace(/\.pdf$/i, "") || "document";
+      downloadBlob(srcBytes, `${base}-unlocked.pdf`);
+      setMessage("Saved a copy without password protection.");
+      window.setTimeout(() => setMessage(""), 4000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not remove password.");
+    } finally {
+      setExporting(false);
+    }
+  }, [sourceName]);
+
+  const handlePasswordPrompt = useCallback(
+    async (password: string) => {
+      const p = passwordPrompt;
+      if (!p) return true;
+      try {
+        const { decryptPDF, isEncrypted } = await import("@pdfsmaller/pdf-decrypt");
+        const srcBytes = new Uint8Array(p.data);
+        const info = await isEncrypted(srcBytes);
+        const bytes = info.encrypted ? await decryptPDF(srcBytes, password) : srcBytes;
+        if (bytes.length === 0) throw new Error("decrypt failed");
+        setPasswordPrompt(null);
+        setUnlockedName(p.name);
+        setMessage(password ? "Unlocked — you can now edit this PDF." : "This PDF had no open password.");
+        window.setTimeout(() => setMessage(""), 4000);
+        void loadPdf({ data: bytes.slice().buffer as ArrayBuffer, name: p.name });
+        return true;
+      } catch {
+        return false;
+      }
+    },
+    [passwordPrompt, loadPdf]
+  );
 
   const exportImage = useCallback(
     async (format: "png" | "jpeg") => {
@@ -1184,6 +1260,13 @@ const undoCb = useCallback(() => {
           >
             {error || message}
           </div>
+        )}
+        {passwordPrompt && (
+          <PasswordPromptDialog
+            fileName={passwordPrompt.name}
+            onCancel={() => setPasswordPrompt(null)}
+            onUnlock={async (pw) => handlePasswordPrompt(pw)}
+          />
         )}
       </div>
     );
@@ -1401,6 +1484,10 @@ const undoCb = useCallback(() => {
                 <MenuAction icon={<ArrowLeftRight className="w-4 h-4" />} label="Move page left" onClick={() => void applyPageOp("moveLeft")} disabled={active === 0} />
                 <MenuAction icon={<ArrowLeftRight className="w-4 h-4" />} label="Move page right" onClick={() => void applyPageOp("moveRight")} disabled={active === dimensions.length - 1} />
                 <div className="my-1 h-px bg-slate-100" />
+                <MenuAction icon={<Scissors className="w-4 h-4" />} label="Split page top/bottom" onClick={() => void applyPageOp("splitH")} />
+                <MenuAction icon={<Scissors className="w-4 h-4" />} label="Split page left/right" onClick={() => void applyPageOp("splitV")} />
+                <MenuAction icon={<Combine className="w-4 h-4" />} label="Merge next page into this one" onClick={() => void applyPageOp("mergeNext")} disabled={active >= dimensions.length - 1} />
+                <div className="my-1 h-px bg-slate-100" />
                 <MenuAction icon={<Trash2 className="w-4 h-4" />} label="Delete this page" onClick={() => void applyPageOp("deletePage")} disabled={dimensions.length <= 1} danger />
               </div>
             </>
@@ -1424,6 +1511,8 @@ const undoCb = useCallback(() => {
               <div className="absolute z-50 mt-1 w-56 rounded-xl border border-slate-200 bg-white p-1 shadow-xl">
                 <MenuAction icon={<Stamp className="w-4 h-4" />} label="Watermark / page numbers" onClick={() => { setMenu(null); setDecoOpen(true); }} role="" />
                 <MenuAction icon={<Lock className="w-4 h-4" />} label="Protect with password" onClick={() => { setMenu(null); setProtectOpen(true); }} />
+                <MenuAction icon={<Unlock className="w-4 h-4" />} label="Remove password / unlock" onClick={() => void removePassword()} disabled={!sourceName} />
+                {unlockedName ? <div className="px-2 py-1 text-[11px] text-slate-400">Unlocked from {unlockedName}</div> : null}
                 <div className="my-1 h-px bg-slate-100" />
                 <MenuAction icon={<Hash className="w-4 h-4" />} label={deco.enabled ? "Decoration enabled — shown on export" : "No watermark set"} onClick={() => { setMenu(null); setDecoOpen(true); }} />
               </div>
@@ -1655,6 +1744,7 @@ const undoCb = useCallback(() => {
       {menu && <button aria-hidden className="fixed inset-0 z-[45] cursor-default" onPointerDown={() => setMenu(null)} tabIndex={-1} />}
       {decoOpen && <DecoDialog initial={deco} onClose={() => setDecoOpen(false)} onApply={(next) => { setDeco(next); setDecoOpen(false); }} />}
       {protectOpen && <ProtectDialog initial={protect} onClose={() => setProtectOpen(false)} onApply={(next) => { setProtect(next); setProtectOpen(false); }} />}
+      {passwordPrompt && <PasswordPromptDialog fileName={passwordPrompt.name} onCancel={() => setPasswordPrompt(null)} onUnlock={handlePasswordPrompt} />}
       {signOpen && <SignDialog onClose={() => { setSignOpen(false); pendingSignRef.current = null; }} onSave={(sig) => { saveSignature(sig); setSignOpen(false); const p = pendingSignRef.current; pendingSignRef.current = null; if (p) placeSignature(sig, p); }} />}
 
       {(error || message) && (
@@ -1846,6 +1936,53 @@ function ProtectDialog({
         <div className="flex justify-end gap-2 mt-5">
           <Button type="button" variant="secondary" onClick={onClose}>Cancel</Button>
           <Button type="button" onClick={() => onApply(draft)}>Protect</Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function PasswordPromptDialog({
+  fileName,
+  onCancel,
+  onUnlock,
+}: {
+  fileName: string;
+  onCancel: () => void;
+  onUnlock: (password: string) => Promise<boolean>;
+}) {
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(false);
+  const [busy, setBusy] = useState(false);
+  return (
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-slate-900/40" onClick={onCancel} />
+      <div className="relative w-full max-w-sm rounded-2xl bg-white p-5 shadow-2xl">
+        <div className="flex items-center gap-2 mb-4">
+          <Unlock className="w-4 h-4 text-indigo-500" />
+          <h3 className="text-base font-semibold text-slate-800">This PDF is password protected</h3>
+        </div>
+        <p className="text-sm text-slate-500 mb-3">Enter the password to open <span className="font-medium text-slate-700">{fileName}</span>.</p>
+        <div className="space-y-3 text-sm">
+          <div>
+            <label className="block text-xs text-slate-500 mb-1">Password</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => { setPassword(e.target.value); setError(false); }}
+              onKeyDown={(e) => { if (e.key === "Enter" && password.length > 0 && !busy) { setBusy(true); void onUnlock(password).then((ok) => { setBusy(false); setError(!ok); }); } }}
+              placeholder="••••••••"
+              autoFocus
+              className="w-full rounded-lg border border-slate-300 px-2.5 py-1.5 focus:border-indigo-500 focus:outline-none"
+            />
+            {error && <p className="mt-1 text-xs text-red-600">Incorrect password — try again.</p>}
+          </div>
+        </div>
+        <div className="flex justify-end gap-2 mt-5">
+          <Button type="button" variant="secondary" onClick={onCancel}>Cancel</Button>
+          <Button type="button" disabled={busy || password.length === 0} onClick={() => { setBusy(true); void onUnlock(password).then((ok) => { setBusy(false); setError(!ok); }); }}>
+            {busy ? "Unlocking…" : "Unlock"}
+          </Button>
         </div>
       </div>
     </div>

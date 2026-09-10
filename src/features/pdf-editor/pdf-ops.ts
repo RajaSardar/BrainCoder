@@ -1,5 +1,5 @@
 import type { PDFDocument, PDFObject } from "pdf-lib";
-import { PDFName, PDFArray, PDFDict, degrees } from "pdf-lib";
+import { PDFName, PDFArray, PDFDict, PDFPage, degrees } from "pdf-lib";
 
 export interface FormWidget {
   name: string;
@@ -225,6 +225,97 @@ export async function pageOps(
     } else {
       return null;
     }
+    return await doc.save();
+  } catch {
+    return null;
+  }
+}
+
+export async function splitPage(
+  data: ArrayBuffer,
+  pageIndex: number,
+  direction: "horizontal" | "vertical"
+): Promise<Uint8Array | null> {
+  const doc = await loadWorkingDoc(data);
+  try {
+    const count = doc.getPageCount();
+    if (count < 1 || pageIndex < 0 || pageIndex >= count) return null;
+    const page = doc.getPage(pageIndex);
+    const { width, height } = page.getSize();
+    const clips =
+      direction === "horizontal"
+        ? [
+            { x: 0, y: height / 2, w: width, h: height - height / 2 },
+            { x: 0, y: 0, w: width, h: height / 2 },
+          ]
+        : [
+            { x: width / 2, y: 0, w: width - width / 2, h: height },
+            { x: 0, y: 0, w: width / 2, h: height },
+          ];
+    const [a, b] = await doc.copyPages(doc, [pageIndex, pageIndex]);
+    a.setMediaBox(clips[0].x, clips[0].y, clips[0].w, clips[0].h);
+    b.setMediaBox(clips[1].x, clips[1].y, clips[1].w, clips[1].h);
+    doc.removePage(pageIndex);
+    doc.insertPage(pageIndex, b);
+    doc.insertPage(pageIndex, a);
+    return await doc.save();
+  } catch {
+    return null;
+  }
+}
+
+export async function mergeAdjacentPages(
+  data: ArrayBuffer,
+  pageIndex: number
+): Promise<Uint8Array | null> {
+  const pdfjs = await import("pdfjs-dist");
+  pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+    "pdfjs-dist/build/pdf.worker.min.mjs",
+    import.meta.url
+  ).toString();
+  try {
+    const pdfDoc = await pdfjs.getDocument({ data: data.slice(0) }).promise;
+    if (pageIndex < 0 || pageIndex >= pdfDoc.numPages - 1) return null;
+    const renderPage = async (idx: number, scale: number) => {
+      const pg = await pdfDoc.getPage(idx + 1);
+      const vp = pg.getViewport({ scale });
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.floor(vp.width);
+      canvas.height = Math.floor(vp.height);
+      const ctx = canvas.getContext("2d");
+      if (!ctx) throw new Error("no ctx");
+      await pg.render({ canvas, viewport: vp }).promise;
+      return { canvas, vp };
+    };
+    const a = pdfDoc.getPage(pageIndex + 1);
+    const aView = await a.then((p) => p.getViewport({ scale: 1 }));
+    const bViewBase = await pdfDoc.getPage(pageIndex + 2).then((p) => p.getViewport({ scale: 1 }));
+    const outH = 792;
+    const scaleA = outH / aView.height;
+    const scaleB = outH / bViewBase.height;
+    const outW = Math.floor(aView.width * scaleA + bViewBase.width * scaleB);
+    const ra = await renderPage(pageIndex, scaleA);
+    const rb = await renderPage(pageIndex + 1, scaleB);
+    const comp = document.createElement("canvas");
+    const K = 2;
+    comp.width = outW * K;
+    comp.height = outH * K;
+    const ctx = comp.getContext("2d");
+    if (!ctx) throw new Error("no ctx");
+    ctx.drawImage(ra.canvas, 0, 0, ra.canvas.width * K, ra.canvas.height * K);
+    ctx.drawImage(rb.canvas, ra.canvas.width * K, 0, rb.canvas.width * K, rb.canvas.height * K);
+    const blob = await new Promise<Blob | null>((res) => comp.toBlob(res, "image/jpeg", 0.92));
+    if (!blob) return null;
+    const imgBytes = new Uint8Array(await blob.arrayBuffer());
+
+    const doc = await loadWorkingDoc(data);
+    const img = await doc.embedJpg(imgBytes);
+    const merged = PDFPage.create(doc);
+    merged.setSize(outW, outH);
+    merged.drawImage(img, { x: 0, y: 0, width: outW, height: outH });
+    doc.removePage(pageIndex);
+    doc.removePage(pageIndex);
+    doc.insertPage(pageIndex, merged);
     return await doc.save();
   } catch {
     return null;
