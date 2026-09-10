@@ -35,6 +35,7 @@ import {
   Shield,
   Square,
   Stamp,
+  SquarePen,
   StickyNote,
   Strikethrough as StrikethroughIcon,
   Trash2,
@@ -62,6 +63,12 @@ import {
   translateAnnotation,
 } from "./annotations";
 import {
+  ContentRuns,
+  extractContentRuns,
+  ImageRun,
+  TextRun,
+} from "./text-structure";
+import {
   FormWidget,
   PageDecorationOptions,
   ExportOptions,
@@ -87,6 +94,7 @@ const ZOOMS = [0.5, 0.75, 1, 1.25, 1.5, 2];
 type Tool =
   | "select"
   | "fill"
+  | "edit"
   | "pen"
   | "brush"
   | "rect"
@@ -112,6 +120,7 @@ const TOOLS: { id: Tool; label: string; group: "view" | "markup" | "insert" | "s
   { id: "strikethrough", label: "Strike", group: "markup" },
   { id: "redact", label: "Redact", group: "markup" },
   { id: "note", label: "Note", group: "insert" },
+  { id: "edit", label: "Edit", group: "insert" },
   { id: "text", label: "Text", group: "insert" },
   { id: "date", label: "Date", group: "insert" },
   { id: "sign", label: "Sign", group: "insert" },
@@ -130,6 +139,8 @@ const RESIZABLE_KINDS: AnnotationKind[] = [
   "strikethrough",
   "redact",
   "image",
+  "imageEdit",
+  "textEdit",
 ];
 
 interface SavedSignature {
@@ -193,6 +204,15 @@ export default function PdfEditor() {
   const [draft, setDraft] = useState<{ x: number; y: number; kind: Tool } | null>(null);
   const [draftText, setDraftText] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+
+  const [runs, setRuns] = useState<ContentRuns | null>(null);
+  const [runsLoading, setRunsLoading] = useState(false);
+  const [editFontSize, setEditFontSize] = useState<number | null>(null);
+  const [editImageMenu, setEditImageMenu] = useState<ImageRun | null>(null);
+  const runsCacheRef = useRef<Record<number, ContentRuns>>({});
+  const editTargetRef = useRef<{ kind: "text"; run: TextRun } | { kind: "image"; run: ImageRun } | null>(null);
+  const imageInputRef = useRef<HTMLInputElement | null>(null);
+  const replaceImageRef = useRef<ImageRun | null>(null);
 
   const [menu, setMenu] = useState<"pages" | "doc" | "download" | null>(null);
   const [deco, setDeco] = useState<PageDecorationOptions>({
@@ -319,6 +339,8 @@ export default function PdfEditor() {
         // previous document already closed
       }
       docRef.current = { doc, data: exportData };
+      runsCacheRef.current = {};
+      setRuns(null);
       const dims: PageDimensions[] = [];
       const t: string[] = [];
       const scale = 0.32;
@@ -479,6 +501,34 @@ export default function PdfEditor() {
   }, [renderBase, renderAnnotations, historyVersion]);
 
   useEffect(() => {
+    if (tool !== "edit" || !docRef.current) return;
+    const r = docRef.current;
+    const cached = runsCacheRef.current[active];
+    if (cached) {
+      setRuns(cached);
+      setRunsLoading(false);
+      return;
+    }
+    let cancelled = false;
+    setRunsLoading(true);
+    void extractContentRuns(r.doc, active)
+      .then((res) => {
+        if (cancelled) return;
+        runsCacheRef.current[active] = res;
+        setRuns(res);
+        setRunsLoading(false);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setRuns(null);
+        setRunsLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [tool, active, loaded]);
+
+  useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
     const ro = new ResizeObserver(() => {
@@ -567,13 +617,39 @@ export default function PdfEditor() {
     const cleanup = () => {
       setDraft(null);
       setDraftText("");
+      setEditFontSize(null);
       editingIdRef.current = null;
+      editTargetRef.current = null;
     };
     if (!d) {
       cleanup();
       return;
     }
     const existing = annotationsRef.current[active] ?? [];
+    if (editTargetRef.current?.kind === "text") {
+      const run = editTargetRef.current.run;
+      push(
+        active,
+        [
+          ...existing,
+          {
+            id: createId(),
+            kind: "textEdit",
+            color: "#111827",
+            x: run.x,
+            y: run.y,
+            width: run.width,
+            height: run.height,
+            baselineY: run.height - run.fontSize * 0.2,
+            fontSize: run.fontSize,
+            text,
+            originalText: run.text,
+          },
+        ]
+      );
+      cleanup();
+      return;
+    }
     if (editingIdRef.current) {
       const id = editingIdRef.current;
       push(
@@ -659,6 +735,70 @@ export default function PdfEditor() {
     [signature, placeSignature]
   );
 
+  const startEditText = useCallback(
+    (run: TextRun) => {
+      editTargetRef.current = { kind: "text", run };
+      setEditFontSize(run.fontSize);
+      setDraftText(run.text);
+      setDraft({ x: run.x, y: run.y, kind: "text" });
+      setSelectedId(null);
+      setEditImageMenu(null);
+    },
+    []
+  );
+
+  const startEditImage = useCallback(
+    (run: ImageRun) => {
+      editTargetRef.current = { kind: "image", run };
+      setEditImageMenu(run);
+      setSelectedId(null);
+    },
+    []
+  );
+
+  const hideImage = useCallback(
+    (run: ImageRun) => {
+      const existing = annotationsRef.current[active] ?? [];
+      push(active, [
+        ...existing,
+        { id: createId(), kind: "imageEdit", color: "#2563eb", x: run.x, y: run.y, width: run.width, height: run.height },
+      ]);
+      setEditImageMenu(null);
+      editTargetRef.current = null;
+    },
+    [active, push, annotationsRef]
+  );
+
+  const replaceImage = useCallback(
+    (run: ImageRun) => {
+      replaceImageRef.current = run;
+      setEditImageMenu(null);
+      imageInputRef.current?.click();
+    },
+    []
+  );
+
+  const onReplaceImageFile = useCallback(
+    (file: File | undefined) => {
+      const run = replaceImageRef.current;
+      replaceImageRef.current = null;
+      if (!file || !run) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        const dataUrl = typeof reader.result === "string" ? reader.result : null;
+        if (!dataUrl) return;
+        const existing = annotationsRef.current[active] ?? [];
+        push(active, [
+          ...existing,
+          { id: createId(), kind: "imageEdit", color: "#2563eb", x: run.x, y: run.y, width: run.width, height: run.height, dataUrl },
+        ]);
+        editTargetRef.current = null;
+      };
+      reader.readAsDataURL(file);
+    },
+    [active, push, annotationsRef]
+  );
+
   const onPointerDown = useCallback(
     (e: React.PointerEvent<HTMLCanvasElement>) => {
       const pr = pageRect();
@@ -676,6 +816,8 @@ export default function PdfEditor() {
       if (tool === "text" || tool === "date" || tool === "note") {
         commitText();
         editingIdRef.current = null;
+        editTargetRef.current = null;
+        setEditFontSize(null);
         setDraftText(tool === "date" ? todayStr() : "");
         setDraft({ x: pt.x, y: pt.y, kind: tool });
         setSelectedId(null);
@@ -1149,6 +1291,8 @@ const undoCb = useCallback(() => {
       // no active textarea
     }
     setDraft(null);
+    setEditImageMenu(null);
+    editTargetRef.current = null;
   }, []);
 
   const updateFormValue = useCallback(
@@ -1182,6 +1326,8 @@ const undoCb = useCallback(() => {
         return <Calendar className="w-4 h-4" />;
       case "sign":
         return <PenTool className="w-4 h-4" />;
+      case "edit":
+        return <SquarePen className="w-4 h-4" />;
       case "fill":
         return <Stamp className="w-4 h-4" />;
       case "line":
@@ -1545,6 +1691,15 @@ const undoCb = useCallback(() => {
 
       {/* Canvas area */}
       <div ref={containerRef} className="flex-1 min-h-0 relative overflow-auto bg-slate-100">
+        {tool === "edit" && !busy && (
+          <div className="absolute top-3 left-1/2 -translate-x-1/2 z-30 rounded-full bg-slate-900/85 text-white text-xs px-3 py-1.5 shadow-lg pointer-events-none whitespace-nowrap">
+            {runsLoading
+              ? "Scanning page content…"
+              : runs
+                ? "Click highlighted text to edit it, or a purple image region to hide or replace it."
+                : "No editable text or images detected on this page."}
+          </div>
+        )}
         <div className="min-h-full w-fit mx-auto flex items-center justify-center p-6 sm:p-10">
           <div className="relative bg-white rounded-lg shadow-xl shadow-slate-900/10 ring-1 ring-slate-900/5 overflow-hidden">
             <canvas ref={pageCanvasRef} className="block" />
@@ -1632,6 +1787,42 @@ const undoCb = useCallback(() => {
                   </div>
                 );
               })}
+            {tool === "edit" && runs && (
+              <div className="absolute inset-0 z-20 pointer-events-none">
+                {runs.text.map((tr) => (
+                  <button
+                    key={tr.id}
+                    type="button"
+                    aria-label={`Edit text: ${tr.text}`}
+                    title={tr.text}
+                    onClick={() => startEditText(tr)}
+                    className="absolute rounded border border-sky-400 bg-sky-200/40 hover:bg-sky-300/60 pointer-events-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+                    style={{
+                      left: tr.x * displayScale,
+                      top: tr.y * displayScale,
+                      width: Math.max(tr.width * displayScale, 8),
+                      height: Math.max(tr.height * displayScale, 10),
+                    }}
+                  />
+                ))}
+                {runs.images.map((im) => (
+                  <button
+                    key={im.id}
+                    type="button"
+                    aria-label="Edit image"
+                    title="Edit image"
+                    onClick={() => startEditImage(im)}
+                    className="absolute rounded border-2 border-fuchsia-500 bg-fuchsia-200/30 hover:bg-fuchsia-300/50 pointer-events-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+                    style={{
+                      left: im.x * displayScale,
+                      top: im.y * displayScale,
+                      width: Math.max(im.width * displayScale, 8),
+                      height: Math.max(im.height * displayScale, 8),
+                    }}
+                  />
+                ))}
+              </div>
+            )}
             {draft && (
               <textarea
                 ref={textareaRef}
@@ -1644,7 +1835,9 @@ const undoCb = useCallback(() => {
                   if (e.key === "Escape") {
                     setDraft(null);
                     setDraftText("");
+                    setEditFontSize(null);
                     editingIdRef.current = null;
+                    editTargetRef.current = null;
                   }
                 }}
                 placeholder={draft.kind === "note" ? "Type a note…" : "Type here…"}
@@ -1652,7 +1845,7 @@ const undoCb = useCallback(() => {
                 style={{
                   left: draft.x * displayScale,
                   top: draft.y * displayScale,
-                  fontSize: `${fontSize * displayScale}px`,
+                  fontSize: `${(editFontSize ?? fontSize) * displayScale}px`,
                   fontFamily: "Arial, Helvetica, sans-serif",
                   color,
                   minWidth: 140,
@@ -1660,6 +1853,39 @@ const undoCb = useCallback(() => {
                 onMouseDown={(e) => e.stopPropagation()}
               />
             )}
+            {editImageMenu && tool === "edit" && (
+              <div
+                className="absolute z-40"
+                style={{
+                  left: editImageMenu.x * displayScale,
+                  top: (editImageMenu.y + editImageMenu.height) * displayScale + 4,
+                }}
+              >
+                <div className="w-44 rounded-xl border border-slate-200 bg-white p-1 shadow-xl">
+                  <button
+                    type="button"
+                    onClick={() => hideImage(editImageMenu)}
+                    className="block w-full text-left rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-100"
+                  >
+                    Hide image
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => replaceImage(editImageMenu)}
+                    className="block w-full text-left rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-100"
+                  >
+                    Replace image…
+                  </button>
+                </div>
+              </div>
+            )}
+            <input
+              ref={imageInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => onReplaceImageFile(e.target.files?.[0] ?? undefined)}
+            />
           </div>
         </div>
       </div>

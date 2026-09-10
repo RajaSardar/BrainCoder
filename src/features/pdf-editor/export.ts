@@ -215,6 +215,33 @@ async function drawAnnotationsIntoPage(
         }
         break;
       }
+      case "imageEdit": {
+        page.drawRectangle({
+          x: ann.x ?? 0,
+          y: ann.y ?? 0,
+          width: ann.width ?? 0,
+          height: ann.height ?? 0,
+          color: rgb(1, 1, 1),
+        });
+        const dataUrl = ann.dataUrl;
+        if (!dataUrl) break;
+        try {
+          const bytes = dataUrlToBytes(dataUrl);
+          const img =
+            dataUrl.startsWith("data:image/png") || dataUrl.startsWith("data:image/webp")
+              ? await doc.embedPng(bytes)
+              : await doc.embedJpg(bytes);
+          page.drawImage(img, {
+            x: ann.x ?? 0,
+            y: ann.y ?? 0,
+            width: ann.width ?? 0,
+            height: ann.height ?? 0,
+          });
+        } catch (e) {
+          console.error("[export-image] embed failed:", e instanceof Error ? e.message : String(e));
+        }
+        break;
+      }
       case "rect": {
         page.drawRectangle({
           x: ann.x ?? 0,

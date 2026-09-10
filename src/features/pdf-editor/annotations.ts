@@ -13,7 +13,8 @@ export type AnnotationKind =
   | "text"
   | "date"
   | "textEdit"
-  | "image";
+  | "image"
+  | "imageEdit";
 
 export interface Point {
   x: number;
@@ -61,6 +62,7 @@ export const RECT_KINDS: AnnotationKind[] = [
   "date",
   "textEdit",
   "image",
+  "imageEdit",
 ];
 
 function drawNoteIcon(
@@ -217,6 +219,20 @@ export function drawAnnotation(
       }
       break;
     }
+    case "imageEdit": {
+      const x = ann.x ?? 0;
+      const y = ann.y ?? 0;
+      const w = ann.width ?? 0;
+      const h = ann.height ?? 0;
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(x, y, w, h);
+      const img = ann.dataUrl ? loadImage(ann.dataUrl) : null;
+      if (img && img.complete && img.naturalWidth > 0) {
+        ctx.drawImage(img, x, y, w, h);
+      }
+      break;
+    }
     case "image": {
       const x = ann.x ?? 0;
       const y = ann.y ?? 0;
@@ -305,7 +321,8 @@ export function hitTestAnnotation(
     case "highlight":
     case "underline":
     case "strikethrough":
-    case "image": {
+    case "image":
+    case "imageEdit": {
       const x = ann.x ?? 0;
       const y = ann.y ?? 0;
       const w = ann.width ?? 0;
@@ -380,7 +397,8 @@ export function getAnnotationBBox(ann: Annotation, ctx: CanvasRenderingContext2D
     case "highlight":
     case "underline":
     case "strikethrough":
-    case "image": {
+    case "image":
+    case "imageEdit": {
       const x = Math.min(ann.x ?? 0, (ann.x ?? 0) + (ann.width ?? 0));
       const y = Math.min(ann.y ?? 0, (ann.y ?? 0) + (ann.height ?? 0));
       return { x, y, width: Math.abs(ann.width ?? 0), height: Math.abs(ann.height ?? 0) };
