@@ -158,6 +158,7 @@ export async function extractContentRuns(
 const SPACE_WEIGHT = 0.45;
 const WORD_PAD_EM = 0.16;
 const WORD_RIGHT_EXTRA_EM = 0.07;
+const MAX_WORD_CHARS = 20;
 
 function charWeight(ch: string): number {
   if (ch === " " || ch === "\t" || ch === "\n" || ch === "\r" || ch === "\u00a0") return SPACE_WEIGHT;
@@ -260,6 +261,11 @@ function splitRunsIntoWords(text: TextRun[]): TextRun[] {
       if (!word.length) wordStart = cursor;
       word.push(token);
       cursor += token.weight;
+      const chars = word.reduce((s, t) => s + t.text.length, 0);
+      if (chars >= MAX_WORD_CHARS) {
+        emitWord(word, wordStart);
+        word = [];
+      }
     }
     if (word.length) emitWord(word, wordStart);
   }
