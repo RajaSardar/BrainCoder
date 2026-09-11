@@ -29,6 +29,7 @@ import {
   MousePointer2,
   PenLine,
   PenTool,
+  Plus,
   Redo2,
   RotateCw,
   Scissors,
@@ -235,15 +236,25 @@ export default function PdfEditor() {
   const [passwordPrompt, setPasswordPrompt] = useState<{ data: ArrayBuffer; name: string } | null>(null);
   const [unlockedName, setUnlockedName] = useState<string | null>(null);
   const [signOpen, setSignOpen] = useState(false);
-  const [signature, setSignature] = useState<SavedSignature | null>(() => {
+  const [signatures, setSignatures] = useState<SavedSignature[]>(() => {
     try {
-      const raw = window.localStorage.getItem("pdf-editor.signature");
-      if (raw) return JSON.parse(raw) as SavedSignature;
+      const raw = window.localStorage.getItem("pdf-editor.signatures");
+      if (raw) {
+        const arr = JSON.parse(raw) as SavedSignature[];
+        return Array.isArray(arr) ? arr : [];
+      }
+      const legacy = window.localStorage.getItem("pdf-editor.signature");
+      if (legacy) {
+        const one = JSON.parse(legacy) as SavedSignature;
+        return [one];
+      }
     } catch {
-      // corrupted saved signature; ignore
+      // corrupted; ignore
     }
-    return null;
+    return [];
   });
+  const [activeSigIndex, setActiveSigIndex] = useState(0);
+  const signature = signatures[activeSigIndex] ?? null;
   const [formWidgets, setFormWidgets] = useState<FormWidget[]>([]);
   const [formValues, setFormValues] = useState<Record<string, string | boolean>>({});
 
@@ -478,14 +489,32 @@ export default function PdfEditor() {
     annotationsRef.current = annotationsByPage;
   }, [annotationsByPage]);
 
-  const saveSignature = useCallback((sig: SavedSignature) => {
-    setSignature(sig);
+  const saveSignatures = useCallback((sigs: SavedSignature[]) => {
+    setSignatures(sigs);
     try {
-      window.localStorage.setItem("pdf-editor.signature", JSON.stringify(sig));
+      window.localStorage.setItem("pdf-editor.signatures", JSON.stringify(sigs));
     } catch {
-      // storage unavailable; signature stays for this session only
+      // storage unavailable; signatures stay for this session only
     }
   }, []);
+
+  const addSignature = useCallback((sig: SavedSignature) => {
+    const next = [...signatures, sig];
+    setActiveSigIndex(next.length - 1);
+    saveSignatures(next);
+  }, [signatures, saveSignatures]);
+
+  const removeSignature = useCallback((index: number) => {
+    const next = signatures.filter((_, i) => i !== index);
+    saveSignatures(next);
+    setActiveSigIndex(Math.min(activeSigIndex, next.length - 1));
+  }, [signatures, activeSigIndex, saveSignatures]);
+
+  const replaceSignature = useCallback((index: number, sig: SavedSignature) => {
+    const next = [...signatures];
+    next[index] = sig;
+    saveSignatures(next);
+  }, [signatures, saveSignatures]);
 
   useEffect(() => {
     undoRef.current = undoStack;
@@ -1503,6 +1532,60 @@ const undoCb = useCallback(() => {
                   style={{ backgroundColor: c }}
                 />
               ))
+            : tool === "sign"
+            ? signatures.length === 0
+              ? <button
+                  type="button"
+                  onClick={() => { pendingSignRef.current = { x: dim.width / 2, y: dim.height / 2 }; setSignOpen(true); }}
+                  aria-label="Create signature"
+                  title="Create signature"
+                  className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm font-medium text-slate-600 hover:bg-slate-100 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+                >
+                  <PenTool className="w-4 h-4" />
+                  <span className="hidden sm:inline">Create signature</span>
+                </button>
+              : <div className="flex items-center gap-1.5">
+                  <select
+                    value={activeSigIndex}
+                    onChange={(e) => setActiveSigIndex(Number(e.target.value))}
+                    className="rounded-lg px-2.5 py-1.5 text-sm font-medium text-slate-600 bg-white border border-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+                    aria-label="Select signature"
+                  >
+                    {signatures.map((s, i) => (
+                      <option key={i} value={i}>
+                        Signature {i + 1} {s.dataUrl ? " (image)" : s.points ? " (drawn)" : " (typed)"}
+                      </option>
+                    ))}
+                  </select>
+                  <button
+                    type="button"
+                    onClick={() => { pendingSignRef.current = { x: dim.width / 2, y: dim.height / 2 }; setSignOpen(true); }}
+                    aria-label="Add new signature"
+                    title="Add new signature"
+                    className="rounded-lg p-2 text-slate-600 hover:bg-slate-100 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+                  >
+                    <Plus className="w-4 h-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => removeSignature(activeSigIndex)}
+                    disabled={signatures.length <= 1}
+                    aria-label="Remove signature"
+                    title="Remove signature"
+                    className="rounded-lg p-2 text-slate-600 hover:bg-red-50 hover:text-red-600 disabled:text-slate-300 disabled:cursor-not-allowed transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { pendingSignRef.current = { x: dim.width / 2, y: dim.height / 2 }; setSignOpen(true); }}
+                    aria-label="Replace signature"
+                    title="Replace signature"
+                    className="rounded-lg p-2 text-slate-600 hover:bg-slate-100 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+                  >
+                    <RotateCw className="w-4 h-4" />
+                  </button>
+                </div>
             : COLORS.map((c) => (
                 <button
                   key={c}
@@ -1979,7 +2062,7 @@ const undoCb = useCallback(() => {
       {decoOpen && <DecoDialog initial={deco} onClose={() => setDecoOpen(false)} onApply={(next) => { setDeco(next); setDecoOpen(false); }} />}
       {protectOpen && <ProtectDialog initial={protect} onClose={() => setProtectOpen(false)} onApply={(next) => { setProtect(next); setProtectOpen(false); }} />}
       {passwordPrompt && <PasswordPromptDialog fileName={passwordPrompt.name} onCancel={() => setPasswordPrompt(null)} onUnlock={handlePasswordPrompt} />}
-      {signOpen && <SignDialog onClose={() => { setSignOpen(false); pendingSignRef.current = null; }} onSave={(sig) => { saveSignature(sig); setSignOpen(false); const p = pendingSignRef.current; pendingSignRef.current = null; if (p) placeSignature(sig, p); }} />}
+      {signOpen && <SignDialog onClose={() => { setSignOpen(false); pendingSignRef.current = null; }} onSave={(sig) => { addSignature(sig); setSignOpen(false); const p = pendingSignRef.current; pendingSignRef.current = null; if (p) placeSignature(sig, p); }} />}
 
       {(error || message) && (
         <div
