@@ -377,8 +377,12 @@ export default function PdfEditor() {
     (pageIndex: number, next: Annotation[]) => {
       const current = annotationsRef.current[pageIndex] ?? [];
       annotationsRef.current = { ...annotationsRef.current, [pageIndex]: next };
-      undoRef.current = { ...undoRef.current, [pageIndex]: [...(undoRef.current[pageIndex] ?? []), current] };
-      redoRef.current = { ...redoRef.current, [pageIndex]: [] };
+      const newUndo = { ...undoRef.current, [pageIndex]: [...(undoRef.current[pageIndex] ?? []), current] };
+      const newRedo = { ...redoRef.current, [pageIndex]: [] };
+      undoRef.current = newUndo;
+      redoRef.current = newRedo;
+      setUndoStack(newUndo);
+      setRedoStack(newRedo);
       setAnnotationsByPage((m) => ({ ...m, [pageIndex]: next }));
       setHistoryVersion((v) => v + 1);
       setSelectedId(null);
