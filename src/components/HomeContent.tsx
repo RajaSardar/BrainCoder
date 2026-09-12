@@ -38,16 +38,13 @@ function ToolCard({ tool }: { tool: ToolConfig }) {
   );
 }
 
-const PDF_TOOLS = [
-  "pdf-creator",
-  "pdf-editor",
-  "pdf-compressor",
-  "pdf-merge",
-  "pdf-split",
-  "image-to-pdf",
-  "pdf-to-image",
-  "html-to-pdf",
-];
+const PDF_TOOLS = TOOLS.filter(
+  (t) =>
+    t.slug === "html-to-pdf" ||
+    t.slug.endsWith("-to-pdf") ||
+    t.slug.startsWith("pdf-") ||
+    t.slug === "word-to-pdf"
+);
 
 export default function HomeContent() {  const [query, setQuery] = useState("");
   const [category, setCategory] = useState<string | null>(null);
@@ -158,11 +155,9 @@ export default function HomeContent() {  const [query, setQuery] = useState("");
             <FileText className="w-8 h-8 text-indigo-500 shrink-0" />
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {PDF_TOOLS.map((t) => {
-              const tool = TOOLS.find((x) => x.slug === t);
-              if (!tool) return null;
-              return <ToolCard key={tool.slug} tool={tool} />;
-            })}
+            {PDF_TOOLS.map((tool) => (
+              <ToolCard key={tool.slug} tool={tool} />
+            ))}
           </div>
         </div>
       </section>

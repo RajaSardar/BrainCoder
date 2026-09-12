@@ -85,6 +85,9 @@ import {
   Shapes,
   MoveDiagonal,
   PenTool,
+  Presentation,
+  FileType,
+  TextCursorInput,
 } from "lucide-react";
 
 export type Category =
@@ -370,6 +373,61 @@ export const TOOLS: ToolConfig[] = [
     icon: FileDigit,
     accent: "text-red-600",
     gradient: "from-red-500 to-rose-600",
+  },
+  {
+    slug: "pdf-to-word",
+    name: "PDF to Word",
+    tagline: "Turn PDF pages into a Word document",
+    description:
+      "Convert a PDF into a .docx file with every page embedded as a full-page image — done fully in your browser.",
+    category: "Convert",
+    icon: FileText,
+    accent: "text-sky-600",
+    gradient: "from-sky-500 to-blue-600",
+  },
+  {
+    slug: "word-to-pdf",
+    name: "Word to PDF",
+    tagline: "Convert .docx documents to PDF",
+    description:
+      "Upload a Word document and get a cleanly paginated PDF with headings, tables and images preserved. No uploads.",
+    category: "Convert",
+    icon: FileType2,
+    accent: "text-blue-600",
+    gradient: "from-blue-500 to-indigo-600",
+  },
+  {
+    slug: "pdf-to-text",
+    name: "PDF to Text",
+    tagline: "Extract selectable text from PDFs",
+    description:
+      "Pull the text layer out of any PDF as a plain .txt file — perfect for quotes, reports and copy-paste workflows.",
+    category: "Convert",
+    icon: TextCursorInput,
+    accent: "text-teal-600",
+    gradient: "from-teal-500 to-cyan-600",
+  },
+  {
+    slug: "text-to-pdf",
+    name: "Text to PDF",
+    tagline: "Plain text into a paginated PDF",
+    description:
+      "Paste any text and download it as an A4 PDF with word wrapping and automatic page breaks. 100% local.",
+    category: "Convert",
+    icon: FileType,
+    accent: "text-emerald-700",
+    gradient: "from-emerald-600 to-green-700",
+  },
+  {
+    slug: "pdf-to-ppt",
+    name: "PDF to PowerPoint",
+    tagline: "Turn PDF pages into a slide deck",
+    description:
+      "Convert a PDF into a 16:9 PowerPoint file with every page placed on its own slide — entirely in your browser.",
+    category: "Convert",
+    icon: Presentation,
+    accent: "text-fuchsia-600",
+    gradient: "from-fuchsia-500 to-purple-600",
   },
   {
     slug: "md-to-html",
