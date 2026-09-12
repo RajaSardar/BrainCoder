@@ -255,6 +255,8 @@ export default function PdfEditor() {
   });
   const [activeSigIndex, setActiveSigIndex] = useState(0);
   const signature = signatures[activeSigIndex] ?? null;
+  const [sigMenuOpen, setSigMenuOpen] = useState(false);
+  const [sigMenuPos, setSigMenuPos] = useState<{ top: number; left: number } | null>(null);
   const [formWidgets, setFormWidgets] = useState<FormWidget[]>([]);
   const [formValues, setFormValues] = useState<Record<string, string | boolean>>({});
 
@@ -290,6 +292,7 @@ export default function PdfEditor() {
   const editingIdRef = useRef<string | null>(null);
   const draftRef = useRef<{ x: number; y: number; kind: Tool } | null>(null);
   const pendingSignRef = useRef<Point | null>(null);
+  const editSigRef = useRef<number | null>(null);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -761,6 +764,7 @@ export default function PdfEditor() {
   const handleSign = useCallback(
     (pt: Point) => {
       if (!signature) {
+        editSigRef.current = null;
         pendingSignRef.current = pt;
         setSignOpen(true);
         return;
@@ -768,6 +772,19 @@ export default function PdfEditor() {
       placeSignature(signature, pt);
     },
     [signature, placeSignature]
+  );
+
+  const openSignFlow = useCallback(
+    (opts: { replace?: boolean; autoplace?: boolean }) => {
+      editSigRef.current = opts.replace ? activeSigIndex : null;
+      if (opts.autoplace) {
+        pendingSignRef.current = dim ? { x: dim.width / 2, y: dim.height / 2 } : { x: 200, y: 200 };
+      } else {
+        pendingSignRef.current = null;
+      }
+      setSignOpen(true);
+    },
+    [activeSigIndex, dim]
   );
 
   const startEditText = useCallback(
@@ -1484,6 +1501,27 @@ const undoCb = useCallback(() => {
             {error}
           </span>
         )}
+        <button
+          type="button"
+          aria-label="Manage signatures"
+          title={`Signatures (${signatures.length})`}
+          onClick={(e) => {
+            const r = e.currentTarget.getBoundingClientRect();
+            setSigMenuPos({ top: r.bottom + 6, left: Math.max(8, r.left) });
+            setSigMenuOpen((v) => !v);
+          }}
+          className={`inline-flex items-center gap-1.5 rounded-lg px-2.5 py-2 text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
+            sigMenuOpen ? "bg-indigo-600 text-white" : "text-slate-600 hover:bg-slate-100"
+          }`}
+        >
+          <PenTool className="w-4 h-4" />
+          <span className="hidden md:inline">Signature</span>
+          {signatures.length > 0 && (
+            <span className={`rounded-full px-1.5 text-xs font-bold ${sigMenuOpen ? "bg-white/25 text-white" : "bg-indigo-100 text-indigo-700"}`}>
+              {signatures.length}
+            </span>
+          )}
+        </button>
         <Button type="button" variant="secondary" onClick={() => void saveSignedCopy()} disabled={busy || exporting}>
           {exporting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
           {exporting ? "Saving…" : "Save signed copy"}
@@ -1536,7 +1574,7 @@ const undoCb = useCallback(() => {
             ? signatures.length === 0
               ? <button
                   type="button"
-                  onClick={() => { pendingSignRef.current = { x: dim.width / 2, y: dim.height / 2 }; setSignOpen(true); }}
+                  onClick={() => openSignFlow({ autoplace: true })}
                   aria-label="Create signature"
                   title="Create signature"
                   className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm font-medium text-slate-600 hover:bg-slate-100 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
@@ -1559,7 +1597,7 @@ const undoCb = useCallback(() => {
                   </select>
                   <button
                     type="button"
-                    onClick={() => { pendingSignRef.current = { x: dim.width / 2, y: dim.height / 2 }; setSignOpen(true); }}
+                    onClick={() => openSignFlow({ autoplace: true })}
                     aria-label="Add new signature"
                     title="Add new signature"
                     className="rounded-lg p-2 text-slate-600 hover:bg-slate-100 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
@@ -1578,7 +1616,7 @@ const undoCb = useCallback(() => {
                   </button>
                   <button
                     type="button"
-                    onClick={() => { pendingSignRef.current = { x: dim.width / 2, y: dim.height / 2 }; setSignOpen(true); }}
+                    onClick={() => openSignFlow({ replace: true })}
                     aria-label="Replace signature"
                     title="Replace signature"
                     className="rounded-lg p-2 text-slate-600 hover:bg-slate-100 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
@@ -2059,10 +2097,96 @@ const undoCb = useCallback(() => {
       </div>
 
       {menu && <button aria-hidden className="fixed inset-0 z-[45] cursor-default" onPointerDown={() => setMenu(null)} tabIndex={-1} />}
+      {sigMenuOpen && sigMenuPos && (
+        <>
+          <button
+            aria-hidden
+            className="fixed inset-0 z-[60] cursor-default"
+            onPointerDown={() => { setSigMenuOpen(false); setSigMenuPos(null); }}
+            tabIndex={-1}
+          />
+          <div
+            className="fixed z-[61] w-72 rounded-2xl border border-slate-200 bg-white shadow-2xl shadow-slate-900/10 p-3"
+            style={{ top: sigMenuPos.top, left: sigMenuPos.left }}
+          >
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-sm font-bold text-slate-800">My signatures</h3>
+              <button
+                type="button"
+                aria-label="Add signature from menu"
+                title="Add new signature"
+                onClick={() => openSignFlow({})}
+                className="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-semibold text-indigo-600 hover:bg-indigo-50 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+              >
+                <Plus className="w-3.5 h-3.5" /> New
+              </button>
+            </div>
+            {signatures.length === 0 ? (
+              <p className="text-sm text-slate-500 py-6 text-center">No signatures yet.<br />Create one to add it here.</p>
+            ) : (
+              <ul className="space-y-2 max-h-72 overflow-y-auto">
+                {signatures.map((s, i) => (
+                  <li key={i} className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setActiveSigIndex(i)}
+                      aria-label={`Use signature ${i + 1}`}
+                      title={`Use signature ${i + 1}`}
+                      className={`flex-1 min-w-0 flex items-center gap-2 rounded-xl border-2 p-1.5 text-left transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
+                        i === activeSigIndex ? "border-indigo-500 bg-indigo-50" : "border-slate-200 hover:border-slate-300"
+                      }`}
+                    >
+                      <span className="w-14 h-7 rounded bg-slate-100 border border-slate-200 flex items-center justify-center overflow-hidden shrink-0">
+                        {s.dataUrl ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img src={s.dataUrl} alt="" className="max-w-full max-h-full object-contain" />
+                        ) : (
+                          <PenTool className="w-4 h-4 text-slate-500" />
+                        )}
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="block text-xs font-semibold text-slate-800 truncate">Signature {i + 1}</span>
+                        <span className="block text-[11px] text-slate-500">
+                          {s.dataUrl ? "Image" : s.points ? "Drawn" : "Typed"}
+                        </span>
+                      </span>
+                      {i === activeSigIndex && <Check className="w-4 h-4 text-indigo-600 shrink-0" />}
+                    </button>
+                    <button
+                      type="button"
+                      aria-label={`Replace signature ${i + 1}`}
+                      title={`Replace signature ${i + 1}`}
+                      onClick={() => {
+                        setActiveSigIndex(i);
+                        setSigMenuOpen(false);
+                        setSigMenuPos(null);
+                        openSignFlow({ replace: true });
+                      }}
+                      className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+                    >
+                      <RotateCw className="w-4 h-4" />
+                    </button>
+                    <button
+                      type="button"
+                      aria-label={`Delete signature ${i + 1}`}
+                      title={`Delete signature ${i + 1}`}
+                      disabled={signatures.length <= 1}
+                      onClick={() => removeSignature(i)}
+                      className="rounded-lg p-1.5 text-slate-400 hover:bg-red-50 hover:text-red-600 disabled:text-slate-200 disabled:cursor-not-allowed transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </>
+      )}
       {decoOpen && <DecoDialog initial={deco} onClose={() => setDecoOpen(false)} onApply={(next) => { setDeco(next); setDecoOpen(false); }} />}
       {protectOpen && <ProtectDialog initial={protect} onClose={() => setProtectOpen(false)} onApply={(next) => { setProtect(next); setProtectOpen(false); }} />}
       {passwordPrompt && <PasswordPromptDialog fileName={passwordPrompt.name} onCancel={() => setPasswordPrompt(null)} onUnlock={handlePasswordPrompt} />}
-      {signOpen && <SignDialog onClose={() => { setSignOpen(false); pendingSignRef.current = null; }} onSave={(sig) => { addSignature(sig); setSignOpen(false); const p = pendingSignRef.current; pendingSignRef.current = null; if (p) placeSignature(sig, p); }} />}
+      {signOpen && <SignDialog onClose={() => { setSignOpen(false); pendingSignRef.current = null; editSigRef.current = null; }} onSave={(sig) => { const idx = editSigRef.current; editSigRef.current = null; if (idx != null) replaceSignature(idx, sig); else addSignature(sig); setSignOpen(false); const p = pendingSignRef.current; pendingSignRef.current = null; if (p && idx == null) placeSignature(sig, p); }} />}
 
       {(error || message) && (
         <div
