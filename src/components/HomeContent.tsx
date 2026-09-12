@@ -39,6 +39,7 @@ function ToolCard({ tool }: { tool: ToolConfig }) {
 }
 
 const PDF_TOOLS = [
+  "pdf-creator",
   "pdf-editor",
   "pdf-compressor",
   "pdf-merge",
@@ -151,7 +152,7 @@ export default function HomeContent() {  const [query, setQuery] = useState("");
                 PDF tools — free &amp; private
               </h2>
               <p className="text-sm text-slate-600 mt-1">
-                Edit, annotate, compress, merge, split and convert PDFs. Nothing leaves your device.
+                Create, edit, annotate, compress, merge, split and convert PDFs. Nothing leaves your device.
               </p>
             </div>
             <FileText className="w-8 h-8 text-indigo-500 shrink-0" />
