@@ -1054,6 +1054,17 @@ export const TOOLS: ToolConfig[] = [
     gradient: "from-emerald-500 to-teal-600",
   },
   {
+    slug: "pdf-creator",
+    name: "PDF Creator",
+    tagline: "Create new PDFs from scratch",
+    description:
+      "Draw, add text, shapes, images and signatures on blank pages — then export your work as a brand-new PDF or PNG.",
+    category: "Convert",
+    icon: Shapes,
+    accent: "text-violet-600",
+    gradient: "from-violet-500 to-purple-600",
+  },
+  {
     slug: "svg-formatter",
     name: "SVG Formatter",
     tagline: "Beautify or minify SVG markup",

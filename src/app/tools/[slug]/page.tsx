@@ -21,7 +21,7 @@ export default async function ToolPage(props: PageProps<'/tools/[slug]'>) {
   const tool = getTool(slug);
   if (!tool) notFound();
   const relatedGuides = getGuidesByTool(slug);
-  const isEditor = slug === "pdf-editor";
+  const isEditor = slug === "pdf-editor" || slug === "pdf-creator";
 
   if (isEditor) {
     return (
@@ -97,6 +97,7 @@ import dynamic from "next/dynamic";
 const mountMap: Record<string, ReturnType<typeof dynamic>> = {
   "pdf-compressor": dynamic(() => import("@/features/pdf-compressor/PdfCompressor")),
   "pdf-editor": dynamic(() => import("@/features/pdf-editor/PdfEditor")),
+  "pdf-creator": dynamic(() => import("@/features/pdf-creator/PdfCreator")),
   "image-compressor": dynamic(() => import("@/features/image-compressor/ImageCompressor")),
   "image-resizer": dynamic(() => import("@/features/image-resizer/ImageResizer")),
   "json-formatter": dynamic(() => import("@/features/json-formatter/JsonFormatter")),
