@@ -24,6 +24,7 @@ export default function PdfMetadata() {
     setRows([]);
     try {
       const data = await file.arrayBuffer();
+      const bytes = data.byteLength;
       const pdfjs = await import("pdfjs-dist");
       pdfjs.GlobalWorkerOptions.workerSrc = new URL(
         "pdfjs-dist/build/pdf.worker.min.mjs",
@@ -34,7 +35,6 @@ export default function PdfMetadata() {
       const info = (meta.info ?? {}) as Record<string, unknown>;
       const out: Meta[] = [];
       out.push({ key: "Pages", value: String(doc.numPages) });
-      const bytes = data.byteLength;
       setSizeText(
         bytes < 1024 * 1024
           ? `${(bytes / 1024).toFixed(1)} KB`

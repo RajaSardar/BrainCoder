@@ -43,7 +43,7 @@ export default function PdfCrop() {
       setPreviewUrl(canvas.toDataURL("image/jpeg", 0.85));
       setRatio(vp.height / vp.width);
       setName(file.name);
-      setBytes(new Uint8Array(data));
+      setBytes(new Uint8Array(data.slice(0)));
       setPageCount(doc.numPages);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not read PDF.");

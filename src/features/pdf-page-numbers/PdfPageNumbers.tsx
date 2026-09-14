@@ -42,7 +42,7 @@ export default function PdfPageNumbers() {
       ).toString();
       const doc = await pdfjs.getDocument({ data }).promise;
       setName(file.name);
-      setBytes(new Uint8Array(data));
+      setBytes(new Uint8Array(data.slice(0)));
       setPageCount(doc.numPages);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not read PDF.");
