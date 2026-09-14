@@ -22,7 +22,7 @@ async function step(name, fn) {
   }
 }
 
-function ooxmlText(buffer, entry) {
+function ooxmlText(buffer) {
   if (!buffer) return "";
   const doc = new DOMParser().parseFromString(dec.decode(buffer), "text/xml");
   const ts = doc.getElementsByTagName("t");

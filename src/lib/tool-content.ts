@@ -1125,6 +1125,168 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       "pdf-editor"
     ]
   },
+  "pdf-auto-redact": {
+    "longDescription": "<p>Auto-Redact PDF is a privacy tool that finds and permanently blackens every occurrence of a word or phrase across a PDF document in one click. Instead of scanning pages by eye, type a name, account number, email address, or any sensitive term and the tool instantly highlights every matching occurrence—then exports a PDF where each match is covered with a solid black box. This is ideal for scrubbing personal data from large documents: names in contracts, email addresses in shared reports, payment details in invoices, or regulated identifiers that must not be exposed.</p><p>The search runs directly on the document's text layer using precise word positioning, so matches are detected on every page, even inside dense paragraphs. Redaction boxes are padded slightly around each match to fully cover the glyphs. Because all detection and processing happens in your browser, your documents and the sensitive terms you search for never leave your device.</p>",
+    "features": [
+      "Search for a word or phrase and redact every match automatically",
+      "Multi-word phrase matching with exact word boundary detection",
+      "Redaction boxes padded around each occurrence for full coverage",
+      "Per-page match counts with a visual preview of detected areas",
+      "Run multiple searches and exclude pages when needed",
+      "100% client-side processing with no uploads"
+    ],
+    "howTo": [
+      {
+        "step": "Upload PDF",
+        "description": "Open the PDF document containing sensitive text you want to remove."
+      },
+      {
+        "step": "Enter Search Term",
+        "description": "Type a name, number, email, or phrase and click Find matches. Every occurrence is highlighted across all pages."
+      },
+      {
+        "step": "Review Matches",
+        "description": "Browse page previews to confirm the highlighted areas cover exactly what you want redacted."
+      },
+      {
+        "step": "Download Redacted PDF",
+        "description": "Export the PDF with every matching occurrence covered by a black redaction box."
+      }
+    ],
+    "faq": [
+      {
+        "question": "How does auto-redaction find words on a page?",
+        "answer": "The tool reads the PDF's embedded text layer, builds positioned word boxes, and matches your search phrase against them—so matches are found even inside dense paragraphs."
+      },
+      {
+        "question": "Can I restrict redaction to certain pages?",
+        "answer": "Yes. After searching, you can exclude specific pages whose matches you want to keep, then export the rest."
+      },
+      {
+        "question": "Is the redaction reversible?",
+        "answer": "No. Redaction draws solid boxes directly into the document structure, permanently covering the matched content in the exported file."
+      },
+      {
+        "question": "Does it work on scanned documents?",
+        "answer": "The matching relies on the text layer. Scanned PDFs without OCR text may need to be converted with our OCR tool first."
+      }
+    ],
+    "relatedSlugs": [
+      "pdf-redact",
+      "pdf-protect",
+      "pdf-unlock",
+      "pdf-watermark",
+      "pdf-editor"
+    ]
+  },
+  "pdf-remove-blank-pages": {
+    "longDescription": "<p>Remove Blank Pages is a cleanup tool that automatically finds and deletes empty pages from PDF documents. Blank pages commonly appear after scanning double-sided originals, exporting messy documents, or merging and splitting files—and removing them by hand is tedious when they're buried in a long document. This tool analyzes every page's ink coverage in your browser, flags pages that contain no visible content, and preselects them for removal so you can clean up the document in seconds.</p><p>You stay in control: blank pages are highlighted for review, and you can toggle any page on or off before exporting. The result is a compact PDF containing only pages with actual content—perfect for preparing documents for printing, archiving, or sharing.</p>",
+    "features": [
+      "Automatically detect blank pages by analyzing ink coverage",
+      "Blank pages preselected for removal with a clear visual badge",
+      "Fine-tune the selection by tapping any page before exporting",
+      "Works on scans, exports, and just about any PDF source",
+      "Preserves the layout and quality of remaining pages",
+      "100% client-side detection with no uploads"
+    ],
+    "howTo": [
+      {
+        "step": "Upload PDF",
+        "description": "Open the PDF you want to clean up. Every page is previewed as a thumbnail."
+      },
+      {
+        "step": "Review Blank Detection",
+        "description": "Pages with no meaningful content are marked blank and preselected for deletion."
+      },
+      {
+        "step": "Adjust Selection",
+        "description": "Tap any page to include or exclude it from the removal, and use Select all blank to reselect the detected pages."
+      },
+      {
+        "step": "Download Clean PDF",
+        "description": "Export the document with the selected blank pages removed."
+      }
+    ],
+    "faq": [
+      {
+        "question": "How does the tool decide a page is blank?",
+        "answer": "Each page is rendered and analyzed for ink coverage. Pages with almost no non-white pixels are classified as blank."
+      },
+      {
+        "question": "Will pages with small content be deleted?",
+        "answer": "Only pages with negligible ink are flagged. Pages containing real content stay safe and are never automatically removed—you must select pages to delete them."
+      },
+      {
+        "question": "Do remaining pages keep their quality?",
+        "answer": "Yes. Removal is lossless; the pages that remain keep their original content and formatting exactly as they were."
+      },
+      {
+        "question": "Can I undo a mistaken selection?",
+        "answer": "Yes. Tap a selected page again to keep it, or use Select all blank to restore the automatic detection."
+      }
+    ],
+    "relatedSlugs": [
+      "pdf-remove-pages",
+      "pdf-merge",
+      "pdf-split",
+      "pdf-editor",
+      "pdf-compress"
+    ]
+  },
+  "pdf-overlay": {
+    "longDescription": "<p>PDF Overlay lets you stamp one PDF on top of another, compositing content from two documents into a single file. It's perfect for watermarking pages with a logo or confidentiality label, adding a letterhead or footer to every sheet, placing a signature page onto a contract, or affixing approved-stamp overlays to templates. You choose a base PDF and an overlay PDF, then control exactly how the overlay is placed: stretched to fill the page, or fitted and positioned at the center, corners, or edges—with adjustable opacity so the stamping blends naturally with the underlying document.</p><p>Overlay pages can be mapped to your base document in two ways: paired to matching page numbers, or repeated cyclically across every page. The result is a standard PDF that opens in any reader, produced entirely within your browser for complete privacy.</p>",
+    "features": [
+      "Stamp one PDF onto another page-by-page",
+      "Eight placement modes: stretch, center, corners, and edges",
+      "Adjustable opacity from 5% to 100%",
+      "Pair overlay pages by number or repeat them across the document",
+      "Compatible with watermarks, letterheads, signatures, and badges",
+      "100% client-side composition with no uploads"
+    ],
+    "howTo": [
+      {
+        "step": "Choose Base PDF",
+        "description": "Select the PDF that receives the overlay—the document your pages are drawn onto."
+      },
+      {
+        "step": "Choose Overlay PDF",
+        "description": "Select the PDF that gets stamped on top, such as a watermark or letterhead."
+      },
+      {
+        "step": "Configure Placement",
+        "description": "Pick a position, set the opacity, and choose whether overlay pages repeat or pair with base pages."
+      },
+      {
+        "step": "Download Overlaid PDF",
+        "description": "Export the composited document with the overlay applied to every page."
+      }
+    ],
+    "faq": [
+      {
+        "question": "Can I use the overlay as a watermark?",
+        "answer": "Yes. Set a low opacity and pick a position like Center or Top center to stamp a translucent logo or label over each page."
+      },
+      {
+        "question": "What if the overlay has fewer pages than the base?",
+        "answer": "Enable Repeat overlay pages to cycle the overlay across the base document, or leave it off to pair by page number."
+      },
+      {
+        "question": "Is the output a standard PDF?",
+        "answer": "Yes. The result is a normal PDF with the overlay drawn into each page's content, viewable and printable in any reader."
+      },
+      {
+        "question": "Does overlay change the base content?",
+        "answer": "No. The base pages keep all their content; the overlay is composited on top at the position and opacity you choose."
+      }
+    ],
+    "relatedSlugs": [
+      "pdf-merge",
+      "pdf-watermark",
+      "pdf-editor",
+      "pdf-protect",
+      "pdf-redact"
+    ]
+  },
   "pdf-merge": {
     "longDescription": "<p>PDF Merge is a fast, intuitive tool that combines multiple PDF documents into a single, unified file. Whether you're consolidating separate chapters of a report, combining invoices and receipts, merging signed and unsigned document versions, or assembling a complete document from multiple sources, this tool makes the process effortless. Simply upload your PDFs, arrange them in your desired order, and download the merged result—all from your browser with zero uploads to external servers.</p><p>The tool preserves the quality, formatting, and structure of every input document in the final merged PDF. It handles PDFs of any size and number, supports drag-and-drop reordering, and maintains bookmarks and internal links where possible. From students combining assignment sections to professionals assembling complete document packages, PDF Merge is the quickest way to bring multiple PDFs together into one cohesive file.</p>",
     "features": [

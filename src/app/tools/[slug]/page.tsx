@@ -341,6 +341,9 @@ const mountMap: Record<string, ReturnType<typeof dynamic>> = {
   "text-to-pdf": dynamic(() => import("@/features/text-to-pdf/TextToPdf")),
   "pdf-to-ppt": dynamic(() => import("@/features/pdf-to-ppt/PdfToPpt")),
   "pdf-rotate": dynamic(() => import("@/features/pdf-rotate/PdfRotate")),
+  "pdf-remove-blank-pages": dynamic(
+    () => import("@/features/pdf-remove-blank-pages/PdfRemoveBlankPages"),
+  ),
   "pdf-remove-pages": dynamic(
     () => import("@/features/pdf-remove-pages/PdfRemovePages"),
   ),
@@ -361,6 +364,10 @@ const mountMap: Record<string, ReturnType<typeof dynamic>> = {
   "pdf-ocr": dynamic(() => import("@/features/pdf-ocr/PdfOcr")),
   "pdf-compare": dynamic(() => import("@/features/pdf-compare/PdfCompare")),
   "pdf-redact": dynamic(() => import("@/features/pdf-redact/PdfRedact")),
+  "pdf-auto-redact": dynamic(
+    () => import("@/features/pdf-auto-redact/PdfAutoRedact"),
+  ),
+  "pdf-overlay": dynamic(() => import("@/features/pdf-overlay/PdfOverlay")),
   "md-to-html": dynamic(() => import("@/features/md-to-html/MdToHtml")),
   "html-to-pdf": dynamic(() => import("@/features/html-to-pdf/HtmlToPdf")),
   "html-to-image": dynamic(

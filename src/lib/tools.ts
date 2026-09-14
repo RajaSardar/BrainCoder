@@ -97,6 +97,8 @@ import {
   Sheet,
   FileDown,
   Combine,
+  EyeOff,
+  ScanLine,
 } from "lucide-react";
 
 export type Category =
@@ -452,6 +454,17 @@ export const TOOLS: ToolConfig[] = [
     gradient: "from-amber-500 to-orange-600",
   },
   {
+    slug: "pdf-remove-blank-pages",
+    name: "Remove Blank Pages",
+    tagline: "Delete empty PDF pages automatically",
+    description:
+      "Automatically detects blank pages by analyzing ink coverage and preselects them for removal — all in your browser.",
+    category: "Convert",
+    icon: ScanLine,
+    accent: "text-emerald-600",
+    gradient: "from-emerald-500 to-teal-600",
+  },
+  {
     slug: "pdf-remove-pages",
     name: "PDF Delete Pages",
     tagline: "Remove unwanted pages",
@@ -582,6 +595,28 @@ export const TOOLS: ToolConfig[] = [
     icon: Eraser,
     accent: "text-slate-700",
     gradient: "from-slate-600 to-gray-700",
+  },
+  {
+    slug: "pdf-auto-redact",
+    name: "Auto-Redact PDF",
+    tagline: "Black out every matching word",
+    description:
+      "Search a PDF for a word or phrase — like a name, account number, or email — and automatically black out every occurrence.",
+    category: "Convert",
+    icon: EyeOff,
+    accent: "text-red-600",
+    gradient: "from-red-500 to-rose-600",
+  },
+  {
+    slug: "pdf-overlay",
+    name: "PDF Overlay",
+    tagline: "Stamp one PDF on top of another",
+    description:
+      "Overlay a watermark, letterhead, or template PDF onto every page of another PDF with full control over position and opacity.",
+    category: "Convert",
+    icon: Blend,
+    accent: "text-indigo-600",
+    gradient: "from-indigo-500 to-blue-600",
   },
   {
     slug: "md-to-html",
