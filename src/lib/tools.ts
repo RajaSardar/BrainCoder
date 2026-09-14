@@ -88,6 +88,11 @@ import {
   Presentation,
   FileType,
   TextCursorInput,
+  RotateCw,
+  Droplets,
+  Crop,
+  Unlock,
+  Info,
 } from "lucide-react";
 
 export type Category =
@@ -428,6 +433,149 @@ export const TOOLS: ToolConfig[] = [
     icon: Presentation,
     accent: "text-fuchsia-600",
     gradient: "from-fuchsia-500 to-purple-600",
+  },
+  {
+    slug: "pdf-rotate",
+    name: "PDF Rotator",
+    tagline: "Rotate pages by 90°, 180° or 270°",
+    description:
+      "Rotate every page of a PDF clockwise or counter-clockwise in one click, then download the result.",
+    category: "Convert",
+    icon: RotateCw,
+    accent: "text-amber-600",
+    gradient: "from-amber-500 to-orange-600",
+  },
+  {
+    slug: "pdf-remove-pages",
+    name: "PDF Delete Pages",
+    tagline: "Remove unwanted pages",
+    description:
+      "Preview every page, tap the ones to remove, and download the PDF with just the pages you want to keep.",
+    category: "Convert",
+    icon: Scissors,
+    accent: "text-red-600",
+    gradient: "from-red-500 to-rose-600",
+  },
+  {
+    slug: "pdf-watermark",
+    name: "PDF Watermark",
+    tagline: "Stamp any text on every page",
+    description:
+      "Overlay configurable text watermarks (size, opacity, angle) across all pages of a PDF, fully client-side.",
+    category: "Convert",
+    icon: Droplets,
+    accent: "text-sky-600",
+    gradient: "from-sky-500 to-blue-600",
+  },
+  {
+    slug: "pdf-page-numbers",
+    name: "Add Page Numbers to PDF",
+    tagline: "Number pages in six positions",
+    description:
+      "Add page numbers (plain or “n / total”) to every page with position, size and start number controls.",
+    category: "Convert",
+    icon: Hash,
+    accent: "text-indigo-600",
+    gradient: "from-indigo-500 to-violet-600",
+  },
+  {
+    slug: "pdf-crop",
+    name: "PDF Cropper",
+    tagline: "Cut margins away by percentage",
+    description:
+      "Trim the top, bottom, left and right margins of every page with a live preview of the kept area.",
+    category: "Convert",
+    icon: Crop,
+    accent: "text-emerald-600",
+    gradient: "from-emerald-500 to-teal-600",
+  },
+  {
+    slug: "pdf-protect",
+    name: "Protect PDF",
+    tagline: "Lock a PDF with a password",
+    description:
+      "Encrypt any PDF with a user password so it needs one to open — generated locally, nothing is uploaded.",
+    category: "Convert",
+    icon: Lock,
+    accent: "text-rose-600",
+    gradient: "from-rose-500 to-pink-600",
+  },
+  {
+    slug: "pdf-unlock",
+    name: "Unlock PDF",
+    tagline: "Remove a password from a PDF",
+    description:
+      "Enter the password for a protected PDF and download an unlocked copy. Decryption runs entirely on your device.",
+    category: "Convert",
+    icon: Unlock,
+    accent: "text-teal-600",
+    gradient: "from-teal-500 to-emerald-600",
+  },
+  {
+    slug: "pdf-metadata",
+    name: "PDF Metadata Viewer",
+    tagline: "Inspect title, author, pages & dates",
+    description:
+      "Read a PDF’s metadata — page count, title, author, creator, producer and creation/modified dates — without leaving the browser.",
+    category: "Convert",
+    icon: Info,
+    accent: "text-cyan-600",
+    gradient: "from-cyan-500 to-sky-600",
+  },
+  {
+    slug: "pdf-to-excel",
+    name: "PDF to Excel",
+    tagline: "Extract tables as XLSX or CSV",
+    description:
+      "Reconstruct text tables from a PDF using line/column layout detection and export them as .xlsx or .csv.",
+    category: "Convert",
+    icon: FileSpreadsheet,
+    accent: "text-green-600",
+    gradient: "from-green-500 to-emerald-600",
+  },
+  {
+    slug: "pdf-to-markdown",
+    name: "PDF to Markdown",
+    tagline: "PDF text into .md or HTML",
+    description:
+      "Convert the text layer of a PDF into clean Markdown or HTML that keeps headings, lists and paragraph structure.",
+    category: "Convert",
+    icon: BookMarked,
+    accent: "text-violet-600",
+    gradient: "from-violet-500 to-purple-600",
+  },
+  {
+    slug: "pdf-ocr",
+    name: "OCR PDF",
+    tagline: "Read text from scanned PDFs",
+    description:
+      "Recognize printed text in scanned PDF pages with on-device Tesseract.js — fully private, no uploads.",
+    category: "Convert",
+    icon: ScanText,
+    accent: "text-blue-600",
+    gradient: "from-blue-500 to-indigo-600",
+  },
+  {
+    slug: "pdf-compare",
+    name: "PDF Compare",
+    tagline: "Spot differences between PDFs",
+    description:
+      "Upload two PDFs and get a page-by-page pixel diff with changed regions highlighted in red.",
+    category: "Convert",
+    icon: GitCompareArrows,
+    accent: "text-fuchsia-600",
+    gradient: "from-fuchsia-500 to-purple-600",
+  },
+  {
+    slug: "pdf-redact",
+    name: "Redact PDF",
+    tagline: "Black out sensitive information",
+    description:
+      "Draw black redaction boxes over private content on any page, then export the redacted PDF — all locally.",
+    category: "Convert",
+    icon: Eraser,
+    accent: "text-slate-700",
+    gradient: "from-slate-600 to-gray-700",
   },
   {
     slug: "md-to-html",
