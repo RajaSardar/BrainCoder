@@ -342,3 +342,45 @@ export function guidesIndexJsonLd() {
     description: "Step-by-step guides for using free online tools: compress, merge and split PDFs.",
   };
 }
+
+export function faqJsonLd(
+  faq: { question: string; answer: string }[],
+  toolName: string,
+) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    name: `${toolName} — Frequently Asked Questions`,
+    mainEntity: faq.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
+  };
+}
+
+export function howToJsonLd(
+  steps: { step: string; description: string }[],
+  toolName: string,
+  toolUrl: string,
+) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name: `How to use ${toolName}`,
+    step: steps.map((s, i) => ({
+      "@type": "HowToStep",
+      position: i + 1,
+      name: s.step,
+      text: s.description,
+    })),
+    about: {
+      "@type": "WebApplication",
+      name: toolName,
+      url: toolUrl,
+    },
+  };
+}
