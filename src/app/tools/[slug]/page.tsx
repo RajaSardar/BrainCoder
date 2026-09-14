@@ -368,6 +368,13 @@ const mountMap: Record<string, ReturnType<typeof dynamic>> = {
     () => import("@/features/pdf-auto-redact/PdfAutoRedact"),
   ),
   "pdf-overlay": dynamic(() => import("@/features/pdf-overlay/PdfOverlay")),
+  "pdf-flatten": dynamic(() => import("@/features/pdf-flatten/PdfFlatten")),
+  "pdf-remove-annotations": dynamic(
+    () => import("@/features/pdf-remove-annotations/PdfRemoveAnnotations"),
+  ),
+  "pdf-scale-pages": dynamic(
+    () => import("@/features/pdf-scale-pages/PdfScalePages"),
+  ),
   "md-to-html": dynamic(() => import("@/features/md-to-html/MdToHtml")),
   "html-to-pdf": dynamic(() => import("@/features/html-to-pdf/HtmlToPdf")),
   "html-to-image": dynamic(

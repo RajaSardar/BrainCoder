@@ -619,6 +619,39 @@ export const TOOLS: ToolConfig[] = [
     gradient: "from-indigo-500 to-blue-600",
   },
   {
+    slug: "pdf-flatten",
+    name: "Flatten PDF",
+    tagline: "Merge every page into a flat image",
+    description:
+      "Rasterize a PDF so each page becomes a single image — text is no longer selectable or editable, everything is locked into the page.",
+    category: "Convert",
+    icon: Layers,
+    accent: "text-purple-600",
+    gradient: "from-purple-500 to-fuchsia-600",
+  },
+  {
+    slug: "pdf-remove-annotations",
+    name: "Remove Annotations",
+    tagline: "Strip comments, highlights, and links",
+    description:
+      "Removes all annotations from a PDF — comments, highlights, stamps, and links — while leaving the page content completely untouched.",
+    category: "Convert",
+    icon: StickyNote,
+    accent: "text-orange-600",
+    gradient: "from-orange-500 to-amber-600",
+  },
+  {
+    slug: "pdf-scale-pages",
+    name: "Scale Pages",
+    tagline: "Resize every page of a PDF",
+    description:
+      "Scale all pages of a PDF by a percentage — page size and content are resized together, uniformly, right in your browser.",
+    category: "Convert",
+    icon: Scaling,
+    accent: "text-cyan-600",
+    gradient: "from-cyan-500 to-sky-600",
+  },
+  {
     slug: "md-to-html",
     name: "Markdown to HTML",
     tagline: "Convert Markdown to HTML",

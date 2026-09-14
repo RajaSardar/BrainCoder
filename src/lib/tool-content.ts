@@ -1287,6 +1287,168 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       "pdf-redact"
     ]
   },
+  "pdf-flatten": {
+    "longDescription": "<p>Flatten PDF converts a vector PDF into a fully flattened document where every page becomes a single raster image. After flattening, text can no longer be selected, copied, or edited; form fields, layers, and interactive elements become part of the page's picture. This is extremely useful for locking a document's appearance before distribution: sharing a filled contract where recipients shouldn't alter or copy text, preparing files for printing services that want a single image per page, or removing hidden layers and metadata that could reveal edit history. Because the output is simply an image per page, it renders identically on every device and viewer.</p><p>The tool renders each page in your browser at a quality you choose — Draft, Normal, or High — and re-embeds the result at the original page size, so the flattened PDF keeps the same dimensions as the source. Choose the lowest quality that still looks sharp to keep your file size down.</p>",
+    "features": [
+      "Convert every page into a single image layer",
+      "Text becomes non-selectable and non-editable",
+      "Strip hidden layers, fields, and interactive content",
+      "Three output qualities to balance size and sharpness",
+      "Output keeps the original page size",
+      "100% client-side rendering with no uploads"
+    ],
+    "howTo": [
+      {
+        "step": "Upload PDF",
+        "description": "Open the PDF you want to flatten into static image pages."
+      },
+      {
+        "step": "Choose Quality",
+        "description": "Pick Draft, Normal, or High rendering: lower options produce smaller files."
+      },
+      {
+        "step": "Flatten Document",
+        "description": "Click flatten and the tool renders every page into a single image layer."
+      },
+      {
+        "step": "Download Flattened PDF",
+        "description": "Download the flattened PDF with the same page dimensions as the original."
+      }
+    ],
+    "faq": [
+      {
+        "question": "What does flattening actually remove?",
+        "answer": "Flattening rasterizes each page, so selectable text, form fields, comments, layers, and interactive elements become part of the static image."
+      },
+      {
+        "question": "Will the output be larger than the original?",
+        "answer": "It can be, since images are less efficient than vector text. Use Draft or Normal quality for smaller files or only flatten when the trade-off is worth it."
+      },
+      {
+        "question": "Does flattening reduce quality?",
+        "answer": "High quality renders pages at 2× their display size, keeping text sharp. Very small font sizes may look less crisp than the vector original."
+      },
+      {
+        "question": "Can I still search the flattened document?",
+        "answer": "No. Once text is part of an image it can't be searched or copied — that's the point of flattening for locked documents."
+      }
+    ],
+    "relatedSlugs": [
+      "pdf-to-image",
+      "pdf-editor",
+      "pdf-scale-pages",
+      "pdf-compress",
+      "pdf-redact"
+    ]
+  },
+  "pdf-remove-annotations": {
+    "longDescription": "<p>Remove Annotations cleans the markup layer off a PDF while keeping the document content exactly as it is. PDFs often accumulate comments, highlights, underlines, stamps, sticky notes, and hyperlinks during review cycles — clutter that isn't appropriate for the final version shared with clients, printed, or archived. This tool removes every annotation from the document in one pass, producing a clean copy with the page content, layout, and quality untouched.</p><p>The tool reports how many annotations it found and on which pages before you remove them, so you know exactly what's being stripped. Because processing happens entirely in your browser, marked-up documents and the notes inside them never leave your device.</p>",
+    "features": [
+      "Remove comments, highlights, stamps, sticky notes, and links",
+      "Per-page annotation counts shown before removal",
+      "Page content and layout remain completely untouched",
+      "Removes the form (AcroForm) entry for a fully clean file",
+      "Works on annotated PDFs from any source",
+      "100% client-side processing with no uploads"
+    ],
+    "howTo": [
+      {
+        "step": "Upload PDF",
+        "description": "Open the annotated PDF you want to clean up."
+      },
+      {
+        "step": "Review Annotation Count",
+        "description": "The tool shows how many annotations exist and on which pages."
+      },
+      {
+        "step": "Remove Annotations",
+        "description": "Click the remove button to strip all annotations from the document."
+      },
+      {
+        "step": "Download Clean PDF",
+        "description": "Download the cleaned PDF with page content fully preserved."
+      }
+    ],
+    "faq": [
+      {
+        "question": "Does removing annotations delete any page content?",
+        "answer": "No. Only the annotation layer is removed. All text, images, and layout are preserved exactly as they were."
+      },
+      {
+        "question": "Are links removed too?",
+        "answer": "Yes. Links are implemented as annotations in PDF, so hyperlinks are removed along with comments and highlights."
+      },
+      {
+        "question": "Will form fields be affected?",
+        "answer": "The form structure is removed, so interactive fields become plain content. Filled-in visible values remain part of the page."
+      },
+      {
+        "question": "Can I undo the removal?",
+        "answer": "No undo is available after download. Keep the original file if you may need the annotations later."
+      }
+    ],
+    "relatedSlugs": [
+      "pdf-editor",
+      "pdf-redact",
+      "pdf-watermark",
+      "pdf-flatten",
+      "pdf-metadata"
+    ]
+  },
+  "pdf-scale-pages": {
+    "longDescription": "<p>Scale Pages resizes every page of a PDF by a percentage, scaling both the page size and its content together in perfect proportion. Whether you're shrinking a poster for sharing, enlarging a document for print, producing consistent page sizes from mixed sources, or fitting content into a specific dimension range, this tool gives you a uniform vector resize. Set a scale from 25% to 300% and the tool applies it to every page simultaneously, then downloads the resized PDF.</p><p>Unlike cropping, scaling keeps the full content in view — it simply makes the whole page larger or smaller. Because pdf-lib scales the underlying vector content (and annotations) rather than re-rendering, text stays crisp at every size. Everything is processed locally in your browser, so your documents never leave your device.</p>",
+    "features": [
+      "Scale all pages together from 25% to 300%",
+      "Page size and content scale in perfect proportion",
+      "Vector content stays crisp at any scale",
+      "Applies uniformly to every page in the document",
+      "Live page-size preview before you export",
+      "100% client-side processing with no uploads"
+    ],
+    "howTo": [
+      {
+        "step": "Upload PDF",
+        "description": "Open the PDF you want to resize. The first page's current size is shown."
+      },
+      {
+        "step": "Set Scale",
+        "description": "Drag the slider to the desired percentage — the resulting page size updates live."
+      },
+      {
+        "step": "Scale Document",
+        "description": "Click scale and every page is resized by the chosen factor."
+      },
+      {
+        "step": "Download Scaled PDF",
+        "description": "Download the resized PDF with all pages scaled uniformly."
+      }
+    ],
+    "faq": [
+      {
+        "question": "Is content scaled or cropped?",
+        "answer": "Scaled. Every page is resized along with its content, so nothing is cut off and proportions are preserved."
+      },
+      {
+        "question": "Will text stay sharp after scaling?",
+        "answer": "Yes. The vector content itself is scaled rather than re-rendered, so text and lines remain crisp at any size."
+      },
+      {
+        "question": "Does the tool support different X and Y scales?",
+        "answer": "Currently scaling is uniform, keeping the aspect ratio intact so no distortion occurs. Use page resizing features for non-uniform layouts."
+      },
+      {
+        "question": "Can I preview the result before exporting?",
+        "answer": "Yes. The tool shows the first page's current dimensions and the exact resulting size for your chosen percentage."
+      }
+    ],
+    "relatedSlugs": [
+      "pdf-crop",
+      "pdf-rotate",
+      "pdf-flatten",
+      "pdf-compress",
+      "pdf-page-numbers"
+    ]
+  },
   "pdf-merge": {
     "longDescription": "<p>PDF Merge is a fast, intuitive tool that combines multiple PDF documents into a single, unified file. Whether you're consolidating separate chapters of a report, combining invoices and receipts, merging signed and unsigned document versions, or assembling a complete document from multiple sources, this tool makes the process effortless. Simply upload your PDFs, arrange them in your desired order, and download the merged result—all from your browser with zero uploads to external servers.</p><p>The tool preserves the quality, formatting, and structure of every input document in the final merged PDF. It handles PDFs of any size and number, supports drag-and-drop reordering, and maintains bookmarks and internal links where possible. From students combining assignment sections to professionals assembling complete document packages, PDF Merge is the quickest way to bring multiple PDFs together into one cohesive file.</p>",
     "features": [
