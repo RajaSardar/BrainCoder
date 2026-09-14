@@ -35,6 +35,7 @@ export default function PdfPageNumbers() {
     setMessage("");
     try {
       const data = await file.arrayBuffer();
+      const copy = data.slice(0);
       const pdfjs = await import("pdfjs-dist");
       pdfjs.GlobalWorkerOptions.workerSrc = new URL(
         "pdfjs-dist/build/pdf.worker.min.mjs",
@@ -42,7 +43,7 @@ export default function PdfPageNumbers() {
       ).toString();
       const doc = await pdfjs.getDocument({ data }).promise;
       setName(file.name);
-      setBytes(new Uint8Array(data.slice(0)));
+      setBytes(new Uint8Array(copy));
       setPageCount(doc.numPages);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not read PDF.");

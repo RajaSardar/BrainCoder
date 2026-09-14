@@ -27,6 +27,7 @@ export default function PdfCrop() {
     setMessage("");
     try {
       const data = await file.arrayBuffer();
+      const copy = data.slice(0);
       const pdfjs = await import("pdfjs-dist");
       pdfjs.GlobalWorkerOptions.workerSrc = new URL(
         "pdfjs-dist/build/pdf.worker.min.mjs",
@@ -43,7 +44,7 @@ export default function PdfCrop() {
       setPreviewUrl(canvas.toDataURL("image/jpeg", 0.85));
       setRatio(vp.height / vp.width);
       setName(file.name);
-      setBytes(new Uint8Array(data.slice(0)));
+      setBytes(new Uint8Array(copy));
       setPageCount(doc.numPages);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not read PDF.");
