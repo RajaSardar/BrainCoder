@@ -4,7 +4,7 @@ import { DOMParser } from "/Users/rajasardar/repos/BrainCoder/node_modules/@xmld
 import fs from "node:fs";
 import path from "node:path";
 
-const BASE = "http://localhost:3777/tools/";
+const BASE = "http://localhost:3777/use/";
 const F = new URL("./fixtures", import.meta.url).pathname;
 const O = new URL("./out", import.meta.url).pathname;
 const dec = new TextDecoder();
