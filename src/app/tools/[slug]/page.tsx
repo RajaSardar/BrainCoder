@@ -498,6 +498,19 @@ const mountMap: Record<string, ReturnType<typeof dynamic>> = {
     () => import("@/features/svg-formatter/SvgFormatter"),
   ),
   "svg-to-png": dynamic(() => import("@/features/svg-to-png/SvgToPng")),
+  "word-to-text": dynamic(() => import("@/features/word-to-text/WordToText")),
+  "word-to-markdown": dynamic(
+    () => import("@/features/word-to-markdown/WordToMarkdown"),
+  ),
+  "word-viewer": dynamic(() => import("@/features/word-viewer/WordViewer")),
+  "word-creator": dynamic(() => import("@/features/word-creator/WordCreator")),
+  "csv-to-excel": dynamic(() => import("@/features/csv-to-excel/CsvToExcel")),
+  "excel-viewer": dynamic(() => import("@/features/excel-viewer/ExcelViewer")),
+  "excel-to-csv": dynamic(() => import("@/features/excel-to-csv/ExcelToCsv")),
+  "excel-to-json": dynamic(() => import("@/features/excel-to-json/ExcelToJson")),
+  "excel-merge": dynamic(() => import("@/features/excel-merge/ExcelMerge")),
+  "excel-to-pdf": dynamic(() => import("@/features/excel-to-pdf/ExcelToPdf")),
+  "pptx-creator": dynamic(() => import("@/features/pptx-creator/PptxCreator")),
 };
 
 function ToolMount({ slug }: { slug: string }) {

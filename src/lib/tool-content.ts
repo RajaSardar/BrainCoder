@@ -5280,5 +5280,543 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       "case-converter",
       "utf8-converter"
     ]
+  },
+  "word-to-text": {
+    "longDescription": "<p>Word to Text extracts the plain text from a Word (.docx) document, stripping away formatting, images, and layout so you are left with clean, editable content. It is built on the same engine developers trust for server-side conversion — but runs 100% in your browser, which means your document never leaves your device.</p><p>Use it to pull text into a notes app, prepare content for a script or subtitles, reflow text for publishing, or strip boilerplate before another step in your workflow. The result opens in a live editor so you can tidy it up before downloading the .txt file.</p>",
+    "features": [
+      "Extract plain text from .docx and .doc files",
+      "Removes formatting, images, and layout clutter",
+      "Live preview in an editable textarea",
+      "Download the result as a .txt file",
+      "Handles headers, footers, and multi-page documents",
+      "100% client-side with no file uploads"
+    ],
+    "howTo": [
+      {
+        "step": "Choose a Word document",
+        "description": "Click the upload button and pick a .docx file, or drag one to the tool."
+      },
+      {
+        "step": "Wait for extraction",
+        "description": "The document is parsed in your browser and its text is extracted in seconds."
+      },
+      {
+        "step": "Tidy the preview",
+        "description": "Edit the extracted text directly in the editable preview if you like."
+      },
+      {
+        "step": "Download .txt",
+        "description": "Click download to save the plain text to your device."
+      }
+    ],
+    "faq": [
+      {
+        "question": "Does it keep formatting?",
+        "answer": "No. The tool intentionally removes formatting to give you clean plain text. For formatted output, use Word to Markdown or Word to PDF instead."
+      },
+      {
+        "question": "Can it read .doc files?",
+        "answer": "Mammoth-based extraction handles the legacy .doc format in most cases. For the best results, prefer .docx."
+      },
+      {
+        "question": "Are my documents uploaded?",
+        "answer": "No. The entire conversion happens locally in your browser using client-side JavaScript."
+      }
+    ],
+    "relatedSlugs": [
+      "word-to-markdown",
+      "word-viewer",
+      "word-creator",
+      "text-to-pdf",
+      "pdf-to-word"
+    ]
+  },
+  "word-to-markdown": {
+    "longDescription": "<p>Word to Markdown converts a Word (.docx) document into clean Markdown — with headings, lists, tables, and links mapped to the correct Markdown syntax. It is perfect for moving legacy documents into content systems, static sites, GitHub repos, or documentation tools.</p><p>The conversion pipeline runs entirely in your browser: your document is parsed locally and rendered to Markdown with the Turndown library. You get a live Markdown view plus a rendered HTML preview toggle, and the .md file downloads with one click.</p>",
+    "features": [
+      "Convert Word documents to Markdown with correct syntax",
+      "Headings, lists, tables, and links preserved",
+      "Live Markdown editor with rendered preview toggle",
+      "Download the result as a .md file",
+      "Clean output ready for static sites and docs tools",
+      "No uploads — everything happens client-side"
+    ],
+    "howTo": [
+      {
+        "step": "Pick a document",
+        "description": "Open a .docx file with the upload button."
+      },
+      {
+        "step": "Review the Markdown",
+        "description": "Check the generated Markdown in the built-in editor."
+      },
+      {
+        "step": "Toggle preview",
+        "description": "Switch to Preview to see how the Markdown renders."
+      },
+      {
+        "step": "Download .md",
+        "description": "Save the finished Markdown file to your device."
+      }
+    ],
+    "faq": [
+      {
+        "question": "Which Markdown dialect is used?",
+        "answer": "Output uses GitHub-style ATX headings with fenced code blocks, so it renders correctly on GitHub, VS Code, and most static site generators."
+      },
+      {
+        "question": "Are tables converted?",
+        "answer": "Yes. Tables in the Word document are converted to pipe-table Markdown syntax."
+      },
+      {
+        "question": "Is this private?",
+        "answer": "Completely. All conversion runs locally in your browser and nothing is sent to any server."
+      }
+    ],
+    "relatedSlugs": [
+      "word-to-text",
+      "markdown-preview",
+      "md-to-html",
+      "word-viewer",
+      "html-markdown"
+    ]
+  },
+  "word-viewer": {
+    "longDescription": "<p>Word Document Viewer lets you open a Word (.docx) file and preview it as rendered content directly in your browser — no Microsoft Office, Google Docs, or other apps required. Headings, paragraphs, bullet lists, and tables are reconstructed and shown as readable HTML.</p><p>Because parsing happens entirely client-side with the mammoth engine, viewing a document is fully private and works offline once the page has loaded. You can also copy the underlying HTML to paste into emails, editors, or web pages.</p>",
+    "features": [
+      "Preview .docx documents in the browser",
+      "Renders headings, lists, tables, and emphasis",
+      "Copy the generated HTML with one click",
+      "No Office install or third-party service needed",
+      "Private — documents never leave your device",
+      "Works for quickly checking any Word file"
+    ],
+    "howTo": [
+      {
+        "step": "Open a document",
+        "description": "Pick a .docx file with the upload button."
+      },
+      {
+        "step": "Read the preview",
+        "description": "Scroll the rendered document exactly as formatted content."
+      },
+      {
+        "step": "Copy the HTML",
+        "description": "Use Copy HTML to grab the cleaned-up markup for reuse."
+      }
+    ],
+    "faq": [
+      {
+        "question": "Does the viewer edit documents?",
+        "answer": "No. It is a read-only preview. Use Word Document Creator or Word to PDF if you need to produce or convert files."
+      },
+      {
+        "question": "Will images show?",
+        "answer": "Basic embedded images are rendered when formats are supported by the browser. Text content, headings, and tables preview reliably."
+      },
+      {
+        "question": "Is it safe to open unknown files here?",
+        "answer": "It is safer than most viewers since nothing is uploaded and no external code executes — documents are parsed and rendered purely client-side."
+      }
+    ],
+    "relatedSlugs": [
+      "word-to-text",
+      "word-to-markdown",
+      "word-to-pdf",
+      "excel-viewer",
+      "word-creator"
+    ]
+  },
+  "word-creator": {
+    "longDescription": "<p>Word Document Creator is a free online way to write and generate .docx files without installing any desktop software. Draft your content in the simple editor, use lightweight formatting markers (# headings, **bold**, *italic*, lists, and --- page breaks), and download a genuine Word document generated locally.</p><p>Everything is built in your browser using the same Open XML packaging Office uses, so the resulting file opens seamlessly in Microsoft Word, Google Docs, LibreOffice, and Apple Pages. There are no accounts, no uploads, and no watermarks.</p>",
+    "features": [
+      "Write and download real .docx documents free",
+      "Simple markers for headings, bold, italic, and lists",
+      "Insert page breaks with ---",
+      "Built-in sample document to get started",
+      "Output opens in Word, Google Docs, and LibreOffice",
+      "Fully client-side generation — nothing uploaded"
+    ],
+    "howTo": [
+      {
+        "step": "Write your content",
+        "description": "Type in the editor using # for headings, ** bold **, and - for bullets."
+      },
+      {
+        "step": "Preview the markers",
+        "description": "Review the quick format reference above the editor at any time."
+      },
+      {
+        "step": "Generate .docx",
+        "description": "Click Generate .docx and the file is built instantly in your browser."
+      },
+      {
+        "step": "Open in Word",
+        "description": "Download and open the document in your favorite office suite."
+      }
+    ],
+    "faq": [
+      {
+        "question": "What formatting markers are supported?",
+        "answer": "# Heading 1, ## Heading 2, ### Heading 3, - bullets, **bold**, *italic*, and --- page breaks. The first heading becomes the title."
+      },
+      {
+        "question": "Does the file open in Microsoft Word?",
+        "answer": "Yes. The tool produces a standard .docx package (Open XML), so it opens in Word, Google Docs, LibreOffice, and Pages."
+      },
+      {
+        "question": "Are images supported?",
+        "answer": "This creator focuses on text documents. For image-based workbooks or PDFs, check Excel View or Image to PDF."
+      }
+    ],
+    "relatedSlugs": [
+      "word-to-text",
+      "word-to-markdown",
+      "word-viewer",
+      "text-to-pdf",
+      "pdf-creator"
+    ]
+  },
+  "csv-to-excel": {
+    "longDescription": "<p>CSV to Excel converts comma-separated value files into a real Excel workbook (.xlsx). Upload one or more CSV files and each becomes a named sheet — perfect for bundling exports, consolidating weekly reports, or preparing data for pivot tables and charts.</p><p>The converter parses CSV robustly (quoted fields, commas inside quotes, escaped quotes) and detects numeric values so numbers stay numbers when the workbook opens. Generation is fully client-side: your data, which can be sensitive business records, never leaves your browser.</p>",
+    "features": [
+      "Convert one or more CSV files to .xlsx",
+      "Each CSV becomes its own named sheet",
+      "Numeric values detected and stored as numbers",
+      "Handles quoted fields and commas within quotes",
+      "Multiple files bundle into a single workbook",
+      "100% client-side — no data upload"
+    ],
+    "howTo": [
+      {
+        "step": "Add CSV files",
+        "description": "Click Add CSV file(s) and select one or more .csv files."
+      },
+      {
+        "step": "Check the sheets",
+        "description": "Review the pending files — each one becomes a sheet named after the file."
+      },
+      {
+        "step": "Convert",
+        "description": "Click Convert to .xlsx and the workbook is built in your browser."
+      },
+      {
+        "step": "Download",
+        "description": "Save the .xlsx and open it in Excel or any spreadsheet app."
+      }
+    ],
+    "faq": [
+      {
+        "question": "Do numbers stay numeric?",
+        "answer": "Yes. Plain numeric values are recognized and stored as numbers, so you can sum them in Excel. Values with currency symbols remain text."
+      },
+      {
+        "question": "Can I combine several CSV files?",
+        "answer": "Yes. Add multiple files and each becomes a sheet in one downloaded workbook."
+      },
+      {
+        "question": "Is my data uploaded?",
+        "answer": "No. Building the workbook happens locally with no network transfer of your data."
+      }
+    ],
+    "relatedSlugs": [
+      "excel-viewer",
+      "excel-to-csv",
+      "excel-to-json",
+      "csv-json",
+      "excel-merge"
+    ]
+  },
+  "excel-viewer": {
+    "longDescription": "<p>Excel Viewer is a free, browser-based way to open and browse Excel workbooks (.xlsx) without installing spreadsheet software. Upload a file and every sheet is listed as a tab you can click through, with cell contents shown in a clean grid.</p><p>The workbook is parsed on your device from the Open XML package — no server, no account, no upload. It is ideal for quickly checking a vendor's export, auditing a report before processing, or reading spreadsheets on a device without Office apps.</p>",
+    "features": [
+      "Open .xlsx workbooks online without Office",
+      "Browse every sheet via tab navigation",
+      "Rows and cells rendered as a readable grid",
+      "First row highlighted to spot headers",
+      "Parsed locally — nothing uploaded",
+      "Great for reports, exports, and audits"
+    ],
+    "howTo": [
+      {
+        "step": "Open a workbook",
+        "description": "Pick an .xlsx file with the upload button."
+      },
+      {
+        "step": "Select a sheet",
+        "description": "Click any sheet tab to view its contents."
+      },
+      {
+        "step": "Scroll the grid",
+        "description": "Review up to 300 rows of cells with headers highlighted."
+      }
+    ],
+    "faq": [
+      {
+        "question": "Which formats are supported?",
+        "answer": "Modern .xlsx files. Legacy .xls binary files are not supported yet."
+      },
+      {
+        "question": "Can it edit cells?",
+        "answer": "No, the viewer is read-only. Use CSV to Excel, Excel to PDF, or Excel Merge for editing workflows."
+      },
+      {
+        "question": "Are formulas calculated?",
+        "answer": "Only static values stored in the sheet are shown; formula results must be saved by the originating app for them to appear."
+      }
+    ],
+    "relatedSlugs": [
+      "excel-to-csv",
+      "excel-to-json",
+      "csv-to-excel",
+      "excel-to-pdf",
+      "word-viewer"
+    ]
+  },
+  "excel-to-csv": {
+    "longDescription": "<p>Excel to CSV exports the sheets of an Excel workbook as clean comma-separated values — one CSV file per sheet. It is the fastest way to move spreadsheet data into databases, data pipelines, analytics tools, and scripts that expect plain text input.</p><p>Cell values are preserved with the exact text stored in the workbook, and the CSV encoding follows the classic RFC-4180 conventions so it imports cleanly anywhere. Everything runs locally in your browser, keeping sensitive data private.</p>",
+    "features": [
+      "Convert Excel worksheets to CSV",
+      "One CSV file per sheet, downloaded individually",
+      "Download every sheet at once",
+      "RFC-4180 compliant escaping",
+      "Values preserved exactly as stored",
+      "Client-side processing — no uploads"
+    ],
+    "howTo": [
+      {
+        "step": "Open a workbook",
+        "description": "Upload an .xlsx file with the upload button."
+      },
+      {
+        "step": "Review the sheets",
+        "description": "Each sheet is listed with its row count."
+      },
+      {
+        "step": "Download",
+        "description": "Download individual sheets or grab all of them as CSV files."
+      }
+    ],
+    "faq": [
+      {
+        "question": "What about text that contains commas?",
+        "answer": "Such fields are quoted and inner quotes escaped per RFC-4180, so the CSV remains valid."
+      },
+      {
+        "question": "Can I get all sheets at once?",
+        "answer": "Yes. Click Download all sheets (.csv) and every sheet is saved as its own file."
+      },
+      {
+        "question": "Is this suitable for databases?",
+        "answer": "Absolutely. The clean CSV output is ideal for importing into SQL databases, Python/R, and ETL pipelines."
+      }
+    ],
+    "relatedSlugs": [
+      "excel-viewer",
+      "csv-to-excel",
+      "csv-to-sql",
+      "excel-to-json",
+      "csv-formatter"
+    ]
+  },
+  "excel-to-json": {
+    "longDescription": "<p>Excel to JSON converts the sheets of an Excel workbook into JavaScript Object Notation. With the header-row option, each sheet becomes an object whose keys come from the first row — ready for API payloads, frontend config, or any tooling that consumes JSON.</p><p>Multi-sheet workbooks produce a clean structure with one object per sheet, and you can toggle between raw JSON and a grid preview of your data. Since all parsing happens in the browser, spreadsheets with sensitive content never leave your machine.</p>",
+    "features": [
+      "Convert Excel sheets to JSON objects",
+      "First-row-as-header mapping, toggleable",
+      "One object per sheet in multi-sheet workbooks",
+      "Empty cells omitted for compact output",
+      "Live JSON preview and a grid view",
+      "100% client-side conversion"
+    ],
+    "howTo": [
+      {
+        "step": "Open the workbook",
+        "description": "Upload an .xlsx file with the upload button."
+      },
+      {
+        "step": "Set the header option",
+        "description": "Keep First row is header enabled to use row 1 as object keys."
+      },
+      {
+        "step": "Inspect the JSON",
+        "description": "Browse the generated JSON or flip to the grid view."
+      },
+      {
+        "step": "Download .json",
+        "description": "Save the JSON file to use in your project."
+      }
+    ],
+    "faq": [
+      {
+        "question": "How are sheets mapped to JSON?",
+        "answer": "Each sheet produces a top-level object: { \"sheet\": \"<name>\", \"data\": [ ... ] }. With headers on, every row becomes an object keyed by the first row's values."
+      },
+      {
+        "question": "What happens to empty cells?",
+        "answer": "Empty cells are omitted from the generated objects to keep the JSON compact and clean."
+      },
+      {
+        "question": "Can I disable headers?",
+        "answer": "Yes. Uncheck First row is header to emit each row as its own array of values instead."
+      }
+    ],
+    "relatedSlugs": [
+      "excel-viewer",
+      "excel-to-csv",
+      "json-viewer",
+      "csv-json",
+      "json-to-typescript"
+    ]
+  },
+  "excel-merge": {
+    "longDescription": "<p>Excel Merge combines two or more Excel workbooks into a single .xlsx file. Every sheet from every uploaded workbook is preserved in the merged output, with duplicate sheet names automatically suffixed (e.g. Sales (1)) so nothing is overwritten.</p><p>It is the quick answer to consolidating monthly reports, combining data from multiple teams, or joining workbooks before further processing. The merge runs entirely in your browser, so confidential spreadsheets never transit a server.</p>",
+    "features": [
+      "Merge multiple .xlsx workbooks into one file",
+      "All sheets preserved, nothing dropped",
+      "Duplicate sheet names auto-suffixed",
+      "Works with merge then convert workflows",
+      "Sheet order follows upload order",
+      "Fully client-side — data never uploaded"
+    ],
+    "howTo": [
+      {
+        "step": "Add workbooks",
+        "description": "Click Add workbook(s) and select two or more .xlsx files."
+      },
+      {
+        "step": "Review the merge",
+        "description": "Confirm the files and their sheets are listed as expected."
+      },
+      {
+        "step": "Merge",
+        "description": "Click Merge into one .xlsx to build a single combined workbook."
+      },
+      {
+        "step": "Download",
+        "description": "Save merged.xlsx — every sheet is inside, rename-safe."
+      }
+    ],
+    "faq": [
+      {
+        "question": "What if two sheets have the same name?",
+        "answer": "The second occurrence is renamed with a suffix such as (1) so both sheets survive in the merged workbook."
+      },
+      {
+        "question": "Is content edited during merge?",
+        "answer": "No. Cell values are copied as-is; styling and formulas held as values are preserved where possible."
+      },
+      {
+        "question": "Does anything get uploaded?",
+        "answer": "No. Merging is performed completely in your browser."
+      }
+    ],
+    "relatedSlugs": [
+      "csv-to-excel",
+      "excel-viewer",
+      "excel-to-csv",
+      "excel-to-json",
+      "pdf-merge"
+    ]
+  },
+  "excel-to-pdf": {
+    "longDescription": "<p>Excel to PDF renders a spreadsheet sheet into a paginated, print-ready PDF — perfect for sharing budgets, reports, and data tables with people who do not use spreadsheet tools. Pick the sheet you want and the tool pages its rows and columns across A4-size pages automatically.</p><p>Rendering happens locally: the grid is drawn with the browser's canvas engine and assembled into a real PDF with the same library used by professional converters, so your data never leaves your device. Headers are kept bold and readable in the output.</p>",
+    "features": [
+      "Convert a selected sheet to a paginated PDF",
+      "Rows and columns laid out across A4 pages",
+      "Header row highlighted in the output",
+      "Choose the target sheet before converting",
+      "Print-friendly black on white",
+      "Client-side only — no uploads"
+    ],
+    "howTo": [
+      {
+        "step": "Open the workbook",
+        "description": "Upload an .xlsx file with the upload button."
+      },
+      {
+        "step": "Pick a sheet",
+        "description": "Click the sheet tab you want to print."
+      },
+      {
+        "step": "Convert to PDF",
+        "description": "Click Convert to PDF for the active sheet."
+      },
+      {
+        "step": "Download",
+        "description": "Save the generated PDF and share or print it."
+      }
+    ],
+    "faq": [
+      {
+        "question": "How many rows are converted?",
+        "answer": "The first 300 rows (up to 20 columns) are rendered so the PDF builds quickly; large sheets can be split at the source first."
+      },
+      {
+        "question": "Can I convert all sheets in one PDF?",
+        "answer": "Not yet — the tool renders the active sheet. Convert each sheet individually and merge the resulting PDFs with PDF Merge if needed."
+      },
+      {
+        "question": "Is the output resolution good enough to print?",
+        "answer": "Yes. Pages are rendered at 2× scale, then embedded as crisp images on A4 pages."
+      }
+    ],
+    "relatedSlugs": [
+      "excel-viewer",
+      "pdf-to-excel",
+      "html-to-pdf",
+      "excel-to-csv",
+      "pdf-merge"
+    ]
+  },
+  "pptx-creator": {
+    "longDescription": "<p>PowerPoint Creator builds real .pptx presentations entirely in your browser. Compose slides with a title and bullet points, add as many slides as you need, reorder them, and download a presentation that opens in Microsoft PowerPoint, Google Slides, LibreOffice, or Keynote.</p><p>It uses the same Open Packaging Conventions as native PowerPoint files, generated locally with no account, upload, or watermark. Bullet-heavy slides, talk outlines, and one-pagers are the sweet spot — build them here and refine in your desktop app.</p>",
+    "features": [
+      "Build .pptx presentations from scratch online",
+      "Title and bullet slides, as many as you like",
+      "Reorder slides with up/down controls",
+      "Bold any bullet by wrapping it in **",
+      "Output opens in PowerPoint, Google Slides, and more",
+      "No uploads — generated client-side"
+    ],
+    "howTo": [
+      {
+        "step": "Add slide content",
+        "description": "Type a title and one bullet (or line) per row in the body box."
+      },
+      {
+        "step": "Reorder slides",
+        "description": "Use the up/down arrows on each slide card to arrange the deck."
+      },
+      {
+        "step": "Add more slides",
+        "description": "Click Add slide to grow the presentation."
+      },
+      {
+        "step": "Generate .pptx",
+        "description": "Click Generate .pptx and download your deck."
+      }
+    ],
+    "faq": [
+      {
+        "question": "Does it create real PowerPoint files?",
+        "answer": "Yes. The output is a standard .pptx package using Open XML, so it opens natively in PowerPoint, Google Slides, LibreOffice, and Keynote."
+      },
+      {
+        "question": "Can I include images?",
+        "answer": "This creator makes text and bullet slides. For image-based decks, convert PDF pages to PPT with the PDF to PPT tool."
+      },
+      {
+        "question": "Is 16:9 or 4:3 used?",
+        "answer": "Slides are generated in widescreen 16:9 format."
+      }
+    ],
+    "relatedSlugs": [
+      "pdf-to-ppt",
+      "word-creator",
+      "markdown-preview",
+      "word-to-markdown",
+      "pdf-creator"
+    ]
   }
 };

@@ -93,6 +93,10 @@ import {
   Crop,
   Unlock,
   Info,
+  FileSearch,
+  Sheet,
+  FileDown,
+  Combine,
 } from "lucide-react";
 
 export type Category =
@@ -102,7 +106,8 @@ export type Category =
   | "Developer"
   | "Text Tools"
   | "Generate"
-  | "Media & Design";
+  | "Media & Design"
+  | "Office";
 
 export interface ToolConfig {
   slug: string;
@@ -123,6 +128,7 @@ export const CATEGORIES: Category[] = [
   "Media & Design",
   "Generate",
   "Text Tools",
+  "Office",
 ];
 
 export const TOOLS: ToolConfig[] = [
@@ -1291,6 +1297,127 @@ export const TOOLS: ToolConfig[] = [
     icon: MoveDiagonal,
     accent: "text-fuchsia-600",
     gradient: "from-fuchsia-500 to-purple-600",
+  },
+  {
+    slug: "word-to-text",
+    name: "Word to Text",
+    tagline: "Extract plain text from .docx",
+    description:
+      "Strip a Word document down to clean, editable plain text — instantly, in your browser, with no uploads.",
+    category: "Office",
+    icon: FileText,
+    accent: "text-sky-600",
+    gradient: "from-sky-500 to-blue-600",
+  },
+  {
+    slug: "word-to-markdown",
+    name: "Word to Markdown",
+    tagline: "Convert .docx to Markdown",
+    description:
+      "Turn a Word document into clean Markdown with headings, lists and tables preserved — fully client-side.",
+    category: "Office",
+    icon: FileCode2,
+    accent: "text-teal-600",
+    gradient: "from-teal-500 to-cyan-600",
+  },
+  {
+    slug: "word-viewer",
+    name: "Word Document Viewer",
+    tagline: "Preview .docx in your browser",
+    description:
+      "Open and preview a Word document as rendered content — headings, lists and tables included. No uploads.",
+    category: "Office",
+    icon: FileSearch,
+    accent: "text-cyan-600",
+    gradient: "from-cyan-500 to-sky-600",
+  },
+  {
+    slug: "word-creator",
+    name: "Word Document Creator",
+    tagline: "Write and generate .docx online",
+    description:
+      "Draft text with simple formatting markers and download a ready .docx file — generated entirely in your browser.",
+    category: "Office",
+    icon: FileType,
+    accent: "text-blue-600",
+    gradient: "from-blue-500 to-indigo-600",
+  },
+  {
+    slug: "csv-to-excel",
+    name: "CSV to Excel",
+    tagline: "Convert CSV files to .xlsx",
+    description:
+      "Turn one or more CSV files into a single Excel workbook, one sheet per file — all in your browser.",
+    category: "Office",
+    icon: Table2,
+    accent: "text-emerald-600",
+    gradient: "from-emerald-500 to-green-600",
+  },
+  {
+    slug: "excel-viewer",
+    name: "Excel Viewer",
+    tagline: "Browse .xlsx sheets online",
+    description:
+      "Open an Excel workbook and navigate every sheet as a clean grid — parsed locally, never uploaded.",
+    category: "Office",
+    icon: Sheet,
+    accent: "text-green-600",
+    gradient: "from-green-500 to-emerald-600",
+  },
+  {
+    slug: "excel-to-csv",
+    name: "Excel to CSV",
+    tagline: "Convert .xlsx sheets to CSV",
+    description:
+      "Export any Excel workbook to CSV, one file per sheet, with formatting preserved — no uploads.",
+    category: "Office",
+    icon: FileDown,
+    accent: "text-lime-600",
+    gradient: "from-lime-500 to-emerald-600",
+  },
+  {
+    slug: "excel-to-json",
+    name: "Excel to JSON",
+    tagline: "Convert .xlsx to JSON",
+    description:
+      "Turn Excel sheets into JSON objects or arrays, using the first row as keys — processed entirely client-side.",
+    category: "Office",
+    icon: FileJson,
+    accent: "text-teal-600",
+    gradient: "from-teal-600 to-cyan-700",
+  },
+  {
+    slug: "excel-merge",
+    name: "Excel Merge",
+    tagline: "Combine workbooks into one",
+    description:
+      "Merge multiple .xlsx files into a single workbook, deduplicating sheet names — all in your browser.",
+    category: "Office",
+    icon: Combine,
+    accent: "text-orange-600",
+    gradient: "from-amber-500 to-orange-600",
+  },
+  {
+    slug: "excel-to-pdf",
+    name: "Excel to PDF",
+    tagline: "Convert spreadsheets to PDF",
+    description:
+      "Render an Excel sheet to a paginated, print-ready PDF — converted locally, nothing is uploaded.",
+    category: "Office",
+    icon: Printer,
+    accent: "text-rose-600",
+    gradient: "from-rose-500 to-red-600",
+  },
+  {
+    slug: "pptx-creator",
+    name: "PowerPoint Creator",
+    tagline: "Build .pptx slides in the browser",
+    description:
+      "Compose title and bullet slides, reorder them, and download a real .pptx presentation — no uploads.",
+    category: "Office",
+    icon: Presentation,
+    accent: "text-amber-600",
+    gradient: "from-orange-500 to-red-600",
   },
 ];
 
