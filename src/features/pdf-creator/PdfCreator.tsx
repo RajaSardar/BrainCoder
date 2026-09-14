@@ -11,7 +11,7 @@ import {
   Download,
   FilePlus2,
   Highlighter,
-  Image,
+Image as ImageIcon,
   Minus,
   MousePointer2,
   Pen,
@@ -790,7 +790,7 @@ export default function PdfCreator() {
           disabled={busy}
           className="flex h-9 items-center gap-1.5 rounded-lg border border-slate-300 px-3 text-sm font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-50 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
         >
-          <Image className="h-4 w-4" /> <span className="hidden sm:inline">PNG</span>
+          <ImageIcon className="h-4 w-4" /> <span className="hidden sm:inline">PNG</span>
         </button>
         <button
           type="button"
@@ -952,7 +952,7 @@ export default function PdfCreator() {
             {toolBtn("oval", "Oval", <Circle className="h-4 w-4" />)}
             {toolBtn("line", "Line", <Minus className="h-4 w-4" />)}
             {toolBtn("arrow", "Arrow", <ArrowUpRight className="h-4 w-4" />)}
-            {toolBtn("image", "Image", <Image className="h-4 w-4" />)}
+            {toolBtn("image", "Image", <ImageIcon className="h-4 w-4" />)}
             {toolBtn("sign", "Signature", <Signature className="h-4 w-4" />)}
             <span className="mx-1 h-6 w-px bg-slate-200" />
             <div className="flex items-center gap-1">
