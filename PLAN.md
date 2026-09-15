@@ -182,7 +182,7 @@ BrainCoder is a privacy-first, browser-based developer toolkit (123 tools) being
 | 3 | Category landing pages (`/categories/${slug}`) | Topical authority hubs — internal linking boosts long-tail ranking | High — growth agent | Done |
 | 4 | 5-8 more guides ("how to redact a pdf", "how to sign a pdf", etc.) | Guides rank for how-to queries + internal link to tools | High — growth agent | Done |
 | 5 | "Verify: 0 uploads" proof page | Shareable proof of the privacy moat — PR / HN material | Medium — growth agent | Done |
-| 6 | Rust/WASM technical deep-dive (dev.to post) | Builds authority + backlinks + GitHub stars | Medium — growth agent | Not started |
+| 6 | Rust/WASM technical deep-dive (dev.to post) | Builds authority + backlinks + GitHub stars | Medium — growth agent | Done |
 | 7 | Ship to Hacker News (Week 4-5) | Validation spike + initial backlink base | Medium — growth agent | Not started |
 | 8 | Directory listings (alternativeTo, awesome-list PRs) | Durable indexable backlinks | Low — growth agent | Not started |
 
@@ -227,6 +227,19 @@ BrainCoder is a privacy-first, browser-based developer toolkit (123 tools) being
 - Replaced the self-referencing "Live app" header link (pointed at own domain) with **"0 uploads — verify"**; footer gained a links row (verify, guides, GitHub); sitemap entry priority 0.6.
 - Verified: file-drop flow (setInputFiles → SHA shown → audit back to 0), header/footer links live, 279 SSG pages, lint clean, 18/18 e2e.
 
+**Rust/WASM dev.to deep-dive drafted (`articles/rust-wasm-pdf-core.md`):**
+- Title: "Shipping Rust to the Browser: How We Built a True PDF-Redaction Core in WebAssembly" — frontmatter-ready for dev.to (tags: rust, wasm, javascript, webdev; `published: false`; canonical → `/guides/how-to-redact-a-pdf`).
+- Technically accurate — written from the actual source, no invented claims:
+  - Real crate: `crates/core/` (braincoder-core, edition 2021) on **zpdf-core/parser/writer 0.13** + wasm-bindgen 0.2.128; five exports (`find_matches`, `split_words`, `merge_pdfs`, `extract_pdfs`, `redact_pdfs`).
+  - **True redaction** explained honestly: content-stream operator excision via `zpdf-writer`'s `redact_page` (not cosmetic cover-boxes) — the moat differentiator.
+  - Word reconstruction math: `char_weight` glyph weights, `WORD_SPLIT_MIN_WIDTH`, `WORD_PAD_EM`, `WORD_RIGHT_EXTRA_EM`, normalized phrase matching → 0..1 rects.
+  - JS bridge: lazy single-instantiation promise cache, transparent JS fallback (`matchRectsJs`), `build:core` emits **one Rust build → 3 artifacts** (browser ESM, Node glue for tests, public wasm).
+  - Size verified from binary: ~666 KB raw / ~245 KB gzipped; `opt-level="s" lto codegen-units=1 panic="abort" strip` release profile.
+  - Correctness story: `e2e/wasm-validate.mjs` byte-identical equivalence vs JS oracle + pdf-lib/pdf.js round-trips (`npm run test:core`).
+  - Lessons: `Vec`-typed wasm-bindgen bindings; JS fallback doubles as test oracle; real-vs-cosmetic redaction.
+  - Backlinks: `/tools/pdf-redact`, `/tools/pdf-auto-redact`, `/tools/pdf-merge`, repo, `/verify` live audit.
+- **Publish step**: flip `published: true`, paste into dev.to editor, submit to `dev.to/rust` + `dev.to/wasm` + `dev.to/javascript` communities. (Not auto-published from repo — no dev.to API token configured.)
+
 **What we're explicitly NOT doing in Phase 2 (per agents):**
 - ~~Chrome extension~~ → distraction until traffic > 5K/mo
 - ~~VS Code extension~~ → 40M users but no distribution channel yet
@@ -243,6 +256,7 @@ BrainCoder is a privacy-first, browser-based developer toolkit (123 tools) being
 - [x] PWA manifest + SW shipped (2%+ installs to measure post-launch)
 - [x] 8+ how-to guides covering PDF + non-PDF long-tail keywords (15 total)
 - [x] "Verify: 0 uploads" proof page live with a functioning network-audit demo
+- [x] Rust/WASM dev.to deep-dive drafted (publish: flip `published: true` → dev.to)
 
 #### Phase 3 — Scale Distribution (Months 4-6)
 
@@ -284,6 +298,7 @@ BrainCoder is a privacy-first, browser-based developer toolkit (123 tools) being
 | 2026-09-15 | Verify page audit hooks `fetch` + `XHR.prototype.send` at mount | Catches any request (incl. FormData/Blob bodies) that would carry the watched file — actually enforceable, unlike a static claim |
 | 2026-09-15 | Proof-page demo hashes file with `crypto.subtle` locally | Real interactive proof: file digest without a single network byte |
 | 2026-09-15 | Swapped header "Live app" (self-link to own domain) for "0 uploads — verify" | Header real-estate now reinforces the moat instead of pointlessly pointing at the same site |
+| 2026-09-15 | dev.to deep-dive stored in-repo with `published: false` frontmatter | Article lives with the code it documents; publish = flip flag + paste to dev.to (no API token) |
 
 ---
 
