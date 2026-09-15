@@ -43,3 +43,6 @@ next-env.d.ts
 test-results/
 
 e2e/out/
+
+# rust
+crates/core/target
