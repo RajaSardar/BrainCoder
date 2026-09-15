@@ -9,29 +9,28 @@ import {
 import { HomeHero } from "@/components/HomeHero";
 import { HomeFeatured } from "@/components/HomeFeatured";
 import { ToolsExplorer } from "@/components/ToolsExplorer";
+import { RecentTools } from "@/components/RecentTools";
 import { CategoryIndex } from "@/components/CategoryIndex";
 import { HomeFaq } from "@/components/HomeFaq";
 
 export const metadata: Metadata = {
   title: {
     default: `${SITE_NAME} — Free online developer tools and utilities`,
-    absolute: `${SITE_NAME} — 123 free online developer tools for your browser`,
+    absolute: `${SITE_NAME} — Privacy-first tools for developers`,
   },
-  description: SITE_DESCRIPTION,
+  description:
+    "Developer utilities that run entirely in your browser — JSON formatter, base64, PDF tools, regex tester, hash generator and more. No uploads, no sign-up, no limits.",
   keywords: [
-    "free online tools",
-    "online tools",
-    "developer tools",
-    "free online tools",
-    "dev utilities",
     "json formatter",
     "base64 encoder",
-    "pdf compressor",
-    "hash generator",
     "regex tester",
-    "code formatter",
-    "file converter",
-    "browser based tools",
+    "hash generator",
+    "pdf compressor no upload",
+    "privacy first developer tools",
+    "client side tools",
+    "browser based utilities",
+    "developer toolbox",
+    "no sign up tools",
   ],
   alternates: {
     canonical: "/",
@@ -63,6 +62,9 @@ export default function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(homeFaqJsonLd()) }}
       />
       <HomeHero />
+      <div className="h-8" />
+      <RecentTools />
+      <div className="h-8" />
       <HomeFeatured />
       <ToolsExplorer />
       <CategoryIndex />

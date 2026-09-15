@@ -3,6 +3,7 @@ import { ArrowLeft } from "lucide-react";
 import { getTool, TOOLS } from "@/lib/tools";
 import { notFound } from "next/navigation";
 import ToolMount from "@/components/ToolMount";
+import { TrackToolUse } from "@/components/TrackToolUse";
 
 export function generateStaticParams() {
   return TOOLS.map((t) => ({ slug: t.slug }));
@@ -32,6 +33,7 @@ export default async function UseToolPage(props: PageProps<"/use/[slug]">) {
 
   return (
     <div className="h-[calc(100dvh-4rem)] min-h-[640px] w-full flex flex-col">
+      <TrackToolUse slug={slug} />
       <div className="flex items-center justify-between gap-3 px-4 py-2 border-b border-slate-200 bg-white">
         <Link
           href={`/tools/${slug}`}
