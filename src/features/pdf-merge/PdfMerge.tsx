@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { Layers, Plus, Trash2, ArrowUp, ArrowDown, Loader2, FileText } from "lucide-react";
 import { Button } from "@/components/ui";
 import { downloadBlob } from "@/lib/download";
+import { mergePdfsWasm } from "@/lib/wasm-core";
 
 interface PdfEntry {
   id: number;
@@ -55,7 +56,16 @@ export default function PdfMerge() {
     setBusy(true);
     setError("");
     setMessage("");
+    const t0 = performance.now();
     try {
+      const wasmOut = await mergePdfsWasm(files.map((f) => f.bytes));
+      if (wasmOut) {
+        downloadBlob(wasmOut, `merged-${files.length}-files.pdf`);
+        setMessage(
+          `Merged ${files.length} PDF${files.length === 1 ? "" : "s"} into ${totalPages} pages (Rust/WASM core · ${(performance.now() - t0).toFixed(1)} ms).`,
+        );
+        return;
+      }
       const { PDFDocument } = await import("pdf-lib");
       const out = await PDFDocument.create();
       for (const f of files) {
@@ -65,7 +75,9 @@ export default function PdfMerge() {
       }
       const bytes = await out.save();
       downloadBlob(bytes, `merged-${files.length}-files.pdf`);
-      setMessage(`Merged ${files.length} PDF(s) into ${out.getPageCount()} pages.`);
+      setMessage(
+        `Merged ${files.length} PDF${files.length === 1 ? "" : "s"} into ${out.getPageCount()} pages (JS fallback · ${(performance.now() - t0).toFixed(1)} ms).`,
+      );
     } catch (err) {
       setError(err instanceof Error ? err.message : "Merge failed");
     } finally {

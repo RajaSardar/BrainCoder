@@ -254,6 +254,51 @@ await step("pdf-auto-redact: wasm core finds phrase", async () => {
   console.log("redact message:", msg);
 });
 
+// ---------- 13. pdf-merge: Rust/WASM core ----------
+await step("pdf-merge: wasm core merges two PDFs", async () => {
+  await page.goto(BASE + "pdf-merge", { waitUntil: "domcontentloaded" });
+  await page.setInputFiles("input[accept*='pdf']", [`${F}/merge-a.pdf`, `${F}/merge-b.pdf`]);
+  await page.getByRole("button", { name: /Merge 2 files/ }).waitFor({ state: "visible", timeout: 20000 });
+  const [dl] = await Promise.all([
+    page.waitForEvent("download", { timeout: 45000 }),
+    page.getByRole("button", { name: /Merge 2 files/ }).click(),
+  ]);
+  const f = await save(dl, "13-pdf-merge.pdf");
+  const buf = fs.readFileSync(f);
+  if (buf.subarray(0, 5).toString("latin1") !== "%PDF-") throw new Error("not a PDF");
+  await page.waitForFunction(
+    () => /Rust\/WASM core/.test(document.body.textContent || ""),
+    null,
+    { timeout: 25000 },
+  );
+  const msg = (await page.locator("div.bg-emerald-50").first().textContent()).trim();
+  if (!/Merged 2 PDFs into 2 pages/.test(msg)) throw new Error("bad merge message: " + msg);
+  console.log("merge message:", msg);
+});
+
+// ---------- 14. pdf-split: Rust/WASM core ----------
+await step("pdf-split: wasm core extracts selected page", async () => {
+  await page.goto(BASE + "pdf-split", { waitUntil: "domcontentloaded" });
+  await page.setInputFiles("input[accept*='pdf']", `${F}/split-src.pdf`);
+  await page.getByAltText("Page 2 preview").waitFor({ state: "visible", timeout: 25000 });
+  await page.getByAltText("Page 1 preview").click();
+  const [dl] = await Promise.all([
+    page.waitForEvent("download", { timeout: 45000 }),
+    page.getByRole("button", { name: /Extract 1 page/ }).click(),
+  ]);
+  const f = await save(dl, "14-pdf-split.pdf");
+  const buf = fs.readFileSync(f);
+  if (buf.subarray(0, 5).toString("latin1") !== "%PDF-") throw new Error("not a PDF");
+  await page.waitForFunction(
+    () => /Rust\/WASM core/.test(document.body.textContent || ""),
+    null,
+    { timeout: 25000 },
+  );
+  const msg = (await page.locator("div.bg-emerald-50").first().textContent()).trim();
+  if (!/Exported 1 page as one PDF/.test(msg)) throw new Error("bad split message: " + msg);
+  console.log("split message:", msg);
+});
+
 await browser.close();
 console.log(`\n=== ${passed} passed, ${failed} failed ===`);
 process.exit(failed ? 1 : 0);

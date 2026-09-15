@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    "src/lib/core/pkg/**",
+    "e2e/.wasm-node/**",
   ]),
 ]);
 

@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test:e2e": "node e2e/office.mjs"
+    "test:e2e": "node e2e/office.mjs",
+    "build:core": "cd crates/core && cargo build --release --target wasm32-unknown-unknown && wasm-bindgen --target web --out-name core --out-dir ../../src/lib/core/pkg target/wasm32-unknown-unknown/release/braincoder_core.wasm && wasm-bindgen --target nodejs --out-name core --out-dir ../../e2e/.wasm-node target/wasm32-unknown-unknown/release/braincoder_core.wasm && cp ../../src/lib/core/pkg/core_bg.wasm ../../public/wasm/core_bg.wasm",
+    "test:core": "node e2e/wasm-validate.mjs"
   },
   "dependencies": {
     "@pdfsmaller/pdf-decrypt": "^1.0.1",
@@ -33,6 +35,7 @@
     "turndown": "^7.2.4"
   },
   "devDependencies": {
+    "@pdf-lib/fontkit": "^1.1.1",
     "@tailwindcss/postcss": "^4",
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^20",

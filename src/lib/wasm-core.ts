@@ -10,29 +10,59 @@ type CoreFindMatches = (
   query: string,
 ) => Float64Array;
 
+type CoreWordBatch = {
+  data(): Float64Array;
+  texts(): string[];
+};
+
+export interface CoreApi {
+  find_matches: CoreFindMatches;
+  split_words: (
+    xs: Float64Array,
+    ys: Float64Array,
+    ws: Float64Array,
+    hs: Float64Array,
+    fonts: Float64Array,
+    baselines: Float64Array,
+    texts: string[],
+  ) => CoreWordBatch;
+  merge_pdfs: (files: Uint8Array[]) => Uint8Array;
+  extract_pdfs: (bytes: Uint8Array, groups: number[][]) => Uint8Array[];
+}
+
 export type MatchRect = { x: number; y: number; w: number; h: number };
 
-let wasmModule: Promise<CoreFindMatches | null> | null = null;
+export type GeometryWord = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  fontSize: number;
+  baseline: number;
+  text: string;
+};
+
+let modulePromise: Promise<CoreApi | null> | null = null;
 
 export function loadCore(
   wasmUrl = "/wasm/core_bg.wasm",
-): Promise<CoreFindMatches | null> {
-  if (!wasmModule) {
-    wasmModule = (async () => {
+): Promise<CoreApi | null> {
+  if (!modulePromise) {
+    modulePromise = (async () => {
       try {
         if (typeof WebAssembly !== "object") return null;
         const mod = await import("@/lib/core/pkg/core");
         if (typeof mod.default !== "function") return null;
         await mod.default(wasmUrl);
         if (typeof mod.find_matches !== "function") return null;
-        return mod.find_matches as CoreFindMatches;
+        return mod as unknown as CoreApi;
       } catch (err) {
         console.warn("[wasm-core] falling back to JS core:", err);
         return null;
       }
     })();
   }
-  return wasmModule;
+  return modulePromise;
 }
 
 export async function findMatchRects(
@@ -42,11 +72,11 @@ export async function findMatchRects(
   query: string,
 ): Promise<{ rects: MatchRect[]; engine: "wasm" | "js" }> {
   if (words.length === 0) return { rects: [], engine: "js" };
-  const find = await loadCore();
-  if (!find) {
+  const core = await loadCore();
+  if (!core) {
     return { rects: matchRectsJs(words, pageW, pageH, query), engine: "js" };
   }
-  const flat = find(
+  const flat = core.find_matches(
     Float64Array.from(words, (w) => w.x),
     Float64Array.from(words, (w) => w.y),
     Float64Array.from(words, (w) => w.width),
@@ -62,6 +92,74 @@ export async function findMatchRects(
     rects.push({ x: flat[i], y: flat[i + 1], w: flat[i + 2], h: flat[i + 3] });
   }
   return { rects, engine: "wasm" };
+}
+
+export async function splitWordsWasm(
+  words: GeometryWord[],
+): Promise<GeometryWord[] | null> {
+  if (words.length === 0) return [];
+  const core = await loadCore();
+  if (!core) return null;
+  try {
+    const batch = core.split_words(
+      Float64Array.from(words, (w) => w.x),
+      Float64Array.from(words, (w) => w.y),
+      Float64Array.from(words, (w) => w.width),
+      Float64Array.from(words, (w) => w.height),
+      Float64Array.from(words, (w) => w.fontSize),
+      Float64Array.from(words, (w) => w.baseline),
+      words.map((w) => w.text),
+    );
+    const data = batch.data();
+    const texts = batch.texts();
+    const out: GeometryWord[] = [];
+    for (let i = 0; i < texts.length; i++) {
+      out.push({
+        x: data[i * 6],
+        y: data[i * 6 + 1],
+        width: data[i * 6 + 2],
+        height: data[i * 6 + 3],
+        fontSize: data[i * 6 + 4],
+        baseline: data[i * 6 + 5],
+        text: texts[i],
+      });
+    }
+    return out;
+  } catch (err) {
+    console.warn("[wasm-core] split_words failed, using JS fallback:", err);
+    return null;
+  }
+}
+
+export async function mergePdfsWasm(
+  files: Uint8Array[],
+): Promise<Uint8Array | null> {
+  if (files.length < 2) return null;
+  const core = await loadCore();
+  if (!core) return null;
+  try {
+    const out = core.merge_pdfs(files.map((f) => f.slice(0)));
+    return out.slice(0);
+  } catch (err) {
+    console.warn("[wasm-core] merge failed, using JS fallback:", err);
+    return null;
+  }
+}
+
+export async function extractPdfsWasm(
+  bytes: Uint8Array,
+  groups: number[][],
+): Promise<Uint8Array[] | null> {
+  if (groups.length === 0) return [];
+  const core = await loadCore();
+  if (!core) return null;
+  try {
+    const out = core.extract_pdfs(bytes.slice(0), groups);
+    return out.map((b) => new Uint8Array(b.slice(0)));
+  } catch (err) {
+    console.warn("[wasm-core] extract failed, using JS fallback:", err);
+    return null;
+  }
 }
 
 const STRIP = /^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu;

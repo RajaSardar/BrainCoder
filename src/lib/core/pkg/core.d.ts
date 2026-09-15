@@ -1,16 +1,36 @@
 /* tslint:disable */
 /* eslint-disable */
 
+export class WordBatch {
+    private constructor();
+    free(): void;
+    [Symbol.dispose](): void;
+    data(): Float64Array;
+    texts(): string[];
+}
+
 export function add(a: number, b: number): number;
 
+export function extract_pdfs(bytes: Uint8Array, groups: Array<any>): any;
+
 export function find_matches(xs: Float64Array, ys: Float64Array, ws: Float64Array, hs: Float64Array, fonts: Float64Array, texts: string[], page_w: number, page_h: number, query: string): Float64Array;
+
+export function merge_pdfs(files: any[]): Uint8Array;
+
+export function split_words(xs: Float64Array, ys: Float64Array, ws: Float64Array, hs: Float64Array, fs: Float64Array, bs: Float64Array, texts: string[]): WordBatch;
 
 export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembly.Module;
 
 export interface InitOutput {
     readonly memory: WebAssembly.Memory;
+    readonly __wbg_wordbatch_free: (a: number, b: number) => void;
     readonly add: (a: number, b: number) => number;
+    readonly extract_pdfs: (a: number, b: number, c: number, d: number) => void;
     readonly find_matches: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number, i: number, j: number, k: number, l: number, m: number, n: number, o: number, p: number, q: number) => void;
+    readonly merge_pdfs: (a: number, b: number, c: number) => void;
+    readonly split_words: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number, i: number, j: number, k: number, l: number, m: number, n: number) => number;
+    readonly wordbatch_data: (a: number, b: number) => void;
+    readonly wordbatch_texts: (a: number, b: number) => void;
     readonly __wbindgen_export: (a: number, b: number) => number;
     readonly __wbindgen_export2: (a: number, b: number, c: number, d: number) => number;
     readonly __wbindgen_add_to_stack_pointer: (a: number) => number;

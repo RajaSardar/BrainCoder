@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui";
 import { downloadBlob } from "@/lib/download";
+import { findMatchRects } from "@/lib/wasm-core";
 import { extractContentRuns, type TextRun } from "@/features/pdf-editor/text-structure";
 
 interface Rect {
@@ -35,12 +36,6 @@ interface PageData {
   words: WordRun[];
   pageWidth: number;
   pageHeight: number;
-}
-
-const STRIP = /^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu;
-
-function normWord(s: string): string {
-  return s.replace(STRIP, "").toLowerCase();
 }
 
 export default function PdfAutoRedact() {
@@ -84,7 +79,7 @@ export default function PdfAutoRedact() {
         canvas.width = Math.floor(viewport.width);
         canvas.height = Math.floor(viewport.height);
         await page.render({ canvas, viewport }).promise;
-        const runs = await extractContentRuns(doc, n - 1);
+        const runs = await extractContentRuns(doc, n - 1, { engine: "wasm" });
         list.push({
           index: n,
           url: canvas.toDataURL("image/jpeg", 0.8),
@@ -136,54 +131,23 @@ export default function PdfAutoRedact() {
     setPreviewSize({ w: canvas.width, h: canvas.height });
   };
 
-  const findMatches = () => {
+  const findMatches = async () => {
     if (!pages.length) return;
     const q = query.trim().toLowerCase();
     if (!q) {
       setError("Enter a word or phrase to redact.");
       return;
     }
-    const queryWords = q.split(/\s+/).filter(Boolean);
+    const t0 = performance.now();
     const found = new Map<number, Rect[]>();
+    let engine: "wasm" | "js" = "js";
     for (const p of pages) {
-      const rects: Rect[] = [];
-      const n = p.words.length;
-      const qn = queryWords.length;
-      for (let i = 0; i < n; i++) {
-        let k = 0;
-        let j = i;
-        while (
-          k < qn &&
-          j < n &&
-          normWord(p.words[j].text) === queryWords[k]
-        ) {
-          k++;
-          j++;
-        }
-        if (k === qn) {
-          let minX = Infinity;
-          let minY = Infinity;
-          let maxX = -Infinity;
-          let maxY = -Infinity;
-          for (let m = i; m < j; m++) {
-            const w = p.words[m];
-            minX = Math.min(minX, w.x);
-            minY = Math.min(minY, w.y);
-            maxX = Math.max(maxX, w.x + w.width);
-            maxY = Math.max(maxY, w.y + w.height);
-          }
-          const fs = p.words[i].fontSize;
-          const padX = (fs * 0.12) / p.pageWidth;
-          const padY = (fs * 0.2) / p.pageHeight;
-          const x = Math.max(0, minX / p.pageWidth - padX);
-          const y = Math.max(0, minY / p.pageHeight - padY);
-          const w = Math.min(1, maxX / p.pageWidth - minX / p.pageWidth + padX * 2);
-          const h = Math.min(1, maxY / p.pageHeight - minY / p.pageHeight + padY * 2);
-          rects.push({ x, y, w, h });
-        }
-      }
-      if (rects.length) found.set(p.index, rects);
+      if (!p.words.length) continue;
+      const res = await findMatchRects(p.words, p.pageWidth, p.pageHeight, q);
+      if (res.engine === "wasm") engine = "wasm";
+      if (res.rects.length) found.set(p.index, res.rects);
     }
+    const ms = performance.now() - t0;
     setMatches(found);
     const total = Array.from(found.values()).reduce((m, r) => m + r.length, 0);
     if (total === 0) {
@@ -195,7 +159,7 @@ export default function PdfAutoRedact() {
     const pdfjsData = new Uint8Array(bytes!.slice(0));
     void loadPagePreview(pdfjsData, first);
     setMessage(
-      `Found ${total} match${total === 1 ? "" : "es"} of "${query.trim()}" across ${found.size} page${found.size === 1 ? "" : "s"}.`,
+      `Found ${total} match${total === 1 ? "" : "es"} of "${query.trim()}" across ${found.size} page${found.size === 1 ? "" : "s"} (${engine === "wasm" ? "Rust/WASM core" : "JS fallback"} · ${ms.toFixed(1)} ms).`,
     );
   };
 

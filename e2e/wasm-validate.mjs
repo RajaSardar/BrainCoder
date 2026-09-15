@@ -1,6 +1,10 @@
 import corePkg from "./.wasm-node/core.js";
+import { PDFDocument } from "pdf-lib";
+import fontkit from "@pdf-lib/fontkit";
+import { readFile } from "node:fs/promises";
+import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
 
-const { find_matches } = corePkg;
+const { find_matches, split_words, merge_pdfs, extract_pdfs } = corePkg;
 
 const STRIP = /^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu;
 const norm = (s) => s.replace(STRIP, "").toLowerCase();
@@ -119,4 +123,170 @@ if (failures) {
   console.error(`\n${failures} case(s) mismatched.`);
   process.exit(1);
 }
-console.log("\nWASM core matches JS reference on all cases.");
+console.log("\nWASM core matches JS reference on all find_matches cases.");
+
+// --- split_words equivalence ------------------------------------------------
+const SPACE_WEIGHT = 0.45;
+const WORD_PAD_EM = 0.16;
+const WORD_RIGHT_EXTRA_EM = 0.07;
+const MAX_WORD_CHARS = 20;
+const WORD_SPLIT_MIN_WIDTH = 3.2;
+
+function charWeight(ch) {
+  if (ch === " " || ch === "\t" || ch === "\n" || ch === "\r" || ch === "\u00a0") return SPACE_WEIGHT;
+  switch (ch) {
+    case "W": case "M": case "O": case "Q": case "w": case "m": case "@": case "#":
+    case "%": case "A": case "G": case "o": case "g": case "d": case "b": case "q":
+    case "p": case "u":
+      return 1.16;
+    case "i": case "j": case "l": case "f": case "t": case "r": case ".": case ",":
+    case "'": case "`": case "|": case "!": case "I": case ":": case ";": case ")":
+    case "(":
+      return 0.82;
+    default:
+      return 1;
+  }
+}
+
+function jsSplit(runs) {
+  const data = [];
+  const texts = [];
+  for (const run of runs) {
+    if (run.width < run.fontSize * WORD_SPLIT_MIN_WIDTH || !/\s/.test(run.text)) {
+      data.push(run.x, run.y, run.width, run.height, run.fontSize, run.baseline);
+      texts.push(run.text);
+      continue;
+    }
+    const tokens = [];
+    let w = 0;
+    for (const ch of run.text) {
+      const cw = charWeight(ch);
+      tokens.push({ text: ch, weight: cw });
+      w += cw;
+    }
+    if (w <= 0) {
+      data.push(run.x, run.y, run.width, run.height, run.fontSize, run.baseline);
+      texts.push(run.text);
+      continue;
+    }
+    const pad = run.fontSize * WORD_PAD_EM;
+    const extraRight = run.fontSize * WORD_RIGHT_EXTRA_EM;
+    const advancePerUnit = run.width / w;
+    const emit = (wordArr, start) => {
+      const wordWeight = wordArr.reduce((s, t) => s + t.weight, 0);
+      const wordChars = wordArr.reduce((s, t) => s + t.text.length, 0);
+      const wx = run.x + start * advancePerUnit;
+      const ww = Math.max(wordChars * run.fontSize * 0.28, wordWeight * advancePerUnit);
+      const x0 = Math.max(run.x, wx - pad);
+      const x1 = Math.min(run.x + run.width, wx + ww + pad + extraRight);
+      data.push(x0, run.y, Math.max(x1 - x0, run.fontSize * 0.5), run.height, run.fontSize, run.baseline);
+      texts.push(wordArr.map((t) => t.text).join(""));
+    };
+    let cursor = 0;
+    let word = [];
+    let wordStart = 0;
+    for (const token of tokens) {
+      if (token.weight <= SPACE_WEIGHT + 1e-6) {
+        if (word.length) {
+          emit(word, wordStart);
+          word = [];
+        }
+        cursor += token.weight;
+        continue;
+      }
+      if (!word.length) wordStart = cursor;
+      word.push(token);
+      cursor += token.weight;
+      if (word.reduce((s, t) => s + t.text.length, 0) >= MAX_WORD_CHARS) {
+        emit(word, wordStart);
+        word = [];
+      }
+    }
+    if (word.length) emit(word, wordStart);
+  }
+  return { data, texts };
+}
+
+const wasmSplit = (runs) => {
+  const batch = split_words(
+    runs.map((r) => r.x),
+    runs.map((r) => r.y),
+    runs.map((r) => r.width),
+    runs.map((r) => r.height),
+    runs.map((r) => r.fontSize),
+    runs.map((r) => r.baseline),
+    runs.map((r) => r.text),
+  );
+  return { data: Array.from(batch.data()), texts: batch.texts() };
+};
+
+const eqRuns = (a, b) => a.data.length === b.data.length && a.data.every((v, i) => Math.abs(v - b.data[i]) < 1e-9) && JSON.stringify(a.texts) === JSON.stringify(b.texts);
+
+const splitRuns = [
+  { x: 60, y: 640, width: 400, height: 14, fontSize: 12, baseline: 654, text: "The patient John A Smith has private insurance details." },
+  { x: 60, y: 600, width: 120, height: 14, fontSize: 12, baseline: 614, text: "CONFIDENTIAL - top" },
+  { x: 60, y: 560, width: 90, height: 14, fontSize: 12, baseline: 574, text: "short" },
+  { x: 10, y: 520, width: 30, height: 14, fontSize: 12, baseline: 534, text: "tiny" },
+  { x: 60, y: 480, width: 300, height: 28, fontSize: 24, baseline: 502, text: "Wide W M alpha." },
+];
+
+let splitFail = 0;
+for (const [idx, run] of splitRuns.entries()) {
+  const a = jsSplit([run]);
+  const b = wasmSplit([run]);
+  const ok = eqRuns(a, b);
+  if (!ok) splitFail++;
+  console.log(`${ok ? "PASS" : "FAIL"}  split_words run#${idx} "${run.text}" -> ${run.width >= run.fontSize * WORD_SPLIT_MIN_WIDTH && /\s/.test(run.text) ? b.texts.length + " word(s)" : "passthrough"}`);
+}
+
+// --- merge/extract round-trip ------------------------------------------------
+async function pdfText(doc, pageIndex) {
+  const page = await doc.getPage(pageIndex);
+  const tc = await page.getTextContent();
+  return tc.items.map((i) => i.str).join(" ");
+}
+
+async function loadPdf(data) {
+  return pdfjs.getDocument({ data: new Uint8Array(data), useSystemFonts: true }).promise;
+}
+
+const ttf = await readFile(new URL("../node_modules/pdfjs-dist/standard_fonts/LiberationSans-Regular.ttf", import.meta.url));
+async function makePdf(lines) {
+  const doc = await PDFDocument.create();
+  doc.registerFontkit(fontkit);
+  const font = await doc.embedFont(new Uint8Array(ttf));
+  const page = doc.addPage([500, 700]);
+  lines.forEach((ln, i) => page.drawText(ln, { x: 60, y: 640 - i * 26, fontSize: 12, font }));
+  return doc.save();
+}
+
+const pdfA = await makePdf(["Alpha first"]);
+const pdfB = await makePdf(["Beta second"]);
+
+const merged = merge_pdfs([new Uint8Array(pdfA), new Uint8Array(pdfB)]);
+const mergedDoc = await loadPdf(merged);
+const mergedP1 = await pdfText(mergedDoc, 1);
+const mergedP2 = await pdfText(mergedDoc, 2);
+const mergeOk = mergedDoc.numPages === 2 && mergedP1.includes("Alpha first") && mergedP2.includes("Beta second");
+console.log(`${mergeOk ? "PASS" : "FAIL"}  merge_pdfs: 2 pages, p1="${mergedP1}", p2="${mergedP2}"`);
+
+const parts = extract_pdfs(merged, [[1], [0]]);
+const part1 = await loadPdf(parts[0]);
+const part2 = await loadPdf(parts[1]);
+const t1 = await pdfText(part1, 1);
+const t2 = await pdfText(part2, 1);
+const splitOk = parts.length === 2 && part1.numPages === 1 && part2.numPages === 1 && t1.includes("Beta second") && t2.includes("Alpha first");
+console.log(`${splitOk ? "PASS" : "FAIL"}  extract_pdfs [[1],[0]]: group0="${t1}", group1="${t2}"`);
+
+const both = extract_pdfs(new Uint8Array(merged), [[0, 1]]);
+const bothDoc = await loadPdf(both[0]);
+const bt1 = await pdfText(bothDoc, 1);
+const bt2 = await pdfText(bothDoc, 2);
+const bothOk = bothDoc.numPages === 2 && bt1.includes("Alpha first") && bt2.includes("Beta second");
+console.log(`${bothOk ? "PASS" : "FAIL"}  extract_pdfs [[0,1]]: p1="${bt1}", p2="${bt2}"`);
+
+if (splitFail || !mergeOk || !splitOk || !bothOk) {
+  console.error("\nsplit_words / merge / extract mismatches detected.");
+  process.exit(1);
+}
+console.log("\nWASM split_words matches JS reference; merge/extract round-trips verified.");

@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { Scissors, Loader2, FileText } from "lucide-react";
 import { Button } from "@/components/ui";
 import { downloadBlob } from "@/lib/download";
+import { extractPdfsWasm } from "@/lib/wasm-core";
 
 interface PageInfo {
   index: number;
@@ -32,7 +33,7 @@ export default function PdfSplit() {
     setMessage("");
     try {
       const buffer = await file.arrayBuffer();
-      const bytes = new Uint8Array(buffer);
+      const bytes = new Uint8Array(buffer.slice(0));
       const pdfjs = await import("pdfjs-dist");
       pdfjs.GlobalWorkerOptions.workerSrc = new URL(
         "pdfjs-dist/build/pdf.worker.min.mjs",
@@ -76,16 +77,34 @@ export default function PdfSplit() {
     setBusy(true);
     setError("");
     setMessage("");
+    const t0 = performance.now();
     try {
-      const { PDFDocument } = await import("pdf-lib");
       const order = Array.from(selected).sort((a, b) => a - b);
+      const wasmOut = await extractPdfsWasm(
+        pdf.bytes,
+        separate ? order.map((p) => [p - 1]) : [order.map((p) => p - 1)],
+      );
+      if (wasmOut && wasmOut.length > 0) {
+        const ms = (performance.now() - t0).toFixed(1);
+        if (!separate) {
+          downloadBlob(wasmOut[0], `${pdf.base}-pages-${order.join("-")}.pdf`);
+          setMessage(`Exported ${order.length} page${order.length === 1 ? "" : "s"} as one PDF (Rust/WASM core · ${ms} ms).`);
+        } else {
+          order.forEach((p, i) => {
+            if (wasmOut[i]) downloadBlob(wasmOut[i], `${pdf.base}-page-${p}.pdf`);
+          });
+          setMessage(`Downloaded ${order.length} PDF file${order.length === 1 ? "" : "s"} (one per page) (Rust/WASM core · ${ms} ms).`);
+        }
+        return;
+      }
+      const { PDFDocument } = await import("pdf-lib");
       if (!separate) {
         const out = await PDFDocument.create();
         const src = await PDFDocument.load(pdf.bytes, { ignoreEncryption: true });
         const copied = await out.copyPages(src, order.map((p) => p - 1));
         copied.forEach((p) => out.addPage(p));
         downloadBlob(await out.save(), `${pdf.base}-pages-${order.join("-")}.pdf`);
-        setMessage(`Exported ${order.length} page${order.length === 1 ? "" : "s"} as one PDF.`);
+        setMessage(`Exported ${order.length} page${order.length === 1 ? "" : "s"} as one PDF (JS fallback · ${(performance.now() - t0).toFixed(1)} ms).`);
       } else {
         const src = await PDFDocument.load(pdf.bytes, { ignoreEncryption: true });
         for (const p of order) {
@@ -94,7 +113,7 @@ export default function PdfSplit() {
           out.addPage(copied);
           downloadBlob(await out.save(), `${pdf.base}-page-${p}.pdf`);
         }
-        setMessage(`Downloaded ${order.length} PDF file${order.length === 1 ? "" : "s"} (one per page).`);
+        setMessage(`Downloaded ${order.length} PDF file${order.length === 1 ? "" : "s"} (one per page) (JS fallback · ${(performance.now() - t0).toFixed(1)} ms).`);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Extraction failed");
