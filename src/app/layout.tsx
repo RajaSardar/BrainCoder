@@ -74,9 +74,12 @@ export default function RootLayout(props: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col bg-slate-50 text-slate-900">
         <Analytics />
+        <a href="#main" className="skip-link">
+          Skip to content
+        </a>
         <SiteHeader />
 
-        <main className="flex-1 flex flex-col">{props.children}</main>
+        <main id="main" className="flex-1 flex flex-col">{props.children}</main>
 
         <footer className="bg-slate-900 text-white/60 py-10">
           <div className="max-w-6xl mx-auto px-5 flex flex-col sm:flex-row items-center justify-between gap-3">

@@ -2,7 +2,7 @@
 
 > Created: 2026-09-15  
 > Last updated: 2026-09-15  
-> Status: **Phase 1 In Progress — retention loop shipped; next: analytics + CSP headers + a11y**
+> Status: **Phase 1 Review — retention loop + analytics + CSP + a11y shipped; waiting: live env & metrics**
 
 ---
 
@@ -103,15 +103,39 @@ BrainCoder is a privacy-first, browser-based developer toolkit (123 tools) being
 
 | # | Task | Why | Status |
 |---|------|-----|--------|
-| 1 | Analytics: Vercel Analytics (free) or Plausible | Flying blind = can't make decisions | Pending — needs env var / account |
+| 1 | Analytics: `@vercel/analytics` (Web Analytics in Vercel dashboard) | Know what users do | Done |
 | 2 | Fix homepage meta (remove hardcoded "123", drop generic keywords) | Stop competing on unwinnable head terms | Done |
 | 3 | Add repository/homepage/bugs to package.json | Enable backlink equity from GitHub | Done |
 | 4 | Create `src/lib/userState.ts` — anonymous ID + recent tools + favorites | Retention loop foundation | Done |
 | 5 | Create `src/components/RecentTools.tsx` — client component | Show recent tools on homepage | Done |
 | 6 | Wire `addRecentTool()` into tool pages | Track usage automatically | Done |
 | 7 | Add RecentTools section to homepage (between hero and featured) | Returning users see their history first | Done |
-| 8 | CSP headers | Security minimum bar | Not started |
-| 9 | a11y fixes: focus-visible, skip link | WCAG AA minimum | Not started |
+| 8 | CSP headers + X-Content-Type-Options + X-Frame-Options + Referrer-Policy | Security minimum bar | Done |
+| 9 | a11y: focus-visible ring + skip-to-content link | WCAG AA minimum | Done |
+
+**Phase 1 — now complete. All core tasks delivered.**
+
+**Analytics delivered:**
+- Installed `@vercel/analytics`; rewrote `src/components/Analytics.tsx` to wrap `<Analytics />` from `@vercel/analytics/next`. No env vars needed — project-level analytics already enabled in Vercel dashboard.
+- Replaced Plausible in CSP: `https://va.vercel-scripts.com` in both `script-src` and `connect-src`.
+- `.env.example` cleaned of stale `NEXT_PUBLIC_ANALYTICS_DOMAIN` reference.
+
+**CSP delivered:**
+- `next.config.ts` now returns these headers on every page:
+  - `Content-Security-Policy` — strict `default-src 'self'`, allowing only the capabilities BrainCoder genuinely needs (inline styles, blob/data for WASM workers + canvas, Vercel analytics). Critical: `connect-src` must include `blob: data:` — many tools do `fetch(canvas.toDataURL(...))` to turn canvas snapshots into array buffers; CSP blocks this without `data:` in `connect-src`.
+  - `X-Content-Type-Options: nosniff`
+  - `X-Frame-Options: DENY`
+  - `Referrer-Policy: strict-origin-when-cross-origin`
+
+**a11y delivered:**
+- `globals.css` — `:focus-visible` ring (indigo-600, 2px offset), suppressed on mouse click via `:focus:not(:focus-visible)`.
+- `skip-link` class: visually hidden, slides in at top-left on keyboard focus, links to `#main`.
+- `layout.tsx` — `<a href="#main" class="skip-link">Skip to content</a>` as first focusable element; `<main id="main">` target.
+
+**Retained notes for future reference:**
+- `connect-src 'self' data: blob:` is essential. Many tools use `fetch()` on `data:` or `blob:` URLs to convert canvas-to-arrayBuffer under CSP. Without this, `excel-to-pdf`, `pptx-creator`, `image-resizer`, and similar tools silently fail.
+- `worker-src 'self' blob:` is needed for pdf.js and tesseract.js web workers.
+- CSP headers require `next.config.ts` change + full dev server restart to take effect.
 
 **Retention loop delivered (batched in one pass):**
 - `src/lib/userState.ts` — `getOrCreateUserId()`, `getRecentTools()`, `addRecentTool()` (deduped, FIFO, max 20), `clearRecentTools()`, `getFavorites()`, `toggleFavorite()`. All safe-guarded (no SSR crash, storage blocked/full tolerated).
@@ -139,10 +163,11 @@ BrainCoder is a privacy-first, browser-based developer toolkit (123 tools) being
 - [x] Homepage meta fixed (no generic keywords, no hardcoded count)
 - [x] package.json has repository fields
 - [x] Retention loop shipped (anonymous ID + recent tools)
-- [ ] Analytics working on all key events
-- [ ] CSP headers deployed
-- [ ] 15%+ of visitors have ≥1 entry in `bc_recent` after 2 weeks (measure from launch)
-- [ ] 20%+ of returning users click a recent tool (measure from launch)
+- [x] Vercel Analytics wired up (no env var needed)
+- [x] CSP headers deployed (tested with excel-to-pdf, pdf-merge, image-resizer)
+- [x] a11y focus-visible + skip link shipped
+- [ ] 15%+ of visitors have ≥1 entry in `bc_recent` after 2 weeks (measure post-launch)
+- [ ] 20%+ of returning users click a recent tool (measure post-launch)
 
 #### Phase 2 — Product Discovery (Months 2-3)
 
@@ -187,6 +212,9 @@ BrainCoder is a privacy-first, browser-based developer toolkit (123 tools) being
 | 2026-09-15 | Track tool use on `/use/[slug]` (not `/tools/[slug]`) | PM agent: only track actual launches, not just page views |
 | 2026-09-15 | Use `useSyncExternalStore` not `useEffect` + `setState` | React 19 lint rejects setState in effects; `useSyncExternalStore` is designed for localStorage |
 | 2026-09-15 | RecentTools returns null on fresh visit | PM agent: conditional rendering avoids confusing new users with an empty "recent" section |
+| 2026-09-15 | Use `@vercel/analytics/next` not Plausible | User has Vercel Web Analytics enabled; no env vars or external accounts needed |
+| 2026-09-15 | CSP `connect-src` must include `data: blob:` | BrainCoder tools call `fetch(canvas.toDataURL(...))` to convert canvas → ArrayBuffer; CSP blocks this without explicit `data:` in `connect-src` |
+| 2026-09-15 | Skip link + focus-visible in `globals.css` | WCAG 2.1 AA: visible focus for keyboard users, skip nav for screen readers; no extra components needed |
 
 ---
 

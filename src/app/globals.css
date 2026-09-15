@@ -18,6 +18,34 @@ body {
   color: var(--foreground);
 }
 
+/* a11y: visible focus ring for keyboard navigation, hidden on mouse click */
+:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* a11y: skip to main content link — hidden until focused */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  z-index: 9999;
+  padding: 0.75rem 1.25rem;
+  background: #4f46e5;
+  color: white;
+  font-weight: 600;
+  font-size: 0.875rem;
+  border-radius: 0 0 0.5rem 0.5rem;
+  transition: top 0.15s ease;
+}
+.skip-link:focus {
+  top: 0;
+}
+
 .md-preview {
   font-size: 0.875rem;
   line-height: 1.6;
