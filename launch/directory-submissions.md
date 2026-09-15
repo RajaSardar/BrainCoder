@@ -159,7 +159,7 @@ When it's time, a PH launch needs:
 | free-for.dev (likely skip) | github.com/ripienaar/free-for-dev | | | | |
 | Tool Finder (paid — likely skip) | toolfinder.co | | | | |
 | G2/Capterra/GetApp (likely skip) | g2.com | | | | |
-| mcuking AWAA PR | github.com/mcuking/Awesome-WebAssembly-Applications | | | | |
+| mcuking AWAA PR | github.com/mcuking/Awesome-WebAssembly-Applications | RajaSardar | 2026-09-15 | [PR #36 (open)](https://github.com/mcuking/Awesome-WebAssembly-Applications/pull/36) | |
 | pluja/awesome-privacy PR | github.com/pluja/awesome-privacy | | | | |
 | awesome-local-first PR | github.com/alexanderop/awesome-local-first | | | | |
 | mbasso/awesome-wasm PR | github.com/mbasso/awesome-wasm | | | | |
