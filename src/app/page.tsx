@@ -1,14 +1,25 @@
 import type { Metadata } from "next";
-import { SITE_URL, SITE_NAME, SITE_DESCRIPTION, siteJsonLd } from "@/lib/seo";
-import HomeContent from "@/components/HomeContent";
+import {
+  SITE_URL,
+  SITE_NAME,
+  SITE_DESCRIPTION,
+  siteJsonLd,
+  homeFaqJsonLd,
+} from "@/lib/seo";
+import { HomeHero } from "@/components/HomeHero";
+import { HomeFeatured } from "@/components/HomeFeatured";
+import { ToolsExplorer } from "@/components/ToolsExplorer";
+import { CategoryIndex } from "@/components/CategoryIndex";
+import { HomeFaq } from "@/components/HomeFaq";
 
 export const metadata: Metadata = {
   title: {
-    default: `${SITE_NAME} — Free dev tools for everyone`,
-    absolute: `${SITE_NAME} — Free dev tools, all in your browser`,
+    default: `${SITE_NAME} — Free online developer tools and utilities`,
+    absolute: `${SITE_NAME} — 123 free online developer tools for your browser`,
   },
   description: SITE_DESCRIPTION,
   keywords: [
+    "free online tools",
     "online tools",
     "developer tools",
     "free online tools",
@@ -26,7 +37,7 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   openGraph: {
-    title: `${SITE_NAME} — Free dev tools, all in your browser`,
+    title: `${SITE_NAME} — Free dev tools for everyone`,
     description: SITE_DESCRIPTION,
     url: SITE_URL,
     siteName: SITE_NAME,
@@ -47,7 +58,15 @@ export default function HomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(siteJsonLd()) }}
       />
-      <HomeContent />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(homeFaqJsonLd()) }}
+      />
+      <HomeHero />
+      <HomeFeatured />
+      <ToolsExplorer />
+      <CategoryIndex />
+      <HomeFaq />
     </>
   );
 }

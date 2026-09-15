@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { LogoMark } from "@/components/Logo";
+import { CATEGORIES } from "@/lib/tools";
 import {
   SITE_DESCRIPTION,
   SITE_NAME,
@@ -77,7 +78,7 @@ export default function RootLayout(props: LayoutProps<"/">) {
 
         <main className="flex-1 flex flex-col">{props.children}</main>
 
-        <footer className="bg-slate-900 text-white/60 py-8">
+        <footer className="bg-slate-900 text-white/60 py-10">
           <div className="max-w-6xl mx-auto px-5 flex flex-col sm:flex-row items-center justify-between gap-3">
             <div className="flex items-center gap-2">
               <LogoMark className="w-6 h-6" />
@@ -86,6 +87,20 @@ export default function RootLayout(props: LayoutProps<"/">) {
             <p className="text-xs">
               © {new Date().getFullYear()} BrainCoder · Free forever · Files stay on your device
             </p>
+          </div>
+          <div className="max-w-6xl mx-auto px-5 mt-6 pt-6 border-t border-white/10">
+            <nav className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs" aria-label="Footer tools">
+              {CATEGORIES.map((c) => (
+                <a
+                  key={c}
+                  href={`/#cat=${encodeURIComponent(c)}`}
+                  className="hover:text-white transition"
+                  title={`${c} tools`}
+                >
+                  {c}
+                </a>
+              ))}
+            </nav>
           </div>
         </footer>
       </body>

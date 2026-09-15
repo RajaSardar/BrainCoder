@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { TOOLS, CATEGORIES } from "./tools";
 import type { ToolConfig } from "./tools";
 
 export const SITE_URL = "https://braincoder.vercel.app";
@@ -228,8 +229,74 @@ export function siteJsonLd() {
         name: `${SITE_NAME} — Free online developer tools`,
         url: SITE_URL,
         description: SITE_DESCRIPTION,
+        about: [...CATEGORIES],
+        numberOfItems: TOOLS.length,
+      },
+      {
+        "@type": "Organization",
+        name: SITE_NAME,
+        url: SITE_URL,
+      },
+      {
+        "@type": "ItemList",
+        name: "All BrainCoder tools",
+        numberOfItems: TOOLS.length,
+        itemListElement: TOOLS.map((tool, i) => ({
+          "@type": "ListItem",
+          position: i + 1,
+          url: `${SITE_URL}/tools/${tool.slug}`,
+          name: tool.name,
+        })),
       },
     ],
+  };
+}
+
+export const HOME_FAQ = [
+  {
+    question: "Are my files uploaded when I use these tools?",
+    answer:
+      "No. Every tool runs 100% in your browser using client-side JavaScript and WebAssembly. Your files never leave your device — there is no upload step and no storage on our servers.",
+  },
+  {
+    question: "Why is BrainCoder free?",
+    answer:
+      "The tools are free forever because they run locally on your machine. There are no servers to pay for per user, so we don't need accounts, subscriptions or ads.",
+  },
+  {
+    question: "Do I need to create an account?",
+    answer:
+      "No sign-up is required. Open any tool and start using it immediately — everything lives in your browser tab, with nothing to save or sync.",
+  },
+  {
+    question: "Which browsers are supported?",
+    answer:
+      "All modern browsers work: Chrome, Edge, Firefox and Safari on desktop and mobile. Your files are processed with the WebAssembly core, so no plugin or download is needed.",
+  },
+  {
+    question: "Can I use these tools offline?",
+    answer:
+      "Many tools run fully offline once the page has loaded, since processing happens locally. Encoders, hashes, generators and text tools generally need no connection at all.",
+  },
+  {
+    question: "What tools can I find on BrainCoder?",
+    answer:
+      "123 free utilities across 8 categories — compress, convert, encode & decode, developer, media & design, generate, text tools and office — plus step-by-step guides for common tasks like merging PDFs.",
+  },
+] as const;
+
+export function homeFaqJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: HOME_FAQ.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
   };
 }
 
