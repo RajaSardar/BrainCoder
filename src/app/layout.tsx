@@ -1,13 +1,14 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { LogoMark } from "@/components/Logo";
-import { CATEGORIES } from "@/lib/tools";
+import { CATEGORIES, getCategorySlug } from "@/lib/tools";
 import {
   SITE_DESCRIPTION,
   SITE_NAME,
   SITE_URL,
 } from "@/lib/seo";
 import { Analytics } from "@/components/Analytics";
+import { PwaRegister } from "@/components/PwaRegister";
 import { SiteHeader } from "@/components/SiteHeader";
 import "./globals.css";
 
@@ -23,6 +24,12 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "BrainCoder",
+  },
   title: {
     default: `${SITE_NAME} — Free dev tools for everyone`,
     template: "%s · BrainCoder",
@@ -66,6 +73,12 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  themeColor: "#4f46e5",
+  width: "device-width",
+  initialScale: 1,
+};
+
 export default function RootLayout(props: LayoutProps<"/">) {
   return (
     <html
@@ -74,6 +87,7 @@ export default function RootLayout(props: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col bg-slate-50 text-slate-900">
         <Analytics />
+        <PwaRegister />
         <a href="#main" className="skip-link">
           Skip to content
         </a>
@@ -96,7 +110,7 @@ export default function RootLayout(props: LayoutProps<"/">) {
               {CATEGORIES.map((c) => (
                 <a
                   key={c}
-                  href={`/#cat=${encodeURIComponent(c)}`}
+                  href={`/categories/${getCategorySlug(c)}`}
                   className="hover:text-white transition"
                   title={`${c} tools`}
                 >

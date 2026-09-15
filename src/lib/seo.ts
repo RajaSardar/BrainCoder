@@ -451,3 +451,89 @@ export function howToJsonLd(
     },
   };
 }
+
+export function buildCategoryMetadata(category: string, slug: string): Metadata {
+  const keywords = CATEGORY_KEYWORDS[category];
+  return {
+    title: `${category} tools online — free no-upload ${category.toLowerCase()} utilities`,
+    description: `${CATEGORY_DESCRIPTIONS[category] ?? `Free ${category.toLowerCase()} tools`} All run in your browser — nothing is uploaded, no sign-up.`,
+    keywords: [...(keywords ?? []), ...GENERIC_KEYWORDS],
+    alternates: {
+      canonical: `/categories/${slug}`,
+    },
+    openGraph: {
+      title: `${category} tools — ${SITE_NAME}`,
+      description: CATEGORY_DESCRIPTIONS[category] ?? category,
+      url: `${SITE_URL}/categories/${slug}`,
+      siteName: SITE_NAME,
+      type: "website",
+      locale: "en_US",
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
+    },
+  };
+}
+
+export const CATEGORY_DESCRIPTIONS: Record<string, string> = {
+  Compress:
+    "Shrink PDFs, images and text without losing quality — compression runs entirely in your browser.",
+  Convert:
+    "Turn formats instantly: image to PDF, HTML to PDF, JSON to CSV, markdown to HTML and more.",
+  "Encode & Decode":
+    "Base64, URL, JWT, hashes and encryption — encode and decode without uploading a single byte.",
+  Developer:
+    "Format JSON and SQL, test regex, diff code, check HTTP statuses and calculate checksums.",
+  "Media & Design":
+    "Edit images, generate QR codes, gradients and box shadows right in your browser.",
+  Generate:
+    "UUIDs, passwords, random numbers, lorem ipsum and more, generated locally in a click.",
+  "Text Tools":
+    "Count words, convert case, clean and sort lines, preview markdown — all without uploads.",
+  Office:
+    "Work with CSV, SQLite, Word, Excel and PowerPoint files without ever sending them to a server.",
+};
+
+export function categoryJsonLd(category: string, slug: string) {
+  const url = `${SITE_URL}/categories/${slug}`;
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "CollectionPage",
+        name: `${category} tools online`,
+        url,
+        description: CATEGORY_DESCRIPTIONS[category],
+        isPartOf: {
+          "@type": "WebSite",
+          name: SITE_NAME,
+          url: SITE_URL,
+        },
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "Home",
+            item: SITE_URL,
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: category,
+            item: url,
+          },
+        ],
+      },
+    ],
+  };
+}

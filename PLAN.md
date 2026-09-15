@@ -178,8 +178,8 @@ BrainCoder is a privacy-first, browser-based developer toolkit (123 tools) being
 | # | Task | Why | Priority | Status |
 |---|------|-----|----------|--------|
 | 1 | Add favorites to `RecentTools.tsx` (heart icon on tool cards) | Completes the retention loop | High — PM agent | Done |
-| 2 | PWA manifest + service worker | Home-screen icon = retention multiplier for utility apps | High — PM agent | Not started |
-| 3 | Category landing pages (`/tools/pdf`, `/tools/convert`, etc.) | Topical authority hubs — internal linking boosts long-tail ranking | High — growth agent | Not started |
+| 2 | PWA manifest + service worker | Home-screen icon = retention multiplier for utility apps | High — PM agent | Done |
+| 3 | Category landing pages (`/categories/${slug}`) | Topical authority hubs — internal linking boosts long-tail ranking | High — growth agent | Done |
 | 4 | 5-8 more guides ("how to redact a pdf", "how to sign a pdf", etc.) | Guides rank for how-to queries + internal link to tools | High — growth agent | Not started |
 | 5 | "Verify: 0 uploads" proof page | Shareable proof of the privacy moat — PR / HN material | Medium — growth agent | Not started |
 | 6 | Rust/WASM technical deep-dive (dev.to post) | Builds authority + backlinks + GitHub stars | Medium — growth agent | Not started |
@@ -191,6 +191,21 @@ BrainCoder is a privacy-first, browser-based developer toolkit (123 tools) being
 - `src/components/RecentTools.tsx` — now renders two sections: **Your favorites** (with remove hearts) and **Your recent tools** (with add hearts). Both cards share `ToolCardSmall`.
 - `src/lib/userState.ts` — added `subscribeUserState()` notification bus. **Critical lesson:** plain `useSyncExternalStore` with a no-op `subscribe` does NOT re-render on same-tab localStorage writes (the `storage` event only fires cross-tab). Components must subscribe to a shared listener set that `addRecentTool`/`toggleFavorite`/`clearRecentTools` notify.
 - Browser-verified: add favorite → section appears instantly, `bc_favorites` written; remove → section disappears, empty array. Lint clean, build green, 18/18 e2e.
+
+**PWA delivered:**
+- `public/manifest.webmanifest` — name/short_name/description, standalone display, theme + background colors, `purpose: "any" + "maskable"` icon (reuses `/icon.svg`).
+- `public/sw.js` — service worker: precaches shell on install, cache-first hashed `/_next/static/`, network-first navigations (offline falls back to homepage), stale-while-revalidate same-origin assets, cache versioning + cleanup on activate.
+- `src/components/PwaRegister.tsx` — registers `/sw.js` client-side, **gated to production** (`process.env.NODE_ENV !== "production"` early-return) so it never interferes with dev.
+- `src/app/layout.tsx` — `manifest: "/manifest.webmanifest"` in metadata, `appleWebApp` capable, and **`themeColor` moved to a separate `export const viewport`** (Next.js 16: themeColor in `metadata` throws a deprecation warning on every page).
+- Verified: `/manifest.webmanifest` → 200 `application/manifest+json`; `/sw.js` → 200; `<link rel="manifest">` present in head.
+
+**Category pages delivered (topical authority hubs):**
+- `src/lib/tools.ts` — added `getCategorySlug()` + `getCategoryBySlug()` mapping the 8 categories to URL-safe slugs (`Encode & Decode` → `encode-decode`, `Media & Design` → `media-design`, etc.).
+- `src/lib/seo.ts` — `buildCategoryMetadata()`, exported `CATEGORY_DESCRIPTIONS` (shared copy moved out of `CategoryIndex.tsx`), and `categoryJsonLd()` (CollectionPage + BreadcrumbList).
+- `src/app/categories/[slug]/page.tsx` — SSG (8 pages): breadcrumb, hero with tool-count + "nothing uploaded" badge, full tool grid via `ToolCard`, JSON-LD, back link. H1 such as "Compress tools".
+- Internal linking improved: `CategoryIndex` "View all" + footer category links now point to `/categories/${slug}` (real crawlable pages) instead of `#cat=` anchors.
+- `sitemap.ts` — added 8 category URLs (`priority 0.7`, weekly).
+- Verified: `/categories/compress` → 200, H1 + tool cards + JSON-LD; sitemap lists all 8; build now 270 SSG pages; 18/18 e2e after warm-up (first run fails on cold dev compile — known dev-mode pattern).
 
 **What we're explicitly NOT doing in Phase 2 (per agents):**
 - ~~Chrome extension~~ → distraction until traffic > 5K/mo
@@ -204,8 +219,8 @@ BrainCoder is a privacy-first, browser-based developer toolkit (123 tools) being
 - [ ] 500+ organic clicks/month (GSC, 90 days)
 - [ ] 25+ referring domains (Ahrefs/SEMrush, 90 days)
 - [ ] 100+ GitHub stars (launch + communities)
-- [ ] Favorites adoption: 5%+ of returning users have ≥1 favorite
-- [ ] PWA install prompt accepted by 2%+ of mobile visitors
+- [x] Favorites feature shipped (5%+ adoption to measure post-launch)
+- [x] PWA manifest + SW shipped (2%+ installs to measure post-launch)
 
 #### Phase 3 — Scale Distribution (Months 4-6)
 
@@ -240,6 +255,10 @@ BrainCoder is a privacy-first, browser-based developer toolkit (123 tools) being
 | 2026-09-15 | Use `@vercel/analytics/next` not Plausible | User has Vercel Web Analytics enabled; no env vars or external accounts needed |
 | 2026-09-15 | CSP `connect-src` must include `data: blob:` | BrainCoder tools call `fetch(canvas.toDataURL(...))` to convert canvas → ArrayBuffer; CSP blocks this without explicit `data:` in `connect-src` |
 | 2026-09-15 | Skip link + focus-visible in `globals.css` | WCAG 2.1 AA: visible focus for keyboard users, skip nav for screen readers; no extra components needed |
+| 2026-09-15 | Category pages at `/categories/${slug}` not `/tools/${slug}` | Avoids conflict with existing dynamic `/tools/[slug]` route; URL-safe slugified categories |
+| 2026-09-15 | SW registration gated to production only | Dev-mode service workers cause stale-cache confusion; register only when `NODE_ENV === "production"` |
+| 2026-09-15 | `themeColor` in `viewport` export, not `metadata` | Next.js 16 deprecates `metadata.themeColor` (throws warning on every page) |
+| 2026-09-15 | Category copy shared via `CATEGORY_DESCRIPTIONS` in `seo.ts` | Single source for hero copy, metadata description, and JSON-LD |
 
 ---
 

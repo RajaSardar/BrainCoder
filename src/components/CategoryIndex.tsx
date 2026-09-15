@@ -1,5 +1,11 @@
+import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { CATEGORIES, getToolsByCategory, type Category } from "@/lib/tools";
+import {
+  CATEGORIES,
+  getCategorySlug,
+  getToolsByCategory,
+  type Category,
+} from "@/lib/tools";
 
 const CATEGORY_COPY: Record<Category, string> = {
   Compress:
@@ -58,13 +64,13 @@ export function CategoryIndex() {
                   </a>
                 ))}
               </div>
-              <a
-                href={`#cat=${encodeURIComponent(c)}`}
+              <Link
+                href={`/categories/${getCategorySlug(c)}`}
                 className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-indigo-600 hover:text-indigo-700"
               >
                 View all {c} tools
                 <ArrowRight className="w-3.5 h-3.5" />
-              </a>
+              </Link>
             </div>
           );
         })}

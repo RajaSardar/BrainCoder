@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { TOOLS } from "@/lib/tools";
+import { CATEGORIES, getCategorySlug, TOOLS } from "@/lib/tools";
 import { GUIDES } from "@/lib/guides";
 import { SITE_URL } from "@/lib/seo";
 
@@ -11,6 +11,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: new Date(),
     changeFrequency: HERO.has(tool.slug) ? "weekly" : "monthly",
     priority: HERO.has(tool.slug) ? 0.9 : 0.8,
+  }));
+
+  const categoryUrls: MetadataRoute.Sitemap = CATEGORIES.map((category) => ({
+    url: `${SITE_URL}/categories/${getCategorySlug(category)}`,
+    lastModified: new Date(),
+    changeFrequency: "weekly",
+    priority: 0.7,
   }));
 
   const guideUrls: MetadataRoute.Sitemap = GUIDES.map((guide) => ({
@@ -33,6 +40,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 0.6,
     },
+    ...categoryUrls,
     ...toolUrls,
     ...guideUrls,
   ];

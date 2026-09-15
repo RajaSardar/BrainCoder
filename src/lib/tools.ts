@@ -1496,3 +1496,26 @@ export function getTool(slug: string): ToolConfig | undefined {
 export function getToolsByCategory(category: Category): ToolConfig[] {
   return TOOLS.filter((t) => t.category === category);
 }
+
+const CATEGORY_SLUGS: Record<Category, string> = {
+  Compress: "compress",
+  Convert: "convert",
+  "Encode & Decode": "encode-decode",
+  Developer: "developer",
+  "Media & Design": "media-design",
+  Generate: "generate",
+  "Text Tools": "text-tools",
+  Office: "office",
+};
+
+export function getCategorySlug(category: Category): string {
+  return CATEGORY_SLUGS[category];
+}
+
+const SLUG_CATEGORIES: Record<string, Category> = Object.fromEntries(
+  (Object.entries(CATEGORY_SLUGS) as [Category, string][]).map(([c, s]) => [s, c]),
+);
+
+export function getCategoryBySlug(slug: string): Category | undefined {
+  return SLUG_CATEGORIES[slug];
+}
