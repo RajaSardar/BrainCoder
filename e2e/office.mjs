@@ -299,6 +299,59 @@ await step("pdf-split: wasm core extracts selected page", async () => {
   console.log("split message:", msg);
 });
 
+// ---------- 15. pdf-remove-pages: Rust/WASM core ----------
+await step("pdf-remove-pages: wasm core removes marked page", async () => {
+  await page.goto(BASE + "pdf-remove-pages", { waitUntil: "domcontentloaded" });
+  await page.setInputFiles("input[accept*='pdf']", `${F}/split-src.pdf`);
+  await page.getByAltText("Page 2 preview").waitFor({ state: "visible", timeout: 25000 });
+  await page.getByAltText("Page 1 preview").click();
+  const button = page.getByRole("button", { name: "Delete 1 page" });
+  await button.waitFor({ state: "visible", timeout: 15000 });
+  const [dl] = await Promise.all([
+    page.waitForEvent("download", { timeout: 45000 }),
+    button.click(),
+  ]);
+  const f = await save(dl, "15-pdf-remove-pages.pdf");
+  const buf = fs.readFileSync(f);
+  if (buf.subarray(0, 5).toString("latin1") !== "%PDF-") throw new Error("not a PDF");
+  await page.waitForFunction(
+    () => /Rust\/WASM core/.test(document.body.textContent || ""),
+    null,
+    { timeout: 25000 },
+  );
+  const msg = (await page.locator("div.bg-emerald-50").first().textContent()).trim();
+  if (!/Removed 1 page \(1 remaining\)/.test(msg)) throw new Error("bad remove message: " + msg);
+  console.log("remove message:", msg);
+});
+
+// ---------- 16. pdf-remove-blank-pages: Rust/WASM core ----------
+await step("pdf-remove-blank-pages: wasm core strips blank page", async () => {
+  await page.goto(BASE + "pdf-remove-blank-pages", { waitUntil: "domcontentloaded" });
+  await page.setInputFiles("input[accept*='pdf']", `${F}/blank-pages.pdf`);
+  await page.waitForFunction(
+    () => /Detected 1 blank page/.test(document.body.textContent || ""),
+    null,
+    { timeout: 30000 },
+  );
+  const button = page.getByRole("button", { name: "Delete 1 page" });
+  await button.waitFor({ state: "visible", timeout: 15000 });
+  const [dl] = await Promise.all([
+    page.waitForEvent("download", { timeout: 45000 }),
+    button.click(),
+  ]);
+  const f = await save(dl, "16-pdf-remove-blank-pages.pdf");
+  const buf = fs.readFileSync(f);
+  if (buf.subarray(0, 5).toString("latin1") !== "%PDF-") throw new Error("not a PDF");
+  await page.waitForFunction(
+    () => /Rust\/WASM core/.test(document.body.textContent || ""),
+    null,
+    { timeout: 25000 },
+  );
+  const msg = (await page.locator("div.bg-emerald-50").first().textContent()).trim();
+  if (!/Removed 1 blank page \(2 remaining\)/.test(msg)) throw new Error("bad blank message: " + msg);
+  console.log("blank message:", msg);
+});
+
 await browser.close();
 console.log(`\n=== ${passed} passed, ${failed} failed ===`);
 process.exit(failed ? 1 : 0);

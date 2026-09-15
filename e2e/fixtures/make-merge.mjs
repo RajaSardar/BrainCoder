@@ -29,11 +29,33 @@ async function makeMultiPagePdf(pages) {
 const [a, b] = await Promise.all([makePdf(["Merge file A content"]), makePdf(["Merge file B content"])]);
 const split = await makeMultiPagePdf([["Page one content"], ["Page two content"]]);
 
+async function makeBlankFixture() {
+  const doc = await PDFDocument.create();
+  doc.registerFontkit(fontkit);
+  const font = await doc.embedFont(new Uint8Array(ttf));
+  const fillPage = (p) => {
+    for (let i = 0; i < 14; i++) {
+      p.drawText(`This is content line number ${i + 1} of the blank-page fixture.`, {
+        x: 60,
+        y: 650 - i * 24,
+        fontSize: 14,
+        font,
+      });
+    }
+  };
+  fillPage(doc.addPage([500, 700]));
+  doc.addPage([500, 700]);
+  fillPage(doc.addPage([500, 700]));
+  return doc.save();
+}
+const blanks = await makeBlankFixture();
+
 await Promise.all([
   writeFile(new URL("./merge-a.pdf", import.meta.url), a),
   writeFile(new URL("./merge-b.pdf", import.meta.url), b),
   writeFile(new URL("./split-src.pdf", import.meta.url), split),
+  writeFile(new URL("./blank-pages.pdf", import.meta.url), blanks),
 ]);
 console.log(
-  `wrote merge-a.pdf (${a.length} B), merge-b.pdf (${b.length} B), split-src.pdf (${split.length} B)`,
+  `wrote merge-a.pdf (${a.length} B), merge-b.pdf (${b.length} B), split-src.pdf (${split.length} B), blank-pages.pdf (${blanks.length} B)`,
 );

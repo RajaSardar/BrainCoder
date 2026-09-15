@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { Trash2, Loader2, FileText } from "lucide-react";
 import { Button } from "@/components/ui";
 import { downloadBlob } from "@/lib/download";
+import { extractPdfsWasm } from "@/lib/wasm-core";
 
 interface PageInfo {
   index: number;
@@ -29,6 +30,7 @@ export default function PdfRemovePages() {
     setRemoving(new Set());
     try {
       const buffer = await file.arrayBuffer();
+      const bytes = new Uint8Array(buffer.slice(0));
       const pdfjs = await import("pdfjs-dist");
       pdfjs.GlobalWorkerOptions.workerSrc = new URL(
         "pdfjs-dist/build/pdf.worker.min.mjs",
@@ -51,7 +53,7 @@ export default function PdfRemovePages() {
       setPages(list);
       setName(file.name);
       setBase(file.name.replace(/\.pdf$/i, ""));
-      setBytes(new Uint8Array(buffer));
+      setBytes(bytes);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not read PDF.");
     } finally {
@@ -73,13 +75,25 @@ export default function PdfRemovePages() {
     setBusy(true);
     setError("");
     setMessage("");
+    const t0 = performance.now();
     try {
+      const keep = [];
+      for (let i = 0; i < pages.length; i++)
+        if (!removing.has(pages[i].index)) keep.push(pages[i].index - 1);
+      const wasmOut = await extractPdfsWasm(bytes, [keep]);
+      if (wasmOut && wasmOut[0]) {
+        downloadBlob(wasmOut[0], `${base}-kept-pages.pdf`);
+        const gone = removing.size;
+        setMessage(
+          gone === 0
+            ? "No pages selected to remove — downloaded the full document."
+            : `Removed ${gone} page${gone === 1 ? "" : "s"} (${keep.length} remaining) (Rust/WASM core · ${(performance.now() - t0).toFixed(1)} ms).`,
+        );
+        return;
+      }
       const { PDFDocument } = await import("pdf-lib");
       const out = await PDFDocument.create();
       const src = await PDFDocument.load(bytes, { ignoreEncryption: true });
-      const keep = [];
-      for (let i = 0; i < src.getPageCount(); i++)
-        if (!removing.has(i + 1)) keep.push(i);
       const copied = await out.copyPages(src, keep);
       copied.forEach((p) => out.addPage(p));
       const gone = removing.size;
@@ -87,7 +101,7 @@ export default function PdfRemovePages() {
       setMessage(
         gone === 0
           ? "No pages selected to remove — downloaded the full document."
-          : `Removed ${gone} page${gone === 1 ? "" : "s"} (${keep.length} remaining).`,
+          : `Removed ${gone} page${gone === 1 ? "" : "s"} (${keep.length} remaining) (JS fallback · ${(performance.now() - t0).toFixed(1)} ms).`,
       );
     } catch (err) {
       setError(err instanceof Error ? err.message : "Remove failed");

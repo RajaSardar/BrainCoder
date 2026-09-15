@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui";
 import { downloadBlob } from "@/lib/download";
+import { extractPdfsWasm } from "@/lib/wasm-core";
 
 interface PageInfo {
   index: number;
@@ -130,13 +131,25 @@ export default function PdfRemoveBlankPages() {
     setBusy(true);
     setError("");
     setMessage("");
+    const t0 = performance.now();
     try {
+      const keep = [];
+      for (let i = 0; i < pages.length; i++)
+        if (!removing.has(pages[i].index)) keep.push(pages[i].index - 1);
+      const wasmOut = await extractPdfsWasm(bytes, [keep]);
+      if (wasmOut && wasmOut[0]) {
+        downloadBlob(wasmOut[0], `${base}-no-blank-pages.pdf`);
+        const gone = removing.size;
+        setMessage(
+          gone === 0
+            ? "No pages selected — downloaded the full document."
+            : `Removed ${gone} blank page${gone === 1 ? "" : "s"} (${keep.length} remaining) (Rust/WASM core · ${(performance.now() - t0).toFixed(1)} ms).`,
+        );
+        return;
+      }
       const { PDFDocument } = await import("pdf-lib");
       const out = await PDFDocument.create();
       const src = await PDFDocument.load(bytes, { ignoreEncryption: true });
-      const keep = [];
-      for (let i = 0; i < src.getPageCount(); i++)
-        if (!removing.has(i + 1)) keep.push(i);
       const copied = await out.copyPages(src, keep);
       copied.forEach((p) => out.addPage(p));
       const gone = removing.size;
@@ -144,7 +157,7 @@ export default function PdfRemoveBlankPages() {
       setMessage(
         gone === 0
           ? "No pages selected — downloaded the full document."
-          : `Removed ${gone} blank page${gone === 1 ? "" : "s"} (${keep.length} remaining).`,
+          : `Removed ${gone} blank page${gone === 1 ? "" : "s"} (${keep.length} remaining) (JS fallback · ${(performance.now() - t0).toFixed(1)} ms).`,
       );
     } catch (err) {
       setError(err instanceof Error ? err.message : "Remove failed");
