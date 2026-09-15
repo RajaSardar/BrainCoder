@@ -228,6 +228,32 @@ await step("pptx-creator: build slides + download", async () => {
   if (!s2.includes("Slide Number Two")) throw new Error("slide2 title missing");
 });
 
+// ---------- 12. pdf-auto-redact: Rust/WASM core ----------
+await step("pdf-auto-redact: wasm core finds phrase", async () => {
+  await page.goto(BASE + "pdf-auto-redact", { waitUntil: "domcontentloaded" });
+  await page.setInputFiles("input[accept*='pdf']", `${F}/redact.pdf`);
+  const queryBox = page.locator("input[placeholder*='Sensitive word']");
+  await queryBox.waitFor({ state: "attached", timeout: 15000 });
+  await queryBox.fill("confidential");
+  await page.getByRole("button", { name: "Find matches" }).click();
+  await page.waitForFunction(
+    () =>
+      /Found \d+ match/.test(document.body.textContent || "") &&
+      /core|fallback/i.test(document.body.textContent || ""),
+    null,
+    { timeout: 25000 },
+  );
+  const msg = (
+    await page
+      .locator("div.bg-emerald-50")
+      .filter({ hasText: /Found \d+ match/ })
+      .first()
+      .textContent()
+  ).trim();
+  if (!/Rust\/WASM core/.test(msg)) throw new Error("expected wasm engine note, got: " + msg);
+  console.log("redact message:", msg);
+});
+
 await browser.close();
 console.log(`\n=== ${passed} passed, ${failed} failed ===`);
 process.exit(failed ? 1 : 0);
