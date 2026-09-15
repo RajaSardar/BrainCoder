@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui";
 import { downloadBlob } from "@/lib/download";
-import { findMatchRects } from "@/lib/wasm-core";
+import { findMatchRects, redactPdfsWasm } from "@/lib/wasm-core";
 import { extractContentRuns, type TextRun } from "@/features/pdf-editor/text-structure";
 
 interface Rect {
@@ -168,7 +168,31 @@ export default function PdfAutoRedact() {
     setBusy(true);
     setError("");
     setMessage("");
+    const t0 = performance.now();
+    const total = Array.from(matches.values()).reduce(
+      (m, arr) => m + arr.length,
+      0,
+    );
+    const pageRects: number[][][] = pages.map((p) => {
+      const group = matches.get(p.index) ?? [];
+      const w = p.pageWidth;
+      const h = p.pageHeight;
+      return group.map((r) => [
+        r.x * w,
+        h - (r.y + r.h) * h,
+        (r.x + r.w) * w,
+        h - r.y * h,
+      ]);
+    });
     try {
+      const wasm = await redactPdfsWasm(bytes, pageRects);
+      if (wasm) {
+        downloadBlob(wasm.bytes, `${base}-redacted.pdf`);
+        setMessage(
+          `Redacted ${total} occurrence${total === 1 ? "" : "s"} across ${matches.size} page${matches.size === 1 ? "" : "s"} (Rust/WASM core · ${wasm.ms.toFixed(1)} ms).`,
+        );
+        return;
+      }
       const { PDFDocument, rgb } = await import("pdf-lib");
       const src = await PDFDocument.load(bytes, { ignoreEncryption: true });
       const out = await PDFDocument.create();
@@ -190,12 +214,8 @@ export default function PdfAutoRedact() {
       }
       const saved = await out.save();
       downloadBlob(saved, `${base}-redacted.pdf`);
-      const total = Array.from(matches.values()).reduce(
-        (m, arr) => m + arr.length,
-        0,
-      );
       setMessage(
-        `Redacted ${total} occurrence${total === 1 ? "" : "s"} across ${matches.size} page${matches.size === 1 ? "" : "s"}.`,
+        `Redacted ${total} occurrence${total === 1 ? "" : "s"} across ${matches.size} page${matches.size === 1 ? "" : "s"} (JS fallback · ${(performance.now() - t0).toFixed(1)} ms).`,
       );
     } catch (err) {
       setError(err instanceof Error ? err.message : "Export failed");

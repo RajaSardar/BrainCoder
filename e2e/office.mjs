@@ -352,6 +352,66 @@ await step("pdf-remove-blank-pages: wasm core strips blank page", async () => {
   console.log("blank message:", msg);
 });
 
+// ---------- 17. pdf-redact: draw box + Rust/WASM core ----------
+await step("pdf-redact: draw a box and export via wasm core", async () => {
+  await page.goto(BASE + "pdf-redact", { waitUntil: "domcontentloaded" });
+  await page.setInputFiles("input[accept*='pdf']", `${F}/redact.pdf`);
+  const preview = page.locator("div.select-none");
+  await preview.waitFor({ state: "visible", timeout: 30000 });
+  const box = await preview.boundingBox();
+  if (!box) throw new Error("no redaction preview box");
+  await page.mouse.move(box.x + box.width * 0.2, box.y + box.height * 0.3);
+  await page.mouse.down();
+  await page.mouse.move(box.x + box.width * 0.6, box.y + box.height * 0.5, {
+    steps: 8,
+  });
+  await page.mouse.up();
+  const button = page.getByRole("button", { name: /Export 1 box/ });
+  await button.waitFor({ state: "visible", timeout: 15000 });
+  const [dl] = await Promise.all([
+    page.waitForEvent("download", { timeout: 45000 }),
+    button.click(),
+  ]);
+  const f = await save(dl, "17-pdf-redact.pdf");
+  const buf = fs.readFileSync(f);
+  if (buf.subarray(0, 5).toString("latin1") !== "%PDF-") throw new Error("not a PDF");
+  await page.waitForFunction(
+    () => /Rust\/WASM core/.test(document.body.textContent || ""),
+    null,
+    { timeout: 25000 },
+  );
+  const msg = (await page.locator("div.bg-emerald-50").first().textContent()).trim();
+  if (!/Drew 1 redaction box/.test(msg)) throw new Error("bad redact message: " + msg);
+  console.log("redact message:", msg);
+});
+
+// ---------- 18. pdf-auto-redact: true excise export via Rust/WASM core ----------
+await step("pdf-auto-redact: export redacts via wasm core", async () => {
+  await page.goto(BASE + "pdf-auto-redact", { waitUntil: "domcontentloaded" });
+  await page.setInputFiles("input[accept*='pdf']", `${F}/redact.pdf`);
+  const queryBox = page.locator("input[placeholder*='Sensitive word']");
+  await queryBox.waitFor({ state: "attached", timeout: 15000 });
+  await queryBox.fill("confidential");
+  await page.getByRole("button", { name: "Find matches" }).click();
+  const button = page.getByRole("button", { name: /Redact \d+ match/ });
+  await button.waitFor({ state: "visible", timeout: 25000 });
+  const [dl] = await Promise.all([
+    page.waitForEvent("download", { timeout: 45000 }),
+    button.click(),
+  ]);
+  const f = await save(dl, "18-pdf-auto-redact.pdf");
+  const buf = fs.readFileSync(f);
+  if (buf.subarray(0, 5).toString("latin1") !== "%PDF-") throw new Error("not a PDF");
+  await page.waitForFunction(
+    () => /Rust\/WASM core/.test(document.body.textContent || ""),
+    null,
+    { timeout: 25000 },
+  );
+  const msg = (await page.locator("div.bg-emerald-50").first().textContent()).trim();
+  if (!/Redacted \d+ occurrence/.test(msg)) throw new Error("bad auto-redact message: " + msg);
+  console.log("auto-redact message:", msg);
+});
+
 await browser.close();
 console.log(`\n=== ${passed} passed, ${failed} failed ===`);
 process.exit(failed ? 1 : 0);

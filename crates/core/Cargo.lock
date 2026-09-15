@@ -72,6 +72,7 @@ dependencies = [
  "getrandom 0.4.3",
  "js-sys",
  "wasm-bindgen",
+ "zpdf-core",
  "zpdf-parser",
  "zpdf-writer",
 ]

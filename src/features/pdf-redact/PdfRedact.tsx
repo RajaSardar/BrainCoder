@@ -4,6 +4,7 @@ import { useRef, useState, useCallback } from "react";
 import { Loader2, FileText, RotateCcw, Download } from "lucide-react";
 import { Button } from "@/components/ui";
 import { downloadBlob } from "@/lib/download";
+import { redactPdfsWasm } from "@/lib/wasm-core";
 
 interface Rect {
   x: number;
@@ -16,7 +17,9 @@ export default function PdfRedact() {
   const [name, setName] = useState("");
   const [base, setBase] = useState("");
   const [bytes, setBytes] = useState<Uint8Array | null>(null);
-  const [pages, setPages] = useState<{ index: number; url: string }[]>([]);
+  const [pages, setPages] = useState<
+    { index: number; url: string; width: number; height: number }[]
+  >([]);
   const [activePage, setActivePage] = useState(1);
   const [pagePreview, setPagePreview] = useState("");
   const [previewSize, setPreviewSize] = useState({ w: 0, h: 0 });
@@ -37,13 +40,15 @@ export default function PdfRedact() {
     setMessage("");
     try {
       const buffer = await file.arrayBuffer();
+      const bytes = new Uint8Array(buffer.slice(0));
+      const pdfjsData = new Uint8Array(buffer.slice(0));
       const pdfjs = await import("pdfjs-dist");
       pdfjs.GlobalWorkerOptions.workerSrc = new URL(
         "pdfjs-dist/build/pdf.worker.min.mjs",
         import.meta.url,
       ).toString();
-      const doc = await pdfjs.getDocument({ data: buffer }).promise;
-      const thumbs: { index: number; url: string }[] = [];
+      const doc = await pdfjs.getDocument({ data: pdfjsData }).promise;
+      const thumbs: { index: number; url: string; width: number; height: number }[] = [];
       const scale = 0.45;
       for (let n = 1; n <= doc.numPages; n++) {
         const page = await doc.getPage(n);
@@ -52,15 +57,21 @@ export default function PdfRedact() {
         canvas.width = Math.floor(viewport.width);
         canvas.height = Math.floor(viewport.height);
         await page.render({ canvas, viewport }).promise;
-        thumbs.push({ index: n, url: canvas.toDataURL("image/jpeg", 0.8) });
+        const full = page.getViewport({ scale: 1 });
+        thumbs.push({
+          index: n,
+          url: canvas.toDataURL("image/jpeg", 0.8),
+          width: full.width,
+          height: full.height,
+        });
       }
       setPages(thumbs);
       setName(file.name);
       setBase(file.name.replace(/\.pdf$/i, ""));
-      setBytes(new Uint8Array(buffer));
+      setBytes(bytes);
       setActivePage(1);
       setRects(new Map());
-      await loadPagePreview(new Uint8Array(buffer), 1, pdfjs);
+      await loadPagePreview(new Uint8Array(bytes.slice(0)), 1, pdfjs);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not read PDF.");
     } finally {
@@ -162,13 +173,32 @@ export default function PdfRedact() {
     setBusy(true);
     setError("");
     setMessage("");
+    const t0 = performance.now();
+    const total = Array.from(rects.values()).reduce(
+      (m, arr) => m + arr.length,
+      0,
+    );
+    const pageRects: number[][][] = pages.map((p) => {
+      const group = rects.get(p.index) ?? [];
+      const w = p.width;
+      const h = p.height;
+      return group.map((r) => [
+        r.x * w,
+        h - (r.y + r.h) * h,
+        (r.x + r.w) * w,
+        h - r.y * h,
+      ]);
+    });
     try {
+      const wasm = await redactPdfsWasm(bytes, pageRects);
+      if (wasm) {
+        downloadBlob(wasm.bytes, `${base}-redacted.pdf`);
+        setMessage(
+          `Drew ${total} redaction box${total === 1 ? "" : "es"} on ${rects.size} page${rects.size === 1 ? "" : "s"} (Rust/WASM core · ${wasm.ms.toFixed(1)} ms).`,
+        );
+        return;
+      }
       const { PDFDocument, rgb } = await import("pdf-lib");
-      const pdfjs = await import("pdfjs-dist");
-      pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-        "pdfjs-dist/build/pdf.worker.min.mjs",
-        import.meta.url,
-      ).toString();
       const src = await PDFDocument.load(bytes, { ignoreEncryption: true });
       const out = await PDFDocument.create();
 
@@ -191,12 +221,8 @@ export default function PdfRedact() {
 
       const saved = await out.save();
       downloadBlob(saved, `${base}-redacted.pdf`);
-      const total = Array.from(rects.values()).reduce(
-        (m, arr) => m + arr.length,
-        0,
-      );
       setMessage(
-        `Drew ${total} redaction box${total === 1 ? "" : "es"} on ${rects.size} page${rects.size === 1 ? "" : "s"}.`,
+        `Drew ${total} redaction box${total === 1 ? "" : "es"} on ${rects.size} page${rects.size === 1 ? "" : "s"} (JS fallback · ${(performance.now() - t0).toFixed(1)} ms).`,
       );
     } catch (err) {
       setError(err instanceof Error ? err.message : "Export failed");

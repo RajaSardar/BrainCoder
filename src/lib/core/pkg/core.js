@@ -151,6 +151,38 @@ export function merge_pdfs(files) {
 }
 
 /**
+ * True-redact page content: excises text/image/path operators intersecting any
+ * given rect, then paints an opaque black box over each region.
+ *
+ * `page_rects` is an outer `Array` (one element per page, page index 0-based)
+ * whose entries are `Array`s of `Rect`s; each `Rect` is a 4-element
+ * `Array` `[x0, y0, x1, y1]` in PDF user space (y-up points).
+ * @param {Uint8Array} bytes
+ * @param {Array<any>} page_rects
+ * @returns {Uint8Array}
+ */
+export function redact_pdfs(bytes, page_rects) {
+    try {
+        const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+        const ptr0 = passArray8ToWasm0(bytes, wasm.__wbindgen_export);
+        const len0 = WASM_VECTOR_LEN;
+        wasm.redact_pdfs(retptr, ptr0, len0, addHeapObject(page_rects));
+        var r0 = getDataViewMemory0().getInt32(retptr + 4 * 0, true);
+        var r1 = getDataViewMemory0().getInt32(retptr + 4 * 1, true);
+        var r2 = getDataViewMemory0().getInt32(retptr + 4 * 2, true);
+        var r3 = getDataViewMemory0().getInt32(retptr + 4 * 3, true);
+        if (r3) {
+            throw takeObject(r2);
+        }
+        var v2 = getArrayU8FromWasm0(r0, r1).slice();
+        wasm.__wbindgen_export3(r0, r1 * 1, 1);
+        return v2;
+    } finally {
+        wasm.__wbindgen_add_to_stack_pointer(16);
+    }
+}
+
+/**
  * @param {Float64Array} xs
  * @param {Float64Array} ys
  * @param {Float64Array} ws
@@ -200,6 +232,10 @@ function __wbg_get_imports() {
         },
         __wbg_from_a39669ce566077da: function(arg0) {
             const ret = Array.from(getObject(arg0));
+            return addHeapObject(ret);
+        },
+        __wbg_get_b1f0ab13c737f856: function(arg0, arg1) {
+            const ret = getObject(arg0)[arg1 >>> 0];
             return addHeapObject(ret);
         },
         __wbg_get_unchecked_363572bdd397d473: function(arg0, arg1) {

@@ -4,7 +4,7 @@ import fontkit from "@pdf-lib/fontkit";
 import { readFile } from "node:fs/promises";
 import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
 
-const { find_matches, split_words, merge_pdfs, extract_pdfs } = corePkg;
+const { find_matches, split_words, merge_pdfs, extract_pdfs, redact_pdfs } = corePkg;
 
 const STRIP = /^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu;
 const norm = (s) => s.replace(STRIP, "").toLowerCase();
@@ -285,8 +285,19 @@ const bt2 = await pdfText(bothDoc, 2);
 const bothOk = bothDoc.numPages === 2 && bt1.includes("Alpha first") && bt2.includes("Beta second");
 console.log(`${bothOk ? "PASS" : "FAIL"}  extract_pdfs [[0,1]]: p1="${bt1}", p2="${bt2}"`);
 
-if (splitFail || !mergeOk || !splitOk || !bothOk) {
-  console.error("\nsplit_words / merge / extract mismatches detected.");
+// --- redact_pdfs true content excision --------------------------------------
+// pdfA draws "Alpha first" at x=60, baseline y=640, 12pt. Cover just the left
+// half of the line; the excised "Alpha" text must disappear from page 1 while
+// page 2 ("Beta second") is untouched.
+const redacted = redact_pdfs(new Uint8Array(merged), [[[50, 625, 130, 648]], []]);
+const redDoc = await loadPdf(redacted);
+const redP1 = await pdfText(redDoc, 1);
+const redP2 = await pdfText(redDoc, 2);
+const redOk = redDoc.numPages === 2 && !redP1.includes("Alpha") && redP2.includes("Beta second");
+console.log(`${redOk ? "PASS" : "FAIL"}  redact_pdfs: p1="${redP1}", p2="${redP2}"`);
+
+if (splitFail || !mergeOk || !splitOk || !bothOk || !redOk) {
+  console.error("\nsplit_words / merge / extract / redact mismatches detected.");
   process.exit(1);
 }
-console.log("\nWASM split_words matches JS reference; merge/extract round-trips verified.");
+console.log("\nWASM split_words matches JS reference; merge/extract round-trips and true redaction verified.");

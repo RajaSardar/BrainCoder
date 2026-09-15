@@ -17,4 +17,14 @@ export function find_matches(xs: Float64Array, ys: Float64Array, ws: Float64Arra
 
 export function merge_pdfs(files: any[]): Uint8Array;
 
+/**
+ * True-redact page content: excises text/image/path operators intersecting any
+ * given rect, then paints an opaque black box over each region.
+ *
+ * `page_rects` is an outer `Array` (one element per page, page index 0-based)
+ * whose entries are `Array`s of `Rect`s; each `Rect` is a 4-element
+ * `Array` `[x0, y0, x1, y1]` in PDF user space (y-up points).
+ */
+export function redact_pdfs(bytes: Uint8Array, page_rects: Array<any>): Uint8Array;
+
 export function split_words(xs: Float64Array, ys: Float64Array, ws: Float64Array, hs: Float64Array, fs: Float64Array, bs: Float64Array, texts: string[]): WordBatch;

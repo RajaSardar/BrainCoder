@@ -28,6 +28,7 @@ export interface CoreApi {
   ) => CoreWordBatch;
   merge_pdfs: (files: Uint8Array[]) => Uint8Array;
   extract_pdfs: (bytes: Uint8Array, groups: number[][]) => Uint8Array[];
+  redact_pdfs: (bytes: Uint8Array, pageRects: number[][][]) => Uint8Array;
 }
 
 export type MatchRect = { x: number; y: number; w: number; h: number };
@@ -158,6 +159,23 @@ export async function extractPdfsWasm(
     return out.map((b) => new Uint8Array(b.slice(0)));
   } catch (err) {
     console.warn("[wasm-core] extract failed, using JS fallback:", err);
+    return null;
+  }
+}
+
+export async function redactPdfsWasm(
+  bytes: Uint8Array,
+  pageRects: number[][][],
+): Promise<{ bytes: Uint8Array; ms: number } | null> {
+  if (pageRects.every((g) => g.length === 0)) return null;
+  const core = await loadCore();
+  if (!core) return null;
+  const t0 = performance.now();
+  try {
+    const out = core.redact_pdfs(bytes.slice(0), pageRects);
+    return { bytes: new Uint8Array(out.slice(0)), ms: performance.now() - t0 };
+  } catch (err) {
+    console.warn("[wasm-core] redact failed, using JS fallback:", err);
     return null;
   }
 }

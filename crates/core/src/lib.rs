@@ -2,8 +2,9 @@ use std::io::Cursor;
 use std::sync::Arc;
 use js_sys::{Array, Uint8Array};
 use wasm_bindgen::prelude::*;
+use zpdf_core::Rect;
 use zpdf_parser::PdfFile;
-use zpdf_writer::{extract_pages, IncrementalWriter};
+use zpdf_writer::{extract_pages, IncrementalWriter, RedactOptions};
 
 #[inline]
 fn js_err(e: impl std::fmt::Display) -> JsValue {
@@ -56,6 +57,52 @@ pub fn extract_pdfs(bytes: Vec<u8>, groups: js_sys::Array) -> Result<JsValue, Js
         out.push(&Uint8Array::from(pdf.as_slice()).into());
     }
     Ok(out.into())
+}
+
+/// True-redact page content: excises text/image/path operators intersecting any
+/// given rect, then paints an opaque black box over each region.
+///
+/// `page_rects` is an outer `Array` (one element per page, page index 0-based)
+/// whose entries are `Array`s of `Rect`s; each `Rect` is a 4-element
+/// `Array` `[x0, y0, x1, y1]` in PDF user space (y-up points).
+#[wasm_bindgen]
+pub fn redact_pdfs(bytes: Vec<u8>, page_rects: js_sys::Array) -> Result<Vec<u8>, JsValue> {
+    let mut writer = IncrementalWriter::new(bytes).map_err(js_err)?;
+    for (page_index, group) in page_rects.iter().enumerate() {
+        let group = js_sys::Array::from(&group);
+        let n = group.length();
+        if n == 0 {
+            continue;
+        }
+        let mut rects: Vec<Rect> = Vec::with_capacity(n as usize);
+        for item in group.iter() {
+            let r = js_sys::Array::from(&item);
+            if r.length() != 4 {
+                return Err(JsValue::from_str(
+                    "Each redaction rect needs an array of 4 numbers: [x0, y0, x1, y1]",
+                ));
+            }
+            let mut c = [0f64; 4];
+            for i in 0..4 {
+                c[i] = r.get(i as u32)
+                    .as_f64()
+                    .ok_or_else(|| JsValue::from_str("Redaction rect coordinates must be numbers"))?;
+            }
+            rects.push(Rect::new(c[0], c[1], c[2], c[3]));
+        }
+        writer
+            .redact_page(
+                page_index,
+                &rects,
+                &RedactOptions {
+                    fill: Some((0.0, 0.0, 0.0)),
+                },
+            )
+            .map_err(js_err)?;
+    }
+    let mut buf: Cursor<Vec<u8>> = Cursor::new(Vec::new());
+    writer.write(&mut buf).map_err(js_err)?;
+    Ok(buf.into_inner())
 }
 
 const SPACE_WEIGHT: f64 = 0.45;
