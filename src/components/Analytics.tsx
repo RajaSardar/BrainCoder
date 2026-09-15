@@ -1,22 +1,12 @@
-import Script from "next/script";
+import { Analytics as VercelAnalytics } from '@vercel/analytics/next';
 
 /**
- * Lightweight, privacy-friendly analytics.
+ * Vercel Web Analytics integration.
  *
- * Set NEXT_PUBLIC_ANALYTICS_DOMAIN (e.g. "braincoder.example.com") to enable.
- * Works with Plausible (including the free Vercel integration) — cookieless
- * and GDPR-friendly, which matches the site's "nothing leaves your device" brand.
- * Omit the env var to disable entirely.
+ * Provides privacy-friendly, lightweight analytics with seamless Next.js integration.
+ * Automatically tracks page views and route changes without requiring manual configuration.
+ * Analytics must be enabled in your Vercel project dashboard to collect data.
  */
 export function Analytics() {
-  const domain = process.env.NEXT_PUBLIC_ANALYTICS_DOMAIN;
-  if (!domain) return null;
-  return (
-    <Script
-      defer
-      data-domain={domain}
-      src="https://plausible.io/js/script.js"
-      strategy="afterInteractive"
-    />
-  );
+  return <VercelAnalytics />;
 }
