@@ -3,6 +3,22 @@ const RECENT_KEY = "bc_recent";
 const FAVORITES_KEY = "bc_favorites";
 export const MAX_RECENT_TOOLS = 20;
 
+const listeners = new Set<() => void>();
+
+function notifyUserState(): void {
+  for (const cb of listeners) cb();
+}
+
+/**
+ * Subscribe to user-state changes (recents, favorites). Used with
+ * `useSyncExternalStore` so React components re-render after same-tab
+ * localStorage mutations — plain `storage` events only fire cross-tab.
+ */
+export function subscribeUserState(cb: () => void): () => void {
+  listeners.add(cb);
+  return () => listeners.delete(cb);
+}
+
 function canUseStorage(): boolean {
   if (typeof window === "undefined") return false;
   try {
@@ -47,6 +63,7 @@ export function addRecentTool(slug: string): void {
   const next = [slug, ...current].slice(0, MAX_RECENT_TOOLS);
   try {
     window.localStorage.setItem(RECENT_KEY, JSON.stringify(next));
+    notifyUserState();
   } catch {
     // Storage full or blocked — best effort.
   }
@@ -55,6 +72,7 @@ export function addRecentTool(slug: string): void {
 export function clearRecentTools(): void {
   if (!canUseStorage()) return;
   window.localStorage.removeItem(RECENT_KEY);
+  notifyUserState();
 }
 
 export function getFavorites(): string[] {
@@ -80,6 +98,7 @@ export function toggleFavorite(slug: string): string[] {
     : [slug, ...current];
   try {
     window.localStorage.setItem(FAVORITES_KEY, JSON.stringify(next));
+    notifyUserState();
   } catch {
     // Storage full or blocked — best effort.
   }

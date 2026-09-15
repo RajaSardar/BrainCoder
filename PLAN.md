@@ -169,18 +169,43 @@ BrainCoder is a privacy-first, browser-based developer toolkit (123 tools) being
 - [ ] 15%+ of visitors have ≥1 entry in `bc_recent` after 2 weeks (measure post-launch)
 - [ ] 20%+ of returning users click a recent tool (measure post-launch)
 
-#### Phase 2 — Product Discovery (Months 2-3)
+#### Phase 2 — Product Discovery (Weeks 2-6)
 
-**Goal:** Find what converts. Add batch processing + AI features.
+**Goal:** Build the habit loop + organic traffic flywheel. Everything stays free.
 
-| Task | Why |
-|------|-----|
-| Batch processing queue (10+ files) | Pro-tier hook |
-| AI-assisted PDF redaction | Premium differentiator |
-| Chrome extension | Daily habit driver |
-| VS Code extension | 40M developer users |
-| SEO content push (20 guides) | Organic traffic |
-| A/B test pricing | Find the price |
+**Key insight from growth + PM agents (2026-09-15):** Chrome/VS Code extensions are distractions. Long-tail SEO is the #1 ROI lever. Favorites + PWA are the highest-ROI product additions.
+
+| # | Task | Why | Priority | Status |
+|---|------|-----|----------|--------|
+| 1 | Add favorites to `RecentTools.tsx` (heart icon on tool cards) | Completes the retention loop | High — PM agent | Done |
+| 2 | PWA manifest + service worker | Home-screen icon = retention multiplier for utility apps | High — PM agent | Not started |
+| 3 | Category landing pages (`/tools/pdf`, `/tools/convert`, etc.) | Topical authority hubs — internal linking boosts long-tail ranking | High — growth agent | Not started |
+| 4 | 5-8 more guides ("how to redact a pdf", "how to sign a pdf", etc.) | Guides rank for how-to queries + internal link to tools | High — growth agent | Not started |
+| 5 | "Verify: 0 uploads" proof page | Shareable proof of the privacy moat — PR / HN material | Medium — growth agent | Not started |
+| 6 | Rust/WASM technical deep-dive (dev.to post) | Builds authority + backlinks + GitHub stars | Medium — growth agent | Not started |
+| 7 | Ship to Hacker News (Week 4-5) | Validation spike + initial backlink base | Medium — growth agent | Not started |
+| 8 | Directory listings (alternativeTo, awesome-list PRs) | Durable indexable backlinks | Low — growth agent | Not started |
+
+**Favorites delivered:**
+- `src/components/FavoriteButton.tsx` — heart button client component. Filled rose when active, outline when not. `aria-label` + `title` announce add/remove. Stops event propagation so clicking doesn't navigate.
+- `src/components/RecentTools.tsx` — now renders two sections: **Your favorites** (with remove hearts) and **Your recent tools** (with add hearts). Both cards share `ToolCardSmall`.
+- `src/lib/userState.ts` — added `subscribeUserState()` notification bus. **Critical lesson:** plain `useSyncExternalStore` with a no-op `subscribe` does NOT re-render on same-tab localStorage writes (the `storage` event only fires cross-tab). Components must subscribe to a shared listener set that `addRecentTool`/`toggleFavorite`/`clearRecentTools` notify.
+- Browser-verified: add favorite → section appears instantly, `bc_favorites` written; remove → section disappears, empty array. Lint clean, build green, 18/18 e2e.
+
+**What we're explicitly NOT doing in Phase 2 (per agents):**
+- ~~Chrome extension~~ → distraction until traffic > 5K/mo
+- ~~VS Code extension~~ → 40M users but no distribution channel yet
+- ~~Batch processing queue~~ → Phase 3 (only relevant when paid tier exists)
+- ~~A/B test pricing~~ → not until there are paying customers
+- ~~Auth / accounts~~ → only add when cross-device sync proves needed
+
+**Phase 2 success metrics:**
+- [ ] 5-10 tools ranking top-3 for long-tail keywords (GSC, 60 days)
+- [ ] 500+ organic clicks/month (GSC, 90 days)
+- [ ] 25+ referring domains (Ahrefs/SEMrush, 90 days)
+- [ ] 100+ GitHub stars (launch + communities)
+- [ ] Favorites adoption: 5%+ of returning users have ≥1 favorite
+- [ ] PWA install prompt accepted by 2%+ of mobile visitors
 
 #### Phase 3 — Scale Distribution (Months 4-6)
 
