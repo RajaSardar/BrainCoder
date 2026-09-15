@@ -273,47 +273,380 @@ export const GUIDES: Guide[] = [
           },
         ],
       },
+{
+    slug: "how-to-convert-html-to-pdf",
+    title: "How to Convert HTML to PDF Online for Free",
+    description:
+      "Turn pasted HTML into a clean, paginated A4 PDF right in your browser — perfect for reports, docs and printable pages.",
+    keywords: [
+      "html to pdf",
+      "convert html to pdf",
+      "html to pdf converter",
+      "web page to pdf",
+      "print page as pdf",
+    ],
+    toolSlug: "html-to-pdf",
+    published: "2026-09-09",
+    updated: "2026-09-09",
+    readMinutes: 3,
+    sections: [
       {
-        slug: "how-to-convert-html-to-pdf",
-        title: "How to Convert HTML to PDF Online for Free",
-        description:
-          "Turn pasted HTML into a clean, paginated A4 PDF right in your browser — perfect for reports, docs and printable pages.",
-        keywords: [
-          "html to pdf",
-          "convert html to pdf",
-          "html to pdf converter",
-          "web page to pdf",
-          "print page as pdf",
-        ],
-        toolSlug: "html-to-pdf",
-        published: "2026-09-09",
-        updated: "2026-09-09",
-        readMinutes: 3,
-        sections: [
-          {
-            heading: "Why convert HTML to PDF",
-            paragraphs: [
-              "PDF gives you a fixed, print-ready snapshot of content that stays identical on every device. Generating a PDF from HTML is a common way to produce invoices, reports, manuals, and documentation from markup that already exists.",
-              "HTML renders natively in the browser, so what you see while editing is very close to what lands in the final PDF.",
-            ],
-          },
-          {
-            heading: "Converting locally, without a server",
-            paragraphs: [
-              "The HTML to PDF tool renders your markup inside a hidden page that's sized to A4, applies normal CSS, and paginates the result before exporting it as a downloadable PDF.",
-              "This runs entirely in your browser, which keeps the conversion instant and private — nothing is sent to an external printing service.",
-            ],
-          },
-          {
-            heading: "Tips for clean page breaks",
-            paragraphs: [
-              "Print pagination divides long content across A4 pages automatically. For the most predictable output, keep your markup simple and avoid fixed-height containers that force content off-page.",
-              "The exported file is a standard PDF, so it opens in any viewer and prints at the size you styled for.",
-            ],
-          },
+        heading: "Why convert HTML to PDF",
+        paragraphs: [
+          "PDF gives you a fixed, print-ready snapshot of content that stays identical on every device. Generating a PDF from HTML is a common way to produce invoices, reports, manuals, and documentation from markup that already exists.",
+          "HTML renders natively in the browser, so what you see while editing is very close to what lands in the final PDF.",
         ],
       },
-    ];
+      {
+        heading: "Converting locally, without a server",
+        paragraphs: [
+          "The HTML to PDF tool renders your markup inside a hidden page that's sized to A4, applies normal CSS, and paginates the result before exporting it as a downloadable PDF.",
+          "This runs entirely in your browser, which keeps the conversion instant and private — nothing is sent to an external printing service.",
+        ],
+      },
+      {
+        heading: "Tips for clean page breaks",
+        paragraphs: [
+          "Print pagination divides long content across A4 pages automatically. For the most predictable output, keep your markup simple and avoid fixed-height containers that force content off-page.",
+          "The exported file is a standard PDF, so it opens in any viewer and prints at the size you styled for.",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "how-to-convert-pdf-to-word",
+    title: "How to Convert a PDF to a Word Document Online for Free",
+    description:
+      "Turn PDF pages into an editable .docx in your browser — no uploads, no sign-up. Private and free for any file size.",
+    keywords: [
+      "convert pdf to word",
+      "pdf to docx",
+      "pdf to word online",
+      "edit pdf as word",
+      "pdf to editable text",
+    ],
+    toolSlug: "pdf-to-word",
+    published: "2026-09-15",
+    updated: "2026-09-15",
+    readMinutes: 3,
+    sections: [
+      {
+        heading: "Why convert PDF to Word at all",
+        paragraphs: [
+          "PDFs are great for sharing finished documents, but they're hard to edit — the layout is fixed at export time. When you need to rewrite a paragraph, adjust spacing, or reuse the text in a report, a .docx gives you back full control.",
+          "Recruiters, editors and reviewers routinely ask for documents they can comment on, which makes 'convert pdf to word' one of the most-requested conversions there is.",
+        ],
+      },
+      {
+        heading: "Converting privately, straight in the browser",
+        paragraphs: [
+          "The PDF to Word tool parses your PDF locally and reconstructs the text and structure as an editable .docx. Headings, paragraphs and tables are mapped where possible, so you don't start from a blank page.",
+          "Because the whole conversion runs in your browser, the file never touches a server — ideal for contracts, resumes and anything with personal data.",
+        ],
+      },
+      {
+        heading: "What to expect from the result",
+        paragraphs: [
+          "Text-heavy documents convert cleanly. Complex layouts — multi-column pages, unusual fonts or layered graphics — can come through with spacing that needs a light polish pass.",
+          "Even so, converting beats retyping by a wide margin: you keep the text and most of the structure, then fix the details in Word.",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "how-to-password-protect-a-pdf",
+    title: "How to Password Protect a PDF Online for Free",
+    description:
+      "Lock any PDF with a password so only people you choose can open it. Runs entirely in your browser — nothing is ever uploaded.",
+    keywords: [
+      "password protect pdf",
+      "lock pdf with password",
+      "add password to pdf",
+      "secure pdf online",
+      "encrypt pdf free",
+    ],
+    toolSlug: "pdf-protect",
+    published: "2026-09-15",
+    updated: "2026-09-15",
+    readMinutes: 3,
+    sections: [
+      {
+        heading: "When a password-protected PDF makes sense",
+        paragraphs: [
+          "Sending a confidential file through email or a shared drive means the file can be opened by anyone who receives it. Adding a password restricts who can actually view the contents.",
+          "It's the standard for sharing quotes, bank statements, tax documents, employment offers and NDAs — anytime the recipient is known but the channel is not private.",
+        ],
+      },
+      {
+        heading: "Locking a PDF without uploading it",
+        paragraphs: [
+          "The Protect PDF tool encrypts your file locally in the browser. You pick a password, and the tool re-writes the PDF with encryption applied and all existing features still intact for the right people.",
+          "Nothing is uploaded, which matters here especially: the point of protecting a file is keeping it out of the wrong hands, and a lock should never require sending the unlocked original to a server first.",
+        ],
+      },
+      {
+        heading: "Choosing a strong password",
+        paragraphs: [
+          "Use a phrase or a password from a generator rather than a word. The lock is only as strong as the password, and modern tools can brute-force short passwords in seconds.",
+          "Share the password on a separate channel from the file — an email with the PDF and a different message with the password — so intercepting one doesn't unlock the other.",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "how-to-unlock-a-password-protected-pdf",
+    title: "How to Unlock a Password-Protected PDF Online for Free",
+    description:
+      "Remove a password you know from a PDF in seconds — right in your browser. The unlocked copy is created locally, so it's private by design.",
+    keywords: [
+      "unlock pdf",
+      "remove pdf password",
+      "remove password from pdf",
+      "unlock pdf online",
+      "decrypt pdf free",
+    ],
+    toolSlug: "pdf-unlock",
+    published: "2026-09-15",
+    updated: "2026-09-15",
+    readMinutes: 3,
+    sections: [
+      {
+        heading: "Why you'd unlock a PDF you own",
+        paragraphs: [
+          "Personnel leave and files get shared across teams, so it's normal to end up with a password-protected PDF you legitimately need to open — the password was saved somewhere or the person who set it is gone.",
+          "Removing the password lets you edit, print, search and re-distribute the document without the friction of re-authenticating every time.",
+        ],
+      },
+      {
+        heading: "Removing the password locally",
+        paragraphs: [
+          "The Unlock PDF tool asks for the current password, verifies it, and writes a new unprotected copy — all inside your browser using pdf-lib. The original file is never uploaded.",
+          "That privacy detail is more than a nicety: you're handling a document someone chose to lock, and the whole point is keeping its contents off third-party servers.",
+        ],
+      },
+      {
+        heading: "What if you don't know the password?",
+        paragraphs: [
+          "If the password was set to restrict access (not just permissions), no in-browser tool can recover the content — that's the encryption working as intended.",
+          "In that case the right move is to ask the person who created the file, or check your password manager, rather than chasing tools that claim to 'crack' PDFs. The Unlock PDF tool is for passwords you already have.",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "how-to-redact-a-pdf",
+    title: "How to Redact a PDF Online for Free (Permanently Hide Text)",
+    description:
+      "Black-out names, numbers and sensitive lines in a PDF so they're truly gone — not just covered. Runs 100% in your browser.",
+    keywords: [
+      "redact pdf",
+      "black out text in pdf",
+      "remove sensitive information from pdf",
+      "redact pdf online free",
+      "hide text in pdf",
+    ],
+    toolSlug: "pdf-redact",
+    published: "2026-09-15",
+    updated: "2026-09-15",
+    readMinutes: 4,
+    sections: [
+      {
+        heading: "Redacting is not the same as covering",
+        paragraphs: [
+          "Real redaction destroys the underlying content — the text is removed from the file, leaving a blank or blacked-out area that cannot be recovered. That's what courts, HR and compliance teams require when sensitive details are removed from disclosed documents.",
+          "Slapping a black rectangle over text with a drawing tool only hides it visually; the text is still in the file and can be selected, searched and copy-pasted right out from underneath.",
+        ],
+      },
+      {
+        heading: "Redacting in the browser, privately",
+        paragraphs: [
+          "The Redact PDF tool rasterizes your pages locally and permanently burns the redaction into the document before you download it. The sensitive text no longer exists in the output file.",
+          "Because redaction is a privacy operation, it's a strong fit for a no-upload tool: you're handling names, addresses, account numbers and other data you never want leaving your device.",
+        ],
+      },
+      {
+        heading: "Redacting specific terms automatically",
+        paragraphs: [
+          "If the document is long or the same words appear many times — an email address, a client name, an invoice number — the Auto-Redact PDF tool finds every occurrence for you and redacts them all at once.",
+          "That removes the classic redaction mistake of missing one of ten identical mentions and leaking the information anyway.",
+        ],
+      },
+      {
+        heading: "Check before you share",
+        paragraphs: [
+          "After redacting, open the output and confirm you can no longer select or search the removed text. Some viewers will happily still show cached search results if you forget to re-open.",
+          "Redacting a copy is the safe pattern: keep your original intact and share the redacted version only.",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "how-to-remove-pages-from-a-pdf",
+    title: "How to Remove Pages from a PDF Online for Free",
+    description:
+      "Delete unwanted, blank or duplicate pages from any PDF — quickly, in your browser, with live page previews.",
+    keywords: [
+      "delete pages from pdf",
+      "remove pages from pdf",
+      "pdf delete pages online",
+      "delete blank pages from pdf",
+      "remove page from pdf free",
+    ],
+    toolSlug: "pdf-remove-pages",
+    published: "2026-09-15",
+    updated: "2026-09-15",
+    readMinutes: 3,
+    sections: [
+      {
+        heading: "When you need to remove pages",
+        paragraphs: [
+          "Scans pull in blank pages, submissions include outdated cover pages, and downloaded reports come with an unwanted appendix. Deleting those pages produces a cleaner, smaller file that's ready to send.",
+          "It's also safer than re-saving a whole document: the finished file simply no longer contains the pages you removed.",
+        ],
+      },
+      {
+        heading: "Removing pages with a live preview",
+        paragraphs: [
+          "The PDF Delete Pages tool renders thumbnails of every page so you can see exactly what you're removing. Click the pages you no longer need, then hit delete — the tool rebuilds the PDF from the pages you kept.",
+          "Multi-select, or choose page ranges when you want to drop a contiguous block like an annex.",
+        ],
+      },
+      {
+        heading: "Getting rid of blank pages too",
+        paragraphs: [
+          "Blank pages often slip in from double-sided scans or mis-configured exports. The Remove Blank Pages tool detects near-empty pages automatically and strips them out.",
+          "Run that first if you're not sure which pages are blank — it keeps the result clean without you hunting through the document manually.",
+        ],
+      },
+      {
+        heading: "Private, like everything here",
+        paragraphs: [
+          "Page deletion happens locally with pdf-lib. The pages you remove and the pages you keep never leave your browser, so even sensitive documents can be trimmed safely.",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "how-to-convert-csv-to-json",
+    title: "How to Convert CSV to JSON Online (or JSON to CSV)",
+    description:
+      "Turn table data into clean JSON (or the other way round) in your browser — delimiter-aware, header-aware, and completely private.",
+    keywords: [
+      "csv to json",
+      "convert csv to json online",
+      "json to csv",
+      "csv to json converter",
+      "spreadsheet to json",
+    ],
+    toolSlug: "csv-json",
+    published: "2026-09-15",
+    updated: "2026-09-15",
+    readMinutes: 3,
+    sections: [
+      {
+        heading: "Why convert CSV to JSON",
+        paragraphs: [
+          "CSV is how data lives in spreadsheets and exports; JSON is how most APIs and frontends expect it. Moving between the two is a daily chore for developers, analysts and automation work.",
+          "A converter that respects headers, quoted fields and delimiters turns a messy export into ready-to-fetch data in one step.",
+        ],
+      },
+      {
+        heading: "Converting with structure in mind",
+        paragraphs: [
+          "The CSV ↔ JSON tool treats the first row as keys and maps every following row to an object, so your JSON mirrors the table instead of becoming a flat list of strings.",
+          "It handles the fiddly parts — comma, semicolon and tab delimiters, quoted values containing separators, and consistent types — so the output parses cleanly on the first try.",
+        ],
+      },
+      {
+        heading: "Both directions, in your browser",
+        paragraphs: [
+          "The same tool goes the other way: paste JSON and get a properly escaped CSV you can drop straight into Excel or Google Sheets.",
+          "Everything is parsed locally, which keeps the conversion instant and keeps proprietary data out of third-party services.",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "how-to-generate-a-strong-password",
+    title: "How to Generate a Strong, Memorable Password Online",
+    description:
+      "Create secure, random passwords in your browser — fully offline, no logging, no uploads. Tunable length, symbols and passphrases.",
+    keywords: [
+      "password generator",
+      "strong password generator",
+      "random password online",
+      "secure password generator",
+      "create strong password",
+    ],
+    toolSlug: "password-generator",
+    published: "2026-09-15",
+    updated: "2026-09-15",
+    readMinutes: 3,
+    sections: [
+      {
+        heading: "What makes a password strong",
+        paragraphs: [
+          "A password's strength comes from unpredictability, not cleverness. Long, random passwords — 16 characters or more, drawn from a wide set of symbols, numbers and case — resist both guessing and automated attacks.",
+          "Dictionary words, personal dates and reused phrases fail because attackers try those first. An offline generator sidesteps the problem entirely with true randomness.",
+        ],
+      },
+      {
+        heading: "Generating passwords that never leave your device",
+        paragraphs: [
+          "The Password Generator uses the browser's cryptographically secure random number generator to build each password on the spot — nothing is generated on, or sent to, a server.",
+          "That matters for credentials: a 'random' password from a hosted tool is only as private as that tool's logging, so generation that happens entirely in your browser is the safer pattern.",
+        ],
+      },
+      {
+        heading: "Length over complexity",
+        paragraphs: [
+          "When choosing settings, prioritize length. A 20-character password beats a 12-character one with more symbol types, simply because the search space is far larger.",
+          "Practical tip: lean on a passphrase for anything you must type by hand, or store the generated password in a password manager and let it autofill.",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "how-to-create-a-qr-code",
+    title: "How to Create a QR Code for Free (URL, Text, Email)",
+    description:
+      "Generate a clean, scannable QR code for any link or text, right in your browser — download as PNG, no sign-up, no tracking.",
+    keywords: [
+      "qr code generator",
+      "create qr code free",
+      "generate qr code online",
+      "qr code for url",
+      "make a qr code",
+    ],
+    toolSlug: "qr-code-generator",
+    published: "2026-09-15",
+    updated: "2026-09-15",
+    readMinutes: 3,
+    sections: [
+      {
+        heading: "What a QR code is for",
+        paragraphs: [
+          "A QR code packs text — usually a URL — into a pattern a phone camera can read instantly. It's the fastest way to move someone from the physical world to a link: menus, business cards, posters, packaging and event invites all use them.",
+          "Because a QR code is just encoded text, creating one needs no account and no personal data — and that includes whatever you choose to encode.",
+        ],
+      },
+      {
+        heading: "Generating one in your browser",
+        paragraphs: [
+          "The QR Code Generator takes a URL or any snippet of text and renders the code locally with the qrcode library — the encoding happens on your device, so the content of the code never goes through a third party.",
+          "Download the result as a PNG at the size you need, ready to drop into a print layout or a mockup.",
+        ],
+      },
+      {
+        heading: "Designing codes that scan every time",
+        paragraphs: [
+          "Keep the surrounding quiet zone clear, size the code generously, and avoid putting text or logos on top of the pattern. High contrast between the squares and the background matters most.",
+          "Test the final version with your phone before printing in bulk — a QR checked once is worth a hundred reprinted signs.",
+        ],
+      },
+    ],
+  },
+];
 
 const guideBySlug = new Map(GUIDES.map((g) => [g.slug, g]));
 

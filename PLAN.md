@@ -180,7 +180,7 @@ BrainCoder is a privacy-first, browser-based developer toolkit (123 tools) being
 | 1 | Add favorites to `RecentTools.tsx` (heart icon on tool cards) | Completes the retention loop | High — PM agent | Done |
 | 2 | PWA manifest + service worker | Home-screen icon = retention multiplier for utility apps | High — PM agent | Done |
 | 3 | Category landing pages (`/categories/${slug}`) | Topical authority hubs — internal linking boosts long-tail ranking | High — growth agent | Done |
-| 4 | 5-8 more guides ("how to redact a pdf", "how to sign a pdf", etc.) | Guides rank for how-to queries + internal link to tools | High — growth agent | Not started |
+| 4 | 5-8 more guides ("how to redact a pdf", "how to sign a pdf", etc.) | Guides rank for how-to queries + internal link to tools | High — growth agent | Done |
 | 5 | "Verify: 0 uploads" proof page | Shareable proof of the privacy moat — PR / HN material | Medium — growth agent | Not started |
 | 6 | Rust/WASM technical deep-dive (dev.to post) | Builds authority + backlinks + GitHub stars | Medium — growth agent | Not started |
 | 7 | Ship to Hacker News (Week 4-5) | Validation spike + initial backlink base | Medium — growth agent | Not started |
@@ -207,6 +207,19 @@ BrainCoder is a privacy-first, browser-based developer toolkit (123 tools) being
 - `sitemap.ts` — added 8 category URLs (`priority 0.7`, weekly).
 - Verified: `/categories/compress` → 200, H1 + tool cards + JSON-LD; sitemap lists all 8; build now 270 SSG pages; 18/18 e2e after warm-up (first run fails on cold dev compile — known dev-mode pattern).
 
+**Guide library grown 7 → 15 delivered:**
+- 8 new guides, each targeting an uncovered tool with 4-6 long-tail keywords and a CTA that internal-links to `/tools/${slug}`:
+  1. `how-to-convert-pdf-to-word` → pdf-to-word ("pdf to docx", "edit pdf as word")
+  2. `how-to-password-protect-a-pdf` → pdf-protect ("lock pdf with password", "encrypt pdf free")
+  3. `how-to-unlock-a-password-protected-pdf` → pdf-unlock ("remove password from pdf", "decrypt pdf free")
+  4. `how-to-redact-a-pdf` → pdf-redact ("black out text in pdf", "remove sensitive information from pdf") — cross-mentions Auto-Redact
+  5. `how-to-remove-pages-from-a-pdf` → pdf-remove-pages ("delete blank pages from pdf") — cross-mentions Remove Blank Pages
+  6. `how-to-convert-csv-to-json` → csv-json (developer category, both directions)
+  7. `how-to-generate-a-strong-password` → password-generator (offline randomness angle)
+  8. `how-to-create-a-qr-code` → qr-code-generator
+- Bedrock principle threaded through all: **no-upload privacy is a selling point, not a footnote** — each guide explicitly contrasts in-browser processing vs. uploading to a server.
+- sitemap, `/guides` index and JSON-LD all pick up from `GUIDES` automatically (278 SSG pages now). Browser-verified each guide: H1, Article JSON-LD, CTA tool link. Build green, 18/18 e2e.
+
 **What we're explicitly NOT doing in Phase 2 (per agents):**
 - ~~Chrome extension~~ → distraction until traffic > 5K/mo
 - ~~VS Code extension~~ → 40M users but no distribution channel yet
@@ -221,6 +234,7 @@ BrainCoder is a privacy-first, browser-based developer toolkit (123 tools) being
 - [ ] 100+ GitHub stars (launch + communities)
 - [x] Favorites feature shipped (5%+ adoption to measure post-launch)
 - [x] PWA manifest + SW shipped (2%+ installs to measure post-launch)
+- [x] 8+ how-to guides covering PDF + non-PDF long-tail keywords (15 total)
 
 #### Phase 3 — Scale Distribution (Months 4-6)
 
