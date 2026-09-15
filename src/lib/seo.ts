@@ -148,7 +148,7 @@ export function buildToolMetadata(tool: ToolConfig): Metadata {
       locale: "en_US",
     },
     twitter: {
-      card: "summary",
+      card: "summary_large_image",
       title: toolTitle(tool),
       description: tool.description,
     },
