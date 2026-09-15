@@ -183,8 +183,8 @@ BrainCoder is a privacy-first, browser-based developer toolkit (123 tools) being
 | 4 | 5-8 more guides ("how to redact a pdf", "how to sign a pdf", etc.) | Guides rank for how-to queries + internal link to tools | High — growth agent | Done |
 | 5 | "Verify: 0 uploads" proof page | Shareable proof of the privacy moat — PR / HN material | Medium — growth agent | Done |
 | 6 | Rust/WASM technical deep-dive (dev.to post) | Builds authority + backlinks + GitHub stars | Medium — growth agent | Done |
-| 7 | Ship to Hacker News (Week 4-5) | Validation spike + initial backlink base | Medium — growth agent | Not started |
-| 8 | Directory listings (alternativeTo, awesome-list PRs) | Durable indexable backlinks | Low — growth agent | Not started |
+| 7 | Ship to Hacker News (Week 4-5) | Validation spike + initial backlink base | Medium — growth agent | Kit ready — post on launch day |
+| 8 | Directory listings (alternativeTo, awesome-list PRs) | Durable indexable backlinks | Low — growth agent | Plan + copy ready |
 
 **Favorites delivered:**
 - `src/components/FavoriteButton.tsx` — heart button client component. Filled rose when active, outline when not. `aria-label` + `title` announce add/remove. Stops event propagation so clicking doesn't navigate.
@@ -257,6 +257,14 @@ BrainCoder is a privacy-first, browser-based developer toolkit (123 tools) being
 - [x] 8+ how-to guides covering PDF + non-PDF long-tail keywords (15 total)
 - [x] "Verify: 0 uploads" proof page live with a functioning network-audit demo
 - [x] Rust/WASM dev.to deep-dive drafted (publish: flip `published: true` → dev.to)
+- [x] Show HN launch kit written (`launch/hacker-news.md`)
+- [x] Directory + awesome-list submission plan and copy written (`launch/directory-submissions.md`)
+
+**Launch kit `launch/hacker-news.md` (research-grounded, Sep 2026):** recommended Show HN title ("I built 123 browser dev tools with a Rust/WASM core – files never leave your device") + backup; 10 ranked title candidates; ~200-word ready-to-paste post body; timing (Tue–Thu 9–11am PT) + first-2-hours engagement plan; criticism-response table (iLovePDF/PDFgear/no-backend/redaction-skeptic); 13-point pre-launch checklist (flagged gap: OG title not yet verified on hn.algolia); 24h follow-up + metrics (front page ~80–100 pts, 500–2k stars = strong result). Key insight: the 2026 "AI slop" backlash is a tailwind — zero-upload architecture is the counter-narrative — but posture is "explain the architecture", never "position against AI".
+
+**`launch/directory-submissions.md` (verified, Sep 2026):** 14-directory table with honest priorities — ⚠️ **SaaSHub rejects `*.vercel.app` outright** (blocked until custom domain); alternativeTo decline list flags "collections of online tools" → submit as a single app (position like PDF24); Tool Finder is paid (150€); free-for.dev is wrong format; G2/Capterra no value at zero traffic. 6 awesome-list PRs with repo/maintained-check + ready-to-paste one-liners (top fit: `mcuking/Awesome-WebAssembly-Applications` "Online Productive Tools", active 2026-09-11; then `pluja/awesome-privacy"); alternativeTo submission copy (~145 word description, 5 tags, real competitors, $5 priority-review tip); Product Hunt deferred post-HN; 3-tier run order; 21-row tracking table.
+
+**Parallel-execution note:** both launch files were produced by two independent research agents running simultaneously (no shared file / no conflict).
 
 #### Phase 3 — Scale Distribution (Months 4-6)
 
@@ -299,6 +307,8 @@ BrainCoder is a privacy-first, browser-based developer toolkit (123 tools) being
 | 2026-09-15 | Proof-page demo hashes file with `crypto.subtle` locally | Real interactive proof: file digest without a single network byte |
 | 2026-09-15 | Swapped header "Live app" (self-link to own domain) for "0 uploads — verify" | Header real-estate now reinforces the moat instead of pointlessly pointing at the same site |
 | 2026-09-15 | dev.to deep-dive stored in-repo with `published: false` frontmatter | Article lives with the code it documents; publish = flip flag + paste to dev.to (no API token) |
+| 2026-09-15 | Launch kit + directory plan produced by two parallel agents | Independent tasks → parallel agents; single shared output dir `launch/`, no cross-file writes |
+| 2026-09-15 | Defer SaaSHub + Product Hunt until custom domain / HN momentum | SaaSHub hard-blocks `vercel.app`; PH needs first-day distribution only HN can provide |
 
 ---
 
