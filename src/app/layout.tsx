@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Link from "next/link";
 import { Geist, Geist_Mono } from "next/font/google";
 import { LogoMark } from "@/components/Logo";
 import { CATEGORIES, getCategorySlug } from "@/lib/tools";
@@ -117,6 +118,22 @@ export default function RootLayout(props: LayoutProps<"/">) {
                   {c}
                 </a>
               ))}
+            </nav>
+            <nav className="mt-4 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs" aria-label="Footer links">
+              <a href="/verify" className="hover:text-white transition">
+                Verify: 0 uploads
+              </a>
+              <Link href="/guides" className="hover:text-white transition">
+                Guides
+              </Link>
+              <a
+                href="https://github.com/RajaSardar/BrainCoder"
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-white transition"
+              >
+                GitHub
+              </a>
             </nav>
           </div>
         </footer>

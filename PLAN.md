@@ -181,7 +181,7 @@ BrainCoder is a privacy-first, browser-based developer toolkit (123 tools) being
 | 2 | PWA manifest + service worker | Home-screen icon = retention multiplier for utility apps | High — PM agent | Done |
 | 3 | Category landing pages (`/categories/${slug}`) | Topical authority hubs — internal linking boosts long-tail ranking | High — growth agent | Done |
 | 4 | 5-8 more guides ("how to redact a pdf", "how to sign a pdf", etc.) | Guides rank for how-to queries + internal link to tools | High — growth agent | Done |
-| 5 | "Verify: 0 uploads" proof page | Shareable proof of the privacy moat — PR / HN material | Medium — growth agent | Not started |
+| 5 | "Verify: 0 uploads" proof page | Shareable proof of the privacy moat — PR / HN material | Medium — growth agent | Done |
 | 6 | Rust/WASM technical deep-dive (dev.to post) | Builds authority + backlinks + GitHub stars | Medium — growth agent | Not started |
 | 7 | Ship to Hacker News (Week 4-5) | Validation spike + initial backlink base | Medium — growth agent | Not started |
 | 8 | Directory listings (alternativeTo, awesome-list PRs) | Durable indexable backlinks | Low — growth agent | Not started |
@@ -220,6 +220,13 @@ BrainCoder is a privacy-first, browser-based developer toolkit (123 tools) being
 - Bedrock principle threaded through all: **no-upload privacy is a selling point, not a footnote** — each guide explicitly contrasts in-browser processing vs. uploading to a server.
 - sitemap, `/guides` index and JSON-LD all pick up from `GUIDES` automatically (278 SSG pages now). Browser-verified each guide: H1, Article JSON-LD, CTA tool link. Build green, 18/18 e2e.
 
+**"Verify: 0 uploads" proof page delivered (`/verify`):**
+- `src/components/NetworkAudit.tsx` — **live network audit**: hooks `window.fetch` + `XMLHttpRequest.prototype.send` the moment the page loads and flags any outbound request that tries to carry a watched file (red "BLOCKED" line). Counters: upload attempts, outbound requests, watched file size. Verdict strip + false-if-caught behavior makes it a real test, not a claim.
+- `src/components/LocalHashDemo.tsx` — drop a real file, SHA-256 computed **locally** with `crypto.subtle` (`await file.arrayBuffer()` → digest). Proves files can be fully processed with zero network I/O. Shares state with the audit via a tiny pub/sub (`watchDemoFile`) — same lesson as favorites: cross-component sync needs a notification bus, not a shared ref.
+- `src/app/verify/page.tsx` — hero ("Proof, not a promise"), audit + demo side-by-side, "how can tools run without a server" explainer (static Next.js build → CDN, client-side pdf.js/pdf-lib/WASM, Blob URLs, open source), DevTools self-verification walkthrough, honest caveat (static assets + aggregate analytics beacon — never file content). WebPage + Breadcrumb JSON-LD.
+- Replaced the self-referencing "Live app" header link (pointed at own domain) with **"0 uploads — verify"**; footer gained a links row (verify, guides, GitHub); sitemap entry priority 0.6.
+- Verified: file-drop flow (setInputFiles → SHA shown → audit back to 0), header/footer links live, 279 SSG pages, lint clean, 18/18 e2e.
+
 **What we're explicitly NOT doing in Phase 2 (per agents):**
 - ~~Chrome extension~~ → distraction until traffic > 5K/mo
 - ~~VS Code extension~~ → 40M users but no distribution channel yet
@@ -235,6 +242,7 @@ BrainCoder is a privacy-first, browser-based developer toolkit (123 tools) being
 - [x] Favorites feature shipped (5%+ adoption to measure post-launch)
 - [x] PWA manifest + SW shipped (2%+ installs to measure post-launch)
 - [x] 8+ how-to guides covering PDF + non-PDF long-tail keywords (15 total)
+- [x] "Verify: 0 uploads" proof page live with a functioning network-audit demo
 
 #### Phase 3 — Scale Distribution (Months 4-6)
 
@@ -273,6 +281,9 @@ BrainCoder is a privacy-first, browser-based developer toolkit (123 tools) being
 | 2026-09-15 | SW registration gated to production only | Dev-mode service workers cause stale-cache confusion; register only when `NODE_ENV === "production"` |
 | 2026-09-15 | `themeColor` in `viewport` export, not `metadata` | Next.js 16 deprecates `metadata.themeColor` (throws warning on every page) |
 | 2026-09-15 | Category copy shared via `CATEGORY_DESCRIPTIONS` in `seo.ts` | Single source for hero copy, metadata description, and JSON-LD |
+| 2026-09-15 | Verify page audit hooks `fetch` + `XHR.prototype.send` at mount | Catches any request (incl. FormData/Blob bodies) that would carry the watched file — actually enforceable, unlike a static claim |
+| 2026-09-15 | Proof-page demo hashes file with `crypto.subtle` locally | Real interactive proof: file digest without a single network byte |
+| 2026-09-15 | Swapped header "Live app" (self-link to own domain) for "0 uploads — verify" | Header real-estate now reinforces the moat instead of pointlessly pointing at the same site |
 
 ---
 

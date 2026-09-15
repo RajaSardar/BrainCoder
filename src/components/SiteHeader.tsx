@@ -26,14 +26,9 @@ export function SiteHeader() {
           <Link href="/guides" className="px-3 py-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition">
             Guides
           </Link>
-          <a
-            href="https://braincoder.vercel.app/"
-            target="_blank"
-            rel="noreferrer"
-            className="px-3 py-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition"
-          >
-            Live app
-          </a>
+          <Link href="/verify" className="px-3 py-2 rounded-lg text-emerald-600 hover:text-emerald-800 hover:bg-emerald-50 transition font-medium">
+            0 uploads — verify
+          </Link>
           <a
             href="https://github.com/RajaSardar/BrainCoder"
             target="_blank"
