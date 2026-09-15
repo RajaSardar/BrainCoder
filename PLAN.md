@@ -469,6 +469,17 @@ Phase 2+ Target (NOT building now):
 
 ---
 
+## Pending Items (blocked on founder action or credentials)
+
+| Item | Blocker | Owner | Status |
+|------|---------|-------|--------|
+| `pluja/awesome-privacy` PR | Weak fit — `## Office` lists full office suites (LibreOffice/OnlyOffice/Cryptpad), not tool collections; same "collections of online tools" decline risk the research flagged. Options: skip / open under `## Office` / try `## Utilities` | Decide | ⏸ held |
+| `awesome-selfhosted` PR | Requires MIT repo + **self-hosting path (Dockerfile/self-host note)** — declined without source/deploy proof | Add Dockerfile or drop | ⏸ held |
+| dev.to article publish | Needs `DEV_TO_TOKEN` env or manual paste to dev.to (flip `published: true`) | Me/founder | ⏸ blocked |
+| alternativeTo + directory forms | Need email-verified accounts ($5 priority review suggested; SaaSHub blocked on `*.vercel.app`) | Founder | ⏸ blocked |
+| Show HN launch | Must post at right time on launch day (Tue–Thu 9–11am PT) per `launch/hacker-news.md` | Founder | ⏸ scheduled |
+| mcuking AWAA PR | Done — [PR #36](https://github.com/mcuking/Awesome-WebAssembly-Applications/pull/36) open | — | ✅ live |
+
 ## Notes
 
 - Agent count: 25 experts across tech, product, growth, business, ops, contrarian
