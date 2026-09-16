@@ -2,19 +2,23 @@
 
 ## Workflow
 
-User correction: use 10 separate expert agents per tool, sequentially, not
-parallel multi-role agents across different tools. Finish judging one tool,
-upgrade it and its related content/pages, then verify before starting the next.
+User corrections:
+- Use 10 separate expert agents per tool, not one multi-role agent (2026-09-16).
+- Judges are read-only, independent and may run in PARALLEL; never parallel
+  judging of multiple tools at once (2026-09-16, supersedes "sequential" rule).
+  Finish judging one tool, upgrade it and its related content/pages, then
+  verify before starting the next.
 
 1. Select the next tool from the registry, starting with PDF Compressor.
-2. Run each of the 10 judges below separately, waiting for each to finish.
+2. Run the 10 judges below in parallel (read-only, independent). Wait for all
+   to finish before implementing.
 3. Judges inspect code and gather evidence without changing product files.
 4. Consolidate confirmed findings; implement focused code and content fixes.
 5. Run regression tests, lint and build. Record failures and untested cases.
 6. Record completion and advance to the next tool. Never mark a tool tested
    from an HTTP 200 alone, or treat a subjective score as release approval.
 
-## Sequential Judges
+## Judges (run in parallel)
 
 1. End user: task clarity, error recovery, desktop/mobile workflows.
 2. Domain expert: output correctness, format constraints, data preservation.

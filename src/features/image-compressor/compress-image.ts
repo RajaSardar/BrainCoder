@@ -1,36 +1,79 @@
 export type QualityPreset = "light" | "balanced" | "strong";
-export type OutputFormat = "auto" | "webp" | "jpeg" | "png" | "avif";
+export type ConcreteFormat = "webp" | "jpeg" | "png" | "avif";
+export type OutputFormat = "auto" | ConcreteFormat;
 
-export const PRESETS: Record<QualityPreset, { quality: number; maxEdge: number }> = {
-  light: { quality: 0.85, maxEdge: 2400 },
-  balanced: { quality: 0.7, maxEdge: 1920 },
-  strong: { quality: 0.45, maxEdge: 1280 },
+export const PRESETS: Record<QualityPreset, { quality: number }> = {
+  light: { quality: 0.85 },
+  balanced: { quality: 0.7 },
+  strong: { quality: 0.45 },
 };
 
-export const FORMAT_EXT: Record<string, string> = {
-  "image/jpeg": "jpg",
-  "image/webp": "webp",
-  "image/png": "png",
-  "image/avif": "avif",
+export const FORMATS: Record<ConcreteFormat, { mime: string; ext: string }> = {
+  webp: { mime: "image/webp", ext: "webp" },
+  jpeg: { mime: "image/jpeg", ext: "jpg" },
+  png: { mime: "image/png", ext: "png" },
+  avif: { mime: "image/avif", ext: "avif" },
 };
+
+export function sniffImageMime(bytes: Uint8Array): { mime: string; ext: string } {
+  if (
+    bytes.byteLength >= 4 &&
+    bytes[0] === 0x89 &&
+    bytes[1] === 0x50 &&
+    bytes[2] === 0x4e &&
+    bytes[3] === 0x47
+  ) {
+    return { mime: "image/png", ext: "png" };
+  }
+  if (bytes.byteLength >= 3 && bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff) {
+    return { mime: "image/jpeg", ext: "jpg" };
+  }
+  if (
+    bytes.byteLength >= 12 &&
+    isAscii(bytes, 0, "RIFF") &&
+    isAscii(bytes, 8, "WEBP")
+  ) {
+    return { mime: "image/webp", ext: "webp" };
+  }
+  if (bytes.byteLength >= 4 && isAscii(bytes, 0, "GIF8")) {
+    return { mime: "image/gif", ext: "gif" };
+  }
+  if (bytes.byteLength >= 2 && bytes[0] === 0x42 && bytes[1] === 0x4d) {
+    return { mime: "image/bmp", ext: "bmp" };
+  }
+  if (
+    bytes.byteLength >= 12 &&
+    isAscii(bytes, 4, "ftyp") &&
+    isAscii(bytes, 8, "avif")
+  ) {
+    return { mime: "image/avif", ext: "avif" };
+  }
+  return { mime: "image/jpeg", ext: "jpg" };
+}
+
+function isAscii(bytes: Uint8Array, offset: number, text: string): boolean {
+  if (offset + text.length > bytes.byteLength) return false;
+  for (let i = 0; i < text.length; i++) {
+    if (bytes[offset + i] !== text.charCodeAt(i)) return false;
+  }
+  return true;
+}
+
+function pickOutputMime(format: OutputFormat): string {
+  if (format === "auto") {
+    throw new Error("Auto format must be resolved on the main thread before dispatch.");
+  }
+  return FORMATS[format].mime;
+}
 
 type CanvasType = HTMLCanvasElement | OffscreenCanvas;
 
-function pickOutputMime(format: OutputFormat): string {
-  if (format !== "auto") {
-    const map: Record<string, string> = {
-      webp: "image/webp",
-      jpeg: "image/jpeg",
-      png: "image/png",
-      avif: "image/avif",
-    };
-    return map[format];
+function metaFromActualMime(mime: string): { ext: string; format: string } {
+  for (const f of Object.values(FORMATS)) {
+    if (f.mime === mime) return { ext: f.ext, format: f.ext };
   }
-
-  const canvas = document.createElement("canvas");
-  if (canvas.toDataURL("image/avif").startsWith("data:image/avif")) return "image/avif";
-  if (canvas.toDataURL("image/webp").startsWith("data:image/webp")) return "image/webp";
-  return "image/jpeg";
+  const subtype = mime.slice(mime.indexOf("/") + 1) || "img";
+  return { ext: subtype, format: subtype };
 }
 
 function get2dContext(
@@ -48,12 +91,12 @@ async function decodeImage(bytes: Uint8Array): Promise<{
   height: number;
 }> {
   if (typeof createImageBitmap !== "undefined") {
-    const blob = new Blob([new Uint8Array(bytes) as unknown as BlobPart]);
+    const blob = new Blob([new Uint8Array(bytes)]);
     const bitmap = await createImageBitmap(blob);
     return { source: bitmap, width: bitmap.width, height: bitmap.height };
   }
 
-  const blobUrl = URL.createObjectURL(new Blob([new Uint8Array(bytes) as unknown as BlobPart]));
+  const blobUrl = URL.createObjectURL(new Blob([new Uint8Array(bytes)]));
   const img = new Image();
   await new Promise<void>((resolve, reject) => {
     img.onload = () => resolve();
@@ -74,26 +117,56 @@ function drawWithStepDown(
   const isOffscreen = typeof OffscreenCanvas !== "undefined";
   const useOffscreen = isOffscreen && source instanceof ImageBitmap;
 
+  const makeCanvas = (w: number, h: number): CanvasType => {
+    if (useOffscreen) return new OffscreenCanvas(w, h);
+    const c = document.createElement("canvas");
+    c.width = w;
+    c.height = h;
+    return c;
+  };
+
+  const smoothing = (ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D) => {
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
+  };
+
+  const canvasError = "Canvas 2D rendering isn't available in this browser.";
+
+  const requireCtx = (
+    c: CanvasType
+  ): CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D => {
+    const ctx = get2dContext(c);
+    if (!ctx) throw new Error(canvasError);
+    return ctx;
+  };
+
   let curW = srcW;
   let curH = srcH;
-  let canvas: CanvasType = useOffscreen
-    ? new OffscreenCanvas(srcW, srcH)
-    : document.createElement("canvas");
-  canvas.width = srcW;
-  canvas.height = srcH;
-  let ctx = get2dContext(canvas);
-  if (ctx) ctx.drawImage(source as CanvasImageSource, 0, 0);
+  let canvas: CanvasType;
+  let ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
+
+  if (curW === targetW && curH === targetH) {
+    canvas = makeCanvas(srcW, srcH);
+    ctx = requireCtx(canvas);
+    ctx.drawImage(source as CanvasImageSource, 0, 0);
+    return canvas;
+  }
+
+  const firstW = Math.max(targetW, Math.floor(srcW / 2));
+  const firstH = Math.max(targetH, Math.floor(srcH / 2));
+  canvas = makeCanvas(firstW, firstH);
+  ctx = requireCtx(canvas);
+  smoothing(ctx);
+  ctx.drawImage(source as CanvasImageSource, 0, 0, srcW, srcH, 0, 0, firstW, firstH);
+  curW = firstW;
+  curH = firstH;
 
   while (curW > targetW * 2 || curH > targetH * 2) {
     const nextW = Math.max(targetW, Math.floor(curW / 2));
     const nextH = Math.max(targetH, Math.floor(curH / 2));
-    const next: CanvasType = useOffscreen
-      ? new OffscreenCanvas(nextW, nextH)
-      : document.createElement("canvas");
-    next.width = nextW;
-    next.height = nextH;
-    const nextCtx = get2dContext(next);
-    if (!nextCtx) break;
+    const next: CanvasType = makeCanvas(nextW, nextH);
+    const nextCtx = requireCtx(next);
+    smoothing(nextCtx);
     nextCtx.drawImage(canvas as CanvasImageSource, 0, 0, curW, curH, 0, 0, nextW, nextH);
     canvas = next;
     ctx = nextCtx;
@@ -102,14 +175,11 @@ function drawWithStepDown(
   }
 
   if (curW !== targetW || curH !== targetH) {
-    const final: CanvasType = useOffscreen
-      ? new OffscreenCanvas(targetW, targetH)
-      : document.createElement("canvas");
-    final.width = targetW;
-    final.height = targetH;
+    const final: CanvasType = makeCanvas(targetW, targetH);
     const finalCtx = get2dContext(final);
-    if (finalCtx)
-      finalCtx.drawImage(canvas as CanvasImageSource, 0, 0, curW, curH, 0, 0, targetW, targetH);
+    if (!finalCtx) throw new Error(canvasError);
+    smoothing(finalCtx);
+    finalCtx.drawImage(canvas as CanvasImageSource, 0, 0, curW, curH, 0, 0, targetW, targetH);
     canvas = final;
   }
 
@@ -133,10 +203,29 @@ async function canvasToBlob(
   });
 }
 
-export interface ImageCompressionResult {
+async function encodeWithFallback(
+  canvas: CanvasType,
+  quality: number,
+  outMime: string
+): Promise<{ blob: Blob; mime: string }> {
+  const first = await canvasToBlob(canvas, outMime, quality);
+  if (!first.type || first.type === outMime) {
+    return { blob: first, mime: first.type || outMime };
+  }
+  const tried = [outMime];
+  for (const mime of [outMime, "image/webp", "image/jpeg"]) {
+    if (tried.includes(mime)) continue;
+    tried.push(mime);
+    const blob = await canvasToBlob(canvas, mime, quality);
+    if (blob.type && blob.type === mime) {
+      return { blob, mime: blob.type };
+    }
+  }
+  return { blob: first, mime: first.type };
+}
+
+export interface ImageCompressionData {
   bytes: Uint8Array;
-  blob: Blob;
-  url: string;
   mimeType: string;
   extension: string;
   originalSize: number;
@@ -153,7 +242,7 @@ export interface ImageCompressionResult {
 
 export interface ImageCompressOptions {
   preset: QualityPreset;
-  format: OutputFormat;
+  format: ConcreteFormat;
   maxWidth?: number | null;
   maxHeight?: number | null;
 }
@@ -161,13 +250,20 @@ export interface ImageCompressOptions {
 export async function compressImageClient(
   bytes: Uint8Array,
   options: ImageCompressOptions
-): Promise<ImageCompressionResult> {
+): Promise<ImageCompressionData> {
   const originalSize = bytes.byteLength;
   const data = await decodeImage(bytes);
   const origW = data.width;
   const origH = data.height;
 
-  const { quality, maxEdge } = PRESETS[options.preset] ?? PRESETS.balanced;
+  if (!origW || !origH) {
+    throw new Error("Couldn't read the image dimensions. Try a standard JPG, PNG or WebP file.");
+  }
+  if (origW * origH > 40_000_000) {
+    throw new Error("Image is too large to process (over 40 megapixels).");
+  }
+
+  const { quality } = PRESETS[options.preset];
   const outMime = pickOutputMime(options.format);
 
   let targetW = origW;
@@ -185,10 +281,6 @@ export async function compressImageClient(
     const scale = Math.min(1, options.maxHeight / origH);
     targetW = Math.max(1, Math.round(origW * scale));
     targetH = Math.max(1, Math.round(origH * scale));
-  } else if (Math.max(origW, origH) > maxEdge) {
-    const scale = maxEdge / Math.max(origW, origH);
-    targetW = Math.max(1, Math.round(origW * scale));
-    targetH = Math.max(1, Math.round(origH * scale));
   }
 
   const resized = targetW !== origW || targetH !== origH;
@@ -196,43 +288,40 @@ export async function compressImageClient(
 
   if (outMime === "image/jpeg") {
     const bg = get2dContext(canvas);
-    if (bg) {
-      bg.globalCompositeOperation = "destination-over";
-      bg.fillStyle = "#ffffff";
-      bg.fillRect(0, 0, canvas.width, canvas.height);
-    }
+    if (!bg) throw new Error("Canvas 2D rendering isn't available in this browser.");
+    bg.globalCompositeOperation = "destination-over";
+    bg.fillStyle = "#ffffff";
+    bg.fillRect(0, 0, canvas.width, canvas.height);
   }
 
-  const blob = await canvasToBlob(canvas, outMime, quality);
+  const { blob, mime: encodedMime } = await encodeWithFallback(canvas, quality, outMime);
   if (data.source instanceof ImageBitmap) data.source.close();
 
   const compressedBytes = new Uint8Array(await blob.arrayBuffer());
   const compressedSize = compressedBytes.byteLength;
 
-  const shouldFallback = !resized && compressedSize >= originalSize;
-  const extension = FORMAT_EXT[outMime] ?? "jpg";
+  const shouldFallback = compressedSize >= originalSize;
+  const sniffed = sniffImageMime(bytes);
+
   const effectiveBytes = shouldFallback ? bytes : compressedBytes;
-  const effectiveMime = shouldFallback ? "image/jpeg" : outMime;
-  const effectiveSize = effectiveBytes.byteLength;
+  const effectiveMime = shouldFallback ? sniffed.mime : encodedMime;
+  const meta = metaFromActualMime(effectiveMime);
+  const effectiveSize = shouldFallback ? originalSize : compressedSize;
 
   return {
     bytes: effectiveBytes,
-    blob: new Blob([new Uint8Array(effectiveBytes) as unknown as BlobPart], {
-      type: effectiveMime,
-    }),
-    url: "",
     mimeType: effectiveMime,
-    extension: shouldFallback ? "jpg" : extension,
+    extension: shouldFallback ? sniffed.ext : meta.ext,
     originalSize,
     compressedSize: effectiveSize,
     reductionPct:
-      originalSize > 0 ? Math.round((1 - effectiveSize / originalSize) * 100) : 0,
+      originalSize > 0 ? Math.max(0, Math.round((1 - effectiveSize / originalSize) * 100)) : 0,
     originalWidth: origW,
     originalHeight: origH,
-    outputWidth: targetW,
-    outputHeight: targetH,
-    format: outMime.replace("image/", ""),
-    resized,
+    outputWidth: shouldFallback ? origW : targetW,
+    outputHeight: shouldFallback ? origH : targetH,
+    format: shouldFallback ? sniffed.ext : meta.format,
+    resized: shouldFallback ? false : resized,
     skipped: shouldFallback,
   };
 }

@@ -1,33 +1,28 @@
 import { formatBytes } from "@/lib/format";
-import type { QualityPreset, OutputFormat } from "./compress-image";
+import type {
+  ImageCompressionData,
+  QualityPreset,
+  OutputFormat,
+  ConcreteFormat,
+} from "./compress-image";
 
 export type { QualityPreset, OutputFormat };
 
-export interface ImageCompressClientResult {
-  bytes: Uint8Array;
+export interface ImageCompressionResult extends ImageCompressionData {
   blob: Blob;
   url: string;
-  mimeType: string;
-  extension: string;
-  originalSize: number;
-  compressedSize: number;
-  reductionPct: number;
-  originalWidth: number;
-  originalHeight: number;
-  outputWidth: number;
-  outputHeight: number;
-  format: string;
-  resized: boolean;
-  skipped: boolean;
 }
 
 type WorkerResponseData = {
+  type: "compress";
+  id: number;
   success: boolean;
-  result?: Omit<ImageCompressClientResult, "blob" | "url">;
+  result?: ImageCompressionData;
   error?: string;
 };
 
 let imageWorker: Worker | null = null;
+let nextRequestId = 0;
 
 function getImageWorker(): Worker {
   if (!imageWorker) {
@@ -45,44 +40,72 @@ export function terminateImageWorker(): void {
   }
 }
 
-function normalizeBytes(bytes: Uint8Array): Uint8Array<ArrayBuffer> {
-  const copy = new Uint8Array(bytes.byteLength);
-  copy.set(bytes);
-  return copy as Uint8Array<ArrayBuffer>;
+export function resolveAutoFormat(): "webp" | "jpeg" | "avif" {
+  const probe = document.createElement("canvas");
+  if (probe.toDataURL("image/avif").startsWith("data:image/avif")) return "avif";
+  if (probe.toDataURL("image/webp").startsWith("data:image/webp")) return "webp";
+  return "jpeg";
 }
 
 export async function compressImageFile(
   file: File,
-  options: { preset: QualityPreset; format: OutputFormat; maxWidth?: number | null; maxHeight?: number | null }
-): Promise<ImageCompressClientResult> {
+  options: {
+    preset: QualityPreset;
+    format: OutputFormat;
+    maxWidth?: number | null;
+    maxHeight?: number | null;
+  }
+): Promise<ImageCompressionResult> {
   const originalSize = file.size;
   const buffer = await file.arrayBuffer();
+  const resolvedFormat: ConcreteFormat = options.format === "auto" ? resolveAutoFormat() : options.format;
 
   const w = getImageWorker();
+  const id = nextRequestId++;
 
   const data = await new Promise<WorkerResponseData>((resolve, reject) => {
-    const handler = (e: MessageEvent<WorkerResponseData>) => {
-      w.removeEventListener("message", handler);
-      w.removeEventListener("error", errHandler);
-      if (e.data.success) {
+    let settled = false;
+
+    const onMessage = (e: MessageEvent<WorkerResponseData>) => {
+      if (settled || e.data.id !== id) return;
+      settled = true;
+      clearTimeout(timer);
+      w.removeEventListener("message", onMessage);
+      w.removeEventListener("error", onError);
+      if (e.data.success && e.data.result) {
         resolve(e.data);
       } else {
         reject(new Error(e.data.error || "Image compression failed"));
       }
     };
-    const errHandler = (e: ErrorEvent) => {
-      w.removeEventListener("message", handler);
-      w.removeEventListener("error", errHandler);
+    const onError = (e: ErrorEvent) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      w.removeEventListener("message", onMessage);
+      w.removeEventListener("error", onError);
+      terminateImageWorker();
       reject(new Error(e.message || "Image compression worker error"));
     };
-    w.addEventListener("message", handler);
-    w.addEventListener("error", errHandler);
+
+    const timer = setTimeout(() => {
+      if (settled) return;
+      settled = true;
+      w.removeEventListener("message", onMessage);
+      w.removeEventListener("error", onError);
+      terminateImageWorker();
+      reject(new Error("Compression timed out. Try a smaller image."));
+    }, 120_000);
+
+    w.addEventListener("message", onMessage);
+    w.addEventListener("error", onError);
     w.postMessage(
       {
         type: "compress",
+        id,
         buffer,
         preset: options.preset,
-        format: options.format,
+        format: resolvedFormat,
         maxWidth: options.maxWidth ?? null,
         maxHeight: options.maxHeight ?? null,
       },
@@ -91,7 +114,11 @@ export async function compressImageFile(
   });
 
   const result = data.result!;
-  const bytes = normalizeBytes(result.bytes);
+  const bytes = new Uint8Array(
+    result.bytes.buffer as ArrayBuffer,
+    result.bytes.byteOffset,
+    result.bytes.byteLength
+  );
   const blob = new Blob([bytes], { type: result.mimeType });
   const url = URL.createObjectURL(blob);
 

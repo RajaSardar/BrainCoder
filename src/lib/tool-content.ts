@@ -4773,33 +4773,33 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ]
   },
   "image-compressor": {
-    "longDescription": "<p>BrainCoder's image compression tool reduces the file size of your images without compromising visual quality. Whether you need to optimize images for a website, reduce file sizes for email attachments, or free up storage space, this tool delivers fast, high-quality compression right in your browser. It supports JPG, PNG, WebP, and other common formats, giving you fine-grained control over the compression level.</p>\n<p>The tool processes images entirely on your device — nothing is uploaded to any server. This is critical for photographers, designers, and businesses working with sensitive or proprietary images. You can adjust the quality slider to find the perfect balance between file size and visual fidelity, and the tool shows you a before-and-after comparison along with the exact file size reduction percentage.</p>\n<p>BrainCoder's image compressor is ideal for web developers optimizing page load times, social media managers reducing upload sizes, and anyone who regularly works with images. It's fast, free, and keeps your images completely private while delivering professional-quality compression results.</p>",
+    "longDescription": "<p>BrainCoder's image compressor shrinks a single image up to 50 MB in your browser. Pick a compression preset — Light, Balanced, or Strong — to balance file size and visual quality, optionally choose an output format (Auto prefers WebP or AVIF where your browser supports it, otherwise JPEG, PNG or WebP), and optionally resize to a 1920 or 1280 px longest edge that never upscales.</p>\n<p>Compression and resizing run entirely in a Web Worker on your device — nothing is uploaded to any server. The tool shows you a before-and-after size comparison along with the exact file size reduction percentage. If compressing would make the result bigger, your original is returned unchanged byte for byte, so the output is never larger than the upload.</p>\n<p>BrainCoder's image compressor is useful for web developers optimizing page load times, writers shrinking image attachments, and anyone who regularly works with images and wants fast, free, private compression with an honest guarantee.</p>",
     "features": [
-      "Compress JPG, PNG, WebP, and other common image formats",
-      "Adjustable quality slider for precise control over compression",
-      "Before-and-after preview with file size comparison",
-      "Batch compression for multiple images at once",
-      "100% client-side — images never leave your device",
-      "Shows exact file size reduction percentage"
+      "Three compression presets — Light, Balanced, Strong",
+      "Smart output format — Auto (WebP/AVIF where supported), JPEG, PNG or WebP",
+      "Optional resizing to 1920 or 1280 px (never upscales)",
+      "Your original is returned if compressing would make it larger",
+      "Single image up to 50 MB, processed in your browser",
+      "Shows the exact file size reduction percentage"
     ],
     "howTo": [
       {
-        "step": "Upload Your Image",
-        "description": "Click the upload button or drag and drop your image into the tool. You can upload one or multiple images for batch compression."
+        "step": "Upload One Image",
+        "description": "Click or drag a single image up to 50 MB into the tool. The tool compresses one image at a time — there is no batch mode."
       },
       {
-        "step": "Adjust Quality Settings",
-        "description": "Use the quality slider to set your desired compression level. Higher quality means larger files; lower quality means smaller files. The preview updates in real time."
+        "step": "Choose Compression, Format and Size",
+        "description": "Pick Light, Balanced, or Strong, optionally choose an output format and a resize option, then click Compress Image. Your image stays on your device while it compresses."
       },
       {
-        "step": "Download Compressed Image",
-        "description": "Once you're satisfied with the result, click the download button to save the compressed image to your device. The file size savings are displayed for reference."
+        "step": "Download the Result",
+        "description": "Review the size comparison and exact reduction percentage. Use Adjust settings to retry with another preset or format, download the result, or choose New image to start over."
       }
     ],
     "faq": [
       {
         "question": "How much can image file sizes be reduced?",
-        "answer": "Reduction depends on the original image and quality settings. Typical savings range from 30% to 80% of the original file size, with minimal visible quality loss at moderate settings."
+        "answer": "It depends on the image and the preset. Photos converting to WebP often shrink by a large margin; JPEG and PNG files that are already optimized may barely shrink or come back unchanged. There is no target size."
       },
       {
         "question": "Are my images uploaded to a server?",
@@ -4807,7 +4807,11 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       },
       {
         "question": "Can I compress multiple images at once?",
-        "answer": "Yes. The tool supports batch compression, allowing you to upload and compress multiple images simultaneously for convenience."
+        "answer": "No — the tool compresses one image at a time. Run it again for the next image."
+      },
+      {
+        "question": "Why is my result identical to the upload?",
+        "answer": "If compressing would make the file bigger, the tool keeps your original byte for byte — the output is never larger. Choose a different preset or resize to get a smaller file."
       }
     ],
     "relatedSlugs": [
@@ -4815,7 +4819,8 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       "image-format-converter",
       "image-filters",
       "image-editor",
-      "image-splitter"
+      "image-splitter",
+      "pdf-compressor"
     ]
   },
   "image-resizer": {

@@ -612,7 +612,7 @@ export const GUIDES: Guide[] = [
       },
     ],
   },
-  {
+{
     slug: "how-to-create-a-qr-code",
     title: "How to Create a QR Code for Free (URL, Text, Email)",
     description:
@@ -648,6 +648,55 @@ export const GUIDES: Guide[] = [
         paragraphs: [
           "Keep the surrounding quiet zone clear, size the code generously, and avoid putting text or logos on top of the pattern. High contrast between the squares and the background matters most.",
           "Test the final version with your phone before printing in bulk — a QR checked once is worth a hundred reprinted signs.",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "how-to-compress-an-image-online",
+    title: "How to Compress an Image Online for Free (JPG, PNG, WebP)",
+    description:
+      "Compress one image up to 50 MB in your browser with presets, optional format and resize. Learn what stays unchanged and why the output is never larger.",
+    keywords: [
+      "compress image online",
+      "reduce image file size",
+      "compress jpg",
+      "compress png",
+      "compress webp online",
+      "make image smaller",
+      "image compressor free",
+    ],
+    toolSlug: "image-compressor",
+    published: "2026-09-16",
+    updated: "2026-09-16",
+    readMinutes: 3,
+    sections: [
+      {
+        heading: "What this compressor does",
+        paragraphs: [
+          "Image Compressor re-encodes one image in a Web Worker inside your browser — nothing is uploaded. The source image is decoded, drawn to a canvas, and encoded again with the settings you chose. Because the file is rebuilt this way, any EXIF, GPS or ICC metadata is stripped and the pixels are converted to sRGB 8-bit.",
+          "Animated GIFs and animated WebP files are not played back; only their first frame is kept. HEIC and HEIF images are not supported — convert those to JPG or PNG first. These are honest trade-offs of in-browser canvas compression, not bugs.",
+        ],
+      },
+      {
+        heading: "1. Choose one image",
+        paragraphs: [
+          "Click or drag a single image up to 50 MB into the tool. JPG, PNG, WebP, AVIF and GIF files are accepted. There is no batch mode — each run processes the one image you load.",
+          "Images larger than 40 megapixels are rejected with a clear message before any processing starts, because decoding them would use too much memory. Reduce the resolution in another tool first.",
+        ],
+      },
+      {
+        heading: "2. Pick a preset, format and resize",
+        paragraphs: [
+          "The presets are lossy JPEG quality levels: Light is 85%, Balanced is 70%, and Strong is 45%. Lower quality means a smaller file with more visible compression. If you pick PNG, the output is lossless and the quality value is ignored, so presets mostly affect file size only through the other settings.",
+          "The output format can be Auto, which prefers WebP and uses AVIF where your browser can encode it — otherwise it falls back to WebP or JPEG cleanly. You can also choose JPEG, PNG or WebP explicitly. Optional resizing to a 1920 or 1280 px longest edge never upscales smaller images.",
+        ],
+      },
+      {
+        heading: "3. Compress, review, download",
+        paragraphs: [
+          "Click Compress Image and review the size comparison and exact reduction percentage. If the output would be larger than the upload, the tool returns your original byte for byte — the result is never bigger, so choose a different preset or a resize to get a smaller file.",
+          "Use Adjust settings to retry with another preset, format or size without re-uploading. Jobs on very large images time out after 2 minutes with a message suggesting a smaller file. Remember that compression does not preserve metadata: the downloaded result is a fresh, metadata-free image.",
         ],
       },
     ],
