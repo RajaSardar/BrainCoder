@@ -482,13 +482,18 @@ Phase 2+ Target (NOT building now):
 
 ## Sequential Tool Upgrades
 
-- User correction (2026-09-16): ten distinct expert agents per tool, run
-  sequentially. Finish judging, upgrades and verification before the next tool.
+- User correction (2026-09-16): ten distinct expert agents per tool. They are
+  read-only and independent, so they run in parallel; judges never wait on each
+  other's output. Finish judging, upgrades and verification before the next tool.
 - Workflow: `audit/TOOL-AUDIT-KIT.md`. All 123 registry tools remain in scope.
 - PDF Compressor: ten judges completed; engine/client/UI and related content
   upgraded. 73 regression tests and 15 production Chrome scenarios passed;
   production build passed (279 pages). Report: `audit/reports/pdf-compressor.md`.
-- Next: Image Compressor. Remaining 122 tools have not completed this process.
+- Image Compressor: ten judges completed (parallel-ready workflow); engine,
+  client, worker, UI and related content upgraded. 5 node regression checks and
+  24 production Chrome scenarios passed; production build passed (280 pages).
+  Report: `audit/reports/image-compressor.md`.
+- Next: Image Resizer. Remaining 121 tools have not completed this process.
 - Residual checks: physical mobile/Safari/Firefox, manual screen readers, parser
   memory limits, and shared /verify proof wording. No universal audit guarantee.
 - Existing changes to other tools are preserved but not counted as reviewed.
