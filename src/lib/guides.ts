@@ -701,6 +701,60 @@ export const GUIDES: Guide[] = [
       },
     ],
   },
+  {
+    slug: "how-to-resize-an-image-online",
+    title: "How to Resize an Image Online for Free (JPG, PNG, WebP)",
+    description:
+      "Resize one image to any pixel dimensions in your browser — pick a common preset, lock or unlock the aspect ratio, choose JPG, PNG, or WebP output, and download. Nothing is uploaded.",
+    keywords: [
+      "resize image online",
+      "resize photo to 1920x1080",
+      "change image dimensions",
+      "resize jpg and png online",
+      "image resizer free",
+    ],
+    toolSlug: "image-resizer",
+    published: "2026-09-16",
+    updated: "2026-09-16",
+    readMinutes: 3,
+    sections: [
+      {
+        heading: "What this resizer does",
+        paragraphs: [
+          "Image Resizer re-encodes your image to an exact target size on a canvas in your browser — nothing is uploaded. Set any pixel dimensions, keep or release the aspect ratio, choose JPG, PNG or WebP output, and download the result in seconds.",
+          "JPG output fills transparent areas with white, while PNG and WebP preserve transparency, so they suit logos and graphics. Shrinking keeps perceived quality high because pixels are simply removed; enlarging has to interpolate new pixels, so the result looks softer. Like any canvas re-encode, the output does not preserve EXIF, GPS or other metadata.",
+        ],
+      },
+      {
+        heading: "1. Choose an image",
+        paragraphs: [
+          "Click the upload area or drop a file (up to 50 MB) into the tool. The original width and height are shown as soon as the image loads, along with its file size.",
+          "Files that can't be decoded show a clear error instead of silently failing — dismiss it and try another image. You can load a new file at any time by using the upload area again.",
+        ],
+      },
+      {
+        heading: "2. Set the target size",
+        paragraphs: [
+          "The width and height inputs clamp to the 1–8,192 px range, so extreme values can never reach the canvas. The aspect-ratio lock is on by default and keeps the two sides in proportion automatically; turn it off for free-form dimensions.",
+          "The preset chips — 256×256, 640×360, 1080×1080, 1280×720 and 1920×1080 — set exact sizes for common social posts and screens with one click.",
+        ],
+      },
+      {
+        heading: "3. Pick the output format and resize",
+        paragraphs: [
+          "PNG is the default output and suits graphics, while JPEG flattens transparency onto a white background and WebP often produces the smallest result for photos.",
+          "The resize runs locally in your browser and is almost instant for normal sizes, with a live status message while the image is being re-encoded. Target sizes are capped at about 40 megapixels to stay inside safe canvas limits.",
+        ],
+      },
+      {
+        heading: "4. Download and verify",
+        paragraphs: [
+          "The resized image appears in the preview with its new dimensions and file size, so you can check the result before saving it.",
+          "Click Download to save the file as resized- plus your original name. Use Reset to start over with the same image, or drop a new file to begin again.",
+        ],
+      },
+    ],
+  },
 ];
 
 const guideBySlug = new Map(GUIDES.map((g) => [g.slug, g]));

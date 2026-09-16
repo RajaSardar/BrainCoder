@@ -28,7 +28,7 @@ const CATEGORY_KEYWORDS: Record<string, string[]> = {
 const TOOL_KEYWORDS: Record<string, string[]> = {
   "pdf-compressor": ["compress pdf online", "reduce pdf file size", "shrink pdf", "pdf compressor free", "make pdf smaller"],
   "image-compressor": ["compress image online", "reduce image file size", "compress jpg", "compress png", "compress webp online", "make image smaller", "compress avif online", "image compressor free"],
-  "image-resizer": ["resize image online", "image resizer free", "resize jpg png webp", "reduce image dimensions"],
+  "image-resizer": ["resize image online", "image resizer free", "resize jpg png webp", "reduce image dimensions", "resize photo online", "resize image to 1920x1080", "image resizer aspect ratio lock", "resize image without uploading"],
   "json-formatter": ["json formatter online", "json beautifier", "json validator", "prettify json", "pretty print json", "format json"],
   "url-encoder": ["url encoder online", "url decoder", "percent encoding", "encodeuri component online", "uri encoder"],
   base64: ["base64 encoder online", "base64 decoder", "text to base64", "base64 to text", "encode base64", "decode base64"],

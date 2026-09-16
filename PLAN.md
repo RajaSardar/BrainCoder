@@ -493,7 +493,12 @@ Phase 2+ Target (NOT building now):
   client, worker, UI and related content upgraded. 5 node regression checks and
   24 production Chrome scenarios passed; production build passed (280 pages).
   Report: `audit/reports/image-compressor.md`.
-- Next: Image Resizer. Remaining 121 tools have not completed this process.
+- Image Resizer: ten independent judges ran in parallel for the first time;
+  engine-free component, worker, UI and content upgraded (safe dims/caps,
+  presets, drag & drop, result preview, a11y parity, honest copy, new guide).
+  3 node checks and 28 production Chrome scenarios passed; production build
+  passed (281 pages). Report: `audit/reports/image-resizer.md`.
+- Next: JSON Formatter. Remaining 120 tools have not completed this process.
 - Residual checks: physical mobile/Safari/Firefox, manual screen readers, parser
   memory limits, and shared /verify proof wording. No universal audit guarantee.
 - Existing changes to other tools are preserved but not counted as reviewed.

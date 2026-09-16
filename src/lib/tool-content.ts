@@ -4824,41 +4824,45 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ]
   },
   "image-resizer": {
-    "longDescription": "<p>BrainCoder's image resizer lets you quickly resize images to any custom dimensions — perfect for social media profiles, website banners, email headers, document inserts, and more. Just upload your image, enter the desired width and height, and download the resized version instantly. You can lock the aspect ratio to prevent distortion or unlock it for custom dimensions.</p>\n<p>This tool is essential for anyone who works with images regularly. Social media platforms have specific image size requirements, websites need optimized dimensions for fast loading, and documents often require images at particular sizes. BrainCoder's resizer handles all these use cases with a simple, intuitive interface that requires no design software or technical expertise.</p>\n<p>Like all BrainCoder tools, the image resizer processes everything locally in your browser. Your photos and graphics never leave your device, making it safe to use for personal photos, proprietary designs, confidential documents, and any images you don't want uploaded to external servers. It's fast, free, and respects your privacy.</p>",
+    "longDescription": "<p>BrainCoder's image resizer lets you quickly resize images to any custom dimensions — perfect for social media profiles, website banners, email headers, document inserts, and more. Just upload your image, enter the desired width and height, and download the resized version in seconds. You can lock the aspect ratio to prevent distortion or unlock it for custom dimensions.</p>\n<p>This tool is essential for anyone who works with images regularly. Social media platforms have specific image size requirements, websites need optimized dimensions for fast loading, and documents often require images at particular sizes. BrainCoder's resizer handles all these use cases with a simple, intuitive interface that requires no design software or technical expertise.</p>\n<p>Like all BrainCoder tools, the image resizer processes everything locally in your browser. Your photos and graphics never leave your device, making it safe to use for personal photos, proprietary designs, confidential documents, and any images you don't want uploaded to external servers. It's fast, free, and respects your privacy.</p>",
     "features": [
       "Resize to any custom width and height in pixels",
+      "Popular preset sizes for social posts and screens",
       "Lock aspect ratio to prevent stretching or distortion",
-      "Common preset sizes for social media platforms and web use",
-      "Supports JPG, PNG, WebP, and other common formats",
-      "Preview the resized image before downloading",
-      "Entirely client-side — no image uploads to any server"
+      "Export the result as JPG, PNG, or WebP",
+      "Preview the resized image and its file size before downloading",
+      "Entirely client-side — nothing is uploaded"
     ],
     "howTo": [
       {
         "step": "Upload Your Image",
-        "description": "Click the upload button or drag and drop your image into the resizer. The image displays with its current dimensions shown."
+        "description": "Click the upload area or drop an image to load it. The image loads and shows its original width and height."
       },
       {
         "step": "Set Target Dimensions",
-        "description": "Enter your desired width and height in pixels. Toggle the aspect ratio lock to maintain proportions or set custom dimensions freely. You can also choose from common preset sizes."
+        "description": "Enter a target width and height or choose a common preset. Keep the aspect-ratio lock on to stay in proportion, or turn it off for free-form dimensions."
       },
       {
         "step": "Preview and Download",
-        "description": "Preview the resized result and click 'Download' to save it to your device. The new dimensions and file size are displayed for reference."
+        "description": "Click 'Resize image', preview the result, then click 'Download' to save it. The new dimensions and file size are shown."
       }
     ],
     "faq": [
       {
         "question": "Will resizing distort my image?",
-        "answer": "If you keep the aspect ratio lock enabled, proportions are maintained and no distortion occurs. If you unlock it and enter non-proportional dimensions, the image will stretch to fit."
+        "answer": "If you keep the aspect ratio lock enabled, proportions are maintained and no distortion occurs. If you unlock it and enter non-proportional dimensions, the image will stretch to fit. Target sizes are capped at 8,192 px per side for safety."
       },
       {
         "question": "What's the maximum size I can resize to?",
-        "answer": "The tool supports resizing up to browser memory limits. For most practical purposes, you can resize to any reasonable dimension. Very large outputs may be limited by your device's memory."
+        "answer": "Target dimensions are capped at 8,192 pixels per side, and files larger than 50 MB are rejected. Browsers also impose their own canvas and memory limits, so very large enlargements may still fail — try a smaller target size."
       },
       {
         "question": "Does resizing reduce image quality?",
         "answer": "Enlarging a small image will reduce quality because pixels need to be interpolated. Shrinking images typically maintains or improves perceived quality. The tool uses high-quality resampling algorithms."
+      },
+      {
+        "question": "Do resized images keep my metadata (EXIF/GPS)?",
+        "answer": "No — the resized copy is re-encoded in your browser and does not carry over EXIF, GPS, or other metadata. Animated images are exported as their first frame."
       }
     ],
     "relatedSlugs": [
