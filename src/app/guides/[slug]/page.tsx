@@ -75,7 +75,7 @@ export default async function GuidePage(props: PageProps<'/guides/[slug]'>) {
           {tool.description}
         </p>
         <Link
-          href={`/tools/${tool.slug}`}
+          href={`/use/${tool.slug}`}
           className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 text-white text-sm font-semibold px-4 py-2.5 hover:bg-indigo-700 transition"
         >
           Open {tool.name} <ExternalLink className="w-4 h-4" />

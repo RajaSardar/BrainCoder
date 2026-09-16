@@ -139,7 +139,7 @@ export const TOOLS: ToolConfig[] = [
     name: "PDF Compressor",
     tagline: "Shrink PDFs right in your browser",
     description:
-      "Reduce PDF file size by recompressing embedded images. Files never leave your device.",
+      "Compress one PDF up to 100 MiB locally with three lossy image presets. Text is preserved; output is never larger than the original.",
     category: "Compress",
     icon: FileText,
     accent: "text-indigo-600",

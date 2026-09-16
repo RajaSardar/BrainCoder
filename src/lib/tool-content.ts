@@ -8,49 +8,60 @@ export interface ToolContent {
 
 export const TOOL_CONTENT: Record<string, ToolContent> = {
   "pdf-compressor": {
-    "longDescription": "<p>PDF Compressor is a powerful, browser-based tool that reduces PDF file sizes without compromising document quality. Whether you need to email large reports, archive documents, or speed up website loading times, our compressor intelligently optimizes PDF files by reducing image resolution, removing unnecessary metadata, and streamlining internal structures. The entire compression process happens locally in your browser—your files never leave your device, ensuring complete privacy and security.</p><p>Unlike desktop software that requires installation, PDF Compressor works instantly online with no sign-ups or limits. It supports both standard and high-quality compression modes, giving you control over the balance between file size and visual fidelity. From student assignments to enterprise legal documents, our tool handles PDFs of any size and complexity while maintaining the professional appearance your work demands.</p>",
+    "longDescription": "<p>PDF Compressor processes one PDF up to 100 MiB locally in a JavaScript worker, without uploading the document or using WebAssembly. Light, Balanced, and Strong presets use lossy JPEG recompression and may downsize supported embedded images. Text, fonts, page layout, and metadata are preserved; pages are not rasterized.</p><p>Unsupported images are left unchanged. Savings depend on the document, so text-heavy or already optimized PDFs may not shrink. If the output would be equal in size or larger, the tool returns your original PDF unchanged. There is no target-size guarantee. Encrypted PDFs and documents with populated digital signatures are rejected. Compression is not metadata removal or document sanitization.</p>",
     "features": [
-      "Compress PDF files by up to 90% without quality loss",
-      "Supports both standard and high-quality compression modes",
-      "100% client-side processing—files never leave your browser",
-      "No file size limits, watermarks, or sign-up required",
-      "Batch compression for multiple PDFs at once",
-      "Instant preview of compressed file size before download"
+      "Light, Balanced, and Strong lossy image-compression presets",
+      "Local JavaScript worker processing for one PDF up to 100 MiB",
+      "Preserves text and metadata; skips unsupported images",
+      "Returns the original PDF if no smaller output is produced",
+      "Compare output size and image counts, then download or adjust compression"
     ],
     "howTo": [
       {
-        "step": "Upload Your PDF",
-        "description": "Click the upload button or drag and drop your PDF file into the compressor tool."
+        "step": "Choose Your PDF",
+        "description": "Open the tool and choose or drop one non-empty PDF no larger than 100 MiB. Use an unencrypted, unsigned copy you are authorized to edit."
       },
       {
         "step": "Choose Compression Level",
-        "description": "Select between standard compression for smaller files or high quality for better visual fidelity."
+        "description": "Choose Light for less image-quality loss, Balanced for a middle setting, or Strong for more aggressive image compression. All three presets are lossy."
       },
       {
         "step": "Compress the File",
-        "description": "Click the compress button and wait a few seconds while the tool optimizes your PDF."
+        "description": "Click Compress PDF to process supported images locally. Processing time depends on the document and device; you can cancel while it runs."
       },
       {
-        "step": "Download the Result",
-        "description": "Preview the new file size and download your compressed PDF to your device."
+        "step": "Review and Download",
+        "description": "Check the sizes and counts of optimized and unchanged images, then download. If no smaller output was produced, the download is your original PDF. Use Adjust compression to try another preset, and inspect the downloaded PDF before sharing."
       }
     ],
     "faq": [
       {
         "question": "Does compressing a PDF reduce its quality?",
-        "answer": "Our tool offers multiple compression levels. Standard compression may slightly reduce image quality, while high-quality mode preserves visual fidelity while still reducing file size through structural optimization."
+        "answer": "Yes. Light, Balanced, and Strong all use lossy JPEG recompression on supported images and may reduce their dimensions. Light retains more image detail; Strong is more aggressive. Text and pages are not rasterized, so existing selectable text stays text. Scans remain images; this tool does not add OCR."
       },
       {
         "question": "Is there a file size limit?",
-        "answer": "PDF Compressor has no strict file size limits. However, very large files (over 100MB) may take longer to process depending on your browser's memory capacity."
+        "answer": "Yes. Select one non-empty PDF up to 100 MiB (104,857,600 bytes). Files within that limit can still exceed browser resources or time out; processing stops after 60 seconds. Try a smaller PDF if that happens."
       },
       {
         "question": "Are my files uploaded to a server?",
-        "answer": "No. All compression happens entirely in your browser using client-side JavaScript. Your PDFs never leave your device, ensuring complete privacy."
+        "answer": "No. PDF processing runs locally in a JavaScript worker, not WebAssembly. The compressor does not upload your PDF. Local processing does not remove sensitive content or metadata from the downloaded file."
       },
       {
         "question": "Can I compress multiple PDFs at once?",
-        "answer": "Yes, the batch compression feature lets you upload and compress multiple PDF files in a single session, saving you time on bulk operations."
+        "answer": "No. The tool processes one PDF at a time. After downloading, choose New file to process another document."
+      },
+      {
+        "question": "Why did some images or the file size stay unchanged?",
+        "answer": "Images with unsupported encodings, color profiles, or masks are skipped, as are images that exceed safety limits, fail to decode, or do not get smaller. The PDF structure may still be saved more compactly. If the complete output is not smaller, the original file is returned byte for byte. No reduction percentage or target size, such as 1 MB, is guaranteed."
+      },
+      {
+        "question": "Can I compress encrypted or digitally signed PDFs?",
+        "answer": "Encrypted PDFs, including files with permission restrictions, are rejected. Documents with populated digital signatures are also rejected because rewriting them would invalidate their signatures. Use an unencrypted, unsigned copy you are authorized to edit. Empty signature fields alone do not trigger rejection; the tool does not validate signature authenticity."
+      },
+      {
+        "question": "Does compression remove metadata or sanitize the document?",
+        "answer": "No. Document metadata is preserved, along with text, fonts, page geometry, and form appearances. Compression is not redaction or sanitization. Review sensitive content and metadata separately before sharing."
       }
     ],
     "relatedSlugs": [
@@ -1230,7 +1241,7 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       "pdf-merge",
       "pdf-split",
       "pdf-editor",
-      "pdf-compress"
+      "pdf-compressor"
     ]
   },
   "pdf-overlay": {
@@ -1337,7 +1348,7 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       "pdf-to-image",
       "pdf-editor",
       "pdf-scale-pages",
-      "pdf-compress",
+      "pdf-compressor",
       "pdf-redact"
     ]
   },
@@ -1445,7 +1456,7 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       "pdf-crop",
       "pdf-rotate",
       "pdf-flatten",
-      "pdf-compress",
+      "pdf-compressor",
       "pdf-page-numbers"
     ]
   },

@@ -185,7 +185,9 @@ export function toolJsonLd(tool: ToolConfig) {
           priceCurrency: "USD",
           availability: "https://schema.org/InStock",
         },
-        featureList: `Format, convert, generate and ${tool.category.toLowerCase()} — all in your browser`,
+        featureList: tool.slug === "pdf-compressor"
+          ? tool.description
+          : `Format, convert, generate and ${tool.category.toLowerCase()} — all in your browser`,
       },
       {
         "@type": "BreadcrumbList",
@@ -484,7 +486,7 @@ export function buildCategoryMetadata(category: string, slug: string): Metadata 
 
 export const CATEGORY_DESCRIPTIONS: Record<string, string> = {
   Compress:
-    "Shrink PDFs, images and text without losing quality — compression runs entirely in your browser.",
+    "Compress PDFs, images and text in your browser. Size savings and quality trade-offs depend on the tool, settings and source file.",
   Convert:
     "Turn formats instantly: image to PDF, HTML to PDF, JSON to CSV, markdown to HTML and more.",
   "Encode & Decode":

@@ -480,6 +480,19 @@ Phase 2+ Target (NOT building now):
 | Show HN launch | Must post at right time on launch day (Tue–Thu 9–11am PT) per `launch/hacker-news.md` | Founder | ⏸ scheduled |
 | mcuking AWAA PR | Done — [PR #36](https://github.com/mcuking/Awesome-WebAssembly-Applications/pull/36) open | — | ✅ live |
 
+## Sequential Tool Upgrades
+
+- User correction (2026-09-16): ten distinct expert agents per tool, run
+  sequentially. Finish judging, upgrades and verification before the next tool.
+- Workflow: `audit/TOOL-AUDIT-KIT.md`. All 123 registry tools remain in scope.
+- PDF Compressor: ten judges completed; engine/client/UI and related content
+  upgraded. 73 regression tests and 15 production Chrome scenarios passed;
+  production build passed (279 pages). Report: `audit/reports/pdf-compressor.md`.
+- Next: Image Compressor. Remaining 122 tools have not completed this process.
+- Residual checks: physical mobile/Safari/Firefox, manual screen readers, parser
+  memory limits, and shared /verify proof wording. No universal audit guarantee.
+- Existing changes to other tools are preserved but not counted as reviewed.
+
 ## Notes
 
 - Agent count: 25 experts across tech, product, growth, business, ops, contrarian

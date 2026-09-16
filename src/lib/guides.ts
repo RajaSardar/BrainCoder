@@ -20,7 +20,7 @@ export const GUIDES: Guide[] = [
     slug: "how-to-compress-pdf-online",
     title: "How to Compress a PDF Online for Free (No Sign-Up)",
     description:
-      "Reduce your PDF file size in seconds — entirely in your browser, no uploads, no sign-up. Free, fast and private.",
+      "Compress one PDF up to 100 MiB in your browser. Learn which lossy preset to choose, what stays unchanged, and why file-size savings vary.",
     keywords: [
       "compress pdf online",
       "reduce pdf file size",
@@ -30,36 +30,42 @@ export const GUIDES: Guide[] = [
     ],
     toolSlug: "pdf-compressor",
     published: "2026-09-09",
-    updated: "2026-09-09",
+    updated: "2026-09-16",
     readMinutes: 3,
     sections: [
       {
-        heading: "Why PDFs get so large",
+        heading: "What this compressor changes",
         paragraphs: [
-          "PDFs balloon in size when they embed high-resolution images, multiple font subsets, or uncompressed metadata. A single scan at 600 DPI can easily top 50 MB, even though the printed page is only a few hundred KB of real content.",
-          "Email providers and upload forms typically cap attachments at 20–25 MB, which is why 'compress pdf online' is one of the most common developer and office searches there is.",
+          "Large embedded images can account for much of a PDF's size. PDF Compressor tries to shrink supported images with lossy JPEG recompression and downsizing, then saves the document using compact object streams. It runs locally in a JavaScript worker, not WebAssembly, and does not upload your PDF.",
+          "Text, fonts, page layout, and document metadata are preserved. Pages are not rasterized: existing selectable text stays text, while scanned text remains part of an image. Compression does not add OCR, remove metadata, or sanitize sensitive content.",
         ],
       },
       {
-        heading: "The quickest way to compress a PDF",
+        heading: "1. Choose one PDF",
         paragraphs: [
-          "The fastest method never uploads your file anywhere. Open the PDF Compressor, drop your file in, and the compression runs locally in your browser using WebAssembly.",
-          "This is a two-step process: the tool re-encodes the document using efficient object streams and strips redundant image data, then hands the smaller file straight back to you as a download — usually in a few seconds.",
-          "Compression is lossless where possible; the tool only discards data that was never displayed in the first place.",
+          "Open PDF Compressor using the button below, then choose or drop one non-empty PDF up to 100 MiB (104,857,600 bytes). There is no batch mode. Keep your source file so you can compare the result.",
+          "Encrypted PDFs, including permission-restricted files, are rejected. Documents with populated digital signatures are also rejected because compression would invalidate those signatures. Use an unencrypted, unsigned copy you are authorized to edit. Empty signature fields alone do not trigger rejection; signature authenticity is not checked.",
         ],
       },
       {
-        heading: "When to use a server-side compressor instead",
+        heading: "2. Choose a compression preset",
         paragraphs: [
-          "Heavy-duty PDFs — hundreds of pages or extremely high-DPI scans — can occasionally compress faster on a server, since you can throw more CPU at them.",
-          "But that convenience comes with a privacy trade-off: the file leaves your device. For documents containing personal or business data, the in-browser option is almost always the right call since nothing is ever transmitted.",
+          "Start with Balanced, the default. Choose Light to retain more image detail, or Strong for more aggressive compression. All three presets are lossy: they can change visible image detail and color, even though text is preserved.",
+          "The presets use JPEG quality settings of 85%, 65%, and 40%, with maximum image dimensions of 2,000, 1,600, and 1,200 pixels respectively. These settings are not promised file-size reductions, and Strong is not guaranteed to reach an email or upload limit.",
         ],
       },
       {
-        heading: "Tips to keep PDFs small in the first place",
+        heading: "3. Run compression",
         paragraphs: [
-          "Save scans as 300 DPI rather than 600 DPI. Compress images to JPEG/WebP before embedding them. Remove unused fonts and metadata in your editor.",
-          "A well-prepared source file often makes later compression unnecessary — but when you do need it, the PDF Compressor handles it in one step.",
+          "Click Compress PDF and wait for the result. Processing time and memory use depend on the document and your device, even below the 100 MiB cap. You can cancel; the source stays selected. A job that takes longer than 60 seconds times out, so try a smaller PDF if needed.",
+          "Unsupported images are left unchanged rather than approximated. This includes many images with color profiles, masks, or complex encodings. Images may also be skipped because of safety limits, decoding errors, or a lack of size savings.",
+        ],
+      },
+      {
+        heading: "4. Review and download",
+        paragraphs: [
+          "Compare the original and output sizes and the counts of optimized and unchanged images, then download. If the complete output would be equal in size or larger, the tool returns your original PDF byte for byte. Text-heavy and already optimized documents may not shrink at all; there is no target-size guarantee.",
+          "Open the downloaded PDF and inspect images and small details before sharing. Use Adjust compression to retry with another preset, or New file to process another PDF. If the result still exceeds your destination's limit, consider re-exporting from the source with smaller images or splitting the document where permitted. Review sensitive content and metadata separately: compression leaves them in place.",
         ],
       },
     ],

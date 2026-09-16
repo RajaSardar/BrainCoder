@@ -9,7 +9,7 @@ import {
 
 const CATEGORY_COPY: Record<Category, string> = {
   Compress:
-    "Shrink PDFs, images and text without losing quality — compression runs entirely in your browser.",
+    "Compress PDFs, images and text in your browser. Size savings and quality trade-offs depend on the tool, settings and source file.",
   Convert:
     "Turn formats instantly: image to PDF, HTML to PDF, JSON to CSV, markdown to HTML and more.",
   "Encode & Decode":

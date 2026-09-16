@@ -70,7 +70,7 @@ const TRUST_ITEMS = [
   {
     icon: Lock,
     title: "Free forever",
-    text: "No accounts, no watermarks, no hidden limits.",
+    text: "No account or payment required.",
   },
   {
     icon: Gauge,
@@ -79,8 +79,8 @@ const TRUST_ITEMS = [
   },
   {
     icon: Zap,
-    title: "Instant results",
-    text: "No queues or uploads, so you get output immediately.",
+    title: "Local processing",
+    text: "Processing time depends on your input and device.",
   },
 ];
 
@@ -301,7 +301,7 @@ export default async function ToolPage(props: PageProps<"/tools/[slug]">) {
               How to use {tool.name}
             </h2>
             <p className="text-sm text-slate-500 mb-6">
-              Three straightforward steps — no sign-up required.
+              Follow the steps below to use the tool.
             </p>
             <ol className="relative space-y-0">
               {content.howTo.map((s, i) => (

@@ -7,6 +7,7 @@ const MOCK_FILES = [
 ];
 
 export function ToolPreview({ tool }: { tool: ToolConfig }) {
+  const isPdfCompressor = tool.slug === "pdf-compressor";
   return (
     <div className="relative">
       <div
@@ -24,6 +25,9 @@ export function ToolPreview({ tool }: { tool: ToolConfig }) {
         </div>
 
         <div className="p-5 sm:p-6">
+          {isPdfCompressor && (
+            <p className="mb-3 text-xs font-medium text-slate-500">Illustrative preview, not an active tool</p>
+          )}
           <div className="flex items-center gap-3">
             <div
               className={`w-12 h-12 rounded-xl bg-gradient-to-br ${tool.gradient} flex items-center justify-center shadow-lg shadow-slate-900/10 shrink-0`}
@@ -48,20 +52,20 @@ export function ToolPreview({ tool }: { tool: ToolConfig }) {
                 <UploadCloud className="w-5 h-5 text-white" />
               </div>
               <p className="mt-2 text-sm font-semibold text-slate-800">
-                Drop your file here
+                {isPdfCompressor ? "Choose one PDF" : "Drop your file here"}
               </p>
               <p className="mt-0.5 text-xs text-slate-500">
-                or browse from your device
+                {isPdfCompressor ? "Up to 100 MiB, processed locally" : "or browse from your device"}
               </p>
               <span className="mt-3 inline-block rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 shadow-sm">
                 <FolderOpen className="w-3.5 h-3.5 inline-block mr-1.5 -mt-0.5" />
-                Browse files
+                {isPdfCompressor ? "Choose PDF" : "Browse files"}
               </span>
             </div>
           </div>
 
           <div className="mt-5 space-y-2.5">
-            {MOCK_FILES.map((f, i) => (
+            {(isPdfCompressor ? MOCK_FILES.slice(0, 1) : MOCK_FILES).map((f, i) => (
               <div
                 key={f.name}
                 className="flex items-center gap-3 rounded-lg border border-slate-100 bg-slate-50/60 px-3 py-2"
@@ -74,19 +78,34 @@ export function ToolPreview({ tool }: { tool: ToolConfig }) {
                     </p>
                     <p className="text-xs text-slate-400 shrink-0">{f.size}</p>
                   </div>
-                  <div className="mt-1 h-1 rounded-full bg-slate-200">
-                    <div
-                      className={`h-1 rounded-full bg-gradient-to-r ${tool.gradient}`}
-                      style={{ width: i === 0 ? "72%" : "50%" }}
-                    />
-                  </div>
+                  {!isPdfCompressor && (
+                    <div className="mt-1 h-1 rounded-full bg-slate-200">
+                      <div
+                        className={`h-1 rounded-full bg-gradient-to-r ${tool.gradient}`}
+                        style={{ width: i === 0 ? "72%" : "50%" }}
+                      />
+                    </div>
+                  )}
                 </div>
-                {i === 0 && (
+                {!isPdfCompressor && i === 0 && (
                   <Download className="w-4 h-4 text-emerald-500 shrink-0" />
                 )}
               </div>
             ))}
           </div>
+          {isPdfCompressor && (
+            <div className="mt-4">
+              <p className="text-xs font-medium text-slate-700">Compression level</p>
+              <div className="mt-2 grid grid-cols-3 gap-2 text-center text-xs font-semibold">
+                {["Light", "Balanced", "Strong"].map((preset) => (
+                  <span key={preset} className={`rounded-xl border-2 px-2 py-3 ${preset === "Balanced" ? "border-indigo-500 bg-indigo-50 text-indigo-700" : "border-slate-200 text-slate-700"}`}>
+                    {preset}
+                  </span>
+                ))}
+              </div>
+              <p className="mt-2 text-xs text-slate-500">Lossy image compression. Text stays text; savings vary.</p>
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -82,7 +82,7 @@ export default async function CategoryPage(props: PageProps<"/categories/[slug]"
         <p className="mt-3 text-lg text-slate-600 max-w-2xl">{description}</p>
         <p className="mt-4 text-xs text-slate-500 flex items-center gap-1.5">
           <Zap className="w-3.5 h-3.5" />
-          Every tool runs entirely in your browser — no account, no uploads, no limits.
+          Every tool runs in your browser. No account or uploads; limits vary by tool.
         </p>
       </div>
 

@@ -1,98 +1,87 @@
-export type QualityPreset = "light" | "balanced" | "strong";
+import type { CompressionResult, QualityPreset } from "./compressor";
 
-export interface CompressResult {
-  bytes: Uint8Array;
+export type { QualityPreset } from "./compressor";
+
+export interface CompressResult extends CompressionResult {
   blob: Blob;
+  /** The successful caller owns this URL and must revoke it when no longer used. */
   url: string;
-  originalSize: number;
-  compressedSize: number;
-  reductionPct: number;
-  method: string;
-  pagesProcessed: number;
-  imagesRecompressed: number;
-  skippedImages: number;
-  message?: string;
 }
 
 type WorkerResponseData = {
   success: boolean;
-  result?: {
-    bytes: Uint8Array;
-    originalSize: number;
-    compressedSize: number;
-    reductionPct: number;
-    method: string;
-    pagesProcessed: number;
-    imagesRecompressed: number;
-    skippedImages: number;
-    message?: string;
-  };
+  result?: CompressionResult;
   error?: string;
 };
 
-function normalizeBytes(bytes: Uint8Array): Uint8Array<ArrayBuffer> {
-  const copy = new Uint8Array(bytes.byteLength);
-  copy.set(bytes);
-  return copy as Uint8Array<ArrayBuffer>;
-}
-
-let worker: Worker | null = null;
-
-function getWorker(): Worker {
-  if (!worker) {
-    worker = new Worker(new URL("./compression.worker.ts", import.meta.url), {
-      type: "module",
-    });
-  }
-  return worker;
-}
-
-export async function compressPdfClient(
+export function compressPdfClient(
   file: File,
-  preset: QualityPreset
+  preset: QualityPreset,
+  options: { signal?: AbortSignal; timeoutMs?: number } = {},
 ): Promise<CompressResult> {
-  const originalSize = file.size;
-  const buffer = await file.arrayBuffer();
-
-  const w = getWorker();
-
-  const result = await new Promise<WorkerResponseData>((resolve, reject) => {
-    const handler = (e: MessageEvent<WorkerResponseData>) => {
-      w.removeEventListener("message", handler);
-      w.removeEventListener("error", errHandler);
-      if (e.data.success) {
-        resolve(e.data);
-      } else {
-        reject(new Error(e.data.error || "Compression failed"));
+  return new Promise((resolve, reject) => {
+    const { signal, timeoutMs = 60_000 } = options;
+    let worker: Worker | undefined;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    let settled = false;
+    const cleanup = () => {
+      clearTimeout(timer);
+      timer = undefined;
+      signal?.removeEventListener("abort", onAbort);
+      worker?.removeEventListener("message", onMessage);
+      worker?.removeEventListener("error", onError);
+      worker?.removeEventListener("messageerror", onMessageError);
+      worker?.terminate();
+    };
+    const fail = (error: unknown) => {
+      if (settled) return;
+      settled = true;
+      cleanup();
+      reject(error);
+    };
+    const onAbort = () => fail(new DOMException("Compression cancelled.", "AbortError"));
+    const onError = (event: ErrorEvent) => fail(new Error(event.message || "Compression worker failed."));
+    const onMessageError = () => fail(new Error("Could not read the compression worker response."));
+    const onMessage = (event: MessageEvent<WorkerResponseData>) => {
+      if (settled) return;
+      const data = event.data?.result;
+      if (!event.data?.success || !data || !(data.bytes instanceof Uint8Array)) {
+        fail(new Error(event.data?.error || "Compression failed."));
+        return;
+      }
+      try {
+        const blob = new Blob([new Uint8Array(data.bytes)], { type: "application/pdf" });
+        cleanup();
+        const url = URL.createObjectURL(blob);
+        settled = true;
+        resolve({ ...data, blob, url });
+      } catch (error) {
+        fail(error);
       }
     };
-    const errHandler = (e: ErrorEvent) => {
-      w.removeEventListener("message", handler);
-      w.removeEventListener("error", errHandler);
-      reject(new Error(e.message || "Compression worker error"));
-    };
-    w.addEventListener("message", handler);
-    w.addEventListener("error", errHandler);
-    w.postMessage({ type: "compress", buffer, preset }, [buffer]);
+
+    if (signal?.aborted) return onAbort();
+    if (!file.size || file.size > 100 * 1024 * 1024) {
+      fail(new Error("Please use a non-empty PDF no larger than 100 MiB."));
+      return;
+    }
+    if (!Number.isFinite(timeoutMs) || timeoutMs <= 0) {
+      fail(new Error("Invalid compression timeout."));
+      return;
+    }
+    signal?.addEventListener("abort", onAbort, { once: true });
+    timer = setTimeout(() => fail(new Error(`Compression timed out after ${Math.ceil(timeoutMs / 1000)} seconds. Try a smaller PDF.`)), timeoutMs);
+    // One worker per call: concurrent requests cannot consume one another's responses.
+    // Reading is covered by cancellation too, although File.arrayBuffer itself is not abortable.
+    Promise.resolve().then(() => file.arrayBuffer()).then((buffer) => {
+      if (settled) return;
+      worker = new Worker(new URL("./compression.worker.ts", import.meta.url), { type: "module" });
+      worker.addEventListener("message", onMessage);
+      worker.addEventListener("error", onError);
+      worker.addEventListener("messageerror", onMessageError);
+      worker.postMessage({ type: "compress", buffer, preset }, [buffer]);
+    }).catch(fail);
   });
-
-  const data = result.result!;
-  const blob = new Blob([normalizeBytes(data.bytes)], { type: "application/pdf" });
-  const url = URL.createObjectURL(blob);
-
-  return {
-    bytes: data.bytes,
-    blob,
-    url,
-    originalSize,
-    compressedSize: data.compressedSize,
-    reductionPct: data.reductionPct,
-    method: data.method,
-    pagesProcessed: data.pagesProcessed,
-    imagesRecompressed: data.imagesRecompressed,
-    skippedImages: data.skippedImages,
-    message: data.message,
-  };
 }
 
 export function formatBytes(bytes: number): string {
