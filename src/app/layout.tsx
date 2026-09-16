@@ -11,6 +11,7 @@ import {
 import { Analytics } from "@/components/Analytics";
 import { PwaRegister } from "@/components/PwaRegister";
 import { SiteHeader } from "@/components/SiteHeader";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -137,6 +138,7 @@ export default function RootLayout(props: LayoutProps<"/">) {
             </nav>
           </div>
         </footer>
+        <SpeedInsights />
       </body>
     </html>
   );
