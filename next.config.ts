@@ -23,7 +23,7 @@ const CSP_DIRECTIVES = [
   "img-src 'self' blob: data:",
   "font-src 'self'",
   "worker-src 'self' blob:",
-  "connect-src 'self' blob: data: https://va.vercel-scripts.com",
+  "connect-src 'self' blob: data: https://va.vercel-scripts.com https://vitals.vercel-analytics.com",
   "frame-src 'none'",
   "object-src 'none'",
   "base-uri 'self'",
