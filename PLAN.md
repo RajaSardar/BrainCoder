@@ -521,7 +521,19 @@ Phase 2+ Target (NOT building now):
   fixed to drop the junk "&" token; copy, FAQ (4→7 incl. JWT caveat), tagline,
   SEO row and a new guide rewritten. 27 production Chrome scenarios passed;
   production build passed (284 pages). Report: `audit/reports/base64.md`.
-- Next: Notepad. Remaining 117 tools have not completed this process.
+- QR Code Generator: ten independent judges ran in parallel (pulled ahead of
+  registry order because the domain-switch commit had swept in unaudited
+  QrCodeGenerator changes). Component rebuilt (alt text no longer leaks the
+  encoded payload — critical privacy fix — img/downloads moved out of the live
+  region into a concise sr-only status, dismissable red role=alert errors,
+  deterministic mode-aware v40 capacity pre-check, ISO 4-module quiet zone,
+  fixed 256px preview with on-demand size-correct PNG/SVG downloads, low-contrast
+  warning, labelled input, Clear, min-h-11/focus-visible parity); copy, features,
+  howTo (phantom Generate button removed), FAQ (3→6), tagline, SEO row, related
+  graph (base64 reciprocates) and the QR guide rewritten. 23 production Chrome
+  scenarios passed (plus url-encoder 19 and base64 27 re-run green); production
+  build passed (284 pages). Report: `audit/reports/qr-code-generator.md`.
+- Next: Notepad. Remaining 116 tools have not completed this process.
 - Residual checks: physical mobile/Safari/Firefox, manual screen readers, parser
   memory limits, and shared /verify proof wording. No universal audit guarantee.
 - Existing changes to other tools are preserved but not counted as reviewed.

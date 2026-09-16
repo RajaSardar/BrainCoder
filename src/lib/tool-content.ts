@@ -1795,7 +1795,8 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       "binary-text",
       "image-base64",
       "utf8-converter",
-      "url-encoder"
+      "url-encoder",
+      "qr-code-generator"
     ]
   },
   "gzip-tool": {
@@ -2483,37 +2484,41 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ]
   },
   "qr-code-generator": {
-    "longDescription": "<p>The BrainCoder QR Code Generator creates QR codes from any text, URL, email address, phone number, or Wi-Fi configuration instantly in your browser. QR (Quick Response) codes are two-dimensional barcodes that can be scanned by any smartphone camera, making them perfect for sharing links, contact information, Wi-Fi passwords, and more.</p>\n<p>Our generator creates high-quality QR codes using the canvas API with customizable colors, sizes, and error correction levels. Higher error correction means the QR code remains scannable even if partially damaged or obscured — useful for printed materials. The generated code can be downloaded as a PNG image or SVG vector format for any resolution.</p>\n<p>No QR code data is uploaded to any server — the image is generated entirely in your browser. This makes it safe to generate QR codes containing sensitive information like Wi-Fi credentials or private URLs. The tool is free, requires no signup, and produces print-ready output.",
+    "longDescription": "<p>The BrainCoder QR Code Generator turns any text or URL into a scannable QR code directly in your browser — no account, no uploads, and no server round-trip. Choose foreground and background colors, set the download size from 100 to 1000 px, and pick an error correction level (L, M, Q, or H) to balance how much data fits against how well the code survives damage.</p>\n<p>Download the result as a PNG for screens and documents, or as an SVG vector that scales to any size without losing sharpness for print. Higher error correction keeps the code scannable even when it is partially obscured — handy for stickers, business cards, and packaging.</p>\n<p>Everything is generated locally using a client-side library, so encoding a Wi-Fi password or a private link never sends it anywhere. Free, no sign-up, no tracking.",
     "features": [
-      "Generate QR codes from any text or URL",
-      "Customizable colors (foreground and background)",
-      "Multiple error correction levels (L, M, Q, H)",
-      "Download as PNG or SVG format",
-      "Adjustable size from 100px to 1000px",
-      "Client-side generation — no data uploads"
+      "Generate QR codes instantly as you type",
+      "Customizable foreground and background colors",
+      "Error correction levels: L, M, Q, and H",
+      "Download as PNG or infinitely scalable SVG",
+      "Download size from 100px to 1000px",
+      "Fully client-side — nothing leaves your device"
     ],
     "howTo": [
       {
-        "step": "Enter content",
-        "description": "Type or paste the text, URL, email, phone number, or Wi-Fi configuration you want encoded in the QR code."
+        "step": "Enter your content",
+        "description": "Type or paste any text, URL, email address, phone number, or Wi-Fi configuration string (WIFI:T:WPA;S:Name;P:Pass;;) into the input box. The QR code updates live as you type — there is no Generate button."
       },
       {
         "step": "Customize appearance",
-        "description": "Adjust the foreground and background colors, error correction level, and output size to match your design needs."
+        "description": "Pick foreground and background colors, choose an error correction level, and set the download size. The on-screen preview stays the same size; your choices carry into the downloaded file."
       },
       {
-        "step": "Generate the QR code",
-        "description": "Click 'Generate' to create the QR code instantly. A scannable barcode will appear on screen."
+        "step": "Verify before you print",
+        "description": "Scan the preview with your phone's camera to confirm it opens the right link or shows the right text, especially before printing in bulk."
       },
       {
-        "step": "Download or copy",
-        "description": "Click 'Download PNG' or 'Download SVG' to save the QR code image. For SVG, you can scale infinitely without quality loss."
+        "step": "Download your QR code",
+        "description": "Click 'Download PNG' for a raster image or 'Download SVG' for a vector file that scales to any resolution without quality loss."
       }
     ],
     "faq": [
       {
+        "question": "What can I encode in a QR code?",
+        "answer": "Any text at all: URLs, plain notes, email addresses, phone numbers, and standard formatted strings such as Wi-Fi credentials (WIFI:T:WPA;S:Name;P:Pass;;) or vCards. The tool encodes exactly what you type, so a QR for a Wi-Fi network must use that WIFI: format for phones to recognize it."
+      },
+      {
         "question": "How much data can a QR code hold?",
-        "answer": "A QR code can hold up to 4,296 alphanumeric characters or 7,089 numeric digits at the lowest error correction level. URLs and short text are ideal. Very long text will produce dense QR codes that are harder to scan."
+        "answer": "Up to 4,296 alphanumeric characters or 7,089 numeric digits at the lowest error correction level. URLs and short text are ideal. Very long text will produce dense QR codes that are harder to scan."
       },
       {
         "question": "What error correction level should I use?",
@@ -2521,13 +2526,22 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       },
       {
         "question": "Can I make the QR code match my brand colors?",
-        "answer": "Yes. You can customize both the foreground (dark) and background (light) colors. Just ensure sufficient contrast — the scanner needs to distinguish between light and dark modules. A contrast ratio of at least 4:1 is recommended."
+        "answer": "Yes. You can customize both the foreground (dark) and background (light) colors. Just ensure sufficient contrast — the scanner needs to distinguish between light and dark modules. A contrast ratio of at least 4:1 is recommended, and the tool warns if you pick colors too close together."
+      },
+      {
+        "question": "Why won't my QR code scan?",
+        "answer": "Three things usually cause scan failures: low contrast between the foreground and background — aim for at least a 4:1 ratio and avoid near-identical colors; output size too small — download at 300 px or larger for reliable phone scanning; and very long text at a low error correction level, which produces a dense code — try raising the error correction to M or H, or shorten the text."
+      },
+      {
+        "question": "Is my data private? Does anything leave my browser?",
+        "answer": "Yes, your data is private. QR codes are generated entirely in your browser with a client-side library — no network requests are made and nothing is uploaded. This is especially important for codes containing Wi-Fi passwords or private URLs. Once the page has loaded, the tool even works offline."
       }
     ],
     "relatedSlugs": [
+      "base64",
       "url-encoder",
       "image-base64",
-      "slug-generator"
+      "uuid-generator"
     ]
   },
   "random-number-generator": {

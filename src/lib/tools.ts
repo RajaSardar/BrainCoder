@@ -720,9 +720,9 @@ export const TOOLS: ToolConfig[] = [
   {
     slug: "qr-code-generator",
     name: "QR Code Generator",
-    tagline: "Create QR codes in seconds",
+    tagline: "QR codes generated in your browser",
     description:
-      "Turn URLs, wifi credentials or any text into a QR code. Download as PNG or SVG with error correction control.",
+      "Turn any text, URL, or Wi-Fi configuration string into a QR code. Customize colors, error correction, and size, then download as PNG or SVG. Nothing is uploaded.",
     category: "Generate",
     icon: QrCode,
     accent: "text-slate-700",

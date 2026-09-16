@@ -612,11 +612,11 @@ export const GUIDES: Guide[] = [
       },
     ],
   },
-{
+  {
     slug: "how-to-create-a-qr-code",
     title: "How to Create a QR Code for Free (URL, Text, Email)",
     description:
-      "Generate a clean, scannable QR code for any link or text, right in your browser — download as PNG, no sign-up, no tracking.",
+      "Generate a clean, scannable QR code for any link or text, right in your browser — download as PNG or SVG, no sign-up, no tracking.",
     keywords: [
       "qr code generator",
       "create qr code free",
@@ -626,8 +626,8 @@ export const GUIDES: Guide[] = [
     ],
     toolSlug: "qr-code-generator",
     published: "2026-09-15",
-    updated: "2026-09-15",
-    readMinutes: 3,
+    updated: "2026-09-16",
+    readMinutes: 4,
     sections: [
       {
         heading: "What a QR code is for",
@@ -640,7 +640,7 @@ export const GUIDES: Guide[] = [
         heading: "Generating one in your browser",
         paragraphs: [
           "The QR Code Generator takes a URL or any snippet of text and renders the code locally with the qrcode library — the encoding happens on your device, so the content of the code never goes through a third party.",
-          "Download the result as a PNG at the size you need, ready to drop into a print layout or a mockup.",
+          "Download the result as a PNG for screens and documents, or grab the SVG version when you need an infinitely sharp vector for print materials.",
         ],
       },
       {
@@ -648,6 +648,13 @@ export const GUIDES: Guide[] = [
         paragraphs: [
           "Keep the surrounding quiet zone clear, size the code generously, and avoid putting text or logos on top of the pattern. High contrast between the squares and the background matters most.",
           "Test the final version with your phone before printing in bulk — a QR checked once is worth a hundred reprinted signs.",
+        ],
+      },
+      {
+        heading: "Error correction and file format",
+        paragraphs: [
+          "Error correction balances data density against damage resilience: L reserves the least space for recovery, M is a safe all-round default, and H keeps codes scannable even when printed on stickers or packaging that get scratched or handled.",
+          "The preview on screen stays one size; the download size slider controls the file itself. Choose PNG for digital use, SVG when you need resolution-independent print output.",
         ],
       },
     ],

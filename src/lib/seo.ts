@@ -55,7 +55,7 @@ const TOOL_KEYWORDS: Record<string, string[]> = {
   "image-ocr": ["ocr online", "image to text", "extract text from image", "ocr jpg png", "photo to text"],
   "image-editor": ["image editor online", "edit photo in browser", "crop resize image", "online drawing"],
   "jwt-decoder": ["jwt decoder online", "decode jwt token", "inspect jwt claims", "jwt header payload", "parse jwt"],
-  "qr-code-generator": ["qr code generator online", "create qr code", "make qr free", "generate qr from text url"],
+  "qr-code-generator": ["qr code generator online", "create qr code free", "free qr code generator no sign up", "qr code generator for url", "qr code with custom colors", "qr code svg download"],
   "csv-json": ["csv to json", "json to csv", "convert csv online", "csv json converter"],
   "json-to-typescript": ["json to typescript", "json to ts interface", "typescript interface generator", "json to type"],
   "sql-formatter": ["sql formatter online", "format sql", "beautify sql query", "sql pretty print", "sql formatter free"],
