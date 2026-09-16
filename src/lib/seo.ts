@@ -31,7 +31,7 @@ const TOOL_KEYWORDS: Record<string, string[]> = {
   "image-resizer": ["resize image online", "image resizer free", "resize jpg png webp", "reduce image dimensions", "resize photo online", "resize image to 1920x1080", "image resizer aspect ratio lock", "resize image without uploading"],
   "json-formatter": ["json formatter online", "json beautifier", "json validator", "prettify json", "pretty print json", "format json", "json pretty print", "validate json online", "json minify"],
   "url-encoder": ["url encoder online", "url decoder", "encode url component online", "url percent encoder", "decode url component online", "encode url online"],
-  base64: ["base64 encoder online", "base64 decoder", "text to base64", "base64 to text", "encode base64", "decode base64"],
+  base64: ["base64 encode decode online", "text to base64", "base64 to text", "base64url", "utf-8 base64 encoder", "base64 string to plain text"],
   notepad: ["online notepad", "notepad online", "text editor online", "quick notes", "scratchpad"],
   "password-generator": ["password generator", "strong password generator online", "random password generator", "secure password", "password maker"],
   "diff-checker": ["diff checker online", "compare text", "text diff", "file comparison online", "find difference between two texts"],
@@ -116,8 +116,11 @@ const TOOL_KEYWORDS: Record<string, string[]> = {
 };
 
 export function toolKeywords(tool: ToolConfig): string[] {
-  const words = tool.name.toLowerCase().split(/\s+/).filter(Boolean);
-  const fromName = words.map((w) => `${w} tool`);
+  const words = tool.name
+    .toLowerCase()
+    .split(/\s+/)
+    .filter((w) => /^[a-z0-9]+$/.test(w));
+  const fromName = [...new Set(words)].map((w) => `${w} tool`);
   const categoryKw = CATEGORY_KEYWORDS[tool.category] ?? [];
   return [
     ...(TOOL_KEYWORDS[tool.slug] ?? []),

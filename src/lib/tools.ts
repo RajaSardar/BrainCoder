@@ -192,9 +192,9 @@ export const TOOLS: ToolConfig[] = [
   {
     slug: "base64",
     name: "Base64 Encoder & Decoder",
-    tagline: "Encode text to Base64 and back",
+    tagline: "Encode text to Base64 and back — URL-safe included",
     description:
-      "Convert text, JSON and binary data to Base64 and decode it back, Unicode-safe.",
+      "Encode text, JSON, and JWTs to standard or URL-safe Base64 and decode it back, live in your browser with nothing uploaded.",
     category: "Encode & Decode",
     icon: Binary,
     accent: "text-violet-600",

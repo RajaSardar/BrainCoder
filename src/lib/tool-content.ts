@@ -1734,31 +1734,31 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ]
   },
   "base64": {
-    "longDescription": "<p>The BrainCoder Base64 Encoder & Decoder converts text to Base64 and back in real time. Base64 encoding is essential when you need to embed binary data as text — such as transmitting image data in JSON, embedding credentials in HTTP headers, or storing binary content in a text-only database field. This tool performs the conversion entirely in your browser with zero server interaction.</p>\n<p>Base64 encoding transforms any string into a safe, ASCII-only representation using 64 printable characters (A-Z, a-z, 0-9, +, /). Our encoder supports standard Base64 as well as URL-safe Base64 (replacing + with - and / with _), making it suitable for both traditional and web-native use cases. Decoding reverses the process, restoring your original text or binary representation with bit-perfect accuracy.</p>\n<p>This tool is especially useful for developers working with JWT tokens, email attachments (MIME), data URIs, and API authentication. It requires no account, no installation, and works on any device with a modern browser. Your data never leaves your machine.",
+    "longDescription": "<p>The BrainCoder Base64 Encoder &amp; Decoder converts text to Base64 and back the moment you type — no buttons, no reloads. Encoding maps binary data onto a safe ASCII alphabet (A-Z, a-z, 0-9, +, /) so it can travel through JSON fields, HTTP headers, email attachments (MIME), and text-only database columns. Everything runs in your browser with zero server interaction — your data never leaves your machine.</p>\n<p>Standard Base64 pads short groups with = characters. The URL-safe variant (base64url) swaps + and / for - and _, which is the format used inside JWT payloads, query strings, and data URIs — this tool detects those characters automatically when decoding.</p>\n<p>Decoding restores the original bytes and interprets them as UTF-8 text, so plain text, JSON, and emoji round-trip exactly. If the source was a binary file such as an image or archive, the decoded bytes aren't valid UTF-8 and the tool reports that instead of printing garbage. Free, no account, works on any modern browser.</p>",
     "features": [
       "Standard Base64 encoding and decoding",
-      "URL-safe Base64 variant support",
-      "Real-time conversion as you type",
-      "Handles Unicode and multi-byte characters correctly",
+      "URL-safe base64url output (uses “-” and “_”, no padding)",
+      "Real-time conversion as you type — no button to press",
+      "Unicode and multi-byte text round-trips exactly",
       "One-click copy for encoded output",
       "Fully client-side — nothing is transmitted"
     ],
     "howTo": [
       {
-        "step": "Enter your text",
-        "description": "Type or paste the string you want to encode into the input field. It can be plain text, JSON, a JWT, or any other text data."
+        "step": "Enter or paste your text",
+        "description": "Type or paste plain text, JSON, or a JWT into the input field. The Base64 output updates instantly as you type — there is no Encode button to press."
       },
       {
-        "step": "Click Encode",
-        "description": "The tool instantly converts your text to its Base64 representation. If you need URL-safe encoding, toggle the option before encoding."
+        "step": "Choose an output format",
+        "description": "Standard Base64 is the default. Tick URL-safe output (uses “-” and “_”, no padding) when the string will live in a URL, query parameter, or JWT."
       },
       {
         "step": "Copy the Base64 string",
-        "description": "Click the copy button to grab the Base64 output and paste it wherever you need it — an HTTP header, a database field, or a config file."
+        "description": "Click the copy button to grab the output and paste it into an HTTP header, database field, or config file."
       },
       {
-        "step": "To decode, paste and click Decode",
-        "description": "If you have a Base64 string, paste it into the input area and click 'Decode' to restore the original text."
+        "step": "Switch to Decode and paste",
+        "description": "Toggle Decode from Base64, then paste a Base64 string. The original text appears immediately; URL-safe strings are detected automatically. If the bytes aren't valid UTF-8 text, an error explains why."
       }
     ],
     "faq": [
@@ -1777,12 +1777,25 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       {
         "question": "Why are there = signs at the end of Base64 strings?",
         "answer": "The = characters are padding. Base64 works in groups of 3 bytes producing 4 characters. If your input isn't a multiple of 3 bytes, padding characters (=) are added to make the output length a multiple of 4."
+      },
+      {
+        "question": "What is the difference between standard and URL-safe Base64?",
+        "answer": "Standard Base64 uses +, /, and = padding, which are reserved or awkward inside URLs and JWTs. URL-safe Base64 (base64url) replaces + with - and / with _ and drops the = padding. Use it for JWT payloads, query parameters, and anywhere the string ends up inside a URL — this tool outputs it when you tick URL-safe and auto-detects it when decoding."
+      },
+      {
+        "question": "Why do I see an error decoding Base64 for an image or file?",
+        "answer": "That Base64 decodes to raw binary bytes, and this tool renders text. When the bytes aren't valid UTF-8, the browser can't show them and the tool reports an error instead of printing replacement characters. For images and archives, use a dedicated binary tool — here, text, JSON, and tokens always decode exactly."
+      },
+      {
+        "question": "Can I decode a JWT here?",
+        "answer": "Yes, a JWT payload decodes just like any Base64 — and that's the point of caution: decoding reveals the payload as plain text (subject, expiry, claims), and this tool does not verify the signature, so treat decoded claims as untrusted. Base64 is encoding, not encryption, and never a security mechanism."
       }
     ],
     "relatedSlugs": [
       "binary-text",
       "image-base64",
-      "aes-encryption"
+      "utf8-converter",
+      "url-encoder"
     ]
   },
   "gzip-tool": {

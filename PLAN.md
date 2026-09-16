@@ -512,8 +512,16 @@ Phase 2+ Target (NOT building now):
   rewritten. 19 production Chrome scenarios passed (including a CopyButton
   cross-tool regression); production build passed (283 pages). No separate
   node harness — no extracted module. Report: `audit/reports/url-encoder.md`.
-- Next: Base64 Encoder & Decoder. Remaining 118 tools have not completed this
-  process.
+- Base64 Encoder & Decoder: ten independent judges ran in parallel. Component
+  rebuilt to the team standard (radiogroup mode toggle, 2MB cap, dismissable
+  role=alert errors now split into truncation / invalid-char / binary-not-UTF-8
+  cases with fatal TextDecoder so raw bytes error instead of printing U+FFFD,
+  swap now flips mode to round-trip instead of double-encoding, output char
+  count + tabIndex=-1, input aria-invalid/describedby); shared `toolKeywords()`
+  fixed to drop the junk "&" token; copy, FAQ (4→7 incl. JWT caveat), tagline,
+  SEO row and a new guide rewritten. 27 production Chrome scenarios passed;
+  production build passed (284 pages). Report: `audit/reports/base64.md`.
+- Next: Notepad. Remaining 117 tools have not completed this process.
 - Residual checks: physical mobile/Safari/Firefox, manual screen readers, parser
   memory limits, and shared /verify proof wording. No universal audit guarantee.
 - Existing changes to other tools are preserved but not counted as reviewed.

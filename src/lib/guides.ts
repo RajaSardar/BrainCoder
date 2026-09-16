@@ -851,6 +851,46 @@ export const GUIDES: Guide[] = [
       },
     ],
   },
+  {
+    slug: "how-to-encode-and-decode-base64",
+    title: "How to Encode and Decode Base64 Online",
+    description:
+      "Turn any text into Base64 and back — right in your browser. Learn when URL-safe Base64 (base64url) is required, how = padding works, and why decoded binary data isn't always readable as text.",
+    keywords: [
+      "how to encode base64",
+      "base64 encode decode online",
+      "base64 to text",
+      "base64url",
+      "decode base64 string",
+    ],
+    toolSlug: "base64",
+    published: "2026-09-16",
+    updated: "2026-09-16",
+    readMinutes: 3,
+    sections: [
+      {
+        heading: "What Base64 is for",
+        paragraphs: [
+          "Base64 maps bytes onto a safe ASCII alphabet of 64 characters — A–Z, a–z, 0–9, plus + and /. Text-only channels such as JSON fields, HTTP headers, API tokens, email attachments (MIME), and text-only database columns can't carry raw binary, but they can carry this alphabet, which is why encodings like these exist.",
+          "This tool runs entirely in your browser: your text is encoded and decoded locally, and nothing is uploaded anywhere.",
+        ],
+      },
+      {
+        heading: "Padding and the URL-safe variant",
+        paragraphs: [
+          "Base64 works in groups of 3 bytes and produces 4 characters per group. When the input isn't a multiple of 3 bytes, = padding characters are appended so the encoded length stays a multiple of 4 — that's where the trailing = signs on some strings come from.",
+          "The URL-safe variant (base64url) swaps + for - and / for _, and drops the = padding entirely. It's the format used inside JWT payloads and query strings. This tool outputs it when you tick URL-safe, and detects the - and _ characters automatically when decoding.",
+        ],
+      },
+      {
+        heading: "Decoding text vs binary",
+        paragraphs: [
+          "Decoding restores the original bytes and then interprets them as UTF-8 text. Plain text, JSON, and emoji round-trip exactly because they are valid UTF-8.",
+          "Binary sources such as images and archives decode to bytes that aren't valid UTF-8, so no text renderer can show them meaningfully. Instead of printing replacement characters, this tool reports an error explaining that the bytes aren't text — for those files, use a dedicated binary tool like the image-to-Base64 converter.",
+        ],
+      },
+    ],
+  },
 ];
 
 const guideBySlug = new Map(GUIDES.map((g) => [g.slug, g]));
