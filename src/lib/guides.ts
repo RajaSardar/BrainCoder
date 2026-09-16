@@ -755,6 +755,56 @@ export const GUIDES: Guide[] = [
       },
     ],
   },
+  {
+    slug: "how-to-format-json-online",
+    title: "How to Format JSON Online (Pretty Print and Validate)",
+    description:
+      "Pretty-print or minify JSON right in your browser with 2 or 4 space indentation, get a live validity check, and pinpoint parse errors by line and column. Nothing is uploaded.",
+    keywords: [
+      "format json online",
+      "json pretty print",
+      "validate json online",
+      "json formatter free",
+      "json minify online",
+    ],
+    toolSlug: "json-formatter",
+    published: "2026-09-16",
+    updated: "2026-09-16",
+    readMinutes: 2,
+    sections: [
+      {
+        heading: "What this formatter does",
+        paragraphs: [
+          "JSON Formatter pretty-prints JSON with 2 or 4 space indentation, updates as you type, and flags invalid input with the line and column where parsing stopped. A green badge confirms valid JSON; a red badge with an error message points to the first problem.",
+          "Everything runs locally in your browser — your JSON never leaves your device, and the tool keeps working offline after the page has loaded once.",
+        ],
+      },
+      {
+        heading: "1. Paste your JSON",
+        paragraphs: [
+          "Copy raw or minified JSON from your clipboard, a terminal, or an API response and paste it into the input area. Formatting starts immediately, so there is no button to click.",
+        ],
+      },
+      {
+        heading: "2. Choose an indent size",
+        paragraphs: [
+          "Use the 2 spaces or 4 spaces buttons to switch indentation. The formatted output and character count update immediately, and the minified version stays available below it.",
+        ],
+      },
+      {
+        heading: "3. Check validity",
+        paragraphs: [
+          "Valid JSON is confirmed with a green badge. For invalid input the badge turns red and you get an error message with the line and column where parsing stopped — useful for spotting a stray comma, a missing quote, or a truncated paste.",
+        ],
+      },
+      {
+        heading: "4. Copy the result",
+        paragraphs: [
+          "Copy the readable formatted output with Copy formatted, or grab the compact single-line version with Copy minified. Both clipboard buttons work in any recent browser without extra permissions.",
+        ],
+      },
+    ],
+  },
 ];
 
 const guideBySlug = new Map(GUIDES.map((g) => [g.slug, g]));

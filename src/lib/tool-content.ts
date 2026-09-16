@@ -2897,45 +2897,49 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ]
   },
   "json-formatter": {
-    "longDescription": "<p>The JSON Formatter is an essential developer utility that instantly beautifies, validates, and minifies JSON data directly in your browser. Whether you're debugging an API response, cleaning up a log dump, or preparing data for a configuration file, this tool transforms messy, minified JSON into a perfectly indented, human-readable structure in milliseconds — with zero server round-trips.</p><p>Paste any raw JSON string and get instant formatting with syntax highlighting, automatic error detection, and collapsible tree navigation. The formatter handles edge cases like trailing commas, unquoted keys, and single-quoted strings gracefully, reporting the exact line and column of any parse error so you can fix issues in seconds. Everything runs entirely client-side, meaning your sensitive data — API keys, tokens, personal records — never leaves your machine.</p><p>Built for developers who work with JSON daily, this tool supports one-click copy to clipboard, minification for production payloads, and works seamlessly on any modern browser without downloads, accounts, or plugin installs.</p>",
+    "longDescription": "<p>The JSON Formatter is a free, client-side utility for formatting, validating, and minifying JSON directly in your browser. Paste any raw or minified JSON and it is indented instantly as you type, so you can read API responses, configuration files, and log dumps without leaving the page.</p><p>Every keystroke is validated live: valid input shows a green badge, and invalid input shows a red badge with an error message pointing to the line and column where parsing stopped. Format with 2 or 4 space indentation, then copy either the readable version or a compact minified payload with one click.</p><p>All processing runs in your browser with zero server round-trips, so sensitive data — API keys, tokens, personal records — never leaves your machine. The tool also works offline once the app has loaded.</p>",
     "features": [
-      "Instant JSON formatting with configurable indentation (2 or 4 spaces)",
-      "Real-time syntax validation with precise error location (line and column)",
-      "One-click minification for compact production-ready JSON",
-      "Collapsible tree view for navigating deeply nested structures",
-      "Full client-side processing — no data ever transmitted to a server",
-      "Works offline after first load with no signup required"
+      "Real-time JSON formatting with 2 or 4 space indentation",
+      "Live Valid JSON / Invalid JSON badge on every keystroke",
+      "Parse errors report the line and column where parsing stopped",
+      "One-click copy of the formatted output or the minified version",
+      "Full client-side processing — JSON never leaves your browser",
+      "Works offline after the app has loaded once, with no signup required"
     ],
     "howTo": [
       {
         "step": "Paste Your JSON",
-        "description": "Copy raw or minified JSON from your clipboard, terminal, or API response and paste it into the input area."
+        "description": "Copy raw or minified JSON from your clipboard, terminal, or an API response and paste it into the input area. Formatting starts as you type."
       },
       {
         "step": "Auto-Format",
-        "description": "The tool instantly parses and formats the JSON with proper indentation, or click the format button if auto-format is disabled."
+        "description": "The tool indents the JSON automatically. Choose 2 or 4 spaces with the buttons above the input."
       },
       {
-        "step": "Fix Errors",
-        "description": "If the JSON is invalid, a clear error message with the exact line and column number is displayed to help you debug quickly."
+        "step": "Check Validity",
+        "description": "A green badge confirms valid JSON. Invalid input shows a red badge and an error message with the line and column where parsing stopped."
       },
       {
         "step": "Copy or Minify",
-        "description": "Use the copy button to grab the formatted output, or toggle minify mode to produce a compact version for production use."
+        "description": "Copy the formatted output with Copy formatted, or grab the compact minified payload with Copy minified below the results."
       }
     ],
     "faq": [
       {
         "question": "Is my data sent to a server when I format JSON?",
-        "answer": "No. The entire formatting process runs in your browser using JavaScript. Your data never leaves your device — making it safe for API keys, tokens, and personal information."
+        "answer": "No. The entire formatting process runs in JavaScript on your device. Your data is never transmitted — so it is safe for API keys, tokens, and personal information."
       },
       {
-        "question": "Does it handle malformed or invalid JSON?",
-        "answer": "Yes. The formatter detects parse errors and shows the exact location (line and column) of the first error, making it easy to fix malformed JSON."
+        "question": "How are parse errors reported?",
+        "answer": "Invalid input shows a red badge and an error message. When the browser reports a position, the tool converts it to the line and column where parsing stopped so you can find the problem quickly."
+      },
+      {
+        "question": "Will formatting change my data?",
+        "answer": "Layout only. Indentation and whitespace are normalized, numbers may be reformatted (for example 1e2 becomes 100), integers beyond 2^53 may lose precision, and duplicate keys keep the last value. Nothing is added or removed beyond that."
       },
       {
         "question": "Can I use this tool offline?",
-        "answer": "Yes. Once the page is loaded, the tool works entirely offline without any server dependencies."
+        "answer": "Yes. Once the page has loaded, the tool works offline with no server dependencies."
       }
     ],
     "relatedSlugs": [
@@ -2943,7 +2947,7 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       "json-to-typescript",
       "json-xml",
       "json-yaml",
-      "url-parser"
+      "xml-formatter"
     ]
   },
   "regex-tester": {

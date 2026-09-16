@@ -498,7 +498,13 @@ Phase 2+ Target (NOT building now):
   presets, drag & drop, result preview, a11y parity, honest copy, new guide).
   3 node checks and 28 production Chrome scenarios passed; production build
   passed (281 pages). Report: `audit/reports/image-resizer.md`.
-- Next: JSON Formatter. Remaining 120 tools have not completed this process.
+- JSON Formatter: ten independent judges ran in parallel. Component + new pure
+  module upgraded (single deferred parse, engine-derived line/column errors,
+  minified copy, a11y live regions + radiogroup, contrast, 2MB cap, friendly
+  deep-nesting), content made fully honest, new guide. 10 node checks and 15
+  production Chrome scenarios passed; production build passed (282 pages).
+  Report: `audit/reports/json-formatter.md`.
+- Next: URL Encoder. Remaining 119 tools have not completed this process.
 - Residual checks: physical mobile/Safari/Firefox, manual screen readers, parser
   memory limits, and shared /verify proof wording. No universal audit guarantee.
 - Existing changes to other tools are preserved but not counted as reviewed.
