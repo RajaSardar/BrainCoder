@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { TOOLS, CATEGORIES } from "./tools";
 import type { ToolConfig } from "./tools";
 
-export const SITE_URL = "https://braincoder.vercel.app";
+export const SITE_URL = "https://braincoder.sardar.dev";
 
 export const SITE_NAME = "BrainCoder";
 export const SITE_DESCRIPTION =

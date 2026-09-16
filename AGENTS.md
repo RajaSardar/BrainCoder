@@ -1,3 +1,5 @@
+# Site URL: https://braincoder.sardar.dev (production, custom domain; SITE_URL in `src/lib/seo.ts:5`)
+
 <!-- BEGIN:nextjs-agent-rules -->
 
 # This is NOT the Next.js you know

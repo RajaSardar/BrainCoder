@@ -65,13 +65,13 @@
 ## 3. Draft Show HN Post Body (~200 words)
 
 ```
-I built BrainCoder (https://braincoder.vercel.app) — a collection of 123+ free developer tools that run entirely in your browser. No upload, no sign-up, no backend.
+I built BrainCoder (https://braincoder.sardar.dev) — a collection of 123+ free developer tools that run entirely in your browser. No upload, no sign-up, no backend.
 
 The problem: every PDF tool, image converter, and code formatter online asks you to upload your files. For developers working with sensitive data, that's a non-starter.
 
 So I built everything client-side. The PDF processing core is Rust compiled to WASM (built on the zpdf crate), with a transparent JS fallback for browsers that don't support it. Compression, merging, splitting, editing, protecting — and actual redaction. Not cosmetic black boxes — the content stream is physically excised from the PDF.
 
-To prove it: open /verify (https://braincoder.vercel.app/verify) and hash a file locally while watching the network tab. Zero outgoing requests.
+To prove it: open /verify (https://braincoder.sardar.dev/verify) and hash a file locally while watching the network tab. Zero outgoing requests.
 
 Stack: Next.js 16, Rust/WASM, zero database, zero auth, zero billing. Everything is free.
 

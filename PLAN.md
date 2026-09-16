@@ -55,7 +55,7 @@ BrainCoder is a privacy-first, browser-based developer toolkit (123 tools) being
 | Office | mammoth (docx), marked (md), sql.js, qrcode | various |
 | Image | html2canvas, fflate | various |
 | Testing | Playwright (e2e), custom WASM validation | e2e/ |
-| Hosting | Vercel (static SSG) | braincoder.vercel.app |
+| Hosting | Vercel (static SSG) | braincoder.sardar.dev |
 | License | MIT | — |
 | Auth | None | — |
 | Database | None | — |
@@ -262,7 +262,7 @@ BrainCoder is a privacy-first, browser-based developer toolkit (123 tools) being
 
 **Launch kit `launch/hacker-news.md` (research-grounded, Sep 2026):** recommended Show HN title ("I built 123 browser dev tools with a Rust/WASM core – files never leave your device") + backup; 10 ranked title candidates; ~200-word ready-to-paste post body; timing (Tue–Thu 9–11am PT) + first-2-hours engagement plan; criticism-response table (iLovePDF/PDFgear/no-backend/redaction-skeptic); 13-point pre-launch checklist (flagged gap: OG title not yet verified on hn.algolia); 24h follow-up + metrics (front page ~80–100 pts, 500–2k stars = strong result). Key insight: the 2026 "AI slop" backlash is a tailwind — zero-upload architecture is the counter-narrative — but posture is "explain the architecture", never "position against AI".
 
-**`launch/directory-submissions.md` (verified, Sep 2026):** 14-directory table with honest priorities — ⚠️ **SaaSHub rejects `*.vercel.app` outright** (blocked until custom domain); alternativeTo decline list flags "collections of online tools" → submit as a single app (position like PDF24); Tool Finder is paid (150€); free-for.dev is wrong format; G2/Capterra no value at zero traffic. 6 awesome-list PRs with repo/maintained-check + ready-to-paste one-liners (top fit: `mcuking/Awesome-WebAssembly-Applications` "Online Productive Tools", active 2026-09-11; then `pluja/awesome-privacy"); alternativeTo submission copy (~145 word description, 5 tags, real competitors, $5 priority-review tip); Product Hunt deferred post-HN; 3-tier run order; 21-row tracking table.
+**`launch/directory-submissions.md` (verified, Sep 2026):** 14-directory table with honest priorities — SaaSHub previously blocked `*.vercel.app` but custom domain `braincoder.sardar.dev` is now live (submit and verify); alternativeTo decline list flags "collections of online tools" → submit as a single app (position like PDF24); Tool Finder is paid (150€); free-for.dev is wrong format; G2/Capterra no value at zero traffic. 6 awesome-list PRs with repo/maintained-check + ready-to-paste one-liners (top fit: `mcuking/Awesome-WebAssembly-Applications` "Online Productive Tools", active 2026-09-11; then `pluja/awesome-privacy"); alternativeTo submission copy (~145 word description, 5 tags, real competitors, $5 priority-review tip); Product Hunt deferred post-HN; 3-tier run order; 21-row tracking table.
 
 **Parallel-execution note:** both launch files were produced by two independent research agents running simultaneously (no shared file / no conflict).
 
@@ -308,7 +308,7 @@ BrainCoder is a privacy-first, browser-based developer toolkit (123 tools) being
 | 2026-09-15 | Swapped header "Live app" (self-link to own domain) for "0 uploads — verify" | Header real-estate now reinforces the moat instead of pointlessly pointing at the same site |
 | 2026-09-15 | dev.to deep-dive stored in-repo with `published: false` frontmatter | Article lives with the code it documents; publish = flip flag + paste to dev.to (no API token) |
 | 2026-09-15 | Launch kit + directory plan produced by two parallel agents | Independent tasks → parallel agents; single shared output dir `launch/`, no cross-file writes |
-| 2026-09-15 | Defer SaaSHub + Product Hunt until custom domain / HN momentum | SaaSHub hard-blocks `vercel.app`; PH needs first-day distribution only HN can provide |
+| 2026-09-15 | Defer SaaSHub + Product Hunt until custom domain / HN momentum | Custom domain `braincoder.sardar.dev` now live; SaaSHub should accept it. PH needs first-day distribution only HN can provide |
 
 ---
 
@@ -476,7 +476,7 @@ Phase 2+ Target (NOT building now):
 | `pluja/awesome-privacy` PR | Weak fit — `## Office` lists full office suites (LibreOffice/OnlyOffice/Cryptpad), not tool collections; same "collections of online tools" decline risk the research flagged. Options: skip / open under `## Office` / try `## Utilities` | Decide | ⏸ held |
 | `awesome-selfhosted` PR | Requires MIT repo + **self-hosting path (Dockerfile/self-host note)** — declined without source/deploy proof | Add Dockerfile or drop | ⏸ held |
 | dev.to article publish | Needs `DEV_TO_TOKEN` env or manual paste to dev.to (flip `published: true`) | Me/founder | ⏸ blocked |
-| alternativeTo + directory forms | Need email-verified accounts ($5 priority review suggested; SaaSHub blocked on `*.vercel.app`) | Founder | ⏸ blocked |
+| alternativeTo + directory forms | Need email-verified accounts ($5 priority review suggested; custom domain `braincoder.sardar.dev` now live — submit to SaaSHub) | Founder | ⏸ blocked |
 | Show HN launch | Must post at right time on launch day (Tue–Thu 9–11am PT) per `launch/hacker-news.md` | Founder | ⏸ scheduled |
 | mcuking AWAA PR | Done — [PR #36](https://github.com/mcuking/Awesome-WebAssembly-Applications/pull/36) open | — | ✅ live |
 

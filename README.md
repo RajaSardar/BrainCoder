@@ -4,7 +4,7 @@
 
 **123+ free, privacy-first developer tools — one app, all in your browser.**
 
-[![Live app](https://img.shields.io/badge/Try%20it%20live-braincoder.vercel.app-6366f1?style=for-the-badge&logo=vercel&logoColor=white)](https://braincoder.vercel.app)
+[![Live app](https://img.shields.io/badge/Try%20it%20live-braincoder.sardar.dev-6366f1?style=for-the-badge&logo=vercel&logoColor=white)](https://braincoder.sardar.dev)
 [![Next.js](https://img.shields.io/badge/Next.js%2016-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org)
 [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![Rust](https://img.shields.io/badge/Rust%20/WASM-B7410E?style=for-the-badge&logo=rust&logoColor=white)](https://www.rust-lang.org)
@@ -30,7 +30,7 @@ sign-up, no tracking, no waiting.
 
 ## 🚀 Live app
 
-**[https://braincoder.vercel.app](https://braincoder.vercel.app)**
+**[https://braincoder.sardar.dev](https://braincoder.sardar.dev)**
 
 ## 🧰 Tools at a glance
 

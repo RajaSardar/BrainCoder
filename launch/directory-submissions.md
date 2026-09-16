@@ -1,6 +1,6 @@
 # BrainCoder — Directory & Awesome-List Submission Plan
 
-**Product:** BrainCoder (https://braincoder.vercel.app · repo https://github.com/RajaSardar/BrainCoder) — 123+ free, privacy-first browser tools in one Next.js 16 app. Every tool runs 100% in the browser; files never leave the device. No upload, no sign-up, no account. Rust/WASM PDF core (`zpdf` crate) with transparent JS fallback. MIT-licensed, open source. Proof page at /verify.
+**Product:** BrainCoder (https://braincoder.sardar.dev · repo https://github.com/RajaSardar/BrainCoder) — 123+ free, privacy-first browser tools in one Next.js 16 app. Every tool runs 100% in the browser; files never leave the device. No upload, no sign-up, no account. Rust/WASM PDF core (`zpdf` crate) with transparent JS fallback. MIT-licensed, open source. Proof page at /verify.
 **Researched:** Sep 2026 · **Goal:** honest ranking of where a pre-launch, zero-traffic site should spend an hour.
 
 ---
@@ -10,8 +10,8 @@
 - Logo (128×128) + 3 screenshots (homepage, a PDF tool, /verify proof page).
 - 1-line: "123+ free, privacy-first browser tools — PDF, images, JSON, SQL, dev utilities. Files never leave your device."
 - 3-paragraph description. Category angles: **PDF tools / developer tools / privacy tools / no-signup tools / open-source**.
-- URL to paste everywhere: **https://braincoder.vercel.app** + repo link.
-- ⚠️ **Domain warning:** several directories reject free subdomains. SaaSHub *explicitly* rejects `*.vercel.app` (their example is literally that). Until a custom domain exists, treat SaaSHub as blocked; verify case-by-case for the rest.
+- URL to paste everywhere: **https://braincoder.sardar.dev** + repo link.
+- ⚠️ **Domain status:** custom domain `braincoder.sardar.dev` is live. SaaSHub previously rejected `*.vercel.app` subdomains but should accept the custom domain — verify case-by-case on submission.
 
 ---
 
@@ -28,7 +28,7 @@
 | 7 | listin.gg | [listin.gg/submit](https://listin.gg/submit) | Yes | Free basic | curated tools catalog (1,200+ tools) | **MEDIUM** | Human-reviewed ≤48h, permanent dofollow. 12k monthly visitors; small but free. |
 | 8 | Startup Fame | [startupfa.me](https://startupfa.me) | Yes | Free ($15–30 to pick launch day) | indie-hacker launchpad | **MEDIUM** | DR83 dofollow, do-follow earlier installs. Do **not** run first — its upvote game needs distribution, which we only have post-HN. |
 | 9 | dev.to topic/community | [dev.to/t/opensource](https://dev.to/t/opensource) | Yes | Free | community post / topic page | **MEDIUM** | Not a directory — a tagged "showdev/build-in-public" post is the listing-equivalent. Run in Wave 2 to amplify the same copy. |
-| 10 | SaaSHub | [saashub.com/submit](https://www.saashub.com/submit/) | Yes (email/GitHub) | Free ($99/mo featured, optional) | software comparisons | **LOW (blocked)** | **Explicitly rejects free subdomains** — our `*.vercel.app` URL is auto-rejected. Skip until custom domain. Great alternatives-page traffic after that. |
+| 10 | SaaSHub | [saashub.com/submit](https://www.saashub.com/submit/) | Yes (email/GitHub) | Free ($99/mo featured, optional) | software comparisons | **MEDIUM** | Previously blocked by `*.vercel.app` rejection. Custom domain `braincoder.sardar.dev` is now live — submit and verify acceptance. |
 | 11 | Snapfor | [snapfor.com](https://snapfor.com) | Yes | Free | dev/design community bookmarking | **LOW** | Small reach; nothing authoritative found in 2026 on its current submit flow — verify before investing. |
 | 12 | free-for.dev | [github.com/ripienaar/free-for-dev](https://github.com/ripienaar/free-for-dev) | PR (GitHub) | Free | "free stuff" mega-list (137k★) | **LOW** | Format is free *tiers of hosting/DB/APIs* for builders, not end-user tool websites. A PR here is a stretch and noisy. |
 | 13 | Tool Finder | [toolfinder.co/add-new-tool](https://toolfinder.net/add-new-tool) | Yes | **Paid** (150€ one-time; $29 on .com mirror) | productivity-tools catalog | **LOW** | Paid listing; zero-traffic pre-launch doesn't justify it. Revisit post-launch if budget allows. |
@@ -40,12 +40,12 @@
 
 | List | Section/file | Maintained? | Priority | Ready-to-paste one-liner |
 |------|-------------|-------------|----------|--------------------------|
-| [mcuking/Awesome-WebAssembly-Applications](https://github.com/mcuking/Awesome-WebAssembly-Applications) | Readme → `Inside the browser` → **`Online Productive Tools`** | ✅ Active (pushed 2026-09-11); PRs merged regularly | **HIGH** | `- [[BrainCoder](https://braincoder.vercel.app)] 123+ free privacy-first browser tools — PDF compress/merge/split/redact, images, JSON/SQL formatters — on a Rust/WASM (zpdf) core; files never leave the device.` |
-| [pluja/awesome-privacy](https://github.com/pluja/awesome-privacy) | Readme → **`## Office`** | ✅ Very active (19.7k★, pushed 2026-07); large, curated, PR-friendly | **HIGH** | `- [BrainCoder](https://braincoder.vercel.app) - 123+ free, open source (MIT), privacy-first browser tools — PDF, image, dev & office utilities, all processed locally with zero uploads.` |
-| [alexanderop/awesome-local-first](https://github.com/alexanderop/awesome-local-first) | Readme → `Real-World Examples` → **`Example Applications`** | ✅ Active (pushed 2026-08); small but responsive | **MEDIUM** | `- [BrainCoder](https://braincoder.vercel.app) – 123+ browser-based PDF/image/dev tools that run entirely on-device; a free, MIT, local-first toolbox with a live zero-upload proof page.` |
-| [mbasso/awesome-wasm](https://github.com/mbasso/awesome-wasm) | Readme → `## Projects` → **`### Others`** | ⚠️ Stale (last push 2024-11) — PR may sit | **LOW/MED** | `- [BrainCoder](https://braincoder.vercel.app) - 123+ privacy-first browser tools powered by a Rust/Wasm PDF engine.` |
+| [mcuking/Awesome-WebAssembly-Applications](https://github.com/mcuking/Awesome-WebAssembly-Applications) | Readme → `Inside the browser` → **`Online Productive Tools`** | ✅ Active (pushed 2026-09-11); PRs merged regularly | **HIGH** | `- [[BrainCoder](https://braincoder.sardar.dev)] 123+ free privacy-first browser tools — PDF compress/merge/split/redact, images, JSON/SQL formatters — on a Rust/WASM (zpdf) core; files never leave the device.` |
+| [pluja/awesome-privacy](https://github.com/pluja/awesome-privacy) | Readme → **`## Office`** | ✅ Very active (19.7k★, pushed 2026-07); large, curated, PR-friendly | **HIGH** | `- [BrainCoder](https://braincoder.sardar.dev) - 123+ free, open source (MIT), privacy-first browser tools — PDF, image, dev & office utilities, all processed locally with zero uploads.` |
+| [alexanderop/awesome-local-first](https://github.com/alexanderop/awesome-local-first) | Readme → `Real-World Examples` → **`Example Applications`** | ✅ Active (pushed 2026-08); small but responsive | **MEDIUM** | `- [BrainCoder](https://braincoder.sardar.dev) – 123+ browser-based PDF/image/dev tools that run entirely on-device; a free, MIT, local-first toolbox with a live zero-upload proof page.` |
+| [mbasso/awesome-wasm](https://github.com/mbasso/awesome-wasm) | Readme → `## Projects` → **`### Others`** | ⚠️ Stale (last push 2024-11) — PR may sit | **LOW/MED** | `- [BrainCoder](https://braincoder.sardar.dev) - 123+ privacy-first browser tools powered by a Rust/Wasm PDF engine.` |
 | [awesome-selfhosted/awesome-selfhosted](https://github.com/awesome-selfhosted/awesome-selfhosted) | `## Document Management` (via awesome-selfhosted-data) | ✅ Extremely active (319k★); strict review | **MEDIUM — flag** | ⚠️ **Requires self-hostable free software with source.** BrainCoder qualifies (MIT + Next.js repo you can deploy), and client-side PDF toolkits have precedent (BentoPDF is listed here). But they're strict — ship a Dockerfile/self-host note or it'll be declined. Entry line mirrors BentoPDF's: `- [BrainCoder](url) - Privacy-first client-side PDF and dev toolkit; processes files directly in the browser.` |
-| [zdayang/awesome-privacy-web-tools](https://github.com/zdayang/awesome-privacy-web-tools) | Readme → `🛠 Developer Utilities` / `📄 Text & Content` | ⚠️ Alive but **0★**, self-promotional | **LOW** | `- [BrainCoder](https://braincoder.vercel.app) - All-in-one privacy suite: 123+ browser tools (PDF, JSON, hash, QR, converters) that never leave your device.` |
+| [zdayang/awesome-privacy-web-tools](https://github.com/zdayang/awesome-privacy-web-tools) | Readme → `🛠 Developer Utilities` / `📄 Text & Content` | ⚠️ Alive but **0★**, self-promotional | **LOW** | `- [BrainCoder](https://braincoder.sardar.dev) - All-in-one privacy suite: 123+ browser tools (PDF, JSON, hash, QR, converters) that never leave your device.` |
 
 Notes:
 - We have **no extension** → skip all "awesome browser-extension" lists, as planned.
@@ -74,7 +74,7 @@ Notes:
 
 **Visitor-suggestion version (a user "suggested alternative" to a competitor):**
 
-> You upload PDFs to someone else's server just to merge or compress them. BrainCoder (https://braincoder.vercel.app) runs 123+ PDF, image, JSON, SQL and dev tools entirely in your browser — nothing is uploaded, no account, MIT open source, with a live zero-upload proof at /verify.
+> You upload PDFs to someone else's server just to merge or compress them. BrainCoder (https://braincoder.sardar.dev) runs 123+ PDF, image, JSON, SQL and dev tools entirely in your browser — nothing is uploaded, no account, MIT open source, with a live zero-upload proof at /verify.
 
 **10-word tagline:** "123+ privacy-first browser tools. Zero uploads. Zero sign-up. MIT open source."
 
@@ -118,7 +118,7 @@ When it's time, a PH launch needs:
 10. Startup Fame, timed to ride HN attention.
 11. Skip: Tool Finder (paid), free-for.dev (wrong format), G2/Capterra (no user base yet).
 
-**Never:** pay for listing placements; submit to SaaSHub with the `vercel.app` URL.
+**Never:** pay for listing placements; submit to SaaSHub with the custom domain.
 
 ### Ready-to-paste intro messages
 
@@ -126,13 +126,13 @@ When it's time, a PH launch needs:
 
 > **Subject:** Add BrainCoder — 123+ client-side, no-upload browser tools
 >
-> Hi team, I run BrainCoder (https://braincoder.vercel.app, repo https://github.com/RajaSardar/BrainCoder) — a free, MIT-licensed suite of 123+ browser-based PDF/image/dev-office tools (compress, merge, split, true redaction, converters, formatters, generators, SQLite viewer). Every tool runs 100% locally via WASM; files never leave the device, and we publish proof at /verify. I noticed you flag "client-side" tools and would love to be listed. Happy to share a description, logo, or screenshots. Thanks!
+> Hi team, I run BrainCoder (https://braincoder.sardar.dev, repo https://github.com/RajaSardar/BrainCoder) — a free, MIT-licensed suite of 123+ browser-based PDF/image/dev-office tools (compress, merge, split, true redaction, converters, formatters, generators, SQLite viewer). Every tool runs 100% locally via WASM; files never leave the device, and we publish proof at /verify. I noticed you flag "client-side" tools and would love to be listed. Happy to share a description, logo, or screenshots. Thanks!
 
 **(b) Awesome-list PR description (mcuking, ready to paste into the PR body):**
 
 > **Add BrainCoder: 123+ privacy-first browser tools (Rust/WASM PDF engine)**
 >
-> BrainCoder (https://braincoder.vercel.app) is a free, MIT-licensed suite of 123+ browser-based developer and office tools: PDF compress/merge/split/redact/protect (Rust/WASM core on the `zpdf` crate with transparent JS fallback), image tools, JSON/SQL/XML formatters, regex tester, JWT decoder, crypto/hash tools, generators, and converters. All processing is client-side — files never leave the device (proof page at /verify). Fits the "Online Productive Tools" section: a productive tool your readers can use with zero setup. Source: https://github.com/RajaSardar/BrainCoder
+> BrainCoder (https://braincoder.sardar.dev) is a free, MIT-licensed suite of 123+ browser-based developer and office tools: PDF compress/merge/split/redact/protect (Rust/WASM core on the `zpdf` crate with transparent JS fallback), image tools, JSON/SQL/XML formatters, regex tester, JWT decoder, crypto/hash tools, generators, and converters. All processing is client-side — files never leave the device (proof page at /verify). Fits the "Online Productive Tools" section: a productive tool your readers can use with zero setup. Source: https://github.com/RajaSardar/BrainCoder
 
 **(c) alternativeTo submission (paste-ready description for the form):**
 

@@ -3,8 +3,8 @@ title: "Shipping Rust to the Browser: How We Built a True PDF-Redaction Core in 
 published: false
 description: "How BrainCoder ships a Rust + wasm-bindgen core (built on the zpdf crate) for privacy-first, client-side PDF merge, split, match and redaction — with a transparent JS fallback and byte-identical output tests."
 tags: rust, wasm, javascript, webdev
-cover_image: https://braincoder.vercel.app/icon.svg
-canonical_url: https://braincoder.vercel.app/guides/how-to-redact-a-pdf
+cover_image: https://braincoder.sardar.dev/icon.svg
+canonical_url: https://braincoder.sardar.dev/guides/how-to-redact-a-pdf
 ---
 
 BrainCoder is a collection of 123+ **free, privacy-first developer tools** that all run 100% in the browser. No uploads, no sign-up — files are read locally and never leave the device. That's a great privacy story, but it creates a hard engineering constraint: **every heavy operation has to run on the client.**
@@ -163,10 +163,10 @@ WASM lazily loaded means the home page and every non-PDF tool pay **zero** cost.
 
 The core runs live in production on every tool that touches PDF text:
 
-- [Redact a PDF](https://braincoder.vercel.app/tools/pdf-redact) — true excision, no cosmetic boxes
-- [Auto-Redact a PDF](https://braincoder.vercel.app/tools/pdf-auto-redact) — `find_matches` + `redact_pdfs` end to end
-- [PDF Merger / Splitter](https://braincoder.vercel.app/tools/pdf-merge) — `merge_pdfs` / `extract_pdfs`
+- [Redact a PDF](https://braincoder.sardar.dev/tools/pdf-redact) — true excision, no cosmetic boxes
+- [Auto-Redact a PDF](https://braincoder.sardar.dev/tools/pdf-auto-redact) — `find_matches` + `redact_pdfs` end to end
+- [PDF Merger / Splitter](https://braincoder.sardar.dev/tools/pdf-merge) — `merge_pdfs` / `extract_pdfs`
 
 Everything is open source (MIT) — whole working app at [github.com/RajaSardar/BrainCoder](https://github.com/RajaSardar/BrainCoder), Rust core in `crates/core/`.
 
-And because we're a no-upload app, there's a [live network audit](https://braincoder.vercel.app/verify) you can watch intercept `fetch`/`XHR` while you use a tool. Files don't lie — and neither does the network tab.
+And because we're a no-upload app, there's a [live network audit](https://braincoder.sardar.dev/verify) you can watch intercept `fetch`/`XHR` while you use a tool. Files don't lie — and neither does the network tab.
