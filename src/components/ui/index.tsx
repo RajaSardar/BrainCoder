@@ -17,16 +17,20 @@ export function CopyButton({ text, label = "Copy", className = "", disabled = fa
     if (disabled) return;
     try {
       await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
     } catch {
       const ta = document.createElement("textarea");
       ta.value = text;
       document.body.appendChild(ta);
       ta.select();
-      document.execCommand("copy");
+      const ok = document.execCommand("copy");
       document.body.removeChild(ta);
+      if (ok) {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1500);
+      }
     }
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
   }, [text, disabled]);
 
   return (
@@ -36,8 +40,9 @@ export function CopyButton({ text, label = "Copy", className = "", disabled = fa
       disabled={disabled}
       className={`flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 transition disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
     >
-      {copied ? <Check className="w-3.5 h-3.5 text-green-600" /> : <Copy className="w-3.5 h-3.5" />}
+      {copied ? <Check className="w-3.5 h-3.5 text-green-600" aria-hidden="true" /> : <Copy className="w-3.5 h-3.5" aria-hidden="true" />}
       {copied ? "Copied" : label}
+      <span className="sr-only" role="status">{copied ? "Copied to clipboard" : ""}</span>
     </button>
   );
 }

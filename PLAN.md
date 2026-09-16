@@ -504,7 +504,16 @@ Phase 2+ Target (NOT building now):
   deep-nesting), content made fully honest, new guide. 10 node checks and 15
   production Chrome scenarios passed; production build passed (282 pages).
   Report: `audit/reports/json-formatter.md`.
-- Next: URL Encoder. Remaining 119 tools have not completed this process.
+- URL Encoder: ten independent judges ran in parallel. Component rebuilt
+  (error separated from output into role=alert, encode-only checkbox with
+  two-state label, radiogroup mode toggle, strict decode, whole-URL hint,
+  2MB cap, dismissable error, a11y parity); shared CopyButton given success-
+  gated feedback and aria-hidden icons; content, SEO, tagline and guide
+  rewritten. 19 production Chrome scenarios passed (including a CopyButton
+  cross-tool regression); production build passed (283 pages). No separate
+  node harness — no extracted module. Report: `audit/reports/url-encoder.md`.
+- Next: Base64 Encoder & Decoder. Remaining 118 tools have not completed this
+  process.
 - Residual checks: physical mobile/Safari/Firefox, manual screen readers, parser
   memory limits, and shared /verify proof wording. No universal audit guarantee.
 - Existing changes to other tools are preserved but not counted as reviewed.

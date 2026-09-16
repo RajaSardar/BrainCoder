@@ -1677,14 +1677,14 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ]
   },
   "url-encoder": {
-    "longDescription": "<p>The BrainCoder URL Encoder & Decoder is a fast, browser-based tool that percent-encodes and decodes URL strings instantly. Whether you need to escape special characters for a query parameter, encode a full URL for API integration, or decode a mangled link you found online, this tool handles it all without sending your data to any server.</p>\n<p>URL encoding (also called percent-encoding) replaces unsafe characters like spaces, ampersands, and non-ASCII characters with their %hex equivalents so they can be safely transmitted in a URL. Our encoder follows the RFC 3986 standard, ensuring compatibility with all modern browsers, APIs, and backend services. Paste your raw URL, click encode or decode, and copy the result — it stays entirely in your browser.</p>\n<p>Developers, QA engineers, and anyone who works with web URLs will find this tool indispensable. It eliminates the need to memorize character codes or install browser extensions. The tool is free, requires no signup, and works offline once the page is loaded.",
+    "longDescription": "<p>The BrainCoder URL Encoder & Decoder percent-encodes and decodes URL strings live in your browser, for free, with zero server round-trips. Encoding replaces unsafe characters — spaces, punctuation, and anything non-ASCII — with their %hex equivalents so a value can travel safely inside a URL. Paste your string and the result updates as you type.</p><p>Two encoding modes cover the two real jobs. Component-level encoding uses JavaScript's native encodeURIComponent, escaping everything except the unreserved characters that browsers safely allow, so it is ideal for a single query value. Whole-URL encoding uses encodeURI, which lets the structure of a full link survive — reserved characters like :, /, ?, & and = stay intact while unsafe characters are escaped. Decoding reverses percent-encoded strings back to their original form.</p><p>Everything runs entirely in your browser under the same rules your own code would use, so there is nothing to install, no signup, and no data leaving your machine. The tool also works offline once the page has loaded.</p>",
     "features": [
-      "RFC 3986 compliant percent-encoding",
-      "One-click encode and decode toggle",
+      "Live percent-encoding and decoding as you type — nothing to click",
+      "Component-level (encodeURIComponent) or whole-URL (encodeURI) encoding modes",
+      "Decode reverses percent-encoded strings with the strict component decoder",
       "Handles full URLs, query strings, and individual characters",
       "Supports Unicode and non-ASCII characters",
-      "Copy-to-clipboard with a single click",
-      "100% client-side — no data leaves your browser"
+      "100% client-side — no data leaves your browser; works offline once loaded"
     ],
     "howTo": [
       {
@@ -1692,30 +1692,34 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
         "description": "Enter the full URL, query string, or individual characters you want to encode or decode into the input area."
       },
       {
-        "step": "Choose Encode or Decode",
-        "description": "Click the 'Encode' button to percent-encode the input, or 'Decode' to reverse a percent-encoded string back to its original form."
+        "step": "Choose Encode or Decode mode",
+        "description": "The output updates live as you type — there is no button to press. Switch direction with the Encode/Decode toggle. In Encode mode, keep Component-level checked to percent-encode a single value, or uncheck it to preserve a full URL's structure (reserved characters like :, /, ?, & and = stay intact)."
       },
       {
         "step": "Copy the result",
-        "description": "Click the copy button next to the output to place the encoded or decoded string on your clipboard for immediate use."
+        "description": "The output panel shows the result and its character count as you type. Grab the text with your own copy shortcut, or use 'Use result as input' to feed it back for a decode/encode round trip."
       },
       {
         "step": "Verify in your application",
-        "description": "Paste the result into your browser address bar, API request, or code editor to confirm it works as expected."
+        "description": "Paste the result into your browser address bar, API request, or code editor to confirm it works as expected. Use 'Use result as input' to flip direction and check the round trip reproduces your original text."
       }
     ],
     "faq": [
       {
         "question": "What characters does URL encoding escape?",
-        "answer": "URL encoding escapes characters that are unsafe in URLs, including spaces (encoded as %20), ampersands (&), angle brackets (< >), and any non-ASCII characters like accented letters or emoji."
+        "answer": "In component-level mode (the default), every character except A–Z, a–z, 0–9 and - _ . ! ~ * ' ( ) is percent-encoded: a space becomes %20, & becomes %26, and non-ASCII characters like accented letters and emoji become UTF-8 %hex sequences. In whole-URL mode (Component-level unchecked), reserved characters such as :, /, ?, & and = are left intact and only unsafe characters are escaped."
+      },
+      {
+        "question": "Can I encode an entire URL including the protocol?",
+        "answer": "Yes, and the mode decides what happens. With Component-level checked, the whole string — protocol, slashes and query delimiters included — is percent-encoded (https:// becomes https%3A%2F%2F). To keep a full URL readable while still escaping unsafe characters, uncheck Component-level. Use component mode for a single query value and whole-URL mode for a complete link."
       },
       {
         "question": "Is this the same as URL slug encoding?",
         "answer": "No. URL slug encoding (like converting 'My Page' to 'my-page') is different from percent-encoding, which converts characters to their %hex representation. Use the slug generator for human-readable slugs."
       },
       {
-        "question": "Can I encode an entire URL including the protocol?",
-        "answer": "Yes. You can paste a full URL like https://example.com/path?q=hello world and the encoder will properly escape the space and other special characters while preserving the structure."
+        "question": "What happens if I try to decode invalid input?",
+        "answer": "If the string is not valid percent-encoding — for example a % not followed by two hex digits — decoding cannot proceed and a red error notice is shown instead of guessing. The output stays empty until you fix the input."
       },
       {
         "question": "Does this work offline?",
@@ -1723,9 +1727,10 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       }
     ],
     "relatedSlugs": [
-      "slug-generator",
-      "base64",
-      "utf8-converter"
+      "url-parser",
+      "html-entities",
+      "utf8-converter",
+      "base64"
     ]
   },
   "base64": {

@@ -805,6 +805,52 @@ export const GUIDES: Guide[] = [
       },
     ],
   },
+  {
+    slug: "how-to-encode-a-url",
+    title: "How to Encode a URL or URL Component Online",
+    description:
+      "Turn any URL or query value into safe %hex form — or decode it back — right in your browser. Learn when to encode only the component and when to keep a whole URL intact.",
+    keywords: [
+      "how to encode a url",
+      "encode url online",
+      "url percent encoder",
+      "encode url component online",
+      "decode percent encoded url",
+    ],
+    toolSlug: "url-encoder",
+    published: "2026-09-16",
+    updated: "2026-09-16",
+    readMinutes: 3,
+    sections: [
+      {
+        heading: "What percent-encoding is for",
+        paragraphs: [
+          "URLs can only safely contain a narrow set of characters. Spaces, ampersands, question marks and non-ASCII text are ambiguous inside a URL — a space can be mistaken for a separator and an & for a query delimiter. Percent-encoding replaces each unsafe character with a % followed by two hex digits (so a space becomes %20) so the value survives parsing intact.",
+          "This tool applies percent-encoding instantly as you type, entirely in your browser, so nothing is uploaded.",
+        ],
+      },
+      {
+        heading: "Component-level vs whole-URL encoding",
+        paragraphs: [
+          "There are two distinct jobs. Encoding a query value — say the user input in ?q= — should escape everything except the unreserved characters, using the same rules as JavaScript's encodeURIComponent: A–Z, a–z, 0–9 and - _ . ! ~ * ' ( ) stay unescaped, everything else becomes %hex. This is the default component-level mode.",
+          "Encoding a full URL is different: you want the structure to survive, so reserved characters like :, /, ?, & and = should stay intact. That is whole-URL mode (encodeURI). Uncheck Component-level to switch to it.",
+        ],
+      },
+      {
+        heading: "Encoding and copying",
+        paragraphs: [
+          "Paste your string into the input area and the output appears immediately — there is nothing to click. Switch the Encode/Decode toggle to flip direction and use 'Use result as input' to re-encode or decode in one step.",
+        ],
+      },
+      {
+        heading: "Decoding back and avoiding double-encoding",
+        paragraphs: [
+          "To reverse an encoded string, switch to Decode. If the input contains a bare % that is not part of a valid %hex pair, decoding fails and a red error notice is shown instead of guessing.",
+          "Don't re-encode an already encoded value: %20 encoded again becomes %2520, and you have to decode twice to get your original text back. Encode once, at the point of use.",
+        ],
+      },
+    ],
+  },
 ];
 
 const guideBySlug = new Map(GUIDES.map((g) => [g.slug, g]));

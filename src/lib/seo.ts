@@ -30,7 +30,7 @@ const TOOL_KEYWORDS: Record<string, string[]> = {
   "image-compressor": ["compress image online", "reduce image file size", "compress jpg", "compress png", "compress webp online", "make image smaller", "compress avif online", "image compressor free"],
   "image-resizer": ["resize image online", "image resizer free", "resize jpg png webp", "reduce image dimensions", "resize photo online", "resize image to 1920x1080", "image resizer aspect ratio lock", "resize image without uploading"],
   "json-formatter": ["json formatter online", "json beautifier", "json validator", "prettify json", "pretty print json", "format json", "json pretty print", "validate json online", "json minify"],
-  "url-encoder": ["url encoder online", "url decoder", "percent encoding", "encodeuri component online", "uri encoder"],
+  "url-encoder": ["url encoder online", "url decoder", "encode url component online", "url percent encoder", "decode url component online", "encode url online"],
   base64: ["base64 encoder online", "base64 decoder", "text to base64", "base64 to text", "encode base64", "decode base64"],
   notepad: ["online notepad", "notepad online", "text editor online", "quick notes", "scratchpad"],
   "password-generator": ["password generator", "strong password generator online", "random password generator", "secure password", "password maker"],

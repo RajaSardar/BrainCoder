@@ -181,7 +181,7 @@ export const TOOLS: ToolConfig[] = [
   {
     slug: "url-encoder",
     name: "URL Encoder & Decoder",
-    tagline: "Encode or decode URL components",
+    tagline: "Percent-encode URLs or single values — round-trip verified",
     description:
       "Percent-encode and decode URLs and query strings with live character-by-character transforms.",
     category: "Encode & Decode",
