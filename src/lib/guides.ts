@@ -898,6 +898,46 @@ export const GUIDES: Guide[] = [
       },
     ],
   },
+  {
+    slug: "how-to-use-a-free-online-notepad",
+    title: "How to Use a Free Online Notepad (Auto-Save, Private Notes)",
+    description:
+      "Write notes that auto-save in your browser — no sign-up, nothing uploaded. Learn the storage limits, how to export as .txt, and what happens if you clear your browser data.",
+    keywords: [
+      "online notepad",
+      "notepad online",
+      "auto save notes",
+      "notes saved in browser",
+      "keep private notes online",
+    ],
+    toolSlug: "notepad",
+    published: "2026-09-16",
+    updated: "2026-09-16",
+    readMinutes: 3,
+    sections: [
+      {
+        heading: "What auto-save actually means",
+        paragraphs: [
+          "Every keystroke is written to this browser's local storage on a short delay, so closing the tab or losing power doesn't lose your note. The note stays on this device and in this browser only — it is never uploaded and never syncs to another device.",
+          "You'll see the confirmation in the corner of the editor: a live word and character count plus a 'saved at' time that updates as you type.",
+        ],
+      },
+      {
+        heading: "Making your notes portable",
+        paragraphs: [
+          "Click Copy to send the whole note to your clipboard in one step. Click Save to download it as a plain-text file with today's date in the filename — keep that file anywhere, or open it later.",
+          "Open lets you load an existing .txt or .md file back into the notepad, so you can keep editing something you started elsewhere.",
+        ],
+      },
+      {
+        heading: "Limits and clearing data",
+        paragraphs: [
+          "Local storage is typically capped around 5 MB per site, and a single note is limited to about 2 million characters. Past that limit the auto-save can stop working, so download a .txt backup of anything important.",
+          "Clearing your site data — or switching browsers, devices, or to a private window — removes your notes, and selecting Clear in the toolbar permanently deletes the local copy with no undo. Download important notes first.",
+        ],
+      },
+    ],
+  },
 ];
 
 const guideBySlug = new Map(GUIDES.map((g) => [g.slug, g]));

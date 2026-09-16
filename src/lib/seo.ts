@@ -32,7 +32,7 @@ const TOOL_KEYWORDS: Record<string, string[]> = {
   "json-formatter": ["json formatter online", "json beautifier", "json validator", "prettify json", "pretty print json", "format json", "json pretty print", "validate json online", "json minify"],
   "url-encoder": ["url encoder online", "url decoder", "encode url component online", "url percent encoder", "decode url component online", "encode url online"],
   base64: ["base64 encode decode online", "text to base64", "base64 to text", "base64url", "utf-8 base64 encoder", "base64 string to plain text"],
-  notepad: ["online notepad", "notepad online", "text editor online", "quick notes", "scratchpad"],
+  notepad: ["online notepad", "notepad online", "auto save notes", "notes auto save in browser", "private notes online no sign up", "take quick notes online"],
   "password-generator": ["password generator", "strong password generator online", "random password generator", "secure password", "password maker"],
   "diff-checker": ["diff checker online", "compare text", "text diff", "file comparison online", "find difference between two texts"],
   "regex-tester": ["regex tester online", "test regex", "regular expression tester", "regex matcher", "regex debugger", "regex builder"],
@@ -131,7 +131,9 @@ export function toolKeywords(tool: ToolConfig): string[] {
 }
 
 export function toolTitle(tool: ToolConfig): string {
-  return `${tool.name} online — free ${tool.category.toLowerCase()} tool`;
+  const cat = tool.category.toLowerCase();
+  const suffix = cat.endsWith("s") || cat.includes("&") ? "" : " tool";
+  return `${tool.name} online — free ${cat}${suffix}`;
 }
 
 export function buildToolMetadata(tool: ToolConfig): Metadata {

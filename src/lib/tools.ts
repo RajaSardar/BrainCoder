@@ -205,7 +205,7 @@ export const TOOLS: ToolConfig[] = [
     name: "Notepad",
     tagline: "Private auto-saving text notepad",
     description:
-      "Write notes that auto-save locally in your browser. Open and export as .txt files.",
+      "Notepad online — notes that auto-save in this browser with a live word count. No sign-up, nothing uploaded; open and export as .txt.",
     category: "Text Tools",
     icon: StickyNote,
     accent: "text-yellow-600",

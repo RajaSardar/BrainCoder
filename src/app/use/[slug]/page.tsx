@@ -42,9 +42,9 @@ export default async function UseToolPage(props: PageProps<"/use/[slug]">) {
           <ArrowLeft className="w-4 h-4" />
           Tool info
         </Link>
-        <span className="text-sm font-semibold text-slate-800 truncate">
+        <h1 className="text-sm font-semibold text-slate-800 truncate">
           {tool.name}
-        </span>
+        </h1>
       </div>
       <div className="flex-1 overflow-y-auto bg-slate-50">
         <ToolMount slug={slug} />

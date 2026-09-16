@@ -4483,41 +4483,49 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ]
   },
   "notepad": {
-    "longDescription": "<p>BrainCoder's free online notepad is a lightweight, browser-based text editor designed for quick note-taking without the hassle of installing software or creating accounts. Whether you're jotting down meeting notes, drafting an email, or writing a to-do list, this notepad is always ready when you need it. Everything stays right in your browser — your notes are never uploaded to any server, giving you complete privacy and peace of mind.</p>\n<p>Unlike traditional notepad applications that require downloads or subscriptions, BrainCoder's notepad works instantly on any device with a web browser. It supports essential editing features like undo/redo, word wrap, and a clean distraction-free interface. You can copy your notes to the clipboard with a single click or download them as a plain text file for offline access.</p>\n<p>This online notepad is ideal for developers who need a quick place to paste code snippets, writers looking for a minimalist writing space, or anyone who wants a reliable digital scratchpad. It loads fast, works offline once opened, and respects your privacy by keeping all data local to your device. No registration, no tracking, no nonsense — just a clean notepad that works.</p>",
+    "longDescription": "<p>BrainCoder's online notepad is a private, zero-install scratchpad that auto-saves as you type. Whatever you write is stored in this browser's local storage and is still there when you come back — a closed tab, a restart, or an accidental click away never costs you a note. Nothing is uploaded to any server, and there is no account to create.</p>\n<p>A note lives on this one device and in this one browser: clearing your site data, switching browsers, or using a private window removes it, so use the Save button to download anything important as a .txt file. A live word and character count keeps you oriented, long lines wrap automatically, and you can open an existing .txt or .md file and keep typing from where you left off.</p>\n<p>This notepad suits meeting minutes, to-do lists, and quick scratch work where a full editor would be overkill. Notes up to about 2 million characters auto-save without issues; for anything larger, download the file with Save and continue in a new note. Works offline once opened, and there is no sign-up to gate any of it.</p>",
     "features": [
-      "Zero-install browser-based notepad — no downloads or sign-ups required",
-      "All data stays local in your browser for complete privacy",
-      "Undo and redo support for effortless editing",
-      "One-click copy to clipboard and download as .txt file",
-      "Word wrap toggle for comfortable reading and writing",
-      "Fast-loading minimalist interface with no distractions"
+      "Auto-saves as you type — your notes are stored in this browser only",
+      "Nothing uploaded to a server, no account or sign-up required",
+      "Live word and character count as you write",
+      "One-click copy to clipboard and save as a .txt file",
+      "Open existing .txt or .md files and keep writing",
+      "Long lines wrap automatically in a clean, distraction-free editor"
     ],
     "howTo": [
       {
-        "step": "Open the Notepad",
-        "description": "Navigate to the free online notepad tool on BrainCoder. The editor loads instantly with a blank canvas ready for your text."
+        "step": "Open the notepad",
+        "description": "Navigate to the free online notepad tool on BrainCoder. The editor is ready with a blank canvas — just start typing."
       },
       {
-        "step": "Start Writing",
-        "description": "Click inside the text area and begin typing your notes, code snippets, or any text. Use the toolbar buttons to toggle word wrap or clear the notepad."
+        "step": "Write and let it save",
+        "description": "Type your notes and the notepad auto-saves them in this browser as you go. The word count and a 'saved at' time in the corner confirm what has been stored — there is no Save button to click for this."
       },
       {
-        "step": "Copy or Download",
-        "description": "When you're done, click 'Copy' to send everything to your clipboard, or click 'Download' to save your notes as a plain text file on your device."
+        "step": "Copy, download, or open a file",
+        "description": "Click Copy to put the note on your clipboard, or click Save to download it as a .txt file with today's date in the filename. Use Open to bring an existing .txt or .md file back into the editor."
       }
     ],
     "faq": [
       {
         "question": "Are my notes stored on a server?",
-        "answer": "No. Everything you type stays in your browser's local storage. No data is ever sent to BrainCoder's servers, so your notes remain completely private."
+        "answer": "No. Everything you type is saved to this browser's local storage only. Nothing is sent to BrainCoder's servers and no account is needed."
       },
       {
         "question": "Can I use this notepad offline?",
-        "answer": "Yes. Once the page is loaded in your browser, the notepad works entirely offline. Your notes persist in your browser until you clear them or download them."
+        "answer": "Yes on a device that has opened the page before. Once the notepad has loaded in your browser, the tool and your auto-saved notes work offline — typing, copying, and downloading are all local to your device."
       },
       {
-        "question": "Is there a character limit?",
-        "answer": "The notepad can handle very large amounts of text. However, extremely large documents may affect browser performance depending on your device's memory."
+        "question": "Is there a size limit?",
+        "answer": "Notes are stored in this browser's local storage, which is typically capped around 5 MB. This notepad also limits a single note to about 2 million characters; past that point typing may slow down or the note may fail to save, so download it with Save and continue in a new note."
+      },
+      {
+        "question": "Can I recover a note I cleared?",
+        "answer": "No. Clear permanently deletes the local copy — there is no undo, sync, or trash. Copy or download anything important before clearing."
+      },
+      {
+        "question": "Can someone else on this device see my notes?",
+        "answer": "Yes. Notes are saved in this browser with no password protection, so anyone using the same browser profile on the same device can open this tool and read them. Use Clear when you are done on a shared device."
       }
     ],
     "relatedSlugs": [

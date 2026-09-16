@@ -533,7 +533,23 @@ Phase 2+ Target (NOT building now):
   graph (base64 reciprocates) and the QR guide rewritten. 23 production Chrome
   scenarios passed (plus url-encoder 19 and base64 27 re-run green); production
   build passed (284 pages). Report: `audit/reports/qr-code-generator.md`.
-- Next: Notepad. Remaining 116 tools have not completed this process.
+- Notepad: ten independent judges ran in parallel. Component rebuilt on the
+  team standard (pagehide/visibilitychange flush closes the 300ms data-loss
+  window, hydration via useState+setTimeout(0)+hydrated flag with an empty-guard
+  kills the #418 SSR mismatch and mount write-back, guarded setItem with a
+  "not saving" role=alert instead of silent death, 2,000,000-char cap,
+  cross-tab storage-event sync, execCommand-fallback copy with "Copied"
+  feedback, first-line-derived download name with delayed revoke, two-step
+  armed Clear replacing confirm(), 8MB file-open guard, visible label +
+  aria-describedby + role=status); the phantom undo/redo + word-wrap claims are
+  gone from copy; FAQ 3→5 with honest recovery/shared-device answers; `seo.ts`
+  `toolTitle()` made plural-aware (kills the "free text tools tool" residual);
+  `/use/[slug]` page tool name promoted span→h1; new guide
+  `how-to-use-a-free-online-notepad`. 34 production Chrome scenarios passed
+  (notepad) plus base64 27 / url-encoder 19 / qr 23 re-runs green; production
+  build passed (285 pages). Report: `audit/reports/notepad.md`.
+- Next: Password Generator (next in registry order after notepad). Remaining 115
+  tools have not completed this process.
 - Residual checks: physical mobile/Safari/Firefox, manual screen readers, parser
   memory limits, and shared /verify proof wording. No universal audit guarantee.
 - Existing changes to other tools are preserved but not counted as reviewed.
