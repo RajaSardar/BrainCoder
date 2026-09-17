@@ -33,7 +33,7 @@ const TOOL_KEYWORDS: Record<string, string[]> = {
   "url-encoder": ["url encoder online", "url decoder", "encode url component online", "url percent encoder", "decode url component online", "encode url online"],
   base64: ["base64 encode decode online", "text to base64", "base64 to text", "base64url", "utf-8 base64 encoder", "base64 string to plain text"],
   notepad: ["online notepad", "notepad online", "auto save notes", "notes auto save in browser", "private notes online no sign up", "take quick notes online"],
-  "password-generator": ["password generator", "strong password generator online", "random password generator", "secure password", "password maker"],
+  "password-generator": ["strong password generator online", "free password generator no sign up", "offline password generator", "password generator with symbols", "password generator for wifi", "password generator 16 characters", "strong random password online"],
   "diff-checker": ["diff checker online", "compare text", "text diff", "file comparison online", "find difference between two texts"],
   "regex-tester": ["regex tester online", "test regex", "regular expression tester", "regex matcher", "regex debugger", "regex builder"],
   "timestamp-converter": ["unix timestamp converter", "epoch converter", "timestamp to date", "epoch to datetime", "ms to seconds"],
@@ -131,9 +131,19 @@ export function toolKeywords(tool: ToolConfig): string[] {
 }
 
 export function toolTitle(tool: ToolConfig): string {
+  const CAT_NOUNS: Record<string, string> = {
+    compress: "compression",
+    convert: "conversion",
+    generate: "generator",
+  };
   const cat = tool.category.toLowerCase();
-  const suffix = cat.endsWith("s") || cat.includes("&") ? "" : " tool";
-  return `${tool.name} online — free ${cat}${suffix}`;
+  const noun = CAT_NOUNS[cat];
+  const suffix = noun
+    ? ` ${noun}`
+    : cat.endsWith("s") || cat.includes("&")
+      ? ""
+      : " tool";
+  return `${tool.name} online — free${suffix}`;
 }
 
 export function buildToolMetadata(tool: ToolConfig): Metadata {
@@ -192,7 +202,9 @@ export function toolJsonLd(tool: ToolConfig) {
         },
         featureList: tool.slug === "pdf-compressor"
           ? tool.description
-          : `Format, convert, generate and ${tool.category.toLowerCase()} — all in your browser`,
+          : tool.category.toLowerCase() === "generate"
+            ? "Format, convert and generate — all in your browser"
+            : `Format, convert, generate and ${tool.category.toLowerCase()} — all in your browser`,
       },
       {
         "@type": "BreadcrumbList",

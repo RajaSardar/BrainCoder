@@ -574,19 +574,19 @@ export const GUIDES: Guide[] = [
   },
   {
     slug: "how-to-generate-a-strong-password",
-    title: "How to Generate a Strong, Memorable Password Online",
+    title: "How to Generate a Strong Password Online",
     description:
-      "Create secure, random passwords in your browser — fully offline, no logging, no uploads. Tunable length, symbols and passphrases.",
+      "Create secure, random passwords in your browser — fully offline, no logging, no uploads. Tunable length, character sets and similar-letter exclusion.",
     keywords: [
-      "password generator",
-      "strong password generator",
-      "random password online",
+      "how to create a strong password",
+      "strong random password online",
       "secure password generator",
-      "create strong password",
+      "generate strong password no sign up",
+      "password generator offline",
     ],
     toolSlug: "password-generator",
     published: "2026-09-15",
-    updated: "2026-09-15",
+    updated: "2026-09-16",
     readMinutes: 3,
     sections: [
       {
@@ -607,7 +607,7 @@ export const GUIDES: Guide[] = [
         heading: "Length over complexity",
         paragraphs: [
           "When choosing settings, prioritize length. A 20-character password beats a 12-character one with more symbol types, simply because the search space is far larger.",
-          "Practical tip: lean on a passphrase for anything you must type by hand, or store the generated password in a password manager and let it autofill.",
+          "Practical tip: store the generated password in a password manager and let it autofill. For anything you must type by hand, prefer a longer random password over a phrase built from dictionary words — passphrases are only as strong as the word list behind them.",
         ],
       },
     ],

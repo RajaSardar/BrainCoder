@@ -216,7 +216,7 @@ export const TOOLS: ToolConfig[] = [
     name: "Password Generator",
     tagline: "Strong random passwords instantly",
     description:
-      "Generate cryptographically strong passwords with length and character-type controls.",
+      "Generate strong random passwords offline in your browser — choose length and character types, exclude similar letters, and copy in one click. No sign-up, nothing uploaded.",
     category: "Generate",
     icon: KeyRound,
     accent: "text-green-600",

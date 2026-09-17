@@ -548,8 +548,23 @@ Phase 2+ Target (NOT building now):
   `how-to-use-a-free-online-notepad`. 34 production Chrome scenarios passed
   (notepad) plus base64 27 / url-encoder 19 / qr 23 re-runs green; production
   build passed (285 pages). Report: `audit/reports/notepad.md`.
-- Next: Password Generator (next in registry order after notepad). Remaining 115
-  tools have not completed this process.
+- Password Generator: ten independent judges ran in parallel. Component rebuilt
+  on the team standard (client-only generation via a deferred effect — the
+  lazy-initializer had been shipping a real password in static HTML — per-type
+  stripped pools that fix the exclude-ambiguous guarantee-path bypass, honest
+  entropy-bits meter instead of the "/2.8 → default reads Weak" scale, role=meter
+  + status region + htmlFor slider + fieldset legend + min-h-11/focus parity,
+  empty-config clears + disables + explains, autocomplete-off/output aria-label,
+  click-to-select, delay-safe RangeError guards); batch/4-128/crack-time claims
+  deleted and copy rewritten true; FAQ 4→6 with corrected entropy math and
+  privacy/offline PAA; shared `toolTitle()` maps verb categories to nouns (free
+  generate tool residual gone) and JSON-LD featureList no longer reads "generate
+  and generate"; guide retitled honest and passphrase claim removed. 29
+  production Chrome scenarios passed (incl. 0/25 ambiguous leak) plus notepad
+  34 / base64 27 / url-encoder 19 / qr 23 re-runs green; production build
+  passed (285 pages). Report: `audit/reports/password-generator.md`.
+- Next: Diff Checker (next in registry order after password-generator). Remaining
+  114 tools have not completed this process.
 - Residual checks: physical mobile/Safari/Firefox, manual screen readers, parser
   memory limits, and shared /verify proof wording. No universal audit guarantee.
 - Existing changes to other tools are preserved but not counted as reviewed.

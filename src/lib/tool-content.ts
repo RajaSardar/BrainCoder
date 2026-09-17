@@ -2336,19 +2336,19 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ]
   },
   "password-generator": {
-    "longDescription": "<p>The BrainCoder Strong Password Generator creates cryptographically random passwords instantly. Configure the length, character types (uppercase, lowercase, digits, symbols), and exclusion rules to generate passwords that meet any requirement — from simple Wi-Fi passwords to complex enterprise credential policies.</p>\n<p>The generator uses the browser's Crypto.getRandomValues() API, which provides cryptographically secure randomness sourced from the operating system's entropy pool. This is vastly superior to Math.random()-based generators, which produce predictable sequences that attackers can exploit. Each password is unique, unpredictable, and statistically resistant to brute-force attacks.</p>\n<p>Your generated passwords are never stored, transmitted, or logged. They exist only on your screen and nowhere else. The tool also calculates password entropy and estimated crack time so you can make informed decisions about password strength. This is the safest way to generate passwords — entirely offline, zero trust required.",
+    "longDescription": "<p>The BrainCoder Strong Password Generator creates cryptographically random passwords in your browser. Pick a length from 6 to 64 characters, toggle character types (uppercase, lowercase, digits, symbols), and optionally exclude hard-to-distinguish characters such as 0/O and l/1/I before copying your password with one click.</p>\n<p>The generator uses the browser's Crypto.getRandomValues() API, which draws cryptographically secure randomness from the operating system's entropy pool — the same source native password managers rely on. This is vastly superior to Math.random()-based generators, whose predictable sequences attackers can exploit. Every password is effectively unpredictable and statistically resistant to brute-force attacks.</p>\n<p>Your passwords are never stored, uploaded, or logged — they exist only on your screen and in your clipboard until you overwrite them. Everything runs locally in your browser, free and with no account required. A live entropy readout shows approximate bits along with a Weak / Good / Strong rating, and regenerating with the same settings produces an entirely new password every time.</p>",
     "features": [
-      "Cryptographically secure random generation",
-      "Configurable length from 4 to 128 characters",
+      "Cryptographically secure random generation (Crypto.getRandomValues)",
+      "Configurable length from 6 to 64 characters",
       "Toggle uppercase, lowercase, digits, and symbols",
-      "Exclude ambiguous characters (0, O, l, 1, I)",
-      "Password entropy and strength indicator",
-      "Generate multiple passwords at once"
+      "Exclude ambiguous characters (I, l, 1, O, 0, o) for easier reading",
+      "Live strength and entropy indicator (≈ bits plus Weak / Good / Strong)",
+      "One-click copy and instant regeneration"
     ],
     "howTo": [
       {
         "step": "Set password length",
-        "description": "Use the slider or input to set your desired password length. Longer passwords are exponentially harder to crack — 16+ characters is recommended."
+        "description": "Drag the slider to set your password length from 6 to 64 characters. Longer passwords are exponentially harder to crack — 16+ characters is recommended."
       },
       {
         "step": "Choose character types",
@@ -2360,7 +2360,7 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       },
       {
         "step": "Generate and copy",
-        "description": "Click 'Generate' to create a new random password. Review the entropy score and crack time estimate, then click 'Copy' to grab it."
+        "description": "Click 'Regenerate' to create a new random password (the field also refreshes automatically when you change settings). Review the strength readout, then click 'Copy' to grab it."
       }
     ],
     "faq": [
@@ -2370,15 +2370,23 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       },
       {
         "question": "Are generated passwords stored anywhere?",
-        "answer": "No. Generated passwords exist only in your browser's memory and on your screen. They are never sent to any server, stored in cookies, or logged. Once you close the page, the password exists only where you saved it."
+        "answer": "No. Generated passwords exist only in your browser's memory and on your screen. They are never sent to any server, stored in cookies, or logged. A generated password stays in your clipboard until it is overwritten, so clear or overwrite it if you are sharing a device."
       },
       {
         "question": "Why not just use a memorable phrase?",
-        "answer": "Memorable phrases work but are vulnerable to dictionary attacks. A truly random 16-character password with mixed types has billions of times more entropy than a 4-word phrase, making it far more resistant to computational cracking."
+        "answer": "Memorable phrases still work but are vulnerable to dictionary attacks. A random 16-character password drawn from all four character types carries roughly 100 bits of entropy — about a quadrillion times more than a common four-word phrase — so a generated password resists guessing far better than even clever-sounding phrases."
       },
       {
         "question": "What is password entropy?",
-        "answer": "Entropy measures password strength in bits. A password with 80 bits of entropy would take roughly 10^24 years to brute-force. Each bit doubles the search space. Our tool displays entropy and estimated crack time for your generated passwords."
+        "answer": "Entropy measures password strength in bits; each extra bit doubles the search space. A random 16-character password using all four character types carries roughly 100 bits, which would take millennia to brute-force even at billions of guesses per second. The tool shows your current password's approximate bit count and a Weak / Good / Strong rating directly under the bar."
+      },
+      {
+        "question": "Is it safe to use an online password generator?",
+        "answer": "Yes, when generation happens locally. This tool uses the browser's crypto.getRandomValues() API — the same cryptographically secure source behind secure connections — and nothing you generate is uploaded or logged. Each password is created on your device and exists only on your screen until you save it."
+      },
+      {
+        "question": "Can I generate passwords offline?",
+        "answer": "Yes. Once the page has loaded, generation runs entirely in your browser with no server call, so it works offline and the password never travels over a network."
       }
     ],
     "relatedSlugs": [
