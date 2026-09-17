@@ -38,7 +38,7 @@ export interface Op {
 
 function normalize(s: string, opts: DiffOptions): string {
   let t = s;
-  if (opts.ignoreCase) t = t.toLocaleLowerCase();
+  if (opts.ignoreCase) t = t.toLowerCase();
   if (opts.ignoreAllSpace) return t.replace(/\s+/g, "");
   if (opts.ignoreTrailingSpace) t = t.replace(/\s+$/g, "");
   return t;
@@ -106,7 +106,9 @@ export function myersScript(a: string[], b: string[], eq: (x: string, y: string)
 
 export function splitLines(text: string): string[] {
   if (text === "") return [];
-  const lines = text.split("\n");
+  const lines = text
+    .split("\n")
+    .map((line) => (line.endsWith("\r") ? line.slice(0, -1) : line));
   if (lines[lines.length - 1] === "") lines.pop();
   return lines;
 }
@@ -171,7 +173,7 @@ export function diffLines(
         aIndex: op.aIndex,
         bIndex: op.bIndex,
         left: aLines[op.aIndex],
-        right: aLines[op.aIndex],
+        right: bLines[op.bIndex],
         leftNo: aNo + 1,
         rightNo: bNo + 1,
       });
@@ -241,13 +243,16 @@ export function diffLines(
 
 function tokenizeWords(text: string, opts: DiffOptions): string[] {
   if (opts.ignoreAllSpace) return text.match(/\S+/g) ?? [];
-  const matches = text.match(/[^\s]+|\s+/g);
+  // CJK scripts are unspaced, so isolate each Han/Kana/Hangul code point as its
+  // own token; otherwise a one-character change would color an entire sentence.
+  const cjk = "\\u3000-\\u303f\\u3040-\\u30ff\\u3400-\\u4dbf\\u4e00-\\u9fff\\uf900-\\ufaff\\uac00-\\ud7af\\uff00-\\uffef";
+  const matches = text.match(new RegExp(`[${cjk}]|[^\\s]+|\\s+`, "g"));
   return matches ?? (text === "" ? [] : [text]);
 }
 
 function tokenizeChars(text: string): string[] {
   if (text === "") return [];
-  return text.split("");
+  return Array.from(text);
 }
 
 function tokenDiff(
@@ -288,13 +293,7 @@ function tokenDiff(
   return { left: collapse(lc), right: collapse(rc) };
 }
 
-export function buildUnifiedText(
-  aLines: string[],
-  bLines: string[],
-  opts: DiffOptions,
-  context = 3
-): string {
-  const hunks = buildHunks(aLines, bLines, opts, context);
+export function buildUnifiedTextFromHunks(hunks: LookupHunk[]): string {
   const out: string[] = ["--- Original", "+++ Changed"];
   for (const hunk of hunks) {
     out.push(`@@ -${hunk.aStart},${hunk.aCount} +${hunk.bStart},${hunk.bCount} @@`);
@@ -304,6 +303,15 @@ export function buildUnifiedText(
     }
   }
   return out.join("\n");
+}
+
+export function buildUnifiedText(
+  aLines: string[],
+  bLines: string[],
+  opts: DiffOptions,
+  context = 3
+): string {
+  return buildUnifiedTextFromHunks(buildHunks(aLines, bLines, opts, context));
 }
 
 export function buildHunks(
@@ -363,9 +371,9 @@ export function buildHunks(
       .map((r) => ({ aNo: r.aNo, bNo: r.bNo, kind: r.kind as OpType | "hunk", text: r.text }));
     const aStart = rows.find((r) => r.aNo !== null)?.aNo ?? 1;
     const bStart = rows.find((r) => r.bNo !== null)?.bNo ?? 1;
-    const aCount = Math.max(1, rows.filter((r) => r.aNo !== null).length);
-    const bCount = Math.max(1, rows.filter((r) => r.bNo !== null).length);
-    hunks.push({ aStart, aCount: Math.max(1, aCount), bStart, bCount: Math.max(1, bCount), rows });
+    const aCount = rows.filter((r) => r.aNo !== null).length;
+    const bCount = rows.filter((r) => r.bNo !== null).length;
+    hunks.push({ aStart, aCount, bStart, bCount, rows });
   }
 
   return hunks;

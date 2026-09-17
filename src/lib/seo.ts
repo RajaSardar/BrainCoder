@@ -183,6 +183,17 @@ export function buildToolMetadata(tool: ToolConfig): Metadata {
 
 export function toolJsonLd(tool: ToolConfig) {
   const url = `${SITE_URL}/tools/${tool.slug}`;
+  const TOOL_FEATURE_LIST: Record<string, string> = {
+    "diff-checker":
+      "Side-by-side and unified diff views, word- and character-level highlighting, ignore-case and whitespace options, unified-diff copy — all in your browser",
+  };
+  const featureList =
+    TOOL_FEATURE_LIST[tool.slug] ??
+    (tool.slug === "pdf-compressor"
+      ? tool.description
+      : tool.category.toLowerCase() === "generate"
+        ? "Format, convert and generate — all in your browser"
+        : `Format, convert, generate and ${tool.category.toLowerCase()} — all in your browser`);
   return {
     "@context": "https://schema.org",
     "@graph": [
@@ -200,11 +211,7 @@ export function toolJsonLd(tool: ToolConfig) {
           priceCurrency: "USD",
           availability: "https://schema.org/InStock",
         },
-        featureList: tool.slug === "pdf-compressor"
-          ? tool.description
-          : tool.category.toLowerCase() === "generate"
-            ? "Format, convert and generate — all in your browser"
-            : `Format, convert, generate and ${tool.category.toLowerCase()} — all in your browser`,
+        featureList,
       },
       {
         "@type": "BreadcrumbList",

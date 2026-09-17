@@ -4545,14 +4545,14 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ]
   },
   "diff-checker": {
-    "longDescription": "<p>BrainCoder's text diff checker is a powerful online tool that compares two pieces of text side by side and highlights every difference between them. Whether you're reviewing code changes, proofreading a document, or verifying that a translation is accurate, this diff tool makes it effortless to spot additions, deletions, and modifications at a glance. It's an essential utility for developers, writers, and anyone who works with text on a regular basis.</p>\n<p>The diff checker processes everything locally in your browser, so sensitive documents, confidential code, and proprietary content never leave your device. There's no need to upload files to a third-party server — just paste your original and modified text, and the tool instantly shows you a color-coded comparison. It works with plain text, code snippets, configuration files, and more.</p>\n<p>With its clean side-by-side layout and inline highlighting, BrainCoder's diff tool helps you understand exactly what changed between two versions of any text. Whether you're merging pull requests, tracking document revisions, or simply comparing two versions of a paragraph, this tool delivers fast, accurate, and private text comparison right in your browser.</p>",
+    "longDescription": "<p>BrainCoder's text diff checker is a powerful online tool that compares two pieces of text side by side and highlights every difference between them. Whether you're reviewing code changes, proofreading a document, or verifying that a translation is accurate, this tool makes it effortless to spot additions, deletions, and modifications at a glance. It's an essential utility for developers, writers, and anyone who works with text on a regular basis.</p>\n<p>The diff checker processes everything locally in your browser, so sensitive documents, confidential code, and proprietary content never leave your device. There's no need to upload files to a third-party server — just paste your original and modified text, and the tool instantly shows you a color-coded comparison. It works with plain text, code snippets, configuration files, and more.</p>\n<p>With its clean side-by-side layout and inline highlighting, BrainCoder's comparison tool helps you understand exactly what changed between two versions of any text. Whether you're merging pull requests, tracking document revisions, or simply comparing two versions of a paragraph, this tool delivers fast, accurate, and private text comparison right in your browser.</p>",
     "features": [
       "Side-by-side text comparison with color-coded differences",
       "Highlights additions, deletions, and modifications clearly",
       "Works with plain text, code, configs, and any text format",
       "Fully client-side — no data ever leaves your browser",
       "Line-by-line and word-level diff detection",
-      "Copy diff results for sharing or documentation"
+      "Copy results as a unified diff for sharing or documentation"
     ],
     "howTo": [
       {
@@ -4565,11 +4565,11 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       },
       {
         "step": "Compare and Review",
-        "description": "Click the 'Compare' button. The tool highlights differences in green (additions), red (deletions), and yellow (modifications) so you can instantly see what changed."
+        "description": "Click the 'Compare' button. The tool shows the result side by side or as a single-file diff: added lines are highlighted in green, removed lines in red, and modified lines appear as a red/green pair with inline word- or character-level highlighting. The summary badge counts how many lines are unchanged, added, removed, and modified."
       },
       {
-        "step": "Copy or Export Results",
-        "description": "Review the diff output and copy the results to your clipboard for documentation, code review notes, or sharing with your team."
+        "step": "Review and Copy the Diff",
+        "description": "Review the comparison, then use 'Copy as unified diff' to copy the result to your clipboard for documentation, code review notes, or sharing with your team."
       }
     ],
     "faq": [
@@ -4583,15 +4583,15 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       },
       {
         "question": "How large can the texts be?",
-        "answer": "The tool can handle moderately large texts. For very large files (hundreds of thousands of lines), performance may vary depending on your browser and device capabilities."
+        "answer": "Diffing runs entirely in your browser, so the practical limit is the memory of one browser tab. Texts up to a few thousand lines compare instantly; heavily rewritten files or hundreds of thousands of lines can run slowly or freeze the tab, so chunk very large inputs before comparing."
       }
     ],
     "relatedSlugs": [
       "notepad",
       "word-counter",
       "text-cleaner",
-      "md-to-html",
-      "html-to-pdf"
+      "text-lines",
+      "markdown-preview"
     ]
   },
   "word-counter": {

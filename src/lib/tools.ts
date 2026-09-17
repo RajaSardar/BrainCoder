@@ -227,7 +227,7 @@ export const TOOLS: ToolConfig[] = [
     name: "Diff Checker",
     tagline: "Compare two texts line by line",
     description:
-      "Spot added and removed lines between two blocks of text with a clear side-by-side view.",
+      "Spot added, removed, and modified lines between two blocks of text with a clear side-by-side or unified diff view.",
     category: "Text Tools",
     icon: GitCompareArrows,
     accent: "text-cyan-600",

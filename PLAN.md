@@ -563,8 +563,28 @@ Phase 2+ Target (NOT building now):
   production Chrome scenarios passed (incl. 0/25 ambiguous leak) plus notepad
   34 / base64 27 / url-encoder 19 / qr 23 re-runs green; production build
   passed (285 pages). Report: `audit/reports/password-generator.md`.
-- Next: Diff Checker (next in registry order after password-generator). Remaining
-  114 tools have not completed this process.
+- Diff Checker: ten independent judges ran in parallel (two rate-limited on
+  first attempt, completed on retry). Engine fixed and upgraded:
+  same-row/right-side text bug (rendered LEFT bytes in the right pane),
+  locale-nondeterministic ignore-case (`toLocaleLowerCase` → `toLowerCase`),
+  surrogate-splitting char highlight (`split("")` → `Array.from`), CJK word
+  tokens split per code point (one-char change no longer colors the whole
+  sentence), CRLF `\r` stripped in `splitLines` (upload path), canonical `-1,0`
+  hunk headers, and the 3rd Myers pass removed (copy formats from stored hunks).
+  Both diff memos now gate on Compare and the render no longer duplicates
+  empty/identical states; an honest amber warning covers very large inputs;
+  the false "yellow modifications" howTo step and the "hundreds of thousands of
+  lines" FAQ are corrected; JSON-LD featureList is now tool-specific (no "format,
+  convert, generate" for a diff tool); split view gained `−`/`+` text markers,
+  th headers, caption, legend, a role=status live region, real tablist/tab
+  semantics with arrow keys, and the house min-h-11/focusRing (also added to the
+  shared Button); Copy uses the shared CopyButton with feedback. 31 production
+  Chrome scenarios passed (incl. same-row regression, byte-exact unified diff,
+  CJK comma-only highlight, emoji-intact char mode, CRLF upload equality) plus
+  notepad 34 / base64 27 / url-encoder 19 / qr 23 re-runs green; production
+  build passed (285 pages). Report: `audit/reports/diff-checker.md`.
+- Next: Regex Tester (next in registry order after diff-checker). Remaining
+  113 tools have not completed this process.
 - Residual checks: physical mobile/Safari/Firefox, manual screen readers, parser
   memory limits, and shared /verify proof wording. No universal audit guarantee.
 - Existing changes to other tools are preserved but not counted as reviewed.
