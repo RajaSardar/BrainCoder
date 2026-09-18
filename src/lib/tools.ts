@@ -850,6 +850,17 @@ export const TOOLS: ToolConfig[] = [
     gradient: "from-blue-500 to-cyan-600",
   },
   {
+    slug: "text-size-calculator",
+    name: "Text Size Calculator",
+    tagline: "Measure bytes, chars & file size",
+    description:
+      "Measure any text in UTF-8 and UTF-16 bytes and characters, with or without whitespace, plus minify and beautify valid JSON. Works for all types of text.",
+    category: "Text Tools",
+    icon: Ruler,
+    accent: "text-slate-700",
+    gradient: "from-slate-600 to-slate-800",
+  },
+  {
     slug: "url-parser",
     name: "URL Parser",
     tagline: "Break any URL into its parts",

@@ -1,135 +1,113 @@
 # Diff Checker: Parallel Judges Audit
 
-Date: 2026-09-17. Status: tenth tool upgraded and verified within the coverage
-below. Ten independent judges ran in parallel (read-only, no edits); two were
-rate-limited on first attempt and completed on retry.
+Date: 2026-09-18. Status: tenth tool upgraded and verified within the coverage
+below. Ten independent judges ran in parallel (read-only, no edits); two
+(performance, cross-browser) were rate-limited on first attempt and completed
+on retry.
 
 ## Ten Independent Judges
 
 | Expert | Main findings |
 | --- | --- |
-| Functional | 14/14 feature scenarios pass, incl. split/unified correctness, counts, context sizing, exact clipboard match, swap/clear/sample, and live ignore-toggles. One real bug: **same rows render the LEFT text in the right pane** (`diff.ts` built `right: aLines[aIndex]`), so ignore-case/-whitespace showed the wrong bytes and the copied unified diff carried the left spelling — applying it to the actual file would rewrite normalized lines. Also: pure insert-at-top hunk header emits non-canonical `-1,1` instead of `-1,0`; a file's single final newline difference is invisible; summary pill always shows `+0 / −0` noise |
-| Code quality | Myers implementation verified correct (backtrack, run-pairing, line numbering all pass; unequal pair counts resume numbers correctly). Critical: `trace.push(v.slice())` per diagonal is O((n+m)²) time **and** memory — 10k reversed lines OOM (measured 5k → 1.53 GB heap). Major: `toLocaleLowerCase()` nondeterministic across locales (Turkish I/ı); `text.split("")` breaks surrogate pairs; CRLF `\r` makes every line differ on the upload path; 3 full Myers passes per keystroke (`diffLines` + `buildHunks` + `buildUnifiedText` memo), ungated and eager even before Compare; `readAsText` UTF-8-only. Minor: dead `"hunk"` OpType branch, incident-safe chunk-collapse aliasing, fragile index-key reuse, no file-input error/value-reset handling |
-| Privacy/security | **No data leaves the browser** — full CDP request sweep (CLIP marker in both panes) saw only same-origin Next assets + RSC prefetches; localStorage/sessionStorage untouched by the tool; clipboard writes only the requested unified diff on click; XSS probe (script/img/onerror payloads) renders 100% as text, zero dangerouslySetInnerHTML/eval/Function/postMessage. Major: no input-size guard → a MB-scale paste hits the O(n+m)² trace and freezes the tab (measured 73,980 chars = 2.56 s). Minor: clipboard `.catch(() => {})` has no fallback (shared CopyButton has one); `'unsafe-eval'` reaches prod CSP (Turbopack-dev rationale in the file comment, not dev-scoped) |
-| Performance | Hydration 153 ms, JS payload 0.84 MB — excellent. But: diff recomputes on every keystroke with **no debounce**, not gated on `compared`/`view`, and `buildUnifiedText` runs a 3rd Myers pass that only Copy consumes. Worst-case reversed 2k lines = 1.5 s freeze, 4k = 2.7 s, 8k = 13.5 s, 5k = +1.5 GB heap. No worker (project already ships worker patterns elsewhere), no virtualization, `chars` mode quadratic for dense diffs. Recommendations: gate the memos on `compared`, drop the 3rd pass, share one script, debounce/worker, cap + warn |
-| SEO | Title `Diff Checker online — free · BrainCoder` (no junk verbs). **Major**: howTo step 3 claims "yellow (modifications)" — the table never uses yellow; **Major**: FAQ claims "hundreds of thousands of lines" — off by ~2 orders of magnitude vs the measured OOM; **Major**: JSON-LD `featureList` is the generic template ("Format, convert, generate and text tools") that a diff checker neither generates nor converts. Minor: meta description omitted the keyword "diff"; keyword row has two zero-volume terms; feature/related-slug fine-tuning; `html-to-pdf` related slug weak; no dedicated guide needed (would cannibalize the tool page). Recommended title swallowed after noun-map audit — pattern already correct |
-| UX/accessibility | Four WCAG AA failures: no live region (results never announced), tab toggles are plain buttons with no tab semantics/roving tabs and active-tab contrast 3.68:1, split view is color-only (no `+`/`−` text markers; deuteranopia reads red/green as one), results table has no headers/caption/legend. Also: checkbox targets 13×13 px, upload buttons 16 px tall, no focus ring (vs house `focusRing`), Copy gives no "Copied" feedback, blank-compare shows two contradictory messages, shared `Button` misses the house `min-h-11`. Passes: contrast ratios 4.79–7.60, label programmatic association, keyboard tab order, icons, context select |
-| Internationalization | Major×3, all proven in the live tool: **(1)** ignore-case is locale-dependent — under `tr-TR`, `I` vs `i` diffs spuriously while `İSTANBUL`/`istanbul` equalize, opposite of `en-US`; **(2)** char granularity splits surrogate pairs — an emoji change renders two U+FFFD boxes; **(3)** word granularity is useless for CJK — one inserted char colors the entire 13-char sentence. Minor: BOM proven safe (Chromium `readAsText` strips it), "Ignore whitespace (git -w)" strips more than git (`\u3000`), `ß` no folding (documented limitation), ~28 hardcoded strings but site is en-only |
-| Edge cases | Grade A-: Myers alignment, hunk construction, context=0, granularities, swap, sample idempotency, blank-line handling, astral chars in words mode all pass. The suspected trailing-newline invisibility does **not** reproduce (splitLines pops exactly one terminal empty; `a\nb\n\n` vs `a\nb\n\n\n` IS detected). Real gaps (minor): a 0-vs-1 final newline difference is invisible, empty added rows have no min-height/placeholder, upload-path CRLF has no dedicated toggle (paste path is transparently normalized by the browser), blank-compare double message, `\u2028` not a line terminator |
-| Cross-browser | Engine matrix: Chrome **PASS**, Firefox **PASS** (identical summary, CJK renders), WebKit not testable (locally-installed build's OS is too old — dyld symbol error). SSR clean: `<html lang="en">`, textareas ship without `value`, no tool data in static HTML, CSR bailout correct. Long line keeps 48 px number column with `break-all`. Style: self-hosted Geist fonts (no third-party FOUT), no print-color CSS (diff backgrounds won't print), site-header 375 px overflow confirmed pre-existing (tool content itself contained by `overflow-x-auto`) |
-| Honesty/copy | **One fabricated claim** (howTo step 3 "yellow modifications" — nothing is yellow in the table; only the pill is amber) and **one dangerous false claim** (FAQ "hundreds of thousands of lines" → the trace measures ~1.6 GB at 5k and OOMs at 10k). Also: "Copy or Export Results" has no Export control; "works with … any text format" vs a file-accept list missing `.yaml/.xml/.log/.yaml`; description under-reports (omits modifications, unified view, char-level). Everything else verified true (client-side privacy, colors, copy, component copy). Grade C — plus step-4 rename and an accept-list extension |
+| Functional | 14/14 scenarios pass (alignment, counts, context sizes, split/unified markers, exact unified-diff clipboard, swap/clear/sample idempotency, live ignore toggles). ONE bug found live: **same rows render the LEFT text in the right pane** (`diff.ts` built `right: aLines[aIndex]`), so with ignore-case/-whitespace the right side showed the wrong spelling, and "Copy as unified diff" emitted the left spelling for equal lines — applying the copied diff would rewrite normalized lines to the left file's bytes. Minor: `-1,1` hunk for insert-at-top (non-canonical), final-newline diff invisible, `+0 / −0` pill noise |
+| Code quality | Myers verified correct end-to-end (backtrack, run-pairing, numbers resume after unequal pairs). CRITICAL: `trace.push(v.slice())` per diagonal → O((n+m)²) time AND memory (5k reversed lines = 1.53 GB heap; ~10k OOM). MAJOR: `toLocaleLowerCase()` is locale-dependent (Turkish I/ı diverge); `text.split("")` splits surrogate pairs; CRLF `\r` survives on upload path so every line differs; 3 full Myers passes per keystroke (diffLines + buildHunks + buildUnifiedText memo) ungated; `readAsText` UTF-8-only. Minor: dead `"hunk"` OpType, index-keys, no file-error handler |
+| Privacy/security | **Zero egress** — full CDP request sweep with a marker string in both panes: only same-origin Next assets + RSC prefetches; no storage writes; clipboard writes only on explicit click; XSS payloads render as literal text; no eval/innerHTML/postMessage. MAJOR: no input cap → MB-scale paste hits the quadratic trace (73,980 chars froze tab 2.56s). MINOR: clipboard `.catch(() => {})` had no fallback; 'unsafe-eval' reaches prod CSP |
+| Performance | Hydration 153 ms; JS 0.84 MB — excellent. But diff recomputed on EVERY keystroke (no debounce, not gated on compared/view) and `buildUnifiedText` ran a 3rd pass only Copy consumes. Worst case: 2k reversed ≈1.5s, 4k ≈2.7s, 8k ≈13.5s freeze, 5k = +1.5 GB heap. No worker, no virtualization; chars mode quadratic for dense small diffs. Recommended: gate memos + drop 3rd pass first |
+| SEO | Title correct (no junk verbs). **FALSE howTo**: "yellow (modifications)" — the table never shows yellow (only the amber pill count). **FALSE FAQ**: "hundreds of thousands of lines" ≈2 orders of magnitude beyond the measured OOM. Junk JSON-LD featureList ("Format, convert, generate and text tools"). Meta description omitted the word "diff"; keyword row OK; `html-to-pdf` weak related slug |
+| UX/a11y | 4 WCAG AA failures: no live region (results never announced), tab toggles plain buttons (no aria-selected, no arrow keys, active cyan 3.68:1), split view color-only (red/green invisible to deuteranopia), table without headers/caption/legend. Also 13×13 checkboxes, 16px upload targets, no focus ring / "Copied" feedback, empty-compare double message. Passes: contrast ratios, label association, tab order, icons |
+| i18n | **Proven live**: ignore-case differs by locale (tr-TR I/i spuriously different, İ/i equal — opposite of en-US); char granularity renders U+FFFD for emoji changes; word granularity useless for CJK (one-char change colors the whole sentence). Minor: BOM safe (Chromium strips it), git -w strips more than git (\u3000), ß no folding, ~28 en-only strings |
+| Edge cases | Grade A-. Verified correct: Myers, hunk/context, granularities, swap, sample idempotency, interior blank lines, astral chars in words mode. The hypothesized trailing-newline invisibility does NOT reproduce (only a 0-vs-1 final newline is invisible). Minor: empty added rows lack min-height; CRLF upload lacks a toggle (paste path normalized by browser); \u2028 not a line terminator |
+| Cross-browser | Chrome PASS, Firefox PASS (CJK renders), WebKit not testable locally (installed build too old — dyld error). SSR clean: `<html lang="en">`, textareas ship without value, no tool data in static HTML, CSR bailout correct. Long lines keep the 48px number column (break-all). Note: site-header overflows 375px (pre-existing, tool content contained by overflow-x-auto) |
+| Honesty/copy | One fabricated claim (howTo "yellow modifications") and one dangerous false claim (FAQ size). "Copy or Export" over-claims export (no Export control). "any text format" vs file accept list missing yaml/xml/log. Description under-reports (omits modifications, unified view, char level). All else verified true. Suggested rewrites supplied |
 
 ## Changes And Evidence
 
-- `src/features/diff-checker/diff.ts` engine fixes:
-  - **same-row right-pane bug fixed**: same rows now render `bLines[op.bIndex]`
-    (the user's actual right-side text) instead of the left text — visible in
-    split view and in the copied unified diff context lines (which now match
-    git semantics: context lines are the original-file spelling);
-  - `normalize()` uses `toLowerCase()` (locale-invariant, deterministic ASCII
-    folding) instead of `toLocaleLowerCase()` — the Turkish I/ı divergence and
-    cross-locale nondeterminism are gone;
-  - `tokenizeChars` now splits with `Array.from()` (code-point aware) so
-    character-granularity highlighting keeps emoji/astral glyphs whole (verified
-    no U+FFFD mid-highlight);
-  - `tokenizeWords` is **CJK-aware**: Han/Kana/Hangul/fullwidth runs tokenize
-    per code point, so a one-character CJK change highlights just that character
-    (verified: only the added `，` renders green, not the whole sentence);
-  - `splitLines` strips a trailing `\r` per line, so CRLF uploads compare equal
-    to LF text without relying on the "Ignore trailing spaces" workaround
-    (verified via a real `\r\n` file upload);
-  - hunk headers are canonical again: an insert-at-top hunk emits `-1,0` (was
-    `-1,1` because counts were force-minimumed to 1);
-  - **3rd Myers pass removed**: copyable text is now
-
-    `buildUnifiedTextFromHunks(diff.hunks)` — formatted from the hunks already
-    stored in the diff result, so the Copy button does zero re-diffing
-    (`buildUnifiedText` kept as a thin compatibility wrapper).
-- `src/features/diff-checker/DiffChecker.tsx`:
-  - **both diff memos gated on `compared`**: nothing diff-related computes
-    until the user clicks Compare (verified: no result table/DOM work before
-    Compare; identically-line inputs are fast d=0 exits once compared);
-    `buildUnifiedText` is gone from the render path; `splitLines` runs once per
-    compared render;
-  - **honest large-input warning**: an amber `role="status"` banner explains a
-    very large or heavily rewritten input can be slow or freeze the tab (was a
-    silent OOM trap; matches the corrected FAQ);
-  - results pill is now a single `role="status" aria-live="polite"` region (SR
-    users hear the summary); the redundant body empty-states are removed so an
-    empty compare shows exactly "No lines to compare" and identical texts show
-    exactly one "No differences found";
-  - split view is **no longer color-only**: a dedicated `−`/`+` text-marker
-    column, `<caption>` (sr-only), `<thead><th scope="col">` headers
-    (Original / Changed), and a visible legend ("Red = removed or modified
-    lines from the Original · Green = added or modified lines in the Changed
-    text");
-  - view and highlight groups are real **tabs**: `role="tablist"` +
-    `role="tab"` + `aria-selected` with arrow/Home/End keyboard navigation;
-    active tab recolored `bg-indigo-600` (white-on-indigo ≈ 6:1, was 3.68:1 on
-    cyan);
-  - Copy uses the shared **`CopyButton`** ("Copied" feedback + sr-only status +
-    `execCommand` fallback) instead of a silent `.catch` call;
-  - checkbox labels and upload buttons got `min-h-11` touch targets and the
-    house `focusRing`; hidden file inputs carry `aria-label`; `FileReader` now
-    has an `onerror` handler; the file `accept` list extended to the common
-    code/config set (yaml, xml, log, toml, ini, py, go, java, c, sql, sh, …) so
-    "works with configuration files" is honest.
-- Shared UI (`src/components/ui/index.tsx`): the house `min-h-11` and
-  `focus-visible:outline-indigo-600` were added to the shared `Button` base
-  (site-wide 44 px target + visible focus keyboard parity); `CopyButton`
-  unchanged.
-- Registry (`tools.ts`): description now covers modifications and views —
-  "Spot added, removed, and modified lines between two blocks of text with a
-  clear side-by-side or unified diff view." (also puts the "diff" keyword back
-  into the meta description).
-- Copy (`tool-content.ts`): howTo step 3 rewritten with the **true colors**
-  (green additions, red deletions, modified lines as a red/green pair with
-  inline word/character highlighting + a modified-count badge); step 4 renamed
-  "Review and Copy the Diff" (no more "Export" that doesn't exist); the false
-  "hundreds of thousands of lines" FAQ replaced with browser-memory-honest
-  guidance that matches the new warning banner; feature "Copy results as a
-  unified diff"; longDescription dedupes the "diff tool" repetition;
-  relatedSlugs swapped `html-to-pdf` (no compare intent) for `text-lines` +
-  `markdown-preview`.
-- SEO (`seo.ts`): per-tool JSON-LD `featureList` override for diff-checker
-  ("Side-by-side and unified diff views, word- and character-level
-  highlighting, ignore-case and whitespace options, unified-diff copy — all in
-  your browser") replacing the generic "Format, convert, generate and text
-  tools" template that this tool can't back up; keyword row unchanged (all five
-  verified accurate).
-- Verification: `e2e/diff-checker-browser.mjs` — 31 production Chrome scenarios
-  passed (SSR ships empty inputs, **no work before Compare**, single empty-state
-  message, identical → No differences found with copy hidden, **same-row
-  right-side spelling regression**, byte-exact unified-diff clipboard, `−`/`+`
-  markers + th headers + legend + live region + one selected tab, arrow-key tab
-  cycling, CRLF-upload vs LF-paste equality, ignore whitespace vs trailing
-  spaces, **CJK comma-only highlight**, **emoji intact at char granularity**,
-  touch-sized labels, 375 px tool fit, large-input honesty banner, cross-tool
-  notepad regression). Sibling re-runs green: notepad 34, base64 27,
-  url-encoder 19, qr 23. Lint 0 errors / 4 pre-existing warnings; production
-  build passed (285 pages).
+- `diff.ts`:
+  - **same-row data bug fixed** — equal rows now render `bLines[op.bIndex]`
+    (user's actual right-side text) in the right pane; copied context lines use
+    git-style left-file spelling;
+  - `normalize()` uses `toLowerCase()` (locale-invariant) — Turkish I/ı and
+    cross-browser nondeterminism gone;
+  - `tokenizeChars` uses `Array.from(text)` (code-point aware) — emoji/astral
+    stay whole in char-granularity highlights;
+  - **CJK-aware `tokenizeWords`** — Han/Kana/Hangul/fullwidth runes tokenize per
+    code point (`/[${cjk}]|[^\s]+|\s+/g`), so a one-char CJK change highlights
+    only that char (verified: only the added `，` renders green);
+  - `splitLines` strips a trailing `\r` per line — CRLF uploads compare equal to
+    LF text without needing "ignore trailing spaces";
+  - canonical hunk counts (`-1,0` for insert-at-top, not `-1,1`);
+  - added `buildUnifiedTextFromHunks(hunks)`; the Copy path now formats from the
+    hunks already stored in the diff result — the 3rd Myers pass is gone
+    (`buildUnifiedText` retained as a thin wrapper).
+- `DiffChecker.tsx`:
+  - **both diff memos gated on `compared`** — zero diff computation until
+    Compare is clicked (verified: no table/DOM diff work before Compare);
+    `unifiedText` derived from stored hunks;
+  - results pill inside `role="status" aria-live="polite"` (SR users hear the
+    summary); render-side empty messages removed → exactly one empty state
+    ("No lines to compare" for blank input, "No differences found" for equal
+    text); `+0 / −0` hidden;
+  - split view is **not color-only**: `−`/`+` text-marker column, sr-only
+    `<caption>`, `<thead>` `# / Original / # / Changed` headers, plus a visible
+    legend ("Red = removed or modified… · Green = added or modified…");
+  - view + highlight groups are real tabs (`role="tablist"`/`role="tab"`,
+    `aria-selected`, roving tabindex, Arrow/Home/End keyboard nav); active tab
+    `bg-indigo-600` ≈6:1 (was cyan 3.68:1);
+  - copy uses the shared `CopyButton` (transient "Copied" + sr-only status +
+    `execCommand` fallback) instead of a silent `.catch`;
+  - checkbox labels and upload buttons got `min-h-11` + house focusRing; hidden
+    file inputs carry `aria-label`; `FileReader` gained `onerror`; accept list
+    extended (yaml/xml/log/toml/ini/py/go/java/c/… + text/* + application/json
+    + application/xml + application/x-yaml) so "works with configuration
+    files" is honest;
+  - amber `role="status"` warning when combined lines >4000 or chars
+    >1,000,000 — honest disclosure instead of a silent tab freeze.
+- Shared `Button` (`components/ui/index.tsx`): added `min-h-11` +
+  `focus-visible:outline-indigo-600` (site-wide target + visible focus parity).
+- Copy (`tool-content.ts`): howTo step 3 rewritten to the REAL colors (green
+  additions, red deletions, modified as a red/green pair with inline
+  word/character highlighting + modified-count badge); step 4 renamed "Review
+  and Copy the Diff" (Export claim deleted); FAQ size answer is honest and
+  matches the new warning; feature copy → "Copy results as a unified diff for
+  sharing or documentation"; longDescription de-duped "diff tool"; relatedSlugs
+  → notepad, word-counter, text-cleaner, text-lines, markdown-preview
+  (`html-to-pdf` removed).
+- Registry (`tools.ts`): description → "Spot added, removed, and modified lines
+  between two blocks of text with a clear side-by-side or unified diff view."
+  (restores the "diff" keyword to the meta description).
+- SEO (`seo.ts`): per-tool `TOOL_FEATURE_LIST` override so diff-checker's
+  JSON-LD featureList is honest ("Side-by-side and unified diff views, word-
+  and character-level highlighting, ignore-case and whitespace options,
+  unified-diff copy — all in your browser") instead of the generic
+  "Format, convert, generate and text tools".
+- Verification: `e2e/diff-checker-browser.mjs` — **31/31 production Chrome
+  scenarios** (SSR empty inputs; nothing computes before Compare; single empty-
+  compare message; identical → No differences + no copy button; same-row
+  right-side regression; byte-exact unified clipboard; −/+ markers; th/caption/
+  legend; role=status; one selected tab; Arrow-key cycling; hunk header;
+  CRLF-upload vs LF-paste equal; ignore-whitespace vs trailing; CJK comma-only
+  highlight; emoji intact at char granularity (no U+FFFD); touch-sized label;
+  375px tool fit; large-input honesty banner; notepad regression). Production
+  build passed (285 pages); lint 0 errors / 4 pre-existing warnings; tsc clean.
 
 ## Remaining Limits
 
 Not runtime-verified: physical mobile devices, real screen-reader passes, and
-WebKit (local Playwright WebKit build is too old for this macOS — Chrome and
-Firefox both passed the smoke matrix). The worst-case engine cost is bounded
-but not eliminated: a 5k–8k-line fully-rewritten file still takes seconds on
-Compare (the honest banner discloses this); a linear-space Myers
-(Hirschberg) backtrack or a Web Worker + row virtualization are the recommended
-follow-ups and the `toLowerCase()`/array-tokenizer changes are now in the shared
-engine for any future re-implementation. Residual shared items still open:
-/verify audit wording, physical-browser matrix, header 375px nav overflow (site
-header, not the tool), `image-base64` self-link,
-`utf8-converter`/`aes-encryption` reciprocal relatedSlugs edges, `'unsafe-eval'`
-in `script-src` (Turbopack dev — noted but reaches prod), the shared ToolPreview
-upload mock, print CSS for colored diff backgrounds, and the sibling random
-tools still using `Math.random()` (share `secureRandomIndex` as a trackable
-follow-up).
+WebKit (local Playwright WebKit is too old for this macOS — Chrome and Firefox
+both passed the smoke matrix). The worst-case engine cost is bounded but not
+eliminated: 5k–8k fully-rewritten lines still take seconds on Compare (honest
+banner discloses it); linear-space Myers (Hirschberg) or a Web Worker for the
+trace are the recommended future follow-ups. Residual shared items still open:
+/verify proof wording, physical-browser matrix, header nav overflow past 375px
+(the site header, not the tool), `image-base64` self-link,
+`utf8-converter`/`aes-encryption` reciprocal relatedSlugs edges,
+`'unsafe-eval'` in script-src (Turbopack), shared ToolPreview upload mock, print
+CSS for colored diff backgrounds, and sibling random tools still on
+`Math.random()` (share `secureRandomIndex` as a tracked follow-up).
 
 Other tools in the registry have not completed this ten-judge process beyond
 PDF Compressor, Image Compressor, Image Resizer, JSON Formatter, URL Encoder,
 Base64 Encoder & Decoder, QR Code Generator, Notepad, Password Generator, and
 Diff Checker — 113 remaining.
 
-Next tool: Regex Tester, the entry after diff-checker in the registry.
+Next tool: Regex Tester (next entry after diff-checker in the registry).

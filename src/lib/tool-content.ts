@@ -4686,6 +4686,61 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       "csv-json"
     ]
   },
+  "text-size-calculator": {
+    "longDescription": "<p>The Text Size Calculator measures any text — plain prose, code, JSON, logs, config files, or pasted clipboard content — in UTF-8 bytes, UTF-16 bytes, characters, words and lines, updating live as you type or paste. Sizes are shown in human-readable B, KB and MB units, so you can instantly answer questions like &quot;how big is this string in bytes?&quot; or &quot;does this JSON payload fit an API limit?&quot;.</p><p>Toggle &quot;Exclude whitespace&quot; to see the same metrics with spaces, tabs and line breaks removed — ideal for estimating minified payload size or storage budgets. When the input is valid JSON, the tool offers minify and beautify actions with copy buttons and a size reduction percentage. For non-JSON text it provides a whitespace-collapse preview and clearly notes that full minify and beautify require valid JSON. An optional file picker measures any text file&apos;s real on-disk byte count and loads its contents for full metrics.</p><p>All counting happens in your browser with the native TextEncoder API — nothing is uploaded, stored, or shared. This makes it safe for API keys, tokens, and any sensitive text.</p>",
+    "features": [
+      "Live UTF-8 and UTF-16 byte counts with human-readable B, KB and MB units",
+      "Character, word, line and whitespace counts for all types of text",
+      "Exclude-whitespace mode for minified-size and storage estimates",
+      "Minify and beautify valid JSON with copy buttons and size reduction",
+      "Whitespace-collapse preview for non-JSON text (honestly labeled)",
+      "Open any text file to read its exact on-disk byte size",
+      "100% client-side with the native TextEncoder API — nothing leaves your browser"
+    ],
+    "howTo": [
+      {
+        "step": "Type or Paste Your Text",
+        "description": "Enter any text — code, logs, JSON, or copy — into the input. Byte and character metrics update live as you type."
+      },
+      {
+        "step": "Toggle Whitespace Exclusion",
+        "description": "Enable &quot;Exclude whitespace from size&quot; to see bytes and characters counted without spaces, tabs and newlines."
+      },
+      {
+        "step": "Measure a File",
+        "description": "Click &quot;Open file&quot; to read a text file&apos;s exact on-disk byte count and load its contents for full metrics."
+      },
+      {
+        "step": "Minify or Beautify JSON",
+        "description": "For valid JSON, copy a beautified or minified version with its byte size and reduction percentage. Non-JSON text gets an honest whitespace-collapse preview instead."
+      }
+    ],
+    "faq": [
+      {
+        "question": "How is size measured without whitespace?",
+        "answer": "The tool makes a temporary copy of your text with spaces, tabs and line breaks removed, then recomputes byte and character counts from that copy. It also shows how many bytes and characters were excluded. The original input is never modified."
+      },
+      {
+        "question": "Which formats support minify and beautify?",
+        "answer": "Only valid JSON gets full minify and beautify. If the input parses as JSON you get compact minified and pretty-printed outputs with copy buttons and character counts. Any other text — CSS, logs, or plain prose — reports metrics only, with a whitespace-collapse preview that is clearly labeled as an approximation."
+      },
+      {
+        "question": "Why does emoji affect the byte count?",
+        "answer": "Emoji and other supplementary-plane characters are encoded as multiple bytes: 4 bytes in UTF-8 and 4 bytes (two UTF-16 code units) in UTF-16. This tool counts characters as Unicode code points, so one emoji counts as a single character while still reporting its full byte weight."
+      },
+      {
+        "question": "Is my data uploaded when I use this tool?",
+        "answer": "No. All counting, minifying and formatting run entirely in JavaScript on your device using the native TextEncoder API. Nothing is transmitted or stored on any server."
+      }
+    ],
+    "relatedSlugs": [
+      "word-counter",
+      "json-formatter",
+      "text-cleaner",
+      "text-lines",
+      "gzip-tool"
+    ]
+  },
   "unicode-styles": {
     "longDescription": "<p>BrainCoder's unicode text styles tool lets you transform plain text into stylish Unicode variations — bold, italic, cursive, monospace, strikethrough, small caps, and more. These styled texts use Unicode characters rather than HTML or Markdown formatting, so they work everywhere: social media bios, chat messages, usernames, Discord nicknames, Instagram captions, and anywhere that doesn't support rich text formatting.</p>\n<p>Simply type or paste your text, choose a style from the available options, and copy the result. The tool generates multiple style variations instantly, including combinations like bold-italic, bold-cursive, and double-struck. This is perfect for personalizing your online presence, creating eye-catching headers, or adding visual emphasis to plain text environments.</p>\n<p>All text generation happens in your browser — nothing is uploaded or stored. The tool uses standard Unicode character mappings, so the styled text renders correctly on most modern devices and platforms. Whether you want a fancy username or a distinctive social media profile, this tool makes it effortless.</p>",
     "features": [

@@ -123,6 +123,9 @@ const mountMap: Record<string, ReturnType<typeof dynamic>> = {
     () => import("@/features/html-entities/HtmlEntities"),
   ),
   "text-lines": dynamic(() => import("@/features/text-lines/TextLines")),
+  "text-size-calculator": dynamic(
+    () => import("@/features/text-size-calculator/TextSizeCalculator"),
+  ),
   "url-parser": dynamic(() => import("@/features/url-parser/UrlParser")),
   "image-base64": dynamic(() => import("@/features/image-base64/ImageBase64")),
   "binary-text": dynamic(() => import("@/features/binary-text/BinaryText")),

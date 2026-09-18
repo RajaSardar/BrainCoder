@@ -67,6 +67,7 @@ const TOOL_KEYWORDS: Record<string, string[]> = {
   "http-status": ["http status codes list", "http status lookup", "list of http codes", "404 500 meaning"],
   "html-entities": ["html entity encode decode", "escape html online", "html special characters", "unicode escape"],
   "text-lines": ["sort lines online", "remove duplicate lines", "line sorter", "join lines", "format line list"],
+  "text-size-calculator": ["text size calculator", "string size calculator", "json size calculator", "calculate bytes in text", "utf8 byte count", "character count tool", "minify json online", "text file size"],
   "url-parser": ["url parser online", "parse url parts", "url query parser", "extract url components"],
   "image-base64": ["image to base64", "base64 to image", "data uri encoder", "encode image base64 online"],
   "binary-text": ["text to binary", "binary to text", "ascii to binary", "binary translator"],
@@ -186,6 +187,8 @@ export function toolJsonLd(tool: ToolConfig) {
   const TOOL_FEATURE_LIST: Record<string, string> = {
     "diff-checker":
       "Side-by-side and unified diff views, word- and character-level highlighting, ignore-case and whitespace options, unified-diff copy — all in your browser",
+    "text-size-calculator":
+      "Live UTF-8 and UTF-16 byte counts, character, word, line and whitespace metrics, exclude-whitespace sizing, JSON minify and beautify with copy buttons, and on-disk file byte measurement — all in your browser",
   };
   const featureList =
     TOOL_FEATURE_LIST[tool.slug] ??
