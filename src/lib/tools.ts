@@ -249,7 +249,7 @@ export const TOOLS: ToolConfig[] = [
     name: "Timestamp Converter",
     tagline: "Unix time to human date and back",
     description:
-      "Convert Unix timestamps to human-readable dates in your local timezone, and the reverse.",
+      "Convert Unix timestamps to local time, UTC, ISO 8601 or HTTP date — and the reverse.",
     category: "Convert",
     icon: Timer,
     accent: "text-orange-600",

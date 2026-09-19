@@ -583,8 +583,47 @@ Phase 2+ Target (NOT building now):
   CJK comma-only highlight, emoji-intact char mode, CRLF upload equality) plus
   notepad 34 / base64 27 / url-encoder 19 / qr 23 re-runs green; production
   build passed (285 pages). Report: `audit/reports/diff-checker.md`.
-- Next: Timestamp Converter (next in registry order after regex-tester). Remaining
-  112 tools have not completed this process.
+- Timestamp Converter: ten independent judges ran in parallel (the edge-cases
+  judge returned an empty report; its scope was covered by the functional
+  findings plus the strict parser written from them and asserted in the
+  harness). The component was rebuilt because three judges independently
+  showed it could crash and two confirmed a broken hydration path. Out-of-range
+  input (over 8.64e15 ms, incl. 1e308/1e400 → Infinity) threw an uncaught
+  RangeError from toISOString() and unmounted the whole /use route to the Next
+  error screen — the ts memo now validates `^-?\d+(\.\d+)?$`, refuses non-finite
+  values, and enforces `|ms| ≤ 8.64e15`, so the exact boundary converts
+  (+275760-09-13) while one ms over shows a role=alert message with empty
+  cards. Hydration mismatch (#418 in Chrome+Firefox) came from Date.now() at
+  module load baking a build-time value into the static HTML — the default is
+  gone; both fields start empty (deterministic SSR) and a client-only effect
+  boots to the current second and starts a 1s tick (set-state only inside
+  callbacks, so the sync set-state-in-effect lint rule is respected). The
+  reverse field was a derived controlled input that evicted partial typing, so
+  it is now a separate draft state committed only when a complete strict local
+  date parses (YYYY-MM-DD HH:MM:SS, date-only = local midnight, component
+  round-trip rejects 2021-02-29/month-13/day-32, blur normalizes). 13-digit
+  values are auto-detected as milliseconds with a role=status hint; the ms
+  checkbox remains an explicit override. Empty input no longer implies
+  1970; invalid input gets role=alert + aria-invalid + aria-describedby on
+  both inputs (they previously had placeholder-only names). Shipped the three
+  cheap wins every judge asked for: a live ticking "Current Unix time" line
+  beside the Now button, a 4th HTTP-date (RFC 2822) card, and a local-time
+  label with the browser timezone name + UTC offset (Intl, computed in the
+  client effect so it can't mismatch SSR). Copy rewrote the five fabricated
+  content claims (timezone-offset configuration, RFC 2822/locale formats, live
+  display, direction toggle, "converts as you type"), replaced the wrong
+  "64-bit integers" 2038 FAQ with double-precision (~275,760) and documented
+  local-parsing semantics; relatedSlugs moved to json-formatter/cron-parser/
+  http-status/jwt-decoder/uuid-generator (all exist); SEO keywords widened and
+  a JSON-LD featureList override added (the regex-tester override's stale
+  "worker-isolated" claim also fixed). 43 production Chrome scenarios passed
+  (incl. boundary crash guard, zero hydration errors, char-by-char reverse
+  typing, leap-day rejection, round-trip, auto-detect, live tick, clipboard
+  content) plus json-formatter 15 / text-size 24 / regex-tester 39 /
+  word-counter spot check green; production build passed (285 pages). Report:
+  `audit/reports/timestamp-converter.md`.
+- Next: Hash Generator (next in registry order after timestamp-converter).
+  Remaining 111 tools have not completed this process.
 - Regex Tester: ten independent judges ran in parallel (one rate-limited on first
   attempt, completed on retry). The evaluation engine was hardened and the UI
   rebuilt. RegExp enumeration moved into a tested pure module

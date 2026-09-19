@@ -36,7 +36,7 @@ const TOOL_KEYWORDS: Record<string, string[]> = {
   "password-generator": ["strong password generator online", "free password generator no sign up", "offline password generator", "password generator with symbols", "password generator for wifi", "password generator 16 characters", "strong random password online"],
   "diff-checker": ["diff checker online", "compare text", "text diff", "file comparison online", "find difference between two texts"],
   "regex-tester": ["regex tester online", "test regex", "regular expression tester", "regex matcher", "regex debugger", "regex builder", "javascript regex tester", "regex capture group tester"],
-  "timestamp-converter": ["unix timestamp converter", "epoch converter", "timestamp to date", "epoch to datetime", "ms to seconds"],
+  "timestamp-converter": ["unix timestamp converter", "epoch converter", "timestamp to date", "epoch to datetime", "unix timestamp to datetime", "date to epoch converter", "current unix timestamp", "ms to seconds converter"],
   "hash-generator": ["hash generator online", "md5 generator", "sha256 generator", "sha1 generator", "sha512 hash", "hash text"],
   "markdown-preview": ["markdown preview", "markdown editor live", "markdown to html preview", "render markdown"],
   "html-minifier": ["html minifier online", "minify html", "compress html code", "remove whitespace html"],
@@ -190,7 +190,9 @@ export function toolJsonLd(tool: ToolConfig) {
     "text-size-calculator":
       "Live UTF-8 and UTF-16 byte counts, character, word, line and whitespace metrics, exclude-whitespace sizing, JSON minify and beautify with copy buttons, and on-disk file byte measurement — all in your browser",
     "regex-tester":
-      "Live match highlighting, flag toggles, numbered and named capture group breakdowns, a token quick-reference panel, and a worker-isolated safety timeout against catastrophic backtracking — entirely in your browser",
+      "Live match highlighting, flag toggles, numbered and named capture group breakdowns, a token quick-reference panel, and a safety gate against catastrophic backtracking — entirely in your browser",
+    "timestamp-converter":
+      "Unix timestamps to local time (with timezone and offset), UTC, ISO 8601 and HTTP dates, plus a reverse date-to-timestamp converter with 10/13-digit auto-detection, a live Unix time counter and one-click copy — all in your browser",
   };
   const featureList =
     TOOL_FEATURE_LIST[tool.slug] ??

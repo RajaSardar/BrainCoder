@@ -2697,31 +2697,31 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ]
   },
   "timestamp-converter": {
-    "longDescription": "<p>The BrainCoder Timestamp Converter converts between Unix timestamps (epoch seconds) and human-readable dates and times. Unix time counts the number of seconds since January 1, 1970 (the Unix epoch) and is the standard time format used in APIs, databases, logging systems, and distributed computing.</p>\n<p>This tool lets you convert a timestamp like 1694678400 into a readable date, or convert a date back into a Unix timestamp. It supports both seconds and milliseconds precision, handles timezone offsets, and displays the result in multiple formats including ISO 8601, RFC 2822, and locale-specific formats. You can also see the current live Unix timestamp updating in real time.</p>\n<p>Whether you're debugging an API response that returns epoch time, calculating time differences, converting database timestamps, or building a time-based feature, this tool provides instant, accurate conversions. Everything happens in your browser — no timestamps are sent to any server.",
+    "longDescription": "<p>The BrainCoder Timestamp Converter converts between Unix timestamps (epoch seconds) and human-readable dates and times. Unix time counts the number of seconds since January 1, 1970 (the Unix epoch) and is the standard time format used in APIs, databases, logging systems, and distributed computing.</p>\n<p>Paste a timestamp like 1725000000 or 1725000000000 and read it instantly as your local time, UTC, ISO 8601, or an HTTP date (RFC 2822). Convert the other way by typing or editing a date and time directly — the timestamp updates as you type. Values of 10 and 13 digits are auto-detected as seconds and milliseconds respectively, with a manual override checkbox when you need either interpretation.</p>\n<p>Local times show your browser's timezone name and current UTC offset, a live 'Current Unix time' line ticks next to the Now button, and every result has a one-click copy button. Everything runs entirely in your browser — no timestamp is ever sent to a server.",
     "features": [
-      "Unix timestamp (seconds) to human-readable date",
-      "Human-readable date to Unix timestamp",
-      "Supports both seconds and milliseconds",
-      "Timezone offset configuration",
-      "ISO 8601, RFC 2822, and locale formats",
-      "Live current timestamp display"
+      "Unix timestamp (seconds or milliseconds) to readable date",
+      "Local date and time to Unix timestamp, converting as you type",
+      "Auto-detects 10-digit seconds vs 13-digit milliseconds",
+      "Local time (with timezone name and offset), UTC, ISO 8601, and HTTP date outputs",
+      "Live current Unix time display with a one-click Now button",
+      "One-click copy on every result, entirely in your browser"
     ],
     "howTo": [
       {
-        "step": "Choose conversion direction",
-        "description": "Select 'Timestamp to Date' to convert an epoch value to a readable date, or 'Date to Timestamp' to convert a date to epoch seconds."
+        "step": "Enter a Unix timestamp",
+        "description": "Paste or type a timestamp such as 1725000000 (seconds) or 1725000000000 (milliseconds). 13-digit values are auto-detected as milliseconds; use the checkbox to switch interpretation."
       },
       {
-        "step": "Enter your value",
-        "description": "For timestamp-to-date, paste a Unix timestamp (e.g., 1694678400). For date-to-timestamp, pick a date and time from the inputs."
+        "step": "Convert the other way",
+        "description": "Type or edit a date and time in the 'Date & time (local)' field, e.g. 2024-01-05 14:30:00. The Unix timestamp updates as soon as a complete valid date is entered."
       },
       {
-        "step": "Configure timezone",
-        "description": "Select your timezone offset or use UTC. The tool will adjust all displayed times accordingly."
+        "step": "Read the results",
+        "description": "Four cards show the value as local time (with your timezone name and offset), UTC time, an ISO 8601 string, and an HTTP date (RFC 2822)."
       },
       {
-        "step": "Copy the result",
-        "description": "Copy the converted value in your preferred format — Unix timestamp, ISO 8601 string, or any other format shown."
+        "step": "Copy any result",
+        "description": "Click the copy button on the card you need. For the current time, click Now — a live Unix time counter is also displayed."
       }
     ],
     "faq": [
@@ -2731,17 +2731,23 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       },
       {
         "question": "Why are some timestamps 13 digits instead of 10?",
-        "answer": "10-digit timestamps represent seconds since the epoch. 13-digit timestamps represent milliseconds since the epoch. Millisecond timestamps are common in JavaScript (Date.now()) and some APIs. This tool handles both."
+        "answer": "10-digit timestamps represent seconds since the epoch. 13-digit timestamps represent milliseconds since the epoch. Millisecond timestamps are common in JavaScript (Date.now()) and some APIs. This tool auto-detects 13-digit values as milliseconds, and the checkbox lets you override that."
       },
       {
         "question": "Will the Year 2038 problem affect this tool?",
-        "answer": "The Year 2038 problem affects 32-bit signed integer Unix timestamps, which overflow on January 19, 2038. Our tool uses 64-bit integers in JavaScript, so it handles dates well beyond 2038 without issues."
+        "answer": "The Year 2038 problem affects systems that store times as signed 32-bit integers, which overflow on January 19, 2038. This tool uses JavaScript's double-precision arithmetic, which represents timestamps correctly up to about the year 275,760 — so dates far beyond 2038 convert here without issue."
+      },
+      {
+        "question": "How is the 'Date & time (local)' field interpreted?",
+        "answer": "Values are parsed strictly against the YYYY-MM-DD HH:MM:SS shape in your browser's local timezone. A date with no time, such as 2024-01-05, is treated as local midnight. This matches the local time shown in the results, so conversions round-trip consistently."
       }
     ],
     "relatedSlugs": [
-      "url-encoder",
-      "case-converter",
-      "number-base"
+      "json-formatter",
+      "cron-parser",
+      "http-status",
+      "jwt-decoder",
+      "uuid-generator"
     ]
   },
   "case-converter": {
