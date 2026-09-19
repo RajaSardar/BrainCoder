@@ -35,7 +35,7 @@ const TOOL_KEYWORDS: Record<string, string[]> = {
   notepad: ["online notepad", "notepad online", "auto save notes", "notes auto save in browser", "private notes online no sign up", "take quick notes online"],
   "password-generator": ["strong password generator online", "free password generator no sign up", "offline password generator", "password generator with symbols", "password generator for wifi", "password generator 16 characters", "strong random password online"],
   "diff-checker": ["diff checker online", "compare text", "text diff", "file comparison online", "find difference between two texts"],
-  "regex-tester": ["regex tester online", "test regex", "regular expression tester", "regex matcher", "regex debugger", "regex builder"],
+  "regex-tester": ["regex tester online", "test regex", "regular expression tester", "regex matcher", "regex debugger", "regex builder", "javascript regex tester", "regex capture group tester"],
   "timestamp-converter": ["unix timestamp converter", "epoch converter", "timestamp to date", "epoch to datetime", "ms to seconds"],
   "hash-generator": ["hash generator online", "md5 generator", "sha256 generator", "sha1 generator", "sha512 hash", "hash text"],
   "markdown-preview": ["markdown preview", "markdown editor live", "markdown to html preview", "render markdown"],
@@ -189,6 +189,8 @@ export function toolJsonLd(tool: ToolConfig) {
       "Side-by-side and unified diff views, word- and character-level highlighting, ignore-case and whitespace options, unified-diff copy — all in your browser",
     "text-size-calculator":
       "Live UTF-8 and UTF-16 byte counts, character, word, line and whitespace metrics, exclude-whitespace sizing, JSON minify and beautify with copy buttons, and on-disk file byte measurement — all in your browser",
+    "regex-tester":
+      "Live match highlighting, flag toggles, numbered and named capture group breakdowns, a token quick-reference panel, and a worker-isolated safety timeout against catastrophic backtracking — entirely in your browser",
   };
   const featureList =
     TOOL_FEATURE_LIST[tool.slug] ??

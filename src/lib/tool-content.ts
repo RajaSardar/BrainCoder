@@ -2991,23 +2991,24 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ]
   },
   "regex-tester": {
-    "longDescription": "<p>The Regex Tester is a powerful live正则表达式 testing environment that highlights matches in real time as you type your pattern and input string. It eliminates the guesswork from regular expressions by visually showing exactly which substrings match your regex, making it indispensable for validating email patterns, scraping rules, input sanitization logic, and log parsing workflows.</p><p>Supporting full JavaScript regex syntax including lookahead, lookbehind, named capture groups, and all standard flags (g, i, m, s, u, d), this tool displays match results, group captures, and index positions instantly. The live highlighting overlay on the input text gives you immediate visual feedback — no need to click a \"test\" button or wait for processing.</p><p>Every character of your input stays in your browser. There's no server processing, no account creation, and no waiting — just a fast, precise regex development environment for developers, data engineers, and security professionals.</p>",
+    "longDescription": "<p>The Regex Tester is a live environment for writing and debugging JavaScript regular expressions. As you type, it highlights every match directly in your test text and lists match details, capture groups, and index positions instantly — no test button, no round trips.</p><p>It runs the full JavaScript (ECMAScript) regex engine, including named capturing groups, lookahead and lookbehind assertions, the dotAll (s), unicode (u), and indices (d) flags, and Unicode property escapes like \\p{L}. Catastrophic-backtracking patterns — the kind that can bring a regex engine to its knees — are detected and paused behind an explicit confirmation, so the tool never freezes your browser without warning.</p><p>Flag toggles, a quick-reference panel for common tokens, and per-match capture group breakdowns make it easy to debug even the most tangled patterns. Everything stays in your browser — patterns and test strings are never sent to a server.</p>",
     "features": [
       "Live match highlighting as you type the pattern",
-      "Full JavaScript regex engine with all flags (g, i, m, s, u, d)",
-      "Named and numbered capture group results with index positions",
-      "Supports lookahead, lookbehind, and advanced pattern constructs",
-      "Client-side only — regex patterns and test strings never leave your browser",
-      "Quick-reference panel for common regex tokens and shortcuts"
+      "Full JavaScript regex engine with all flags (g, i, m, s, u, d, y)",
+      "Numbered and named capture group results with index positions",
+      "Supports lookahead, lookbehind, Unicode properties, and advanced constructs",
+      "Client-side only — patterns and test strings never leave your browser",
+      "Quick-reference panel for common regex tokens and shortcuts",
+      "Catastrophic-backtracking guard that pauses suspicious patterns before they can freeze the page"
     ],
     "howTo": [
       {
         "step": "Enter Your Regex Pattern",
-        "description": "Type your regular expression into the pattern field. Slashes are added automatically."
+        "description": "Type your regular expression into the pattern field. Surrounding slashes are optional — add them only if you prefer, and the pattern inside is used automatically."
       },
       {
         "step": "Set Flags",
-        "description": "Toggle flags like global (g), case-insensitive (i), multiline (m), and dotAll (s) using the provided checkboxes."
+        "description": "Toggle flags with the checkboxes: global (g), case-insensitive (i), multiline (m), dotAll (s), unicode (u), indices (d), and sticky (y)."
       },
       {
         "step": "Provide Test Input",
@@ -3015,17 +3016,21 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       },
       {
         "step": "Review Match Details",
-        "description": "Inspect the match results panel for full match text, capture groups, and character index positions."
+        "description": "Inspect the match results table for full match text, numbered or named capture groups, and character index positions. Use the token quick-reference panel to look up any syntax you need."
       }
     ],
     "faq": [
       {
         "question": "Which regex flavor does this tool support?",
-        "answer": "It uses the full JavaScript (ECMAScript) regex engine, including modern features like named groups, lookbehind assertions, and the dotAll flag."
+        "answer": "It uses the full JavaScript (ECMAScript) regex engine, including modern features like named groups, lookbehind assertions, the dotAll flag, and Unicode property escapes."
       },
       {
         "question": "Can I use this to test patterns for other languages?",
-        "answer": "JavaScript regex is very similar to PCRE and Python's re module. Most patterns transfer directly, though a few edge cases may differ."
+        "answer": "JavaScript regex is very similar to PCRE and Python's re module. Most patterns transfer directly, though a few edges differ — for example, backreferences inside lookbehind are unsupported and some atomic-like constructs don't exist."
+      },
+      {
+        "question": "What happens if my pattern is very slow to evaluate?",
+        "answer": "Patterns with nested or repeated quantifiers — like (a+)+ against a long failing string — are detected up front and paused behind an explicit \"run anyway\" confirmation instead of freezing the page. You can still run them, but only after acknowledging the risk."
       },
       {
         "question": "Is my regex or input data stored anywhere?",
@@ -3033,11 +3038,11 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       }
     ],
     "relatedSlugs": [
-      "json-formatter",
-      "url-parser",
-      "html-formatter",
-      "sql-formatter",
-      "csv-formatter"
+      "text-cleaner",
+      "text-lines",
+      "word-counter",
+      "html-entities",
+      "checksum-calculator"
     ]
   },
   "markdown-preview": {

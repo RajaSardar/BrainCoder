@@ -583,8 +583,45 @@ Phase 2+ Target (NOT building now):
   CJK comma-only highlight, emoji-intact char mode, CRLF upload equality) plus
   notepad 34 / base64 27 / url-encoder 19 / qr 23 re-runs green; production
   build passed (285 pages). Report: `audit/reports/diff-checker.md`.
-- Next: Regex Tester (next in registry order after diff-checker). Remaining
-  113 tools have not completed this process.
+- Next: Timestamp Converter (next in registry order after regex-tester). Remaining
+  112 tools have not completed this process.
+- Regex Tester: ten independent judges ran in parallel (one rate-limited on first
+  attempt, completed on retry). The evaluation engine was hardened and the UI
+  rebuilt. RegExp enumeration moved into a tested pure module
+  (`src/features/regex-tester/regex-engine.ts`) with a 5000-match cap that is now
+  DISCLOSED (amber "first 5,000 matches" notice + honest count) and a 400ms soft
+  deadline for runaway match loops. Catastrophic backtracking can no longer
+  freeze the tab unnoticed: a heuristic gates nested/repeated-quantifier and
+  alternation-in-group patterns (e.g. (a+)+, (a|b)*) behind an amber warning with
+  an explicit "Run anyway" button, so pathological patterns never auto-execute a
+  user's browser (a Web Worker attempt was dropped — Turbopack's next build emits
+  user worker assets as video/mp2t behind nosniff and resolves the URL to an
+  un-hashed root path, so that precedent tool path is currently non-functional).
+  Input is capped at 2,000,000 chars with a disclosed truncation notice (house
+  StyledTextarea focus styling preserved). Capture groups no longer vanish: group
+  identity is preserved (`$1 = a, year = 2024`, "∅" for non-participating groups)
+  and named-group names are surfaced by a capture-order parser; zero-length
+  matches render as explicit "∅ (empty match)" rows instead of invisible blanks.
+  Flags became an accessible checkbox set (g, i, m, s, u, d, y) instead of a
+  free-text field; a /…/ or /…/flags wrapper is auto-detected with a note; a
+  needs-u hint fires for \p{…}/\x{…} without the u flag. A collapsed ~18-token
+  quick-reference panel now exists (the old feature bullet was a lie), matched by
+  copy rewrites: embedded CJK token purged from the long description, the false
+  "slashes are added automatically" and "provided checkboxes" howTo steps
+  corrected, relatedSlugs moved to text-cleaner/text-lines/word-counter/
+  html-entities/checksum-calculator, and JSON-LD featureList is now tool-specific.
+  A11y fixes: role=alert on the error and timeout banners, role=status live
+  regions for the badge/truncation/limit notices, aria-labels on pattern and text
+  inputs and each flag checkbox, table caption + scope=col, slate-400→slate-600
+  contrast on the raised/* text, and an overflow-x-auto wrapper (min-w table) so
+  long matches scroll inside the card instead of pushing the 375px page
+  (the rolling site-header navigation overflow remains a tracked residual).
+  Highlight marks are skipped for zero-length matches. 39 production Chrome
+  scenarios passed (incl. group identity, named groups, non-participating groups,
+  i/u flag behaviors, zero-length, invalid regex, slash wrapper, 5000 disclosure,
+  catastrophic gate + run-anyway + recovery, 375px containment, a11y roles) plus
+  json-formatter / word-counter / text-size-calculator re-runs green; production
+  build passed (285 pages). Report: `audit/reports/regex-tester.md`.
 - Residual checks: physical mobile/Safari/Firefox, manual screen readers, parser
   memory limits, and shared /verify proof wording. No universal audit guarantee.
 - Existing changes to other tools are preserved but not counted as reviewed.
