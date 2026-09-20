@@ -1,13 +1,33 @@
 "use client";
 
-import { useCallback, useState } from "react";
-import { Hash, Copy, Check } from "lucide-react";
-import { Button, Field } from "@/components/ui";
+import { useCallback, useEffect, useState } from "react";
+import { Hash } from "lucide-react";
+import { Button, CopyButton, SliderField } from "@/components/ui";
+
+const DEFAULT_COUNT = 5;
+const MIN_COUNT = 1;
+const MAX_COUNT = 100;
+
+function randomV4(): string {
+  if (typeof globalThis.crypto?.randomUUID === "function") {
+    return globalThis.crypto.randomUUID();
+  }
+  if (typeof globalThis.crypto?.getRandomValues === "function") {
+    const bytes = globalThis.crypto.getRandomValues(new Uint8Array(16));
+    bytes[6] = (bytes[6] & 0x0f) | 0x40;
+    bytes[8] = (bytes[8] & 0x3f) | 0x80;
+    const hex = Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
+    return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
+  }
+  return "";
+}
 
 function generateUuid(count: number, uppercase: boolean, noDashes: boolean): string[] {
   const out: string[] = [];
   for (let i = 0; i < count; i++) {
-    let u = crypto.randomUUID();
+    const raw = randomV4();
+    if (!raw) return [];
+    let u = raw;
     if (noDashes) u = u.replace(/-/g, "");
     if (uppercase) u = u.toUpperCase();
     out.push(u);
@@ -16,90 +36,119 @@ function generateUuid(count: number, uppercase: boolean, noDashes: boolean): str
 }
 
 export default function UuidGenerator() {
-  const [count, setCount] = useState(5);
+  const [count, setCount] = useState(DEFAULT_COUNT);
   const [uppercase, setUppercase] = useState(false);
   const [noDashes, setNoDashes] = useState(false);
-  const [uuids, setUuids] = useState<string[]>(() => generateUuid(5, false, false));
-  const [copiedAll, setCopiedAll] = useState(false);
+  const [uuids, setUuids] = useState<string[]>([]);
 
-  const regenerate = useCallback(() => {
-    setUuids(generateUuid(count, uppercase, noDashes));
-  }, [count, uppercase, noDashes]);
+  const cryptoAvailable =
+    typeof globalThis.crypto?.getRandomValues === "function" ||
+    typeof globalThis.crypto?.randomUUID === "function";
 
-  const copyAll = async () => {
-    try {
-      await navigator.clipboard.writeText(uuids.join("\n"));
-    } catch {
-      /* ignore */
-    }
-    setCopiedAll(true);
-    setTimeout(() => setCopiedAll(false), 1500);
-  };
+  const regenerate = useCallback(
+    (nextCount: number, nextUppercase: boolean, nextNoDashes: boolean) => {
+      setUuids(generateUuid(nextCount, nextUppercase, nextNoDashes));
+    },
+    [],
+  );
 
-  const copyOne = async (value: string) => {
-    try {
-      await navigator.clipboard.writeText(value);
-    } catch {
-      /* ignore */
-    }
-  };
+  useEffect(() => {
+    const t = setTimeout(() => regenerate(DEFAULT_COUNT, false, false), 0);
+    return () => clearTimeout(t);
+  }, [regenerate]);
 
   return (
     <div className="space-y-5 w-full">
       <div className="flex flex-wrap items-end gap-4">
-        <Field label={`Count: ${count}`}>
-          <input
-            type="range"
-            min={1}
-            max={50}
+        <div className="w-56">
+          <SliderField
+            label="Count"
             value={count}
-            onChange={(e) => setCount(Number(e.target.value))}
-            className="w-48 accent-blue-600"
+            min={MIN_COUNT}
+            max={MAX_COUNT}
+            onChange={(v) => {
+              setCount(v);
+              regenerate(v, uppercase, noDashes);
+            }}
           />
-        </Field>
-        <label className="flex items-center gap-2 text-sm text-slate-600 bg-white border border-slate-200 rounded-xl px-3 py-2.5">
+        </div>
+        <label className="flex items-center gap-2 text-sm text-slate-600 bg-white border border-slate-200 rounded-xl px-3 py-2.5 min-h-11">
           <input
             type="checkbox"
             checked={uppercase}
-            onChange={(e) => setUppercase(e.target.checked)}
+            onChange={(e) => {
+              setUppercase(e.target.checked);
+              regenerate(count, e.target.checked, noDashes);
+            }}
             className="rounded border-slate-300 text-blue-600 focus:ring-blue-500"
           />
           Uppercase
         </label>
-        <label className="flex items-center gap-2 text-sm text-slate-600 bg-white border border-slate-200 rounded-xl px-3 py-2.5">
+        <label className="flex items-center gap-2 text-sm text-slate-600 bg-white border border-slate-200 rounded-xl px-3 py-2.5 min-h-11">
           <input
             type="checkbox"
             checked={noDashes}
-            onChange={(e) => setNoDashes(e.target.checked)}
+            onChange={(e) => {
+              setNoDashes(e.target.checked);
+              regenerate(count, uppercase, e.target.checked);
+            }}
             className="rounded border-slate-300 text-blue-600 focus:ring-blue-500"
           />
           No hyphens
         </label>
-        <Button type="button" onClick={regenerate}>
+        <Button
+          type="button"
+          onClick={() => regenerate(count, uppercase, noDashes)}
+          disabled={!cryptoAvailable}
+        >
           <Hash className="w-4 h-4 mr-1.5 inline" /> Generate
         </Button>
-        <Button type="button" variant="secondary" onClick={copyAll}>
-          {copiedAll ? <Check className="w-4 h-4 mr-1.5 inline text-green-600" /> : <Copy className="w-4 h-4 mr-1.5 inline" />}
-          {copiedAll ? "Copied" : "Copy all"}
+        <CopyButton
+          text={uuids.join("\n")}
+          label="Copy all"
+          ariaLabel="Copy all UUIDs"
+          disabled={uuids.length === 0}
+        />
+        <Button
+          type="button"
+          variant="danger"
+          onClick={() => setUuids([])}
+          disabled={uuids.length === 0}
+        >
+          Clear
         </Button>
       </div>
+
+      <p role="status" aria-live="polite" className="text-xs sm:text-sm text-slate-600">
+        {uuids.length > 0
+          ? `${uuids.length} UUID${uuids.length === 1 ? "" : "s"} generated${
+              noDashes ? " (no hyphens)" : ""
+            }${uppercase ? " (uppercase)" : ""}`
+          : cryptoAvailable
+            ? "No UUIDs yet — press Generate."
+            : "Cryptographic UUID generation is unavailable in this browser."}
+      </p>
+
+      {!cryptoAvailable && (
+        <p role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          This tool needs the browser’s Web Crypto random source (crypto.getRandomValues or crypto.randomUUID),
+          which isn’t available here. Try a modern browser over HTTPS or localhost.
+        </p>
+      )}
 
       {uuids.length > 0 && (
         <div className="rounded-xl border border-slate-200 bg-white divide-y divide-slate-100">
           {uuids.map((u, i) => (
             <div
-              key={`${u}-${i}`}
+              key={u}
               className="flex items-center justify-between gap-3 px-4 py-2.5"
             >
               <code className="font-mono text-sm text-blue-700 break-all">{u}</code>
-              <button
-                type="button"
-                onClick={() => copyOne(u)}
-                className="text-slate-400 hover:text-slate-600 shrink-0"
-                aria-label="Copy UUID"
-              >
-                <Copy className="w-4 h-4" />
-              </button>
+              <CopyButton
+                text={u}
+                label=""
+                ariaLabel={`Copy UUID ${i + 1}`}
+              />
             </div>
           ))}
         </div>

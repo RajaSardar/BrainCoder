@@ -41,7 +41,7 @@ const TOOL_KEYWORDS: Record<string, string[]> = {
   "markdown-preview": ["markdown preview", "markdown to html preview", "online markdown editor", "render markdown in browser", "markdown preview no sign up"],
   "html-minifier": ["html minifier online", "minify html", "compress html code", "remove whitespace html", "minify html in browser", "html pretty print online"],
   "case-converter": ["case converter online", "text case converter", "uppercase to lowercase", "title case", "snake case camel case"],
-  "uuid-generator": ["uuid generator online", "random uuid v4", "generate uuid", "guid generator", "bulk uuid"],
+  "uuid-generator": ["uuid generator online", "random uuid v4", "generate uuid", "guid generator", "uuid without dashes", "uppercase uuid", "uuid from 1 to 100"],
   "word-counter": ["word counter online", "count words", "character counter", "sentence counter", "word count tool"],
   "lorem-ipsum": ["lorem ipsum generator", "dummy text generator", "placeholder text", "lorem text"],
   "color-converter": ["color converter online", "hex to rgb", "rgb to hex", "hex to hsl", "color code converter"],
@@ -199,6 +199,8 @@ export function toolJsonLd(tool: ToolConfig) {
       "Live CommonMark and GitHub Flavored Markdown preview with tables, task lists, strikethrough and auto-linked URLs, sanitized HTML output, character/word/reading-time counts, drafts auto-saved in your browser, and HTML copy or standalone download — all client-side",
     "html-minifier":
       "Whitespace-safe HTML minification that preserves pre, textarea, script and style content and quoted attribute values, conditional-comment preservation, pretty-print formatting, byte-accurate size and savings, HTML file open and download — all in your browser",
+    "uuid-generator":
+      "Cryptographically random UUID v4 generation with a 1-to-100 count slider, uppercase and no-hyphens variants that re-render instantly, per-row and copy-all buttons, and zero uploads — everything runs locally in your browser",
   };
   const featureList =
     TOOL_FEATURE_LIST[tool.slug] ??

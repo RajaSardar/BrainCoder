@@ -622,9 +622,9 @@ Phase 2+ Target (NOT building now):
   content) plus json-formatter 15 / text-size 24 / regex-tester 39 /
   word-counter spot check green; production build passed (285 pages). Report:
   `audit/reports/timestamp-converter.md`.
-- Next: UUID Generator (case-converter is next in registry order after
-  html-minifier but is excluded from commits, so uuid-generator is the next
-  audit target). Remaining 108 tools have not completed this process.
+- Next: Word Counter (case-converter is excluded from commits, so
+  word-counter follows uuid-generator as the next audit target). Remaining 107
+  tools have not completed this process.
 - Hash Generator: ten independent judges ran in parallel (the architect report
   was not returned — aborted; its coverage supplied by functional/security/
   edge findings plus the harness). Component rebuilt on the team standard
@@ -698,6 +698,38 @@ Phase 2+ Target (NOT building now):
   buttons, aria roles) plus Wave 1 siblings and timestamp-converter re-runs
   green; production build passed (287 pages). Report:
   `audit/reports/html-minifier.md`.
+- UUID Generator: ten independent judges ran in parallel (all ten returned
+  reports — the first perfect wave). Component rebuilt on the team standard:
+  the `useState(() => generateUuid())` lazy initializer had been running
+  crypto.randomUUID during SSR AND client hydration — React #418 (the classic
+  hydration mismatch). Generation now boots on a client-only deferred effect
+  (setTimeout callback, so the sync set-state-in-effect lint rule is respected);
+  the crypto calls moved behind a capability guard (`getRandomValues` still
+  works in insecure contexts, `randomUUID` does not, so a getRandomValues-based
+  v4 fallback replaces the http-origin crash — a client-only role=alert tells
+  users when neither is available). The stale-config trap is gone: slider and
+  toggles re-render the list live via an explicit next-values handler, so the
+  displayed batch always matches the current options (slider max corrected
+  50→100 to match the promised range; floor 1). Copy truth is fixed: copy-all
+  and per-row copy use the shared CopyButton (success-gated feedback +
+  execCommand fallback + distinct `aria-label`s); a Clear button empties the
+  list and both copy/Clear disable when empty; a `role=status` live region
+  reports the generated count and active variants honestly ("5 UUIDs
+  generated"; singular handled at 1). The phantom "Generate Batch" button and
+  "batch up to 100 without saying how" wording are gone from copy; features,
+  howTo (slider-first, re-roll, variants, copy, Clear) and FAQ were rewritten —
+  the 122-random-bit wording replaces the 128-bit phrasing, and a new
+  no-upload disclosure FAQ added. Keywords widened (no-dashes/uppercase/1-100
+  terms) and a JSON-LD featureList override added; a11y: SliderField gained a
+  useId-backed `label htmlFor` (was an unlabelled range — the Field component
+  renders a `<p>`), CopyButton gained the shared focus-visible ring, and the
+  per-row copy hit area/contrast parity landed. 58 production Chrome scenarios
+  passed (hydration-zero, slider 1/100 live re-render, 100-row no-dupes,
+  version/variant nibbles surviving 32-char strip, uppercase re-format,
+  clipboards for copy-all and per-row, Clear disable states, Generate re-roll +
+  refill, a11y roles, honest /tools/ copy) plus Wave 1 siblings and
+  timestamp-converter re-runs green; production build passed (287 pages).
+  Report: `audit/reports/uuid-generator.md`.
 - Regex Tester: ten independent judges ran in parallel (one rate-limited on first
   attempt, completed on retry). The evaluation engine was hardened and the UI
   rebuilt. RegExp enumeration moved into a tested pure module

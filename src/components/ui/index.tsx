@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useId, useState } from "react";
 import { Copy, Check } from "lucide-react";
 
 interface CopyButtonProps {
@@ -40,7 +40,7 @@ export function CopyButton({ text, label = "Copy", ariaLabel, className = "", di
       onClick={onCopy}
       disabled={disabled}
       aria-label={ariaLabel ?? label}
-      className={`flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 transition disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
+      className={`flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 transition disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ${className}`}
     >
       {copied ? <Check className="w-3.5 h-3.5 text-green-600" aria-hidden="true" /> : <Copy className="w-3.5 h-3.5" aria-hidden="true" />}
       {copied ? "Copied" : label}
@@ -102,16 +102,20 @@ interface SliderFieldProps {
 }
 
 export function SliderField({ label, value, min = 0, max = 100, step = 1, onChange, unit = "" }: SliderFieldProps) {
+  const inputId = useId();
   return (
     <div>
       <div className="flex items-center justify-between mb-1">
-        <label className="text-xs font-medium text-slate-500">{label}</label>
+        <label htmlFor={inputId} className="text-xs font-medium text-slate-500">
+          {label}
+        </label>
         <span className="text-xs font-mono text-slate-600">
           {value}
           {unit}
         </span>
       </div>
       <input
+        id={inputId}
         type="range"
         min={min}
         max={max}

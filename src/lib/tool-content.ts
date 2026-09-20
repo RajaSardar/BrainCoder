@@ -2392,51 +2392,56 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ]
   },
   "uuid-generator": {
-    "longDescription": "<p>The BrainCoder UUID Generator creates Universally Unique Identifiers (UUIDs) also known as GUIDs (Globally Unique Identifiers). UUIDs are 128-bit values that are practically guaranteed to be unique across all devices and all time — the probability of a collision is lower than being struck by lightning twice. This tool generates UUID v4 (random) identifiers with one click.</p>\n<p>UUID v4 is the most commonly used version for database primary keys, session identifiers, transaction IDs, API request tracking, and distributed systems where coordination between nodes is impractical. Each UUID is a 36-character string in the standard format: 8-4-4-4-12 (e.g., 550e8400-e29b-41d4-a716-446655440000).</p>\n<p>Our generator uses the browser's cryptographic random number generator to ensure each UUID is truly random and unpredictable. You can generate single UUIDs or batch-generate up to 100 at once. No UUIDs are stored or transmitted — they're created and displayed locally.",
+    "longDescription": "<p>The BrainCoder UUID Generator creates UUID v4 (random) identifiers in your browser. UUIDs — sometimes called GUIDs — are 128-bit identifiers with 122 random bits, and the chance any two v4 UUIDs collide is about 1 in 2^122, so generated values are practically unique without any central coordination. That makes them ideal for database primary keys, session and transaction IDs, API request tracing, and distributed systems.</p>\n<p>Each UUID follows the standard 8-4-4-4-12 format (36 characters, e.g. <code>550e8400-e29b-41d4-a716-446655440000</code>). Use the Count slider to generate 1 to 100 at once, and switch to Uppercase or No hyphens (32 characters) variants if your system expects them. The list updates the moment you change any option; <strong>Generate</strong> re-rolls a fresh batch, and <strong>Clear</strong> empties the list.</p>\n<p>Values are produced with the browser's cryptographic random source (Web Crypto) and never leave your device — nothing is uploaded or stored by the tool.</p>",
     "features": [
-      "UUID v4 generation using cryptographic randomness",
-      "Generate single UUIDs or batch up to 100",
-      "Standard 8-4-4-4-12 format output",
+      "UUID v4 generation using the browser's cryptographic random source",
+      "Count slider generates 1 to 100 UUIDs per batch",
+      "Standard 8-4-4-4-12 format, with Uppercase and No hyphens variants",
       "One-click copy for individual UUIDs",
       "Copy all generated UUIDs at once",
-      "Zero server interaction — fully client-side"
+      "Zero server interaction — fully client-side, nothing uploaded"
     ],
     "howTo": [
       {
-        "step": "Click Generate",
-        "description": "Click the 'Generate' button to create a new UUID v4. A unique 36-character identifier will appear instantly."
+        "step": "Choose a count",
+        "description": "Drag the Count slider (1–100) to set the batch size. The list regenerates immediately, so the number of UUIDs shown always matches the slider."
       },
       {
-        "step": "Generate batch if needed",
-        "description": "If you need multiple UUIDs, set the quantity (1-100) and click 'Generate Batch' to create them all at once."
+        "step": "Apply variants",
+        "description": "Toggle Uppercase or No hyphens to reformat the output (36-character hyphenated form, or 32 uppercase hex digits with both options on)."
       },
       {
-        "step": "Copy the UUID",
-        "description": "Click the copy button next to any UUID to grab it for use as a database ID, session token, or unique identifier in your application."
+        "step": "Generate or re-roll",
+        "description": "Click 'Generate' to replace the list with a fresh random batch. Every click produces completely new identifiers."
       },
       {
-        "step": "Clear and regenerate",
-        "description": "Click 'Clear' to remove generated UUIDs and start fresh. Each generation produces completely new, unique identifiers."
+        "step": "Copy the UUIDs",
+        "description": "Click the copy button next to any UUID for a single value, or 'Copy all' to copy the whole batch as one value per line. Use 'Clear' to empty the list."
       }
     ],
     "faq": [
       {
         "question": "What version of UUID does this generate?",
-        "answer": "This tool generates UUID v4, which uses cryptographically random numbers for all 128 bits (with 6 bits reserved for version and variant). UUID v4 is the most widely used version for general-purpose unique identification."
+        "answer": "UUID v4 — 122 random bits plus 6 fixed bits reserving the version (4) and variant fields. It is the most widely used version for general-purpose unique identification."
       },
       {
         "question": "Can two UUIDs ever be the same?",
-        "answer": "Theoretically yes, but the probability is approximately 1 in 2^122 (about 5.3 × 10^36). You would need to generate 2^61 UUIDs to have a 50% chance of a single collision — a number so large it's effectively impossible."
+        "answer": "Theoretically yes, but the probability any two v4 UUIDs collide is about 1 in 2^122 (5.3 × 10^36). By the birthday bound you would need to generate around 2^61 UUIDs for a 50% chance of any collision — far more than any real workload."
       },
       {
-        "question": "What are UUIDs used for?",
-        "answer": "UUIDs are used as primary keys in databases, session identifiers, transaction IDs, API request tracking, device identifiers, and anywhere you need a unique value without coordinating with a central authority."
+        "question": "Why are there Uppercase and No hyphens options?",
+        "answer": "Some systems and schemas expect uppercase hex or store compact 32-character identifiers without dashes. Toggling either option re-renders the current batch in that form — both are the same 122-bit value, just a different textual representation."
+      },
+      {
+        "question": "Are generated UUIDs stored or sent anywhere?",
+        "answer": "No. Values are produced locally with Web Crypto, kept in the page's memory while you work, and cleared when you leave or press Clear. Nothing is uploaded, and no UUID you generate is persisted by the tool."
       }
     ],
     "relatedSlugs": [
       "password-generator",
       "hash-generator",
-      "random-number-generator"
+      "random-number-generator",
+      "slug-generator"
     ]
   },
   "lorem-ipsum": {
