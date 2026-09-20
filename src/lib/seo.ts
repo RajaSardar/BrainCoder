@@ -37,9 +37,9 @@ const TOOL_KEYWORDS: Record<string, string[]> = {
   "diff-checker": ["diff checker online", "compare text", "text diff", "file comparison online", "find difference between two texts"],
   "regex-tester": ["regex tester online", "test regex", "regular expression tester", "regex matcher", "regex debugger", "regex builder", "javascript regex tester", "regex capture group tester"],
   "timestamp-converter": ["unix timestamp converter", "epoch converter", "timestamp to date", "epoch to datetime", "unix timestamp to datetime", "date to epoch converter", "current unix timestamp", "ms to seconds converter"],
-  "hash-generator": ["hash generator online", "md5 generator", "sha256 generator", "sha1 generator", "sha512 hash", "hash text"],
-  "markdown-preview": ["markdown preview", "markdown editor live", "markdown to html preview", "render markdown"],
-  "html-minifier": ["html minifier online", "minify html", "compress html code", "remove whitespace html"],
+  "hash-generator": ["hash generator online", "sha256 generator", "sha1 generator", "sha384 generator", "sha512 generator", "hash text to sha256", "hash text"],
+  "markdown-preview": ["markdown preview", "markdown to html preview", "online markdown editor", "render markdown in browser", "markdown preview no sign up"],
+  "html-minifier": ["html minifier online", "minify html", "compress html code", "remove whitespace html", "minify html in browser", "html pretty print online"],
   "case-converter": ["case converter online", "text case converter", "uppercase to lowercase", "title case", "snake case camel case"],
   "uuid-generator": ["uuid generator online", "random uuid v4", "generate uuid", "guid generator", "bulk uuid"],
   "word-counter": ["word counter online", "count words", "character counter", "sentence counter", "word count tool"],
@@ -193,6 +193,12 @@ export function toolJsonLd(tool: ToolConfig) {
       "Live match highlighting, flag toggles, numbered and named capture group breakdowns, a token quick-reference panel, and a safety gate against catastrophic backtracking — entirely in your browser",
     "timestamp-converter":
       "Unix timestamps to local time (with timezone and offset), UTC, ISO 8601 and HTTP dates, plus a reverse date-to-timestamp converter with 10/13-digit auto-detection, a live Unix time counter and one-click copy — all in your browser",
+    "hash-generator":
+      "Instant SHA-1, SHA-256, SHA-384 and SHA-512 hashes of any text via the Web Crypto API — debounced live updates, lowercase hexadecimal output, per-algorithm and copy-all buttons, computed locally with nothing uploaded",
+    "markdown-preview":
+      "Live CommonMark and GitHub Flavored Markdown preview with tables, task lists, strikethrough and auto-linked URLs, sanitized HTML output, character/word/reading-time counts, drafts auto-saved in your browser, and HTML copy or standalone download — all client-side",
+    "html-minifier":
+      "Whitespace-safe HTML minification that preserves pre, textarea, script and style content and quoted attribute values, conditional-comment preservation, pretty-print formatting, byte-accurate size and savings, HTML file open and download — all in your browser",
   };
   const featureList =
     TOOL_FEATURE_LIST[tool.slug] ??

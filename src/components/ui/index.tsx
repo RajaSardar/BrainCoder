@@ -6,11 +6,12 @@ import { Copy, Check } from "lucide-react";
 interface CopyButtonProps {
   text: string;
   label?: string;
+  ariaLabel?: string;
   className?: string;
   disabled?: boolean;
 }
 
-export function CopyButton({ text, label = "Copy", className = "", disabled = false }: CopyButtonProps) {
+export function CopyButton({ text, label = "Copy", ariaLabel, className = "", disabled = false }: CopyButtonProps) {
   const [copied, setCopied] = useState(false);
 
   const onCopy = useCallback(async () => {
@@ -38,6 +39,7 @@ export function CopyButton({ text, label = "Copy", className = "", disabled = fa
       type="button"
       onClick={onCopy}
       disabled={disabled}
+      aria-label={ariaLabel ?? label}
       className={`flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 transition disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
     >
       {copied ? <Check className="w-3.5 h-3.5 text-green-600" aria-hidden="true" /> : <Copy className="w-3.5 h-3.5" aria-hidden="true" />}

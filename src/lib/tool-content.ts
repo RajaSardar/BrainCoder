@@ -1848,49 +1848,45 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ]
   },
   "hash-generator": {
-    "longDescription": "<p>The BrainCoder Hash Generator computes cryptographic hashes from any text input using popular algorithms including MD5, SHA-1, SHA-256, SHA-384, and SHA-512. Hashing is a one-way process that converts data into a fixed-size string that serves as a digital fingerprint — useful for verifying file integrity, storing passwords securely, and creating unique identifiers.</p>\n<p>Our hash generator runs entirely in your browser using the Web Crypto API, the same cryptographic engine used by modern browsers for HTTPS and authentication. This means your input is processed locally and the original data is never transmitted to any server. You can hash passwords (for non-security research purposes), compare file checksums, verify download integrity, or generate deterministic identifiers from arbitrary text.</p>\n<p>The tool supports all major hash algorithms and displays results in multiple formats. Whether you're a developer debugging an authentication flow, a security researcher comparing hashes, or a system administrator verifying a file download, this tool provides instant, accurate results without any external dependencies.",
+    "longDescription": "<p>The BrainCoder Hash Generator computes cryptographic hashes of your text with SHA-1, SHA-256, SHA-384 and SHA-512, showing all four results instantly as you type. Hashing is a one-way process that turns any input into a fixed-length string, which makes it useful for verifying file integrity, comparing checksums, and generating deterministic identifiers.</p>\n<p>Everything runs in your browser using the Web Crypto API — the same cryptographic engine browsers use to secure HTTPS connections. Your input is hashed locally and never sent to a server, so you can safely run hashes over private text, API keys or proprietary data. Results are printed as lowercase hexadecimal, the format used by shasum, Git and most tooling.</p>\n<p>Each algorithm gets its own copy button, and a copy-all option grabs the full set at once. Hashing is intentionally debounced so the page stays responsive even with large pastes. In practice, SHA-256 is a safe default for integrity checks, SHA-1 still matches many legacy checksums, and SHA-384/SHA-512 produce longer digests when you want them.</p>",
     "features": [
-      "Supports MD5, SHA-1, SHA-256, SHA-384, and SHA-512",
+      "SHA-1, SHA-256, SHA-384 and SHA-512 in one view",
       "Powered by the browser's native Web Crypto API",
-      "Displays hash output in hexadecimal format",
-      "Compute multiple algorithms simultaneously",
-      "One-click copy for each hash output",
+      "Lowercase hexadecimal output — the format used by shasum",
+      "Debounced live hashing as you type",
+      "One-click copy per hash plus copy-all",
       "Zero data transmission — everything stays on your device"
     ],
     "howTo": [
       {
         "step": "Enter text to hash",
-        "description": "Type or paste the string you want to compute a hash for into the input field. This can be a password, a file name, a URL, or any text."
+        "description": "Type or paste the string you want to hash into the textarea. This can be a password (for research only), a checksum to compare, or any arbitrary text."
       },
       {
-        "step": "Select hash algorithms",
-        "description": "Choose one or more algorithms from the available options (MD5, SHA-1, SHA-256, SHA-384, SHA-512). You can select multiple to compare outputs."
+        "step": "Review the hashes",
+        "description": "SHA-1, SHA-256, SHA-384 and SHA-512 results appear automatically and update as you type, all in lowercase hexadecimal."
       },
       {
-        "step": "View the generated hashes",
-        "description": "The tool instantly computes and displays the hash values in hexadecimal format for each selected algorithm."
-      },
-      {
-        "step": "Copy and use the hash",
-        "description": "Click the copy button next to any hash to place it on your clipboard for use in configuration files, databases, or verification scripts."
+        "step": "Copy a hash",
+        "description": "Click the copy button next to one algorithm, or use copy all to grab the complete set for comparing against another tool."
       }
     ],
     "faq": [
       {
-        "question": "What hash algorithm should I use?",
-        "answer": "For general integrity checking, SHA-256 is the recommended standard. MD5 and SHA-1 are faster but have known collision vulnerabilities and should not be used for security purposes. SHA-512 offers the highest security but produces longer output."
-      },
-      {
-        "question": "Can two different inputs produce the same hash?",
-        "answer": "In theory, yes — this is called a hash collision. However, for modern algorithms like SHA-256, the probability is astronomically low (practically zero). MD5 and SHA-1 have known collision attacks, making them unsuitable for security-critical applications."
-      },
-      {
-        "question": "Is this tool suitable for password hashing?",
-        "answer": "For research and testing purposes, yes. For production password storage, use a dedicated password hashing function like bcrypt, scrypt, or Argon2 which add salting and key stretching — features a simple hash generator doesn't provide."
+        "question": "Which algorithms are supported?",
+        "answer": "SHA-1, SHA-256, SHA-384 and SHA-512. MD5 is not included — it is not part of the Web Crypto API and is no longer recommended anywhere. For MD5 or CRC checksums, try the Checksum Calculator tool."
       },
       {
         "question": "Why does the same input always produce the same hash?",
-        "answer": "That's a fundamental property of hashing — it's deterministic. The same input will always produce the exact same output. This is what makes hashes useful for verifying data integrity."
+        "answer": "Hashing is deterministic: the same input always hashes to the exact same output. This is what makes hashes useful for verifying that data hasn't changed."
+      },
+      {
+        "question": "Which algorithm should I use for integrity checks?",
+        "answer": "SHA-256 is the recommended default — good balance of speed and 256-bit output. Choose SHA-512 for a larger digest (a 128-character hex string), or SHA-1 when you need to match a legacy checksum."
+      },
+      {
+        "question": "Is this suitable for password hashing?",
+        "answer": "For research and testing, yes. For production password storage, use a dedicated function like bcrypt, scrypt or Argon2, which add salting and are designed to resist brute force."
       }
     ],
     "relatedSlugs": [
@@ -3052,95 +3048,103 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ]
   },
   "markdown-preview": {
-    "longDescription": "<p>The Markdown Preview Editor is a dual-pane writing environment that renders your Markdown in real time, giving you a live preview alongside the source as you type. It's the fastest way to compose README files, documentation, blog posts, and changelogs with confidence — seeing exactly how the final rendered output will look without switching between editors and browsers.</p><p>Supporting the full CommonMark specification plus GitHub Flavored Markdown (GFM) extensions — including tables, task lists, fenced code blocks with syntax highlighting, and automatic link detection — this editor handles everything from simple inline formatting to complex multi-column layouts. The synchronized scrolling between editor and preview keeps your cursor position in context at all times.</p><p>Your drafts are saved locally in your browser's storage, so you never lose work between sessions. No cloud accounts, no sync fees, and no risk of your proprietary documentation being uploaded anywhere. Just fast, distraction-free Markdown authoring.</p>",
+    "longDescription": "<p>The Markdown Preview tool is a dual-pane editor that renders your Markdown to HTML the moment you type it. Keep the source on the left, see the rendered result on the right — a fast way to compose README files, documentation, blog posts and changelogs without switching between an editor and a browser tab.</p><p>It ships with the core CommonMark specification plus GitHub Flavored Markdown extensions: tables, task lists, strikethrough, automatic links and fenced code blocks with language labels. Because the rendered output is sanitized before display, pasting raw HTML into your document can't run scripts — event handlers, embedded media and unsafe URLs are stripped.</p><p>Your draft is auto-saved to this browser's local storage, so reopening the page picks up where you left off. Copy the rendered HTML, download it as a standalone file, or keep writing — everything stays on your device, and nothing is ever uploaded.</p>",
     "features": [
-      "Real-time split-pane Markdown preview with synchronized scrolling",
-      "Full CommonMark and GitHub Flavored Markdown (GFM) support",
-      "Fenced code blocks with syntax highlighting for popular languages",
-      "Tables, task lists, footnotes, and automatic URL linking",
-      "Local browser storage for draft persistence across sessions",
-      "Export to HTML with a single click for sharing or embedding"
+      "Live split-pane preview that updates as you type",
+      "CommonMark plus GitHub Flavored Markdown: tables, task lists, strikethrough, auto links and fenced code blocks",
+      "Rendered HTML is sanitized — pasted scripts and event handlers are stripped",
+      "Copy the HTML or download it as a standalone .html file",
+      "Drafts auto-saved in your browser across sessions",
+      "Character, word and reading-time counts — zero uploads"
     ],
     "howTo": [
       {
         "step": "Write Markdown",
-        "description": "Type your Markdown in the left editor pane using standard syntax — headings, lists, links, images, code blocks, and more."
+        "description": "Type in the left editor using standard Markdown syntax — headings, lists, links, images, code fences and more."
       },
       {
-        "step": "Preview Live",
-        "description": "The right pane instantly renders your Markdown. Scroll in sync or independently to compare source and output."
+        "step": "Watch it render",
+        "description": "The right pane updates live. Tables, task lists and strikethrough use GitHub Flavored Markdown semantics."
       },
       {
-        "step": "Use GFM Extensions",
-        "description": "Take advantage of GitHub Flavored Markdown features like tables, task checkboxes, and fenced code blocks for richer content."
+        "step": "Keep or restore your draft",
+        "description": "Your document is auto-saved locally. Use Clear to start fresh, or Reset sample to reload the example."
       },
       {
-        "step": "Export or Copy",
-        "description": "Click export to download the rendered HTML file, or copy the HTML source for embedding in your project."
+        "step": "Copy or download",
+        "description": "Copy the rendered HTML to the clipboard, or download it as a standalone HTML file."
       }
     ],
     "faq": [
       {
-        "question": "Does it support GitHub Flavored Markdown?",
-        "answer": "Yes. Full GFM support includes tables, task lists, autolinks, strikethrough, and fenced code blocks with language-annotated syntax highlighting."
+        "question": "Which Markdown features are supported?",
+        "answer": "CommonMark plus GitHub Flavored Markdown: tables, task lists, strikethrough, automatic links and fenced code blocks with language labels. Footnotes are not included."
+      },
+      {
+        "question": "Can I paste raw HTML?",
+        "answer": "Yes — inline HTML is rendered as HTML. For safety, the output is sanitized first: scripts, event handlers, and unsafe URLs are stripped, and disallowed tags like iframe or embed are removed."
       },
       {
         "question": "Are my drafts saved between sessions?",
-        "answer": "Yes. The editor auto-saves your work to your browser's local storage. No cloud account is needed."
+        "answer": "Yes. The editor auto-saves your draft to this browser's local storage. Nothing is uploaded — the data stays in your browser."
       },
       {
         "question": "Can I export the rendered output?",
-        "answer": "Yes. You can export the fully rendered content as an HTML file or copy the HTML source to your clipboard."
+        "answer": "Yes. Copy the rendered HTML to your clipboard, or download it as a standalone .html file with built-in styles."
       }
     ],
     "relatedSlugs": [
+      "md-to-html",
       "html-markdown",
       "html-formatter",
-      "json-formatter",
-      "toml-json",
-      "html-minifier"
+      "html-minifier",
+      "json-formatter"
     ]
   },
   "html-minifier": {
-    "longDescription": "<p>The HTML Minifier compresses your HTML files by stripping unnecessary whitespace, removing redundant attributes, shortening boolean attributes, and optimizing tag structures — reducing file sizes by 10–40% without altering the rendered output. It's the go-to tool for front-end developers preparing HTML for production deployment where every kilobyte impacts load time and Core Web Vitals scores.</p><p>Beyond simple whitespace removal, this minifier intelligently collapses optional tags, removes comments (with an option to preserve critical ones), shortens class and ID names when safe, and optimizes attribute ordering for minimal output size. The tool provides a clear before/after comparison showing exact byte savings and compression percentage so you can quantify the impact.</p><p>All processing happens in your browser with zero server uploads. Sensitive HTML containing embedded API keys, internal URLs, or proprietary markup never leaves your machine — a critical requirement for enterprise teams and security-conscious organizations.</p>",
+    "longDescription": "<p>The HTML Minifier shrinks HTML by removing comments and collapsing whitespace that browsers ignore, producing a smaller file without touching the content that matters. Whitespace inside <code>&lt;pre&gt;</code> and <code>&lt;textarea&gt;</code> is preserved, JavaScript and CSS inside <code>&lt;script&gt;</code> and <code>&lt;style&gt;</code> passes through untouched, and values inside attributes are never rewritten — so minifying real-world markup stays safe.</p><p>Switch to pretty-print mode to reformat messy markup into clean indented structure, keep conditional comments like <code>&lt;!--[if IE]&gt;</code> when you need them, open a local .html file to process, and download the result when you're done. The header shows exact sizes in bytes and characters with the savings percentage, so you can see what you actually gained.</p><p>All processing happens in your browser with zero server uploads. Sensitive HTML containing API keys or internal URLs never leaves your machine.</p>",
     "features": [
-      "Intelligent whitespace and comment removal with configurable options",
-      "Boolean attribute shortening (e.g., disabled=\"disabled\" to disabled)",
-      "Optional tag collapsing and redundant attribute stripping",
-      "Real-time before/after size comparison with compression percentage",
-      "Option to preserve critical comments and conditional comments",
-      "Fully client-side — HTML never uploaded to any server"
+      "Removes comments and collapses non-essential whitespace in one pass",
+      "Preserves whitespace in pre, textarea, script and style, plus quoted attribute values",
+      "Option to keep conditional comments (e.g. <!--[if IE]>)",
+      "Pretty-print mode reformats messy markup into indented structure",
+      "Live byte and character sizes with savings percentage",
+      "Open local .html files and download the result — fully client-side"
     ],
     "howTo": [
       {
-        "step": "Paste or Upload HTML",
-        "description": "Input your HTML source code by pasting it into the editor or dragging a file onto the drop zone."
+        "step": "Paste or open HTML",
+        "description": "Paste markup into the editor, or use Open .html to load a local file into the tool."
       },
       {
-        "step": "Configure Options",
-        "description": "Toggle settings like comment removal, whitespace collapsing, and boolean attribute shortening to match your project's needs."
+        "step": "Choose Minify or Pretty-print",
+        "description": "Minify strips comments and collapses non-essential whitespace. Pretty-print reindents the markup instead."
       },
       {
-        "step": "Minify",
-        "description": "Click the minify button to produce the compressed output. The tool shows the original and minified sizes with savings."
+        "step": "Keep conditional comments (optional)",
+        "description": "In Minify mode, tick Keep conditional comments to preserve constructs like <!--[if IE]>...<![endif]-->."
       },
       {
-        "step": "Copy or Download",
-        "description": "Copy the minified HTML to your clipboard or download it as a .html file ready for production deployment."
+        "step": "Copy or download",
+        "description": "Copy the result to your clipboard, or download it as a .html file."
       }
     ],
     "faq": [
       {
-        "question": "Will minification break my HTML layout?",
-        "answer": "No. The minifier only removes characters that are whitespace or comments in the HTML spec. The rendered output remains identical."
+        "question": "Will minification break my HTML?",
+        "answer": "No. The tool only removes whitespace and comments that the browser already collapses: text inside pre and textarea is preserved, script and style content is preserved, and quoted attribute values are never rewritten."
       },
       {
-        "question": "Can I preserve certain HTML comments?",
-        "answer": "Yes. You can configure the tool to preserve comments containing specific patterns or conditional comments used for legacy browser support."
+        "question": "Does it strip attributes or rewrite tags?",
+        "answer": "No. Unlike aggressive minifiers, this tool never removes or renames attributes, shortens boolean attributes, or collapses optional tags. It only removes comments and non-essential whitespace."
       },
       {
-        "question": "How much file size reduction can I expect?",
-        "answer": "Typically 10–40% depending on how much whitespace and how many comments your source HTML contains. Well-indented, comment-heavy files see the largest reductions."
+        "question": "Can I keep some comments?",
+        "answer": "Yes. Enable Keep conditional comments to preserve conditional comments such as <!--[if IE]>. Standard HTML comments are removed."
+      },
+      {
+        "question": "How much can I save?",
+        "answer": "It depends on how much whitespace and how many comments your source contains. The tool shows the exact byte and character savings, so you can measure your actual file rather than rely on a rule of thumb."
       }
     ],
     "relatedSlugs": [

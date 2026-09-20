@@ -622,8 +622,82 @@ Phase 2+ Target (NOT building now):
   content) plus json-formatter 15 / text-size 24 / regex-tester 39 /
   word-counter spot check green; production build passed (285 pages). Report:
   `audit/reports/timestamp-converter.md`.
-- Next: Hash Generator (next in registry order after timestamp-converter).
-  Remaining 111 tools have not completed this process.
+- Next: UUID Generator (case-converter is next in registry order after
+  html-minifier but is excluded from commits, so uuid-generator is the next
+  audit target). Remaining 108 tools have not completed this process.
+- Hash Generator: ten independent judges ran in parallel (the architect report
+  was not returned — aborted; its coverage supplied by functional/security/
+  edge findings plus the harness). Component rebuilt on the team standard
+  (empty boot with em-dash placeholder — the demo "Hello, world!" default is
+  gone, 150ms debounce settling rapid retypes on the latest input, 1,000,000
+  char cap with disclosed note, crypto.subtle availability guard with a
+  role=alert instead of a throw, Clear now resets results + re-disables copy
+  instead of leaving stale hashes, results live region with aria-busy,
+  per-algorithm copy aria-labels + Copy-all, honest hex-only SHA-1/256/384/512
+  scope); shared CopyButton gained an ariaLabel prop for distinct accessible
+  names; copy rewrote the fabricated MD5 + "multiple formats (hex/binary/
+  base64)" claims and now points MD5/CRC users to Checksum Calculator,
+  keywords dropped "md5 generator" and widened to sha384/sha512, JSON-LD
+  tool-specific featureList added. 29 production Chrome scenarios passed
+  (digest byte-exact check against known SHA-256 vectors, debounce race,
+  copy-all/per-algo clipboard contents, clear-reset, empty state, caps,
+  a11y roles) plus the other two Wave 1 tools and timestamp-converter
+  re-runs green; production build passed (287 pages).
+  Report: `audit/reports/hash-generator.md`.
+- Markdown Preview: ten independent judges ran in parallel (functional and
+  performance not returned — aborted; security not returned — connection
+  reset; the critical XSS was independently runtime-verified by the architect
+  and edge-case judges, both probes fired `xss_fired=1`). Component upgraded
+  around a new allowlist sanitizer module
+  (`src/features/markdown-preview/sanitize.ts`): a DOMParser allowlist
+  (approx 50 tags, strict attribute allowlist, javascript:/vbscript:/data:
+  URL stripping with data:image kept, disallowed tags unwrapped to inert text)
+  sits between `marked` and the preview div, gated behind a mounted flag so
+  SSR and first client render are identical (no hydration mismatch; DOMParser
+  is client-only). marked v18 was probed in Node first: tables/task lists/
+  strikethrough/autolinks work, footnotes render as a plain link (never
+  claimed), raw HTML passes through (the sink now closed). Promised-but-missing
+  features were actually implemented: drafts auto-save to localStorage
+  (300ms debounce, restored on reload) and Copy HTML / Download .html export
+  the sanitized output; the fires claims (synchronized scrolling, syntax
+  highlighting, footnotes, "export with one click") were expelled from copy,
+  FAQ explicitly discloses footnotes are not included, GFM support is
+  described precisely (tables, task lists, strikethrough, autolinks, fenced
+  code). Parse failures surface as role=alert with the last good output kept;
+  useDeferredValue + 1,000,000 cap handle large docs; textarea/preview gained
+  accessible names and aria-live. 30 production Chrome scenarios passed (XSS
+  triads inert, task list checked state, table, autolink, strikethrough,
+  sanitized Copy HTML, download filename, autosave-vs-reload restoration,
+  Clear/Reset, a11y roles, honest footnotes disclosure on /tools/) plus Wave 1
+  siblings and timestamp-converter re-runs green; production build passed
+  (287 pages). Report: `audit/reports/markdown-preview.md`.
+- HTML Minifier: ten independent judges ran in parallel (architect not
+  returned — aborted; its corruption concerns were independently produced by
+  six judges with identical examples). The O(n²) regex engine was replaced by
+  a pure single-pass scanner (`src/features/html-minifier/html-minify.ts`,
+  `minifyHtml`/`beautifyHtml`): raw-text regions (script/style/textarea/pre)
+  pass through verbatim so a JS string containing `<!--` survives, quoted
+  attribute values are never rewritten (`class="a  b"`, `title="1 > 2"`),
+  inline/block whitespace rules keep exactly one space between inline elements
+  while dropping inter-block runs, comments are removed linearly (the ReDoS
+  backtracking regexes are gone), conditional comments (`<!--[if IE]>`)
+  survive only when the new keep-conditional option is on, and pretty-print
+  reindents without ever deep-indenting void `<br>`/`<img>`. normalizeTag also
+  collapses stray spaces before `>` and `/>` — a late fix caught when the
+  browser harness flagged `<div  class="a  b" >` → `<div class="a  b">`
+  (16/16 Node unit cases green; 1MB perf 46ms/42ms vs ~8.2s before, a 160×
+  win). The component gained the minify/pretty mode toggle (aria-pressed),
+  byte-accurate savings line in a role=status region (TextEncoder counts),
+  Open .html via a labelled file input, Copy/Download with mode-aware
+  filenames, and Clear. Copy rewrote the fabricated "attribute surgery" claims
+  (redundant-attribute removal, boolean shortening, optional-tag collapsing,
+  10-40% reduction, drag-and-drop) into the honest whitespace+comments scope;
+  keywords and a JSON-LD featureList override added. 34 production Chrome
+  scenarios passed (pre/script/textarea verbatim, conditional keep/drop,
+  inline spacing, `a > b`, beautify depth, byte stats, filename, guarded
+  buttons, aria roles) plus Wave 1 siblings and timestamp-converter re-runs
+  green; production build passed (287 pages). Report:
+  `audit/reports/html-minifier.md`.
 - Regex Tester: ten independent judges ran in parallel (one rate-limited on first
   attempt, completed on retry). The evaluation engine was hardened and the UI
   rebuilt. RegExp enumeration moved into a tested pure module
