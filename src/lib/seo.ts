@@ -42,9 +42,9 @@ const TOOL_KEYWORDS: Record<string, string[]> = {
   "html-minifier": ["html minifier online", "minify html", "compress html code", "remove whitespace html", "minify html in browser", "html pretty print online"],
   "case-converter": ["case converter online", "text case converter", "uppercase to lowercase", "title case", "snake case camel case"],
   "uuid-generator": ["uuid generator online", "random uuid v4", "generate uuid", "guid generator", "uuid without dashes", "uppercase uuid", "uuid from 1 to 100"],
-  "word-counter": ["word counter online", "count words", "character counter", "sentence counter", "word count tool"],
-  "lorem-ipsum": ["lorem ipsum generator", "dummy text generator", "placeholder text", "lorem text"],
-  "color-converter": ["color converter online", "hex to rgb", "rgb to hex", "hex to hsl", "color code converter"],
+  "word-counter": ["word counter online", "count words", "character counter", "sentence counter", "word count tool", "how many words in text", "count characters online"],
+  "lorem-ipsum": ["lorem ipsum generator", "dummy text generator", "placeholder text", "lorem text", "generate lorem ipsum", "lorem ipsum paragraphs", "dummy copy generator"],
+  "color-converter": ["color converter online", "hex to rgb", "rgb to hex", "hex to hsl", "hsl to rgb", "color code converter", "rgba to hex", "hex to rgba"],
   "css-cursor": ["css cursor generator", "cursor css", "url cursor generator", "w3c cursor online"],
   "gzip-tool": ["gzip online", "compress text gzip", "decompress gzip", "deflate online", "gzip string"],
   "image-to-pdf": ["image to pdf online", "jpg to pdf", "png to pdf", "convert image to pdf free"],
@@ -201,6 +201,12 @@ export function toolJsonLd(tool: ToolConfig) {
       "Whitespace-safe HTML minification that preserves pre, textarea, script and style content and quoted attribute values, conditional-comment preservation, pretty-print formatting, byte-accurate size and savings, HTML file open and download — all in your browser",
     "uuid-generator":
       "Cryptographically random UUID v4 generation with a 1-to-100 count slider, uppercase and no-hyphens variants that re-render instantly, per-row and copy-all buttons, and zero uploads — everything runs locally in your browser",
+    "word-counter":
+      "Real-time word, character (with and without spaces), sentence, paragraph, line and unique-word counts plus reading and speaking time — sentence detection ignores decimals and abbreviations, a 1,000,000-character limit keeps large pastes responsive, and everything runs locally in your browser",
+    "lorem-ipsum":
+      "Classic lorem ipsum paragraphs, sentences or words from 1 to 50 units, each batch opening with 'Lorem ipsum dolor sit amet', no adjacent word repeats, auto-regeneration on any change, one-click copy and fully client-side generation",
+    "color-converter":
+      "Instant conversion between HEX (3/4/6/8-digit), RGB/RGBA and HSL/HSLA with alpha support, automatic out-of-range clamping, a live swatch that keeps the last valid color, per-format copy buttons — all in your browser",
   };
   const featureList =
     TOOL_FEATURE_LIST[tool.slug] ??
@@ -208,7 +214,9 @@ export function toolJsonLd(tool: ToolConfig) {
       ? tool.description
       : tool.category.toLowerCase() === "generate"
         ? "Format, convert and generate — all in your browser"
-        : `Format, convert, generate and ${tool.category.toLowerCase()} — all in your browser`);
+        : tool.category.toLowerCase() === "convert"
+          ? "Format, convert and generate — all in your browser"
+          : `Format, convert, generate and ${tool.category.toLowerCase()} — all in your browser`);
   return {
     "@context": "https://schema.org",
     "@graph": [

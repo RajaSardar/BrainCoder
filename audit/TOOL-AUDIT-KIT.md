@@ -4,10 +4,12 @@
 
 User corrections:
 - Use 10 separate expert agents per tool, not one multi-role agent (2026-09-16).
-- Judges are read-only, independent and may run in PARALLEL; never parallel
-  judging of multiple tools at once (2026-09-16, supersedes "sequential" rule).
-  Finish judging one tool, upgrade it and its related content/pages, then
-  verify before starting the next.
+- Judges are read-only, independent and may run in PARALLEL (2026-09-16).
+- WAVES of 2–3 tools run concurrently (2026-09-20): judges for all tools in the
+  wave launch in parallel; consolidation, implementation, the single production
+  build, and per-tool harnesses each cover the whole wave before the next wave
+  starts. Finish all tools in the wave (judge, upgrade content/pages, verify)
+  before starting the next wave.
 
 1. Select the next tool from the registry, starting with PDF Compressor.
 2. Run the 10 judges below in parallel (read-only, independent). Wait for all

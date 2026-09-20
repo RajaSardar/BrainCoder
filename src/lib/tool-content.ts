@@ -2445,27 +2445,27 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ]
   },
   "lorem-ipsum": {
-    "longDescription": "<p>The BrainCoder Lorem Ipsum Generator produces classic placeholder text for design mockups, wireframes, and layout testing. Lorem Ipsum is the industry-standard dummy text used since the 1500s when an unknown printer scrambled a type specimen book to create a type specimen. It remains the go-to choice for filling layouts with realistic-looking text without distracting from the design.</p>\n<p>Our generator creates paragraphs, sentences, or words of Lorem Ipsum text with configurable quantity. Whether you're building a website mockup, testing a CMS layout, filling a design prototype, or demonstrating typography, this tool provides instantly generated placeholder content. You can choose between classic Lorem Ipsum, shuffled words for a more natural look, or pure random text.</p>\n<p>All generation happens in your browser — no text is stored or transmitted. The tool is free, requires no signup, and provides one-click copy for the generated content. It's the fastest way to fill any layout with realistic placeholder text.",
+    "longDescription": "<p>The BrainCoder Lorem Ipsum Generator produces classic placeholder text for design mockups, wireframes, and layout testing. Lorem Ipsum is the industry-standard dummy text — scrambled from Cicero's 'De Finibus Bonorum et Malorum' (45 BC) and in printing use since the 1500s — because its varied word lengths and letter distribution resemble real text without distracting from the layout.</p>\n<p>Generate paragraphs, sentences, or words, from 1 to 50 units at a time. Each batch opens with the classic 'Lorem ipsum dolor sit amet' opener, draws only from the authentic Cicero-based vocabulary, and avoids repeating the same word twice in a row. Changing the unit type or quantity regenerates the text immediately, and Generate re-rolls a fresh batch on demand.</p>\n<p>Everything happens in your browser — no generated text is stored or transmitted anywhere.</p>",
     "features": [
-      "Generate by paragraphs, sentences, or words",
-      "Classic Lorem Ipsum text based on Cicero's writings",
-      "Option to shuffle words for more natural-looking text",
-      "Configurable quantity from 1 to 50 units",
-      "One-click copy for generated text",
-      "No data stored or transmitted"
+      "Generate paragraphs, sentences, or words, from 1 to 50 units",
+      "Every batch opens with the classic 'Lorem ipsum dolor sit amet' opener",
+      "Classic vocabulary drawn from Cicero's De Finibus",
+      "No adjacent word repeats for natural-looking output",
+      "Auto-regenerates when you change unit or quantity, plus a one-click Generate re-roll",
+      "One-click copy — generated text never leaves your browser"
     ],
     "howTo": [
       {
-        "step": "Choose generation unit",
-        "description": "Select whether you want to generate text by paragraphs, sentences, or individual words depending on how much content you need."
+        "step": "Choose the generation unit",
+        "description": "Select paragraphs, sentences, or words depending on how much content and which shape of placeholder you need."
       },
       {
         "step": "Set the quantity",
-        "description": "Use the slider or input to specify how many paragraphs, sentences, or words you want to generate."
+        "description": "Drag the Count slider from 1 to 50 to choose how many paragraphs, sentences, or words to generate. The text updates as soon as you move it."
       },
       {
-        "step": "Click Generate",
-        "description": "The tool instantly produces the requested amount of Lorem Ipsum text. Toggle 'shuffle words' for a more randomized, natural-looking output."
+        "step": "Generate or re-roll",
+        "description": "Click Generate to replace the output with a fresh random batch. Changing the unit or quantity regenerates automatically."
       },
       {
         "step": "Copy the output",
@@ -2479,7 +2479,11 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       },
       {
         "question": "Why not just use 'test test test'?",
-        "answer": "Lorem Ipsum has varied word lengths, punctuation, and letter distributions that more closely resemble real English text. This makes it better for evaluating typography, line spacing, and layout aesthetics in designs."
+        "answer": "Lorem Ipsum has varied word lengths, punctuation, and letter distributions that more closely resemble real English text, so it's better for evaluating typography, line spacing, and layout aesthetics in designs."
+      },
+      {
+        "question": "Why does every batch start with 'Lorem ipsum dolor sit amet'?",
+        "answer": "That five-word run is the canonical starting phrase of the original passage, and it's what most people expect from a lorem ipsum generator — it signals instantly that the text is placeholder content."
       },
       {
         "question": "Can I use Lorem Ipsum in a production website?",
@@ -4615,41 +4619,49 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ]
   },
   "word-counter": {
-    "longDescription": "<p>BrainCoder's word and character counter is a fast, accurate online tool that instantly tallies the number of words, characters, sentences, and paragraphs in any text. Whether you're meeting a word count requirement for an essay, optimizing content for SEO, or checking the length of a social media post, this counter gives you precise statistics in real time. Just paste your text and watch the numbers update as you type.</p>\n<p>This tool is invaluable for writers, students, marketers, and content creators who need to track text length without the overhead of a full word processor. It counts words, characters (with and without spaces), sentences, and paragraphs — giving you a comprehensive overview of your text's structure. It's also useful for developers checking string lengths or validating input fields.</p>\n<p>Like all BrainCoder tools, the word counter runs entirely in your browser. Your text is never uploaded or stored anywhere, so you can safely use it for confidential documents, personal writing, or proprietary content. It's free, instant, and requires no registration — just paste and count.</p>",
+    "longDescription": "<p>BrainCoder's word and character counter tallies words, characters, sentences, paragraphs, lines, unique words, and reading and speaking time for any text. Counts update as you type or paste — useful for essays with a word limit, SEO content length checks, social posts, or simply measuring a document.</p>\n<p>Word and sentence counts are built on whitespace and punctuation tokenization, which is most accurate for space-delimited languages like English. Character counts, by contrast, count every character regardless of script, so they stay accurate for Chinese, Japanese, Korean, Arabic and any other writing system. Decimals and common abbreviations (Mr., e.g., 3.14) no longer inflate the sentence count.</p>\n<p>Like all BrainCoder tools this runs entirely in your browser with a 1,000,000-character limit — your text is never uploaded to a server, so it's safe for confidential writing.</p>",
     "features": [
-      "Real-time word, character, sentence, and paragraph counting",
-      "Characters counted with and without spaces",
-      "Instant updates as you type or paste text",
-      "100% private — all counting happens in your browser",
-      "Works with any language and text format",
-      "Simple one-field interface for quick results"
+      "Real-time word, character, sentence, paragraph and line counts",
+      "Character counts with and without spaces — accurate for any script",
+      "Unique word count, and reading and speaking time estimates",
+      "Sentence counting that ignores decimals and common abbreviations",
+      "1,000,000-character input limit keeps paste-heavy use fast",
+      "100% private — all counting happens in your browser, nothing uploaded"
     ],
     "howTo": [
       {
-        "step": "Open the Counter",
-        "description": "Navigate to the word and character counter tool on BrainCoder. You'll see a large text input area ready for your content."
+        "step": "Type or paste your text",
+        "description": "Add any text; the counters update in real time as content is added or removed."
       },
       {
-        "step": "Paste or Type Your Text",
-        "description": "Paste your text into the input field or start typing directly. The counters update in real time as content is added or removed."
+        "step": "Review the statistics",
+        "description": "Check words, characters (with and without spaces), sentences, paragraphs, lines, unique words and estimated reading/speaking time."
       },
       {
-        "step": "Review Statistics",
-        "description": "Check the displayed counts for words, characters (with and without spaces), sentences, and paragraphs. Use these stats for SEO optimization, assignment requirements, or content planning."
+        "step": "Clear to start fresh",
+        "description": "Press Clear to blank the input (disabled when already empty) before counting the next document."
       }
     ],
     "faq": [
       {
-        "question": "Does it count words correctly in other languages?",
-        "answer": "Yes. The word counter handles multi-byte characters and works with most languages, including Chinese, Japanese, Korean, Arabic, and other non-Latin scripts."
+        "question": "What counts as a word?",
+        "answer": "A word is any run of letters or digits, including contractions and hyphenated terms (don't, state-of-the-art) and decimal numbers such as 3.14. Standalone punctuation like '.' or '-' is not counted as a word."
+      },
+      {
+        "question": "Does it count Chinese, Japanese or Korean words?",
+        "answer": "Character counts are accurate for every script including CJK. Word counts are based on whitespace tokens, which is the natural definition for space-delimited languages like English — for unspaced scripts such as Japanese or Chinese, use the character count instead."
+      },
+      {
+        "question": "How are sentences counted?",
+        "answer": "A sentence is a group of text ending in '.', '!', '?', '。', '！' or '？'. Periods inside decimals (3.14) and common abbreviations (Mr., Dr., e.g., etc.) are ignored so those don't split a sentence."
+      },
+      {
+        "question": "Is there an input limit?",
+        "answer": "Yes — the counter covers the first 1,000,000 characters."
       },
       {
         "question": "Is my text stored anywhere?",
-        "answer": "No. All counting is performed locally in your browser. Your text is never transmitted to any server or stored beyond the current page session."
-      },
-      {
-        "question": "Can I count characters without spaces?",
-        "answer": "Yes. The tool provides both character counts — with spaces and without spaces — so you can use whichever metric fits your needs."
+        "answer": "No. All counting is performed locally in your browser. Your text is never transmitted to a server or saved beyond the current page session."
       }
     ],
     "relatedSlugs": [
@@ -5603,45 +5615,45 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ]
   },
   "color-converter": {
-    "longDescription": "<p>Color Converter is a fast, browser-based tool that converts colors between HEX, RGB, and HSL formats with a live color preview. Whether you are porting a design from a hex code, tweaking hue and saturation for a gradient, or matching brand colors across different stylesheets, this tool translates values instantly and accurately. Everything runs locally in your browser, so no code ever leaves your device.</p><p>The converter supports all common CSS color notations, including 3- and 6-digit hex, rgba, and hsl, with clamping for values outside valid ranges. A live swatch updates as you type, and one click copies the converted value in your preferred format. Perfect for developers, designers, and anyone working with CSS, canvas, or SVG colors.</p>",
+    "longDescription": "<p>BrainCoder's Color Converter converts between HEX, RGB, and HSL color formats instantly. Type a hex value like #7C3AED, an RGB value like rgb(124, 58, 237), or an HSL value like hsl(262, 83%, 58%) and watch all three formats update in real time, with a live preview swatch.</p>\n<p>It understands the full CSS color syntax: short hex (#f00), long hex (#7C3AED), RGBA with alpha (#7C3AEDFF and rgba(124, 58, 237, 1)), and HSLA. Channel values are clamped automatically — entering rgb(300, 0, 0) corrects to 255 with no errors. Reading a brand color from CSS or Figma and converting it to every format is a two-second job, and every result carries its own one-click copy button.</p>\n<p>Validation is forgiving about in-progress input: partially typed values like #7C or hsl(2 simply wait for more characters; only genuinely invalid values such as 'red' or '#ggg' show an error, and the preview swatch always keeps the last valid color on screen. All conversion happens locally in your browser.</p>",
     "features": [
-      "Convert between HEX, RGB, and HSL with instant results",
-      "Live color preview swatch as you type",
-      "Supports 3- and 6-digit hex, rgba, and hsla notations",
-      "Automatic clamping of out-of-range values",
-      "One-click copy in your preferred color format",
-      "100% client-side processing with no uploads"
+      "Convert between HEX, RGB, RGBA, HSL and HSLA in real time",
+      "Accepts hex (#7C3AED, #f00), rgb()/rgba() and hsl()/hsla() input",
+      "RGBA/HSLA alpha channel support with #RRGGBBAA (8-digit hex)",
+      "Out-of-range channels clamped automatically (e.g. 300 → 255)",
+      "Live color swatch that keeps the last valid color on invalid input",
+      "One-click copy for each output format — 100% in-browser"
     ],
     "howTo": [
       {
-        "step": "Enter a Color",
-        "description": "Type or paste a color in HEX, RGB, or HSL format into the input field."
+        "step": "Type or pick a color",
+        "description": "Enter any hex, rgb(), or hsl() value, or use the color picker to choose one visually. Invalid values show an error; partially typed values wait for completion."
       },
       {
-        "step": "Preview Live",
-        "description": "Watch the real-time swatch update as you modify the color value."
+        "step": "Read the conversions",
+        "description": "The HEX, RGB, and HSL cards show the same color in every format, with alpha included when present."
       },
       {
-        "step": "Choose Output Format",
-        "description": "Select the target format you want to convert to."
-      },
-      {
-        "step": "Copy the Result",
-        "description": "Click copy to place the converted value on your clipboard."
+        "step": "Copy what you need",
+        "description": "Use the copy button on any card to grab that format for CSS, design tools, or code."
       }
     ],
     "faq": [
       {
-        "question": "Which color formats are supported?",
-        "answer": "The tool converts between HEX (3- and 6-digit), RGB/RGBA, and HSL/HSLA. CSS color names are not currently supported."
+        "question": "What color formats are supported?",
+        "answer": "HEX (3, 4, 6 and 8-digit — including #RRGGBBAA alpha), RGB/RGBA and HSL/HSLA. CSS color names like 'red' or 'rebeccapurple' are not supported."
       },
       {
-        "question": "Is the conversion accurate?",
-        "answer": "Yes. Conversions use exact color-space math with standard CSS rounding, and out-of-range values are clamped so output stays valid CSS."
+        "question": "What happens if I enter a value out of range?",
+        "answer": "Channels are clamped to the valid range. rgb(300, 0, 0) is converted as rgb(255, 0, 0), and hsl hue values wrap around the 360° circle."
       },
       {
-        "question": "Do I need an account or upload?",
-        "answer": "No. Conversion happens entirely in your browser. There is no upload, no account, and no data sent to any server."
+        "question": "How is alpha handled?",
+        "answer": "Inputs with alpha — rgba(), hsla(), 4 or 8-digit hex — carry their alpha through to every output format. A color without alpha keeps no alpha in the outputs."
+      },
+      {
+        "question": "Does the converter store my colors?",
+        "answer": "No. Conversion runs entirely in your browser and nothing you enter is transmitted or stored."
       }
     ],
     "relatedSlugs": [

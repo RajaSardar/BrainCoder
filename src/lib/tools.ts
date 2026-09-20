@@ -335,7 +335,7 @@ export const TOOLS: ToolConfig[] = [
   {
     slug: "color-converter",
     name: "Color Converter",
-    tagline: "HEX, RGB, HSL & CSS colors",
+    tagline: "HEX, RGB & HSL color converter",
     description:
       "Convert colors between HEX, RGB and HSL with a live color preview.",
     category: "Convert",

@@ -622,8 +622,83 @@ Phase 2+ Target (NOT building now):
   content) plus json-formatter 15 / text-size 24 / regex-tester 39 /
   word-counter spot check green; production build passed (285 pages). Report:
   `audit/reports/timestamp-converter.md`.
-- Next: Word Counter (case-converter is excluded from commits, so
-  word-counter follows uuid-generator as the next audit target). Remaining 107
+- Word Counter: ten independent judges ran in parallel (all ten returned).
+  Component rebuilt on the team standard: the sentence splitter now shields
+  decimals and mutes common abbreviations (Mr./e.g./etc./v1.2.3) before
+  matching terminal punctuation — "Mr. Smith went home." → 1 sentence,
+  "Use e.g. apples." stays one unit, punctuation-only input ("!.!.") counts 0
+  words/sentences; words tokenize via a Unicode property regex (hyphenated
+  and dotted terms count once, punctuation never); characters count code
+  points (emoji honest, the old UTF-16 double-count is gone) in a single
+  for…of pass with no per-keystroke copy. Performance: `useDeferredValue` +
+  `useMemo` keep typing at input latency on a 1,000,000-char cap (was ~228ms
+  visible on 5MB pastes), with a disclosed limit note. Empty state is now
+  honest (no hardcoded pangram): a Clear button (disabled when empty), a
+  `role=status` aria-live line ("N words, M characters", singular handled),
+  `useId` + label htmlFor textarea, dl-based stat cards with the label
+  announced before the value, `toLocaleString("en-US")` pinned (rules out a
+  grouped-separator hydration mismatch), and reading/speaking time + unique
+  words cards. Copy rewrote the CJK overclaim into honest scoping —
+  character counts accurate for every script, word/sentence counts tuned for
+  space-delimited languages — added the 1,000,000 FAQ, and features now list
+  unique words and reading/speaking time; keywords widened and a JSON-LD
+  featureList override added. 38 production Chrome scenarios passed
+  (abbreviation/decimal immunity, 0-word punctuation, emoji chars, unique
+  collapse, lines/paragraphs, 40k-word paste accurate + zero errors,
+  pluralized status, dl order, Clear, honest /tools/ copy) plus Wave 1/2
+  re-runs green; production build passed (287 pages). Report:
+  `audit/reports/word-counter.md`.
+- Lorem Ipsum: ten independent judges ran in parallel (all ten returned).
+  Component rebuilt on the team standard: the `useState(() => build(mode,
+  count))` lazy initializer had been running Math.random during SSR AND client
+  hydration — React #418. State now starts "" and a client-only deferred
+  effect (setTimeout callback, sync set-state-in-effect rule respected) fills
+  the output on mount and regenerates on every mode/count change — the
+  stale-output trap is gone (no more copying text that doesn't match the
+  controls). The slider was raised 20 → 50 to match the promised 1–50 range
+  and replaced with the shared SliderField (useId label htmlFor from the prior
+  wave). Mode buttons live in a `role=group aria-label="Type"` group with
+  `aria-pressed` + ring (color-only active state removed); the output textarea
+  is readOnly with `aria-label="Generated output"` and a `role=status` line
+  announces the active config. The canonical "Lorem ipsum dolor sit amet"
+  opener now leads every first generated unit (words mode: "lorem ipsum…" for
+  count ≥ 2) so the classic claim is literally true, and a no-adjacent-
+  duplicates pick guard removes word collisions. Copy deleted the fabricated
+  "shuffle words"/"pure random"/"slider or input" capabilities, scoped privacy
+  to "generated text never leaves your browser", and documented the opener,
+  the anti-repeat guarantee and the real range; keywords widened + JSON-LD
+  featureList override added. 30 production Chrome scenarios passed
+  (hydration-zero, opener, 1–50 label, aria-pressed group, auto-regen on
+  mode/count, 50-word batch with zero adjacent dupes, Generate re-roll,
+  readOnly output + clipboard copy, honest /tools/ copy) plus Wave 1/2
+  re-runs green; production build passed (287 pages). Report:
+  `audit/reports/lorem-ipsum.md`.
+- Color Converter: ten independent judges ran in parallel (all ten returned).
+  Component rebuilt: hex-ONLY input was making the promised RGB/HSL switching,
+  rgba/hsla and clamping unreachable, so a real `parseColor()` now accepts
+  #RGB/#RRGGBB/#RGBA/#RRGGBBAA and CSS rgb()/rgba()/hsl()/hsla() (numeric or %
+  channels, alpha 0–1 or 0–100%, hue 360-wrap, whitespace-tolerant) — all three
+  formats output live, alpha carries through every format, and out-of-range
+  channels clamp (rgb(300,0,0) → 255) exactly as marketed. Input triage
+  distinguishes valid / hopeful (partial hex or css prefix — no error, hides
+  results) / hopeless (garbage like "red"/"#ggg" → role=alert + aria-invalid +
+  hidden results); the picker tracks a separate `lastValid` state instead of
+  the raw (possibly garbage) hex, so partial overwrites never snap it to
+  #000000. rgbToHex is computed once per render. A11y: useId + label htmlFor
+  on the hex input, role=alert error banner, distinct copy aria-labels
+  ("Copy HEX/RGB/HSL value"), house indigo focus ring (was purple). Tagline
+  fixed ("HEX, RGB, HSL & CSS colors" → "HEX, RGB & HSL color converter",
+  matching the CSS-names FAQ); copy dropped the phantom "Choose Output Format"
+  step, documents 3/4/6/8-digit hex, alpha flow and clamping; keywords widened
+  (hsl-to-rgb, rgba-to-hex…) + JSON-LD featureList override added AND the
+  generic Convert-category fallback fixed (the doubled "convert" in "Format,
+  convert, generate and convert"). 33 production Chrome scenarios passed
+  (default #7C3AED→rgb+hsl, #f00, rgb()→hex, hsl()→#FF0000, rgba alpha
+  round-trips, 8-digit hex, clamping, distinct copy labels + clipboard,
+  hopeless/hopeful/empty triage, picker keeps last valid, honest /tools/ copy)
+  plus Wave 1/2 re-runs green; production build passed (287 pages). Report:
+  `audit/reports/color-converter.md`.
+- Next: CSS Cursor (follows color-converter in registry order). Remaining 104
   tools have not completed this process.
 - Hash Generator: ten independent judges ran in parallel (the architect report
   was not returned — aborted; its coverage supplied by functional/security/
