@@ -698,7 +698,66 @@ Phase 2+ Target (NOT building now):
   hopeless/hopeful/empty triage, picker keeps last valid, honest /tools/ copy)
   plus Wave 1/2 re-runs green; production build passed (287 pages). Report:
   `audit/reports/color-converter.md`.
-- Next: CSS Cursor (follows color-converter in registry order). Remaining 104
+- CSS Cursor: ten independent judges ran in parallel (all ten returned).
+  Component rebuilt: the pasted-URL promise is dead (no way to load a remote
+  image, and browsers block cursor url() fetches), so a labelled local
+  PNG/CUR file input now renders a real custom cursor on the interactive
+  preview target (`cursor: url("blob:…") 2 2, pointer;`) with the Blob URL
+  revoked on unmount/replacement; the 36 keyword cards became plain buttons
+  with `aria-pressed` selection + distinct accessible names and a single Copy
+  button writes the exact `cursor: value;` declaration (per-card copy buttons
+  removed); non-image files get a role=alert. Copy, keyword row, JSON-LD
+  featureList and description rewritten to the honest scope (local-only custom
+  cursor + browser remote-URL blocking documented in FAQ, which also keeps the
+  no-upload disclosure). 21 production Chrome scenarios passed (36 cards,
+  default pointer declaration + label, selection state, grab updates,
+  exact-clipboard copy, custom-PNG blob declaration, clear-custom restore,
+  non-image alert, honest /tools/ copy) plus prior re-runs green; production
+  build passed (287 pages). Report: `audit/reports/css-cursor.md`.
+- Gzip Tool: ten independent judges ran in parallel (all ten returned).
+  Component rebuilt: the output region now really holds the compressed value
+  as text (copy writes the exact base64); JSON-payload mode emits
+  `{"<format>":true,"data":…}` and its Download unwraps to the raw .gz/
+  .deflate bytes; decompression works on bytes with binary detection
+  (NUL/U+FFFD heuristics) surfacing a "Download original bytes" action instead
+  of FFFD soup; the stack-overflowing whole-buffer `String.fromCharCode(...)`
+  spread is a chunked 32 KB loop; formats scoped to gzip/deflate/deflate-raw
+  (data-URI and raw-byte-string claims deleted); 20 MB input / 64 MB
+  decompressed caps with a 200 KB display truncation note (full data kept for
+  copy/download); CompressionStream feature-gate role=alert banner replaces a
+  missing-constructor crash; a11y: label htmlFor on the textarea, role=group +
+  aria-pressed pills, aria-label/aria-busy output region, role=status/alert.
+  Copy, SEO row, JSON-LD featureList and description rewritten honest. 33
+  production Chrome scenarios passed (labelled input, pills, H4sI base64,
+  exact clipboard, node-gunzip cross-checks, JSON payload + keyed Decompressed
+  report + payload-Data download, binary warning + byte-identical original
+  download, plain-text not mis-detected, truncated-display/full-copy, file
+  compress/decompress, deflate pill, honest /tools/ copy) plus prior re-runs
+  green; production build passed (287 pages). Report:
+  `audit/reports/gzip-tool.md`.
+- Image to PDF: ten independent judges ran in parallel (all ten returned;
+  one first-pass report lost to a rate limit and re-run). Component rebuilt:
+  buildPdf snapshots items up front, embeds each image in its own
+  try/catch with a canvas→JPEG fallback and reports success (`role=status`,
+  page count) or failure (`role=alert`) — the silent abort is gone; downloads
+  use an exact-size buffer copy (the raw `bytes.buffer` had trailing zero
+  padding); fit mode clamps to the 14400 pt PDF limit with a scale-to-fit +
+  white background draw (no more 56-inch pages / NaN from zero-dim files);
+  move up/down reordering (disabled at edges, distinct accessible names),
+  dedup by name+size, and real drag-drop on the empty state and grid; the size
+  select is properly labelled and the margin control switched to the shared
+  SliderField (label htmlFor) shown only for A4/Letter; object URLs tracked
+  and revoked on unmount/removal; root aria-busy + "Building page x of N"
+  progress. Copy, SEO row, JSON-LD featureList and description rewritten
+  honest (GIF = static first frame; no orientation/custom-dimensions/animated
+  claims). 30 production Chrome scenarios passed (labelled select, fit/A4/
+  letter, honest empty state, order-preserving add, duplicate reject,
+  reorder/disables, distinct remove names, %PDF magic + exact page counts via
+  pdf-lib load, build status, drag-drop, A4 margin slider, unloadable-image
+  alert, clear-to-empty, honest /tools/ copy, zero hydration/page errors)
+  plus prior re-runs green; production build passed (287 pages). Report:
+  `audit/reports/image-to-pdf.md`.
+- Next: PDF to Image (follows image-to-pdf in registry order). Remaining 101
   tools have not completed this process.
 - Hash Generator: ten independent judges ran in parallel (the architect report
   was not returned — aborted; its coverage supplied by functional/security/

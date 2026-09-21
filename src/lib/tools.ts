@@ -359,7 +359,7 @@ export const TOOLS: ToolConfig[] = [
     name: "Gzip Compress & Decompress",
     tagline: "Compress or decompress text and files",
     description:
-      "Compress text or files to .gz (gzip/deflate) right in your browser, or decompress them back. Zero uploads.",
+      "Compress text or files to gzip, deflate or deflate-raw right in your browser, or decompress them back. Zero uploads.",
     category: "Compress",
     icon: Archive,
     accent: "text-emerald-600",
@@ -370,7 +370,7 @@ export const TOOLS: ToolConfig[] = [
     name: "Image to PDF",
     tagline: "Combine images into a single PDF",
     description:
-      "Turn one or more JPG, PNG or WebP images into a single PDF with page size, orientation and fit options.",
+      "Turn one or more JPG, PNG or WebP images into a single PDF with page size, margins and fit options.",
     category: "Convert",
     icon: FileImage,
     accent: "text-rose-600",

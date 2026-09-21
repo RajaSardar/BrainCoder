@@ -45,7 +45,7 @@ const TOOL_KEYWORDS: Record<string, string[]> = {
   "word-counter": ["word counter online", "count words", "character counter", "sentence counter", "word count tool", "how many words in text", "count characters online"],
   "lorem-ipsum": ["lorem ipsum generator", "dummy text generator", "placeholder text", "lorem text", "generate lorem ipsum", "lorem ipsum paragraphs", "dummy copy generator"],
   "color-converter": ["color converter online", "hex to rgb", "rgb to hex", "hex to hsl", "hsl to rgb", "color code converter", "rgba to hex", "hex to rgba"],
-  "css-cursor": ["css cursor generator", "cursor css", "url cursor generator", "w3c cursor online"],
+  "css-cursor": ["css cursor generator", "cursor css", "css cursor preview", "cursor property tester", "custom css cursor image"],
   "gzip-tool": ["gzip online", "compress text gzip", "decompress gzip", "deflate online", "gzip string"],
   "image-to-pdf": ["image to pdf online", "jpg to pdf", "png to pdf", "convert image to pdf free"],
   "pdf-to-image": ["pdf to image online", "pdf to png", "pdf to jpg", "pdf pages to image"],
@@ -207,6 +207,12 @@ export function toolJsonLd(tool: ToolConfig) {
       "Classic lorem ipsum paragraphs, sentences or words from 1 to 50 units, each batch opening with 'Lorem ipsum dolor sit amet', no adjacent word repeats, auto-regeneration on any change, one-click copy and fully client-side generation",
     "color-converter":
       "Instant conversion between HEX (3/4/6/8-digit), RGB/RGBA and HSL/HSLA with alpha support, automatic out-of-range clamping, a live swatch that keeps the last valid color, per-format copy buttons — all in your browser",
+    "css-cursor":
+      "Live preview of all 36 CSS cursor keywords on an interactive hover target, a custom PNG or CUR cursor image loaded from your device with a fallback keyword, and one-click copy of the ready-made cursor declaration — entirely in your browser",
+    "gzip-tool":
+      "Gzip, deflate and deflate-raw compression using the native Compression Streams API, compression ratio and size display, Base64 or JSON-payload output, automatic format detection on decompression with binary detection, and file compress/decompress — zero server calls",
+    "image-to-pdf":
+      "Combine JPG, PNG, WebP, BMP and GIF images into a single multi-page PDF with drag-and-drop and file-browser adding, move-button reordering, fit-to-image pages or A4/Letter with a custom margin — all processed locally in your browser",
   };
   const featureList =
     TOOL_FEATURE_LIST[tool.slug] ??

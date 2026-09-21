@@ -73,41 +73,41 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ]
   },
   "image-to-pdf": {
-    "longDescription": "<p>Image to PDF is a free, browser-based converter that transforms JPG, PNG, WebP, and other image formats into professional PDF documents. Perfect for combining multiple photos into a single presentation, creating portfolios, or preparing scanned documents for submission, this tool handles the conversion entirely in your browser. No server uploads, no watermarks, and no registration required—just fast, reliable image-to-PDF conversion whenever you need it.</p><p>Our tool supports custom page sizes, orientation settings, and image ordering, giving you full control over the final PDF output. Whether you're a student turning in a photo assignment, a professional assembling a visual report, or anyone who needs to package images as a PDF, Image to PDF delivers clean, high-quality results in seconds. The client-side processing ensures your images remain private and secure throughout the entire conversion.</p>",
+    "longDescription": "<p>Image to PDF is a free, browser-based converter that transforms JPG, PNG, WebP, BMP, and GIF images into professional PDF documents. Perfect for combining multiple photos into a single presentation, creating portfolios, or preparing scanned documents for submission, this tool handles the conversion entirely in your browser. No server uploads, no watermarks, and no registration required—just fast, reliable image-to-PDF conversion whenever you need it.</p><p>Add images by browsing or by dragging and dropping them straight onto the tool, then reorder them before converting and choose between fit-to-image pages or A4 and Letter with a custom margin. The client-side processing ensures your images remain private and secure throughout the entire conversion.</p>",
     "features": [
-      "Convert JPG, PNG, WebP, BMP, and GIF images to PDF",
-      "Combine multiple images into a single multi-page PDF",
-      "Custom page sizes: A4, Letter, custom dimensions",
-      "Adjustable page orientation (portrait or landscape)",
-      "Drag-and-drop reordering of images before conversion",
-      "100% client-side processing with no file uploads"
+      "Combine JPG, PNG, WebP, BMP and GIF images into one PDF",
+      "Add images by browsing or by dragging and dropping",
+      "Reorder images before conversion with the move buttons",
+      "Fit-to-image pages, or A4 and Letter with a custom margin",
+      "100% client-side processing with no file uploads",
+      "Free, fast, and no registration required"
     ],
     "howTo": [
       {
         "step": "Add Images",
-        "description": "Click the upload button or drag and drop one or more image files into the tool."
+        "description": "Click Add images to browse your device, or drag and drop image files straight onto the tool."
       },
       {
         "step": "Arrange Order",
-        "description": "Drag and drop images to reorder them as they will appear in the PDF."
+        "description": "Use the up and down buttons on each card to reorder images as they will appear in the PDF."
       },
       {
         "step": "Configure Settings",
-        "description": "Choose page size, orientation, and margin options for your PDF."
+        "description": "Choose fit-to-image, A4 or Letter, and adjust the margin when using a fixed page size."
       },
       {
-        "step": "Generate PDF",
-        "description": "Click convert and download your new PDF file instantly."
+        "step": "Build the PDF",
+        "description": "Click Download PDF to combine the images and save the resulting file instantly."
       }
     ],
     "faq": [
       {
         "question": "What image formats are supported?",
-        "answer": "The tool supports all major image formats including JPG, JPEG, PNG, WebP, BMP, and animated GIF files."
+        "answer": "JPG, JPEG, PNG, WebP, BMP and GIF are supported. Animated GIF files are added as their static first frame."
       },
       {
         "question": "Can I combine images of different sizes into one PDF?",
-        "answer": "Yes. Each image will be automatically scaled to fit the selected page size while maintaining its aspect ratio."
+        "answer": "Yes. With A4 or Letter pages, each image is scaled to fit the selected page and its margin while keeping its aspect ratio. Fit-to-image mode gives each image its own page at its natural size."
       },
       {
         "question": "Is there a limit to how many images I can add?",
@@ -1800,13 +1800,13 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ]
   },
   "gzip-tool": {
-    "longDescription": "<p>The BrainCoder Gzip Compress & Decompress tool lets you shrink text data using the gzip algorithm directly in your browser. Gzip is the most widely used compression format on the web — every HTTP server uses it to reduce payload sizes and speed up page loads. Now you can compress and decompress text, JSON, HTML, and other string data yourself without installing anything.</p>\n<p>Compression can dramatically reduce the size of repetitive or verbose text. A 10 KB JSON payload might compress to under 2 KB, saving bandwidth and storage. Our tool uses the browser's built-in Compression Streams API, which means the compression happens at near-native speed with no server round-trips. Decompress any gzip-encoded string or data URI you encounter in your work.</p>\n<p>This is particularly useful for developers debugging API responses, inspecting compressed assets, preparing payloads for bandwidth-constrained environments, or learning how compression works. Everything runs locally — your data is never uploaded anywhere.",
+    "longDescription": "<p>The BrainCoder Gzip Compress & Decompress tool lets you shrink text data using the gzip, deflate or deflate-raw algorithms directly in your browser. Gzip is one of the most widely used compression formats on the web — every HTTP server uses it to reduce payload sizes and speed up page loads. Now you can compress and decompress text, JSON, HTML, and other string data yourself without installing anything.</p>\n<p>Compression can dramatically reduce the size of repetitive or verbose text. A 10 KB JSON payload might compress to under 2 KB, saving bandwidth and storage. Our tool uses the browser's built-in Compression Streams API, which means the compression happens at near-native speed with no server round-trips. Decompress gzip, deflate or deflate-raw data you encounter in your work — output is auto-detected across all three formats and fancy JSON results are pretty-printed.</p>\n<p>This is particularly useful for developers debugging API responses, inspecting compressed assets, preparing payloads for bandwidth-constrained environments, or learning how compression works. Everything runs locally — your data is never uploaded anywhere.",
     "features": [
-      "Gzip compress and decompress in the browser",
+      "Gzip, deflate and deflate-raw compress and decompress in the browser",
       "Uses the native Compression Streams API for speed",
       "Works with text, JSON, HTML, CSS, and JavaScript",
       "Shows compression ratio and original vs compressed size",
-      "Copy compressed output as base64 or raw bytes",
+      "Copy compressed output as Base64 or as a JSON payload with your own key",
       "No server calls — fully offline capable"
     ],
     "howTo": [
@@ -1815,16 +1815,16 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
         "description": "Enter the text content you want to compress — this could be a JSON response, HTML snippet, or any other string data."
       },
       {
-        "step": "Click Compress",
-        "description": "The tool applies gzip compression to your input and displays the compressed output along with the compression ratio showing how much space was saved."
+        "step": "Choose a format and click Compress",
+        "description": "Pick gzip, deflate or deflate-raw, then compress to a Base64 string or to a JSON payload. The ratio shows how much space was saved."
       },
       {
         "step": "Copy or export the result",
-        "description": "Copy the compressed data as a raw byte string or as a Base64-encoded string depending on your use case."
+        "description": "Copy the Base64 string, or download the compressed file. A JSON payload can also be downloaded as the raw compressed bytes if you need that exact file."
       },
       {
-        "step": "To decompress, paste gzip data and click Decompress",
-        "description": "If you have a gzip-encoded string or Base64-encoded gzip data, paste it in and click 'Decompress' to restore the original text."
+        "step": "To decompress, paste compressed data and click Decompress",
+        "description": "Paste Base64-encoded data, a JSON payload, or raw bytes and click Decompress. gzip, deflate and deflate-raw are tried automatically."
       }
     ],
     "faq": [
@@ -1834,11 +1834,11 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       },
       {
         "question": "Is gzip compression lossless?",
-        "answer": "Yes. Gzip is lossless — the decompressed output is identical to the original input, byte for byte. No data is lost during compression, making it safe for all types of data."
+        "answer": "Yes. Deflate and gzip are lossless — the decompressed output is identical to the original input, byte for byte. No data is lost during compression, making it safe for all types of data."
       },
       {
         "question": "Can I decompress data from a server response?",
-        "answer": "Yes. If you have a gzip-encoded response body (often indicated by the Content-Encoding: gzip header), you can paste it here to decompress and inspect the original content."
+        "answer": "Yes. If you have a gzip- or deflate-encoded response body (often indicated by a Content-Encoding header), you can paste it here to decompress and inspect the original content. All three formats are detected automatically."
       }
     ],
     "relatedSlugs": [
@@ -5665,41 +5665,41 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ]
   },
   "css-cursor": {
-    "longDescription": "<p>CSS Cursor Generator lets you preview every CSS cursor value on an interactive target and copy the exact CSS snippet you need. Hover behavior matters — a well-chosen cursor tells users whether something is clickable, draggable, resizable, or busy. This tool shows each keyword cursor live so you can pick the right one for your UI in seconds.</p><p>Beyond the standard keywords, the generator supports custom cursor URLs so you can test your own icon cursors before shipping them. The generated snippet is clean, copy-ready, and works in any stylesheet. Because everything runs in your browser, no files or data are ever uploaded.</p>",
+    "longDescription": "<p>CSS Cursor Generator lets you preview every CSS cursor keyword on an interactive target and copy the exact declaration you need. Hover behavior matters — a well-chosen cursor tells users whether something is clickable, draggable, resizable, or busy. This tool shows each keyword cursor live on a real hover target so you can pick the right one for your UI in seconds.</p><p>Browsers only allow same-origin or data URLs for custom cursor images, so the tool reads a PNG or CUR file straight from your device — nothing is ever uploaded. The generated snippet is a clean, copy-ready CSS declaration that works in any stylesheet.</p>",
     "features": [
       "Live preview of every CSS cursor keyword",
       "Interactive hover/press target to test behavior",
-      "Custom cursor URL support with fallback keyword",
-      "One-click copy-ready CSS snippet",
+      "Custom cursor image from a local PNG or CUR file",
+      "One-click copy-ready CSS declaration",
       "Covers default, pointer, grab, resize, progress, and more",
       "100% client-side, no uploads or account required"
     ],
     "howTo": [
       {
-        "step": "Select a Cursor",
-        "description": "Click any cursor keyword in the list to preview it on the interactive target."
+        "step": "Pick a Cursor",
+        "description": "Click any keyword in the grid to preview it on the interactive pane above."
       },
       {
-        "step": "Test Behavior",
-        "description": "Hover, click, and drag the target to see the cursor in action."
+        "step": "Test It Out",
+        "description": "Hover and press the pane to feel the cursor in action."
       },
       {
-        "step": "Add a Custom URL",
-        "description": "Optionally paste a cursor image URL and set a fallback keyword."
+        "step": "Add a Custom Image",
+        "description": "Optionally load a PNG or CUR cursor image from your device; it is applied with a fallback keyword."
       },
       {
         "step": "Copy the CSS",
-        "description": "Click copy to grab the generated cursor CSS snippet."
+        "description": "Click copy to grab the generated cursor declaration and paste it into your stylesheet."
       }
     ],
     "faq": [
       {
         "question": "What cursor keywords are supported?",
-        "answer": "All standard CSS keywords are covered: pointer, move, grab, grabbing, text, wait, progress, help, plus all resize, crosshair, cell, copy, zoom, not-allowed, and more."
+        "answer": "All standard CSS keywords are covered: default, pointer, move, grab, grabbing, text, wait, progress, help, plus all resize, crosshair, cell, copy, zoom, no-drop, not-allowed, and more."
       },
       {
         "question": "Can I use a custom cursor image?",
-        "answer": "Yes. Paste a cursor image URL (PNG/CUR) and choose a fallback keyword. The tool generates a valid multi-value cursor CSS declaration."
+        "answer": "Yes. Load a PNG or CUR file from your device and the tool generates a multi-value cursor declaration with a fallback keyword. Browsers block remote URLs for cursor images, so only local files (or data URLs) work reliably."
       },
       {
         "question": "Are my files uploaded?",
