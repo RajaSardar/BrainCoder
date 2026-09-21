@@ -801,8 +801,23 @@ Phase 2+ Target (NOT building now):
   per-page text, BOM download, clipboard, range exclude/include, "zz" rejection
   + clear-to-recover, scanned → OCR link, locked alert, zero hydration/page
   errors, honest /tools/ copy). Report: `audit/reports/pdf-to-text.md`.
-- Next: Text to PDF (follows pdf-to-text in registry order). Remaining 98 tools
-  have not completed this process.
+- Text to PDF: ten independent judges ran in parallel. `buildTextPdf` in
+  the shared pdf-office module was rewritten (WinAnsi prevalidation throws a
+  single friendly error naming the first offending chars so CJK/emoji/
+  Cyrillic never crash the embed; a linear per-token char-width chunker
+  replaced the O(n²)/O(n³) binary-search path so a 500,000-char word builds
+  fast and even the *first* word is chunked; `cur` reset kills the ghost
+  duplicate line; paragraphs split on `/\r\n?|\n/`; no trailing blank page).
+  The component was rebuilt: labelled textarea, real 10–24 pt font-size
+  SliderField, 500,000 `maxlength` with the cap disclosed in the status
+  region and in copy, role=status live announcements, role=alert errors,
+  aria-busy, exact-size Blob + deferred revoke. Copy no longer claims margin/
+  line-spacing customization, a "Convert to PDF" button, or Letter support.
+  New guide `how-to-convert-text-to-pdf`. 14/14 engine checks and 35/35
+  production Chrome scenarios passed; production build passed (288 pages).
+  Report: `audit/reports/text-to-pdf.md`.
+- Next: PDF to PPT (follows text-to-pdf in registry order). Remaining 97
+  tools have not completed this process.
 - Hash Generator: ten independent judges ran in parallel (the architect report
   was not returned — aborted; its coverage supplied by functional/security/
   edge findings plus the harness). Component rebuilt on the team standard

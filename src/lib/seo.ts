@@ -51,6 +51,7 @@ const TOOL_KEYWORDS: Record<string, string[]> = {
   "pdf-to-image": ["pdf to image online", "pdf to png", "pdf to jpg", "pdf pages to image"],
   "word-to-pdf": ["word to pdf", "convert word to pdf", "docx to pdf", "docx to pdf converter"],
   "pdf-to-text": ["pdf to text", "extract text from pdf", "pdf to txt", "convert pdf to text online"],
+  "text-to-pdf": ["text to pdf", "text to pdf converter", "convert txt to pdf", "plain text to pdf", "text file to pdf"],
   "md-to-html": ["markdown to html", "md to html converter", "convert markdown online"],
   "html-to-pdf": ["html to pdf online", "convert html to pdf", "webpage to pdf", "print html as pdf"],
   "html-to-image": ["html to image", "html to png", "screenshot html online", "capture div as image"],
@@ -221,6 +222,8 @@ export function toolJsonLd(tool: ToolConfig) {
       "Render .docx documents into a paginated A4 PDF in your browser — parse, preview the extracted content, convert, and download; drag-and-drop supported with no uploads",
     "pdf-to-text":
       "Extract the embedded text layer of a PDF to plain text in reading order — optional page ranges, copy to clipboard or download as .txt, fully client-side",
+    "text-to-pdf":
+      "Word-wrapped A4 pages with automatic page breaks, a 10–24 pt font-size slider, a live character counter and a one-click download of a standard PDF generated entirely in your browser with nothing uploaded",
   };
   const featureList =
     TOOL_FEATURE_LIST[tool.slug] ??

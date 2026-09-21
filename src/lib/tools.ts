@@ -425,7 +425,7 @@ export const TOOLS: ToolConfig[] = [
     name: "Text to PDF",
     tagline: "Plain text into a paginated PDF",
     description:
-      "Paste any text and download it as an A4 PDF with word wrapping and automatic page breaks. 100% local.",
+      "Paste basic Latin text, pick a 10–24 pt font size, and download it as a word-wrapped A4 PDF with automatic page breaks. Runs 100% in your browser.",
     category: "Convert",
     icon: FileType,
     accent: "text-emerald-700",

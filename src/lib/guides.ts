@@ -938,6 +938,47 @@ export const GUIDES: Guide[] = [
       },
     ],
   },
+  {
+    slug: "how-to-convert-text-to-pdf",
+    title: "How to Convert Text to PDF (Free, No Uploads)",
+    description:
+      "Turn plain text into a word-wrapped A4 PDF in your browser. Learn what's preserved, how pagination works, and what this tool doesn't do.",
+    keywords: [
+      "convert text to pdf",
+      "insert text into pdf",
+      "txt to pdf",
+      "make a pdf from text",
+      "text to pdf converter free",
+    ],
+    toolSlug: "text-to-pdf",
+    published: "2026-09-21",
+    updated: "2026-09-21",
+    readMinutes: 3,
+    sections: [
+      {
+        heading: "What stays preserved",
+        paragraphs: [
+          "Paste your notes, letter, report, or code into Text to PDF and the tool word-wraps every paragraph to the page width. Each newline starts a fresh paragraph, bullets and basic punctuation like em-dashes and accented Latin letters are kept, and the document is laid out onto A4 pages with built-in margins.",
+          "The PDF embeds basic Latin (WinAnsi) text only, which covers English and most Western European languages. If your text contains non-Latin characters — CJK, Cyrillic, Greek, Arabic, or emoji — the tool lists the exact characters you need to remove or replace before it builds the PDF, rather than silently dropping them.",
+          "Plain paragraphs are re-flowed to fit the page width, so runs of spaces or tabs are normalized as the text wraps. For rich formatting like headings, bold, or lists, convert Markdown to HTML first, then use HTML to PDF for the styled result.",
+        ],
+      },
+      {
+        heading: "Choose a font size",
+        paragraphs: [
+          "Use the font-size slider to set type between 10 and 24 points (13 points by default). Line spacing and text width follow the size you pick, and the preview count below the box updates live as you type.",
+          "Input is capped at 500,000 characters. The counter below the text box shows your current length and flags the cap so a very long paste is rarely a surprise.",
+        ],
+      },
+      {
+        heading: "Download and open",
+        paragraphs: [
+          "Press Download PDF and the file saves to your device as text.pdf. It opens in any PDF viewer and prints cleanly because the output is a standard PDF built at exact A4 page geometry.",
+          "Everything runs locally: your text is laid out and rendered into the PDF in your browser and is never uploaded to a server.",
+        ],
+      },
+    ],
+  },
 ];
 
 const guideBySlug = new Map(GUIDES.map((g) => [g.slug, g]));

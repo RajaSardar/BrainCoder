@@ -359,41 +359,49 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ]
   },
   "text-to-pdf": {
-    "longDescription": "<p>BrainCoder's text to PDF converter transforms any plain text into a downloadable PDF document — instantly and privately. Whether you need to create a PDF from meeting notes, convert a text-based report, or generate a simple document for sharing or printing, this tool produces clean, well-formatted PDFs without uploading your content to any server.</p>\n<p>The converter lets you customize basic formatting options like font size, page margins, and line spacing before generating the PDF. This gives you control over the final appearance without needing a word processor. The output is a standard PDF file that can be opened, printed, and shared on any device.</p>\n<p>All text processing happens in your browser, ensuring your notes, drafts, and sensitive content never leave your device. It's the fastest way to turn raw text into a professional-looking PDF — no software installation, no account creation, and no privacy concerns.</p>",
+    "longDescription": "<p>BrainCoder's Text to PDF converter turns plain text into a downloadable A4 PDF — instantly and privately. Paste meeting notes, a letter, a report, or even source code into the box, pick a font size, and download a clean, word-wrapped document with automatic page breaks.</p><p>The converter word-wraps your text to the page width and splits long documents across pages automatically, so multi-page notes come out as a tidy, readable file. It embeds basic Latin text — the encoding used by the PDF's built-in font — so text containing non-Latin scripts such as CJK, Cyrillic, Greek, Arabic, or emoji can't be rendered, and the tool tells you exactly which characters to remove or replace before it builds the PDF.</p><p>All processing happens in your browser: your text is laid out and rendered into the PDF locally and is never uploaded to any server. No software installation, no account creation, nothing to sign up for.</p>",
     "features": [
-      "Convert plain text to PDF in one click",
-      "Customize font size, margins, and line spacing",
-      "Supports long text with automatic page breaks",
+      "Paste plain text and download a clean, word-wrapped PDF",
+      "Choose a font size from 10–24 pt to suit the document",
+      "Automatic page breaks for long documents",
       "Download as a standard PDF file",
-      "No uploads — all processing happens in your browser",
-      "No watermarks, no accounts, no usage limits"
+      "100% browser-based — nothing is uploaded",
+      "No watermarks, no accounts"
     ],
     "howTo": [
       {
         "step": "Paste Your Text",
-        "description": "Enter or paste the text you want to convert into the input area. This can be any plain text content — notes, reports, letters, or code."
+        "description": "Enter or paste the text you want to convert — notes, reports, letters, or code. The box accepts up to 500,000 characters and wraps text to the page width automatically."
       },
       {
-        "step": "Adjust Formatting",
-        "description": "Optionally adjust font size, page margins, and line spacing to control the appearance of your PDF document."
+        "step": "Choose a Font Size",
+        "description": "Use the font-size slider to pick 10–24 pt type (13 pt by default). Line spacing and the A4 page layout follow the size you choose."
       },
       {
-        "step": "Generate and Download",
-        "description": "Click 'Convert to PDF' and the tool generates the document. Download the PDF file directly to your device."
+        "step": "Download the PDF",
+        "description": "Press Download PDF and the file saves to your device as text.pdf. Open it in any PDF viewer."
       }
     ],
     "faq": [
       {
-        "question": "Can I add headings or formatting to the text?",
-        "answer": "The tool works with plain text. For rich formatting (headings, bold, lists), consider using the Markdown to HTML converter first, then the HTML to PDF tool for more control."
+        "question": "Can I add headings, bold, or other rich formatting?",
+        "answer": "No — the tool embeds plain text only. Your line breaks, paragraphs, bullets, and basic punctuation are preserved as text. For rich formatting (headings, bold, lists), use Markdown to HTML first and then HTML to PDF for more control."
       },
       {
-        "question": "Does it support different page sizes?",
-        "answer": "The tool uses standard A4 or Letter page sizes by default. Text is automatically paginated based on the selected font size and margins."
+        "question": "Does it support Chinese, Arabic, Cyrillic, or emoji?",
+        "answer": "No. The PDF's built-in font encodes basic Latin (WinAnsi) characters only, which covers English and most Western European languages. If your text contains non-Latin characters, the tool lists the exact characters you need to remove or replace before building the PDF."
+      },
+      {
+        "question": "What page size and margins does it use?",
+        "answer": "A4, with a page margin built into the layout. Text is wrapped to the page width and breaks to a new page automatically whenever the next line would cross the bottom margin."
+      },
+      {
+        "question": "How much text can I convert at once?",
+        "answer": "Up to 500,000 characters. A live counter below the text box shows your current length and flags the cap."
       },
       {
         "question": "Is my text uploaded to generate the PDF?",
-        "answer": "No. The entire PDF generation process happens locally in your browser. Your text never leaves your device."
+        "answer": "No. The entire PDF generation process happens locally in your browser — your text never leaves your device."
       }
     ],
     "relatedSlugs": [
@@ -4932,7 +4940,8 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       "word-counter",
       "text-lines",
       "notepad",
-      "md-to-html"
+      "md-to-html",
+      "text-to-pdf"
     ]
   },
   "image-compressor": {

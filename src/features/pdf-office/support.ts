@@ -508,28 +508,83 @@ export async function buildTextPdf(
   const margin = 56.7;
   const maxW = pageW - margin * 2;
 
+  const encodable = (ch: string): boolean => {
+    if (ch === "\n" || ch === "\r" || ch === "\t") return true;
+    try {
+      font.widthOfTextAtSize(ch, fontSize);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  const unsupported: string[] = [];
+  const seen = new Set<string>();
+  for (const ch of text) {
+    if (!seen.has(ch) && !encodable(ch)) {
+      seen.add(ch);
+      unsupported.push(ch);
+      if (unsupported.length >= 8) break;
+    }
+  }
+  if (unsupported.length > 0) {
+    const list = unsupported.map((c) => `"${c}"`).join(" ");
+    const isPlural = unsupported.length > 1;
+    throw new Error(
+      `This tool embeds basic Latin (WinAnsi) text, and ${isPlural ? "these characters can't" : "this character can't"} be rendered: ${list}. Remove or replace ${isPlural ? "them" : "it"} (CJK, emoji, Cyrillic, Greek and other non-Latin scripts aren't supported), then try again.`,
+    );
+  }
+
+  const chunkToken = (token: string): string[] => {
+    const chars = [...token];
+    const n = chars.length;
+    const widths = new Array<number>(n);
+    for (let i = 0; i < n; i++) {
+      widths[i] = font.widthOfTextAtSize(chars[i], fontSize);
+    }
+    const out: string[] = [];
+    let start = 0;
+    while (start < n) {
+      let sum = 0;
+      let k = start;
+      for (; k < n; k++) {
+        sum += widths[k];
+        if (sum > maxW) break;
+      }
+      let end = k === n ? n : Math.max(start + 1, k - 2);
+      if (end < n) {
+        while (end > start + 1 && font.widthOfTextAtSize(chars.slice(start, end).join(""), fontSize) > maxW) {
+          end--;
+        }
+        while (end < n && font.widthOfTextAtSize(chars.slice(start, end + 1).join(""), fontSize) <= maxW) {
+          end++;
+        }
+      }
+      out.push(chars.slice(start, end).join(""));
+      start = end;
+    }
+    return out;
+  };
+
   function splitLines(paragraph: string): string[] {
     const words = paragraph.split(/\s+/).filter(Boolean);
     const lines: string[] = [];
     let cur = "";
     for (const w of words) {
+      const wTooWide = font.widthOfTextAtSize(w, fontSize) > maxW;
       const test = cur ? `${cur} ${w}` : w;
-      if (font.widthOfTextAtSize(test, fontSize) <= maxW || !cur) cur = test;
-      else {
+      if (!wTooWide && font.widthOfTextAtSize(test, fontSize) <= maxW) {
+        cur = test;
+        continue;
+      }
+      if (cur) {
         lines.push(cur);
-        if (font.widthOfTextAtSize(w, fontSize) > maxW) {
-          let chunk = w;
-          while (chunk.length) {
-            let n = chunk.length;
-            while (
-              n > 1 &&
-              font.widthOfTextAtSize(chunk.slice(0, n), fontSize) > maxW
-            )
-              n--;
-            lines.push(chunk.slice(0, n));
-            chunk = chunk.slice(n);
-          }
-        } else cur = w;
+        cur = "";
+      }
+      if (wTooWide) {
+        lines.push(...chunkToken(w));
+      } else {
+        cur = w;
       }
     }
     if (cur) lines.push(cur);
@@ -539,7 +594,7 @@ export async function buildTextPdf(
   let page = doc.addPage([pageW, pageH]);
   let y = pageH - margin;
 
-  for (const para of text.split(/\r?\n/).map((s) => s.replace(/\t/g, "    "))) {
+  for (const para of text.split(/\r\n?|\n/).map((s) => s.replace(/\t/g, "    "))) {
     if (!para.trim()) {
       y -= lineHeight;
     } else {
