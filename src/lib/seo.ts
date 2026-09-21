@@ -49,6 +49,8 @@ const TOOL_KEYWORDS: Record<string, string[]> = {
   "gzip-tool": ["gzip online", "compress text gzip", "decompress gzip", "deflate online", "gzip string"],
   "image-to-pdf": ["image to pdf online", "jpg to pdf", "png to pdf", "convert image to pdf free"],
   "pdf-to-image": ["pdf to image online", "pdf to png", "pdf to jpg", "pdf pages to image"],
+  "word-to-pdf": ["word to pdf", "convert word to pdf", "docx to pdf", "docx to pdf converter"],
+  "pdf-to-text": ["pdf to text", "extract text from pdf", "pdf to txt", "convert pdf to text online"],
   "md-to-html": ["markdown to html", "md to html converter", "convert markdown online"],
   "html-to-pdf": ["html to pdf online", "convert html to pdf", "webpage to pdf", "print html as pdf"],
   "html-to-image": ["html to image", "html to png", "screenshot html online", "capture div as image"],
@@ -213,6 +215,12 @@ export function toolJsonLd(tool: ToolConfig) {
       "Gzip, deflate and deflate-raw compression using the native Compression Streams API, compression ratio and size display, Base64 or JSON-payload output, automatic format detection on decompression with binary detection, and file compress/decompress — zero server calls",
     "image-to-pdf":
       "Combine JPG, PNG, WebP, BMP and GIF images into a single multi-page PDF with drag-and-drop and file-browser adding, move-button reordering, fit-to-image pages or A4/Letter with a custom margin — all processed locally in your browser",
+    "pdf-to-image":
+      "Render PDF pages as PNG or JPEG images at a 1–4x output scale (about 72–288 PPI), choose a page range like 1-3,5, preview the first 12 pages, and download single pages or a ZIP of all selected pages — all processed locally in your browser",
+    "word-to-pdf":
+      "Render .docx documents into a paginated A4 PDF in your browser — parse, preview the extracted content, convert, and download; drag-and-drop supported with no uploads",
+    "pdf-to-text":
+      "Extract the embedded text layer of a PDF to plain text in reading order — optional page ranges, copy to clipboard or download as .txt, fully client-side",
   };
   const featureList =
     TOOL_FEATURE_LIST[tool.slug] ??

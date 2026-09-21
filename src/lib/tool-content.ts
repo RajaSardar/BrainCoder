@@ -127,49 +127,57 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ]
   },
   "pdf-to-image": {
-    "longDescription": "<p>PDF to Image is a fast, client-side tool that converts each page of a PDF document into high-resolution image files. Export your PDF as JPG or PNG images with customizable DPI settings, making it ideal for sharing individual pages on social media, extracting visual content for presentations, or creating image archives of important documents. The entire rendering process runs in your browser—no uploads, no waiting, no privacy concerns.</p><p>Whether you need to convert a single page or an entire multi-page document, PDF to Image handles it with precision and speed. Adjust output resolution from 72 DPI for web use to 300 DPI for print-quality output. Perfect for designers, educators, content creators, and anyone who needs to transform PDF content into versatile, shareable image formats without installing any software.</p>",
+    "longDescription": "<p>PDF to Image renders the pages of a PDF into PNG or JPEG images entirely in your browser. Pick the pages you need — a range like 1-3,5 or the whole document — choose a format and quality scale, and export single pages or a ZIP archive of all of them. Nothing is uploaded; the file never leaves your device.</p><p>Use the output-scale slider to control resolution: at 1x a US-Letter page comes out at roughly 72 PPI, at 4x around 288 PPI — plenty for web use and most print-adjacent needs. Perfect for sharing a slide, archiving a receipt, or pulling any page out of a multi-page document without installing software.</p>",
     "features": [
-      "Render PDF pages as JPG or PNG images",
-      "Adjustable DPI resolution from 72 to 300",
-      "Batch export all pages at once or select specific pages",
-      "High-fidelity rendering preserves text clarity and graphics",
-      "100% browser-based with no file uploads",
-      "Download individual pages or a ZIP of all converted images"
+      "Render PDF pages as PNG or JPEG images",
+      "Output scale from 1x to 4x (about 72–288 PPI at US Letter)",
+      "Convert a page range like 1-3,5, or the entire document",
+      "Preview the first 12 pages, then save a single page",
+      "Download all selected pages as a ZIP archive",
+      "100% browser-based — no uploads"
     ],
     "howTo": [
       {
         "step": "Upload PDF",
-        "description": "Drag and drop your PDF file or click to browse and select it from your device."
+        "description": "Drag and drop your PDF file, or click to browse and select it from your device."
       },
       {
-        "step": "Select Output Format",
-        "description": "Choose between JPG and PNG output, and set your desired DPI resolution."
+        "step": "Set Format and Scale",
+        "description": "Choose PNG or JPEG output, then pick a quality scale from 1x to 4x (about 72–288 PPI at US Letter size)."
       },
       {
         "step": "Choose Pages",
-        "description": "Select to convert all pages or specify a range of pages to export."
+        "description": "Leave the Pages box empty to convert everything, or enter a range such as 1-3,5 to convert only those pages."
       },
       {
         "step": "Convert and Download",
-        "description": "Click convert, then download your images individually or as a ZIP archive."
+        "description": "Conversion starts automatically. Save a single page, or download all the selected pages as a ZIP archive."
       }
     ],
     "faq": [
       {
-        "question": "What's the difference between JPG and PNG output?",
-        "answer": "JPG is best for photographs and complex images with smaller file sizes. PNG is ideal for graphics with sharp lines and text, offering lossless quality at larger file sizes."
+        "question": "What's the difference between PNG and JPEG output?",
+        "answer": "JPEG is best for photographs and complex images with smaller file sizes. PNG is ideal for graphics with sharp lines and text, offering lossless quality at larger file sizes."
       },
       {
-        "question": "Can I convert just one page from a multi-page PDF?",
-        "answer": "Yes. You can specify a page range or select individual pages to convert rather than exporting the entire document."
+        "question": "Can I convert just some pages of a multi-page PDF?",
+        "answer": "Yes. Enter a page range in the Pages box (for example 2-4 or 1,3,5) to limit the conversion, or leave it empty for all pages."
       },
       {
-        "question": "What DPI should I use?",
-        "answer": "72 DPI is sufficient for web and screen use. 150 DPI works well for presentations. Use 300 DPI for print-quality output."
+        "question": "What DPI do the images come out at?",
+        "answer": "The Output scale slider sets the resolution: scale 1x is about 72 PPI and scale 4x about 288 PPI when measured at US-Letter size. The exported images don't carry DPI metadata, so choose the scale for where the images will be used — 1–2x for the screen, up to 4x when you need more pixels."
       },
       {
         "question": "Does this work with encrypted PDFs?",
-        "answer": "If the PDF is password-protected, you'll need to unlock it first using our PDF Unlock tool before converting to images."
+        "answer": "Password-protected PDFs can't be read here. Unlock the file first with our PDF Unlock tool, then convert the unlocked version."
+      },
+      {
+        "question": "What does the ZIP contain?",
+        "answer": "Download ZIP re-renders your selected pages at the current format and scale and bundles them into a single archive."
+      },
+      {
+        "question": "Are there size limits?",
+        "answer": "This tool handles PDFs up to 100 MB and up to 200 pages per run. For larger documents, split them with PDF Split first."
       }
     ],
     "relatedSlugs": [
@@ -235,73 +243,85 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ]
   },
   "word-to-pdf": {
-    "longDescription": "<p>BrainCoder's Word to PDF converter transforms .docx files into downloadable PDF documents — entirely in your browser. Powered by the mammoth.js library for accurate .docx parsing, this tool preserves your document's formatting, headings, lists, tables, images, and styling during conversion. Upload your Word document, preview the converted output, and download a clean PDF without any server uploads.</p>\n<p>This is essential for anyone who needs to share documents in a universally readable format. PDFs preserve formatting across all devices and platforms, making them ideal for sharing resumes, reports, contracts, and academic papers. BrainCoder's converter produces professional-quality PDFs that look identical to the original Word document.</p>\n<p>All conversion happens locally in your browser using client-side JavaScript. Your Word documents — which may contain sensitive business data, personal information, or proprietary content — never leave your device. It's the safest, fastest way to convert Word documents to PDF without cloud services or email attachments to third parties.</p>",
+    "longDescription": "<p>BrainCoder's Word to PDF renders your .docx document into a PDF right in your browser. The document is parsed locally with mammoth, you review the extracted content in a preview, then the pages are rendered and packed into a paginated A4 PDF that you download. No file is uploaded to any server.</p><p>The PDF is a high-resolution visual snapshot of the document — headings, tables, images, and lists come across as they appear. Because it preserves the look of the page rather than an editable text layer, the copy in the PDF isn't selectable, and elements Word draws outside the page flow (headers, footers, page numbers, separate page sizes) aren't carried over. Use it when you need a reliable, printable copy of exactly what's on the page.</p><p>Everything runs client-side on your device — resumes, contracts, reports, and other sensitive documents never leave your computer.</p>",
     "features": [
       "Convert .docx files to PDF entirely in your browser",
-      "Preserves headings, formatting, tables, images, and lists",
-      "Powered by mammoth.js for accurate document parsing",
-      "Preview converted content before downloading",
+      "Preview the parsed content before converting",
+      "Headings, tables, images, and lists rendered onto A4 pages",
+      "Drag-and-drop or file-browser upload",
       "No server uploads — complete document privacy",
-      "No watermarks, no accounts, no file size limits"
+      "Documents up to 25 MB"
     ],
     "howTo": [
       {
-        "step": "Upload Your Word Document",
-        "description": "Click the upload button or drag and drop your .docx file. The tool parses the document using mammoth.js and displays a preview."
+        "step": "Choose Your File",
+        "description": "Click the button or drag and drop a .docx file. It's parsed locally and a preview of the content appears."
       },
       {
-        "step": "Preview the Conversion",
-        "description": "Review the parsed content to ensure headings, formatting, and content have been correctly interpreted. Make note of any formatting that may need adjustment."
+        "step": "Review the Preview",
+        "description": "Check the parsed content — this is exactly what the rendered pages will show."
       },
       {
-        "step": "Download the PDF",
-        "description": "Click 'Convert to PDF' to generate the document. Download the resulting PDF file to your device for sharing, printing, or archiving."
+        "step": "Convert to PDF",
+        "description": "Click Convert to PDF to render the pages in your browser."
+      },
+      {
+        "step": "Download",
+        "description": "Download the finished PDF and open it anywhere — it's already on your device."
       }
     ],
     "faq": [
       {
         "question": "Does it preserve all Word formatting?",
-        "answer": "The mammoth.js parser handles most common formatting including headings, bold/italic text, lists, tables, and images. Very complex layouts or advanced Word features may have minor differences in the PDF output."
+        "answer": "It preserves how the content looks on the page: headings, bold and italic text, lists, tables, and images are all rendered. Because the output is a visual snapshot, the text inside the PDF isn't selectable."
+      },
+      {
+        "question": "What about headers, footers, and page numbers?",
+        "answer": "Those are drawn by Word outside the body content, so they aren't carried over into this rendering — and pagination may differ slightly from Word's own page breaks."
       },
       {
         "question": "Can it handle large Word documents?",
-        "answer": "Yes. The tool can process documents of significant length. Very large files with many images may take slightly longer to parse and convert."
+        "answer": "Yes, up to 25 MB. Very long documents are capped at 300 pages; split them into smaller files for anything longer."
       },
       {
         "question": "Is my Word document uploaded to a server?",
-        "answer": "No. The entire conversion — parsing the .docx file and generating the PDF — happens in your browser. Your document never leaves your device."
+        "answer": "No. Parsing and rendering happen entirely in your browser — your document never leaves your device."
+      },
+      {
+        "question": "Can it open .doc files?",
+        "answer": "No. Only .docx (Office Open XML) is supported. Save legacy .doc files as .docx first, then convert that."
       }
     ],
     "relatedSlugs": [
-      "text-to-pdf",
+      "pdf-to-word",
+      "image-to-pdf",
+      "excel-to-pdf",
       "html-to-pdf",
-      "md-to-html",
-      "notepad",
-      "word-counter"
+      "text-to-pdf"
     ]
   },
   "pdf-to-text": {
-    "longDescription": "<p>PDF to Text is a fast, efficient tool that extracts plain text from any PDF document and converts it into a clean, copyable text file. Perfect for researchers extracting content from papers, developers processing document data, or anyone who needs to pull text from a PDF without the hassle of manual copying, this tool works entirely in your browser for instant results. It handles both native digital PDFs and documents with embedded text layers, delivering accurate extraction every time.</p><p>The extracted text preserves the logical reading order and paragraph structure of the original document, making it ready for use in word processors, code editors, or any text-based workflow. Since all processing is client-side, your confidential documents—legal contracts, financial reports, medical records—remain completely private. No accounts, no uploads, no limits. Just paste, extract, and use your text.</p>",
+    "longDescription": "<p>PDF to Text pulls the text layer out of a PDF and gives it to you as clean, copyable plain text — entirely in your browser. Choose a page range or extract the whole document, then copy the result or download it as a .txt file. Nothing is uploaded; your documents stay on your device.</p><p>The extractor reads the embedded text directly from the PDF and reconstructs paragraphs in reading order, so quotes, reports, and paper content come out ready to paste into a document or code editor. It works on PDFs that contain real text; PDFs that are just scans or photos have no text layer and need OCR instead.</p>",
     "features": [
-      "Extract plain text from any PDF document",
-      "Preserves reading order and paragraph structure",
-      "Supports multi-page documents with batch extraction",
-      "Copy text to clipboard or download as .txt file",
+      "Extract the embedded text from PDF pages",
+      "Choose a page range like 1-3, or the whole document",
+      "Reconstructs reading order and paragraph breaks",
+      "Copy to clipboard or download as .txt",
       "100% browser-based with no server uploads",
-      "Works with both digital and text-layer PDFs"
+      "PDFs up to 100 MB"
     ],
     "howTo": [
       {
         "step": "Upload PDF",
-        "description": "Drag and drop your PDF file or click to select it from your device."
+        "description": "Drag and drop your PDF file, or click to browse and select it from your device."
       },
       {
-        "step": "Extract Text",
-        "description": "Click the extract button and wait for the tool to pull text from every page."
+        "step": "Choose Pages (Optional)",
+        "description": "To extract only some pages, enter a range in the Pages box such as 1-3 or 1,3,5; leave it empty to extract the whole document."
       },
       {
         "step": "Review Output",
-        "description": "Scroll through the extracted text to verify completeness and accuracy."
+        "description": "Extraction starts automatically and the text appears in the preview box in reading order."
       },
       {
         "step": "Copy or Download",
@@ -311,19 +331,23 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     "faq": [
       {
         "question": "Does it work with scanned PDFs?",
-        "answer": "Scanned PDFs contain images, not text. For those, use our OCR PDF tool to recognize and extract the text first."
+        "answer": "No — scanned PDFs store images, not text. Use our PDF OCR tool to read the text from the page images first."
       },
       {
         "question": "Will the text formatting be preserved?",
-        "answer": "The tool extracts plain text while preserving reading order and paragraph breaks. It does not preserve bold, italic, or font styling—use PDF to Word for formatted output."
+        "answer": "The output is plain text: reading order and paragraph breaks are kept, but bold, italic, and font styling are not. Use PDF to Word for a formatted, image-based document."
       },
       {
         "question": "How accurate is the extraction?",
-        "answer": "For digital PDFs with text layers, extraction is virtually 100% accurate. The tool reads the embedded text data directly from the PDF structure."
+        "answer": "For text-based PDFs the extraction reads the embedded text directly, so it's as accurate as the PDF's own text layer. Complex multi-column layouts can reorder when read as straight text."
       },
       {
         "question": "Can I extract text from specific pages only?",
-        "answer": "Yes, you can specify a page range to extract text from only certain pages of the document."
+        "answer": "Yes. Put a range like 1-3 (or pages such as 1,3,5) in the Pages box before extracting."
+      },
+      {
+        "question": "What if no text comes out?",
+        "answer": "Then the PDF has no text layer — it's a scanned document. The tool shows a hint and you can switch straight to PDF OCR to read the pages."
       }
     ],
     "relatedSlugs": [

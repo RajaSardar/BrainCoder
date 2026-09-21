@@ -10,7 +10,7 @@ export interface PageImage {
 }
 
 let workerReady = false;
-function ensureWorker(pdfjs: typeof import("pdfjs-dist")) {
+export function ensurePdfjsWorker(pdfjs: typeof import("pdfjs-dist")) {
   if (workerReady) return;
   pdfjs.GlobalWorkerOptions.workerSrc = new URL(
     "pdfjs-dist/build/pdf.worker.min.mjs",
@@ -24,8 +24,8 @@ export async function renderPdfPages(
   scale = 2,
 ): Promise<PageImage[]> {
   const pdfjs = await import("pdfjs-dist");
-  ensureWorker(pdfjs);
-  const doc = await pdfjs.getDocument({ data: data.slice(0) }).promise;
+  ensurePdfjsWorker(pdfjs);
+  const doc = await pdfjs.getDocument({ data }).promise;
   const out: PageImage[] = [];
   for (let p = 1; p <= doc.numPages; p++) {
     const page = await doc.getPage(p);
@@ -45,38 +45,189 @@ export async function renderPdfPages(
   return out;
 }
 
-export async function extractPdfText(data: ArrayBuffer): Promise<string> {
-  const pdfjs = await import("pdfjs-dist");
-  ensureWorker(pdfjs);
-  const doc = await pdfjs.getDocument({ data: data.slice(0) }).promise;
-  const pages: string[] = [];
-  for (let p = 1; p <= doc.numPages; p++) {
-    const page = await doc.getPage(p);
-    const content = await page.getTextContent();
-    let line = "";
-    const parts: string[] = [];
-    const items = (content.items ?? []) as Array<{
-      str?: string;
-      hasEOL?: boolean;
-    }>;
-    for (const item of items) {
-      if (typeof item.str === "string" && item.str) {
-        line += item.str;
-        if (item.hasEOL) {
-          parts.push(line.replace(/\s+$/, ""));
-          line = "";
-        }
-      }
+interface PdfTextItem {
+  str?: string;
+  hasEOL?: boolean;
+  transform?: number[];
+  width?: number;
+}
+
+interface ExtractedPageSelection {
+  ok: true;
+  order: Array<number>;
+}
+interface ExtractedPageSelectionError {
+  ok: false;
+  message: string;
+}
+
+export function pageRangeSyntaxError(range: string): string | null {
+  const trimmed = range.trim();
+  if (!trimmed) return null;
+  for (const segment of trimmed.split(",")) {
+    const match = /^(\d+)\s*(?:-\s*(\d+)\s*)?$/.exec(segment.trim());
+    if (!match) {
+      return "Enter pages like 1-3,5 — numbers separated by commas, with a dash for ranges.";
     }
-    if (line.trim()) parts.push(line);
-    pages.push(
-      parts
-        .map((s) => s.trim())
-        .filter(Boolean)
-        .join("\n"),
-    );
+    const from = Number(match[1]);
+    const to = match[2] ? Number(match[2]) : from;
+    if (from < 1 || to < from) {
+      return "Page numbers must be 1 or higher, and ranges must run upward (for example 2-5).";
+    }
   }
-  return pages.join("\n\n");
+  return null;
+}
+
+function parsePageSelection(
+  range: string,
+  total: number,
+): ExtractedPageSelection | ExtractedPageSelectionError {
+  const syntaxError = pageRangeSyntaxError(range);
+  if (syntaxError) return { ok: false, message: syntaxError };
+  const trimmed = range.trim();
+  if (!trimmed) return { ok: true, order: [] as Array<number> };
+  const parts: Array<[number, number]> = [];
+  for (const segment of trimmed.split(",")) {
+    const match = /^(\d+)\s*(?:-\s*(\d+)\s*)?$/.exec(segment.trim());
+    if (!match) continue;
+    const from = Number(match[1]);
+    const to = match[2] ? Number(match[2]) : from;
+    parts.push([from, to]);
+  }
+  const order: Array<number> = [];
+  for (const [from, to] of parts)
+    for (let p = from; p <= to; p++) {
+      if (p > total) {
+        return {
+          ok: false,
+          message: `This PDF has ${total} page${total === 1 ? "" : "s"} — requested page ${p} is out of range.`,
+        };
+      }
+      order.push(p);
+    }
+  if (order.length > 500) {
+    return {
+      ok: false,
+      message:
+        "Select up to 500 pages — use PDF Split for larger documents.",
+    };
+  }
+  return { ok: true, order };
+}
+
+function layoutTextPage(content: { items?: Array<unknown> }): string {
+  const text: Array<{
+    y: number;
+    x: number;
+    str: string;
+    width: number;
+    eol: boolean;
+  }> = [];
+  const order: Array<{ kind: "text"; idx: number } | { kind: "blank" }> = [];
+  for (const raw of content.items ?? []) {
+    const item = raw as Partial<PdfTextItem>;
+    const str = typeof item.str === "string" ? item.str : "";
+    if (str) {
+      const t = Array.isArray(item.transform) ? item.transform : [1, 0, 0, 1, 0, 0];
+      text.push({
+        y: typeof t[5] === "number" ? t[5] : 0,
+        x: typeof t[4] === "number" ? t[4] : 0,
+        str,
+        width: typeof item.width === "number" ? item.width : 0,
+        eol: item.hasEOL === true,
+      });
+      order.push({ kind: "text", idx: text.length - 1 });
+    } else if (item.hasEOL) {
+      order.push({ kind: "blank" });
+    }
+  }
+
+  const sortLine = (indices: Array<number>): string => {
+    const items = indices
+      .map((i) => text[i])
+      .sort((a, b) => a.x - b.x);
+    let s = "";
+    let endX = 0;
+    for (const it of items) {
+      const gap = s ? it.x - endX : 0;
+      if (s && gap > 1) s += " ";
+      s += it.str;
+      endX = it.x + it.width;
+    }
+    return s.trim();
+  };
+
+  const out: string[] = [];
+  let cur: Array<number> = [];
+  let curY: number | null = null;
+  let blankPending = 0;
+  const flushLine = () => {
+    if (!cur.length) return;
+    for (let b = 0; b < blankPending; b++) out.push("");
+    blankPending = 0;
+    out.push(sortLine(cur));
+    cur = [];
+    curY = null;
+  };
+
+  for (const item of order) {
+    if (item.kind === "blank") {
+      flushLine();
+      blankPending += 1;
+      continue;
+    }
+    const it = text[item.idx];
+    if (curY === null) curY = it.y;
+    if (Math.abs(it.y - curY) >= 2.5) flushLine();
+    cur.push(item.idx);
+    if (it.eol) flushLine();
+  }
+  flushLine();
+  while (out.length && out[out.length - 1] === "") out.pop();
+  return out.join("\n");
+}
+
+export interface ExtractPdfTextOptions {
+  pages?: string;
+  onPage?: (page: number, total: number) => void;
+}
+
+export async function extractPdfText(
+  data: ArrayBuffer,
+  options: ExtractPdfTextOptions = {},
+): Promise<string> {
+  const pdfjs = await import("pdfjs-dist");
+  ensurePdfjsWorker(pdfjs);
+  const task = pdfjs.getDocument({ data });
+  const doc = await task.promise;
+  try {
+    const selection = parsePageSelection(options.pages ?? "", doc.numPages);
+    if (!selection.ok) throw new Error(selection.message);
+    const total = selection.order.length || doc.numPages;
+    const pages: string[] = [];
+    let done = 0;
+    for (let p = 1; p <= doc.numPages; p++) {
+      if (selection.order.length && !selection.order.includes(p)) continue;
+      const page = await doc.getPage(p);
+      const content = await page.getTextContent();
+      pages.push(layoutTextPage(content));
+      try {
+        page.cleanup();
+      } catch {
+        /* noop */
+      }
+      done += 1;
+      options.onPage?.(done, total);
+    }
+    while (pages.length && !pages[pages.length - 1]) pages.pop();
+    return pages.join("\n\n");
+  } finally {
+    try {
+      await task.destroy();
+    } catch {
+      /* noop */
+    }
+  }
 }
 
 function dataUrlToBytes(dataUrl: string): Uint8Array {

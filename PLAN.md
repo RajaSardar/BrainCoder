@@ -757,8 +757,52 @@ Phase 2+ Target (NOT building now):
   alert, clear-to-empty, honest /tools/ copy, zero hydration/page errors)
   plus prior re-runs green; production build passed (287 pages). Report:
   `audit/reports/image-to-pdf.md`.
-- Next: PDF to Image (follows image-to-pdf in registry order). Remaining 101
-  tools have not completed this process.
+- PDF to Image: ten independent judges ran in parallel. Component rebuilt on
+  the pdf.js pipeline shared with word-to-pdf and pdf-to-text (`getDocument` +
+  `task.destroy`, per-page preview rendering, PNG/JPEG export, ZIP packaging,
+  page-range input behind the shared `pageRangeSyntaxError` validator, drag-drop,
+  locked-PDF detection with a friendly "password-protected" message, 500-page
+  cap). The harness exposed a detached-ArrayBuffer crash: pdf.js transfers the
+  data buffer, so re-using the same ArrayBuffer across renders threw "Cannot
+  perform Construct on a detached ArrayBuffer" — all three `getDocument` call
+  sites now pass `data.slice(0)`. Copy is honest about the real output
+  resolution (render scale ≈72–288 PPI) — the "300 DPI" claim is gone. 29
+  production Chrome scenarios passed (three previews, PNG magic-byte save,
+  JPEG re-render + magic, a range restricting to one page → one preview via
+  `waitForFunction` on img counts (the rerender is slow and text settles first),
+  ZIP name/container/entry/magic, invalid "2-1"/"abc" range rejection + clear
+  to recover, locked PDF (the new `e2e/fixtures/make-encrypted.mjs` R2/RC4-40
+  fixture) → friendly alert, drag-drop, zero hydration/page errors, honest
+  /tools/ copy). Report: `audit/reports/pdf-to-image.md`.
+- Word to PDF: ten independent judges ran in parallel. Component rebuilt around
+  the shared docx-to-HTML-to-PDF path: real .docx (OOXML) opens (generated zip
+  fixtures validated through mammoth), legacy .doc (CFB) is rejected with the
+  exact friendly message ("Please choose a .docx file … save it as .docx
+  first"; asserted with `/choose a \.docx file/`), the accept-attribute check
+  is token-based so the ".docx" token isn't masked by the ".doc" substring,
+  a preview phase precedes a %PDF download verified by pdf-lib page counts
+  (1 and ≥2), and all four error states surface as role=alert. 28 production
+  Chrome scenarios passed (short/long/empty OOXML, CFB .doc + CFB-masked
+  .docx, accept tokens, preview phase, download name + %PDF magic + page
+  counts, error alerts, drag-drop, zero hydration/page errors, honest /tools/
+  copy). Report: `audit/reports/word-to-pdf.md`.
+- PDF to Text: ten independent judges ran in parallel (the architect report
+  came back empty; its coverage supplied by the other judges plus the harness).
+  Component rebuilt on the shared pdf-office `extractPdfText` (reading-order
+  y/x line assembly, page range, 500-page cap, `task.destroy`) and the
+  TextExtractor worker: a labelled textarea holds the extracted text, the .txt
+  download carries the `\uFEFF` BOM, clipboard copy is verified, scanned pages
+  report "No selectable text was found" with a link to PDF OCR (the tesseract
+  CDN fetch is now user-visible — tracked residual), locked PDFs get a friendly
+  alert (the encrypted fixture loads via pdf.js without a prompt, matching the
+  app), and an invalid page range is rejected up front — subsequent file picks
+  are blocked until the bad range is cleared. 26 production Chrome scenarios
+  passed (same-baseline right-before-left tokens assemble in reading order,
+  per-page text, BOM download, clipboard, range exclude/include, "zz" rejection
+  + clear-to-recover, scanned → OCR link, locked alert, zero hydration/page
+  errors, honest /tools/ copy). Report: `audit/reports/pdf-to-text.md`.
+- Next: Text to PDF (follows pdf-to-text in registry order). Remaining 98 tools
+  have not completed this process.
 - Hash Generator: ten independent judges ran in parallel (the architect report
   was not returned — aborted; its coverage supplied by functional/security/
   edge findings plus the harness). Component rebuilt on the team standard

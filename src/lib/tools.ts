@@ -381,7 +381,7 @@ export const TOOLS: ToolConfig[] = [
     name: "PDF to Image",
     tagline: "Render PDF pages as PNG or JPG",
     description:
-      "Convert PDF pages to images right in the browser — choose the scale, format and download all pages.",
+      "Convert PDF pages to images right in the browser — pick a page range, set the scale and download a single page or a ZIP of them all. No uploads.",
     category: "Convert",
     icon: FileDigit,
     accent: "text-red-600",
@@ -403,7 +403,7 @@ export const TOOLS: ToolConfig[] = [
     name: "Word to PDF",
     tagline: "Convert .docx documents to PDF",
     description:
-      "Upload a Word document and get a cleanly paginated PDF with headings, tables and images preserved. No uploads.",
+      "Render a Word .docx into a PDF right in the browser — parse, preview, then convert and download. No uploads.",
     category: "Convert",
     icon: FileType2,
     accent: "text-blue-600",
@@ -412,9 +412,9 @@ export const TOOLS: ToolConfig[] = [
   {
     slug: "pdf-to-text",
     name: "PDF to Text",
-    tagline: "Extract selectable text from PDFs",
+    tagline: "Extract the text layer from PDFs",
     description:
-      "Pull the text layer out of any PDF as a plain .txt file — perfect for quotes, reports and copy-paste workflows.",
+      "Pull the text layer out of a PDF as a plain .txt file, for a page range or a whole document — copy or download. Runs fully in your browser.",
     category: "Convert",
     icon: TextCursorInput,
     accent: "text-teal-600",
