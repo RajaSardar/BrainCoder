@@ -6,9 +6,30 @@ import { Button } from "@/components/ui";
 import { downloadBlob } from "@/lib/download";
 import { extractPdfsWasm } from "@/lib/wasm-core";
 
+const MAX_FILE_BYTES = 100 * 1024 * 1024;
+const MAX_PAGES = 200;
+const THUMB_SCALE = 0.45;
+const SAVE_OPTS = { updateFieldAppearances: false, addDefaultPage: false };
+
 interface PageInfo {
   index: number;
   url: string;
+}
+
+function friendlyReadError(err: unknown): string {
+  const name = err instanceof Error ? err.name : "";
+  const msg = err instanceof Error ? err.message : "";
+  const raw = `${name} ${msg}`;
+  if (name === "PasswordException" || /password|encrypted/i.test(raw)) {
+    return "That PDF is password-protected. Unlock it with PDF Unlock first, then load the unlocked file here.";
+  }
+  if (
+    name === "InvalidPDFException" ||
+    /failed to fetch|no pdf header|invalid pdf/i.test(raw)
+  ) {
+    return "That file doesn't look like a valid PDF.";
+  }
+  return "Could not read that PDF. It may be corrupt or unsupported.";
 }
 
 export default function PdfRemovePages() {
@@ -21,44 +42,96 @@ export default function PdfRemovePages() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  const runIdRef = useRef(0);
+
+  const resetState = () => {
+    setPages([]);
+    setBytes(null);
+    setName("");
+    setBase("");
+    setRemoving(new Set());
+  };
 
   const handleFile = async (file: File | undefined) => {
     if (!file) return;
+    const runId = ++runIdRef.current;
     setBusy(true);
     setError("");
     setMessage("");
-    setRemoving(new Set());
     try {
+      if (file.size > MAX_FILE_BYTES) {
+        resetState();
+        setError(
+          "That file is larger than 100 MB, which this tool doesn't support. Split it with PDF Split first.",
+        );
+        return;
+      }
       const buffer = await file.arrayBuffer();
-      const bytes = new Uint8Array(buffer.slice(0));
+      if (runId !== runIdRef.current) return;
+      const exportBytes = new Uint8Array(buffer.slice(0));
+      setMessage("Rendering page previews…");
       const pdfjs = await import("pdfjs-dist");
       pdfjs.GlobalWorkerOptions.workerSrc = new URL(
         "pdfjs-dist/build/pdf.worker.min.mjs",
         import.meta.url,
       ).toString();
-      const doc = await pdfjs.getDocument({ data: buffer }).promise;
-      const list: PageInfo[] = [];
-      const scale = 0.45;
-      for (let n = 1; n <= doc.numPages; n++) {
-        const page = await doc.getPage(n);
-        const viewport = page.getViewport({ scale });
-        const canvas = document.createElement("canvas");
-        canvas.width = Math.floor(viewport.width);
-        canvas.height = Math.floor(viewport.height);
-        const ctx = canvas.getContext("2d");
-        if (!ctx) continue;
-        await page.render({ canvas, viewport }).promise;
-        list.push({ index: n, url: canvas.toDataURL("image/jpeg", 0.8) });
+      const data = new Uint8Array(buffer.slice(0));
+      const loadingTask = pdfjs.getDocument({ data });
+      const doc = await loadingTask.promise;
+      try {
+        if (doc.numPages > MAX_PAGES) {
+          resetState();
+          setError(
+            `This document has ${doc.numPages} pages, which is more than this tool handles at once (${MAX_PAGES}). Split it with PDF Split first, then trim each part.`,
+          );
+          return;
+        }
+        const list: PageInfo[] = [];
+        for (let n = 1; n <= doc.numPages; n++) {
+          if (runId !== runIdRef.current) return;
+          setMessage(`Rendering page previews… ${n} of ${doc.numPages}.`);
+          const page = await doc.getPage(n);
+          try {
+            const viewport = page.getViewport({ scale: THUMB_SCALE });
+            const canvas = document.createElement("canvas");
+            canvas.width = Math.floor(viewport.width);
+            canvas.height = Math.floor(viewport.height);
+            const ctx = canvas.getContext("2d");
+            if (!ctx) {
+              throw new Error("Could not render this page in the browser.");
+            }
+            await page.render({ canvas, viewport }).promise;
+            list.push({ index: n, url: canvas.toDataURL("image/jpeg", 0.8) });
+          } finally {
+            page.cleanup();
+          }
+        }
+        if (runId !== runIdRef.current) return;
+        setPages(list);
+        setBytes(exportBytes);
+        setName(file.name);
+        setBase(file.name.replace(/\.pdf$/i, ""));
+        setMessage(
+          list.length === 1
+            ? "Loaded 1 page. Mark pages below to remove them."
+            : `Loaded ${list.length} pages. Tap any page to mark it for deletion.`,
+        );
+      } finally {
+        await loadingTask.destroy();
       }
-      setPages(list);
-      setName(file.name);
-      setBase(file.name.replace(/\.pdf$/i, ""));
-      setBytes(bytes);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not read PDF.");
+      if (runId !== runIdRef.current) return;
+      resetState();
+      setError(friendlyReadError(err));
     } finally {
-      setBusy(false);
+      if (runId === runIdRef.current) setBusy(false);
     }
+  };
+
+  const handlePicker = (file: File | undefined) => {
+    if (inputRef.current) inputRef.current.value = "";
+    if (!file) return;
+    void handleFile(file);
   };
 
   const toggle = (n: number) => {
@@ -71,53 +144,57 @@ export default function PdfRemovePages() {
   };
 
   const removePages = async () => {
-    if (!bytes) return;
+    if (!bytes || removing.size === 0) return;
+    if (removing.size === pages.length) {
+      setError(
+        "Every page is selected — nothing would be left. Tap a page to keep it before deleting.",
+      );
+      return;
+    }
+    const runId = ++runIdRef.current;
     setBusy(true);
     setError("");
-    setMessage("");
-    const t0 = performance.now();
+    setMessage("Removing selected pages…");
     try {
-      const keep = [];
-      for (let i = 0; i < pages.length; i++)
-        if (!removing.has(pages[i].index)) keep.push(pages[i].index - 1);
-      const wasmOut = await extractPdfsWasm(bytes, [keep]);
-      if (wasmOut && wasmOut[0]) {
-        downloadBlob(wasmOut[0], `${base}-kept-pages.pdf`);
-        const gone = removing.size;
-        setMessage(
-          gone === 0
-            ? "No pages selected to remove — downloaded the full document."
-            : `Removed ${gone} page${gone === 1 ? "" : "s"} (${keep.length} remaining) (Rust/WASM core · ${(performance.now() - t0).toFixed(1)} ms).`,
-        );
-        return;
+      const keep: number[] = [];
+      for (const p of pages) {
+        if (!removing.has(p.index)) keep.push(p.index - 1);
       }
-      const { PDFDocument } = await import("pdf-lib");
-      const out = await PDFDocument.create();
-      const src = await PDFDocument.load(bytes, { ignoreEncryption: true });
-      const copied = await out.copyPages(src, keep);
-      copied.forEach((p) => out.addPage(p));
+      const wasmOut = await extractPdfsWasm(bytes, [keep]);
+      let out: Uint8Array;
+      if (wasmOut && wasmOut[0]) {
+        out = wasmOut[0];
+      } else {
+        const { PDFDocument } = await import("pdf-lib");
+        const rebuilt = await PDFDocument.create();
+        const src = await PDFDocument.load(bytes);
+        const copied = await rebuilt.copyPages(src, keep);
+        copied.forEach((p) => rebuilt.addPage(p));
+        out = await rebuilt.save(SAVE_OPTS);
+      }
+      if (runId !== runIdRef.current) return;
       const gone = removing.size;
-      downloadBlob(await out.save(), `${base}-kept-pages.pdf`);
+      downloadBlob(out, `${base}-kept-pages.pdf`);
       setMessage(
-        gone === 0
-          ? "No pages selected to remove — downloaded the full document."
-          : `Removed ${gone} page${gone === 1 ? "" : "s"} (${keep.length} remaining) (JS fallback · ${(performance.now() - t0).toFixed(1)} ms).`,
+        `Downloaded ${base}-kept-pages.pdf — removed ${gone} page${gone === 1 ? "" : "s"}, ${keep.length} remaining.`,
       );
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Remove failed");
+      if (runId !== runIdRef.current) return;
+      setError(friendlyReadError(err));
     } finally {
-      setBusy(false);
+      if (runId === runIdRef.current) setBusy(false);
     }
   };
 
   return (
-    <div className="space-y-5 w-full">
+    <div className="space-y-5 w-full" aria-busy={busy}>
       <input
         ref={inputRef}
         type="file"
         accept="application/pdf,.pdf"
         className="hidden"
-        onChange={(e) => void handleFile(e.target.files?.[0] ?? undefined)}
+        aria-label="Choose a PDF to delete pages from"
+        onChange={(e) => handlePicker(e.target.files?.[0] ?? undefined)}
       />
       <div className="flex flex-wrap items-center gap-3">
         <Button
@@ -132,30 +209,39 @@ export default function PdfRemovePages() {
           )}
           {name ? "Choose another PDF" : "Open PDF"}
         </Button>
-        <span className="text-sm text-slate-500">
+        <span className="text-sm text-slate-500" role="status">
           {name
             ? `${name} — ${pages.length} pages`
-            : "Select a PDF, then mark the pages to delete."}
+            : "Open a PDF, tap the pages to delete, and download a file with only what's left. Nothing is uploaded."}
         </span>
       </div>
 
       {error && (
-        <div className="rounded-xl bg-amber-50 border border-amber-200 text-amber-700 px-4 py-3 text-sm">
+        <div
+          role="alert"
+          className="rounded-xl bg-amber-50 border border-amber-200 text-amber-700 px-4 py-3 text-sm"
+        >
           {error}
         </div>
       )}
       {message && (
-        <div className="rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-3 text-sm">
+        <div
+          role="status"
+          className="rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-3 text-sm"
+        >
           {message}
         </div>
       )}
 
       {pages.length > 0 && (
-        <>
+        <fieldset disabled={busy} className="space-y-4">
+          <legend className="text-sm font-medium text-slate-700">
+            Pages to delete
+          </legend>
           <div className="flex flex-wrap items-center gap-3">
             <Button
               type="button"
-              disabled={busy || pages.length === 0}
+              disabled={removing.size === 0}
               onClick={() => void removePages()}
             >
               <Trash2 className="w-4 h-4 mr-1.5 inline" />
@@ -178,12 +264,17 @@ export default function PdfRemovePages() {
                 ? "Clear"
                 : `Select all ${pages.length}`}
             </Button>
-            <span className="text-xs text-slate-400">
-              Tap a page to mark it for deletion.
+            <span className="text-xs text-slate-500">
+              Tap a page to mark it for deletion. Marked pages get a red border
+              — tap again to keep one.
             </span>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+          <div
+            className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3"
+            role="group"
+            aria-label="Page previews"
+          >
             {pages.map((p) => {
               const on = removing.has(p.index);
               return (
@@ -191,6 +282,8 @@ export default function PdfRemovePages() {
                   key={p.index}
                   type="button"
                   onClick={() => toggle(p.index)}
+                  aria-pressed={on}
+                  aria-label={`Page ${p.index}${on ? ", marked for deletion" : ""}`}
                   className={`group relative rounded-xl border-2 overflow-hidden transition ${
                     on
                       ? "border-red-500"
@@ -200,7 +293,7 @@ export default function PdfRemovePages() {
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={p.url}
-                    alt={`Page ${p.index} preview`}
+                    alt=""
                     className="w-full aspect-[3/4] object-cover bg-slate-100"
                     loading="lazy"
                   />
@@ -220,7 +313,7 @@ export default function PdfRemovePages() {
               );
             })}
           </div>
-        </>
+        </fieldset>
       )}
     </div>
   );
