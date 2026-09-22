@@ -816,7 +816,28 @@ Phase 2+ Target (NOT building now):
   New guide `how-to-convert-text-to-pdf`. 14/14 engine checks and 35/35
   production Chrome scenarios passed; production build passed (288 pages).
   Report: `audit/reports/text-to-pdf.md`.
-- Next: PDF to PPT (follows text-to-pdf in registry order). Remaining 97
+- PDF to PPT: ten independent judges ran in parallel. The engine was upgraded
+  (`renderPdfPages` hardened — `data.slice(0)`, `task.destroy()` in finally,
+  `page.cleanup()`, null-ctx throws instead of silently dropping the page, so
+  pdf-to-word benefits too; new `renderPptSlides` emits PNG **bytes** with a
+  15,000,000 px² + 16,000px canvas guard that reports reduced scale, ≤12
+  downscaled preview thumbnails, target page lists and live per-page
+  progress; `buildPptx` now takes `{page, bytes, width, height}`, writes media
+  straight into the zip at `level: 0`, and guards non-finite geometry so
+  zero/oversized/minuscule pages can never emit NaN/Infinity coords). The
+  component was rebuilt: no auto-download (explicit Download .pptx via the
+  shared exact-size `downloadBlob`, `<base>.pptx`), 100 MB / 200 pages-per-run
+  caps, real page range, drag-and-drop drop zone (role=button + keys), a
+  1–3x image-quality slider that actually re-renders, Re-render button on
+  dirty settings, 12-preview cap with truthful non-editable-text notes,
+  role=status progress + success, role=alert errors (friendly password-locked
+  and invalid-file messages), aria-busy + disabled buttons + runId race guard.
+  Copy/FAQ/SEO rewritten honest (snapshot slides, not editable text; PDF to
+  Text/Markdown as editable alternatives); reciprocal link from pdf-to-image;
+  new guide `how-to-convert-pdf-to-powerpoint`. 18/18 node structure checks
+  and 40/40 production Chrome scenarios passed; production build passed
+  (289 pages). Report: `audit/reports/pdf-to-ppt.md`.
+- Next: PDF Rotator (follows pdf-to-ppt in registry order). Remaining 96
   tools have not completed this process.
 - Hash Generator: ten independent judges ran in parallel (the architect report
   was not returned — aborted; its coverage supplied by functional/security/

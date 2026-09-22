@@ -436,7 +436,7 @@ export const TOOLS: ToolConfig[] = [
     name: "PDF to PowerPoint",
     tagline: "Turn PDF pages into a slide deck",
     description:
-      "Convert a PDF into a 16:9 PowerPoint file with every page placed on its own slide — entirely in your browser.",
+      "Convert a PDF into a 16:9 PowerPoint file with every page placed on its own slide as a snapshot image — pick a page range and image quality, entirely in your browser.",
     category: "Convert",
     icon: Presentation,
     accent: "text-fuchsia-600",

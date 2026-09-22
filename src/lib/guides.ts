@@ -280,6 +280,45 @@ export const GUIDES: Guide[] = [
         ],
       },
 {
+    slug: "how-to-convert-pdf-to-powerpoint",
+    title: "How to Convert a PDF to PowerPoint (PPT/PPTX) Online",
+    description:
+      "Turn every PDF page into its own 16:9 PowerPoint slide as a snapshot image. Pick a page range and image quality, preview, download.",
+    keywords: [
+      "pdf to ppt",
+      "pdf to powerpoint",
+      "convert pdf to pptx",
+      "pdf to slides",
+      "pdf to powerpoint online",
+    ],
+    toolSlug: "pdf-to-ppt",
+    published: "2026-09-22",
+    updated: "2026-09-22",
+    readMinutes: 3,
+    sections: [
+      {
+        heading: "What a PDF-to-PPT conversion actually gives you",
+        paragraphs: [
+          "PDF to PPT renders every page of your PDF as a full-slide snapshot image inside a 16:9 PowerPoint deck. Color, layout, fonts, and images are all preserved exactly as they appear — but the slides are pictures, not live text, so the words inside them can't be selected or edited later.",
+          "That makes the tool ideal when you want to re-present an existing document (a report, a research paper, a set of mockups) as a deck without rebuilding every slide by hand. If you genuinely need editable text, a cleaner path is PDF to Text or PDF to Markdown to extract the wording, then paste it into PowerPoint yourself.",
+        ],
+      },
+      {
+        heading: "Keeping it sharp and fast",
+        paragraphs: [
+          "The image-quality slider controls how crisply each page is rendered: 1x keeps downloads small, while 3x produces sharper slides for projectors and large screens at the cost of bigger files and slower rendering.",
+          "You can also convert only part of the document by entering a page range such as 1-3,5, which is handy when a paper is 40 pages but the talk only needs its core slides.",
+        ],
+      },
+      {
+        heading: "Private conversion, never uploaded",
+        paragraphs: [
+          "Rendering happens locally in your browser with the pdf.js engine, and the .pptx is built right on your device — your file never touches a server. For password-protected documents, unlock them with PDF Unlock first, since protected files can't be read here.",
+        ],
+      },
+    ],
+  },
+{
     slug: "how-to-convert-html-to-pdf",
     title: "How to Convert HTML to PDF Online for Free",
     description:

@@ -19,30 +19,166 @@ export function ensurePdfjsWorker(pdfjs: typeof import("pdfjs-dist")) {
   workerReady = true;
 }
 
+type PdfLoadingTask = ReturnType<typeof import("pdfjs-dist")["getDocument"]>;
+
 export async function renderPdfPages(
   data: ArrayBuffer,
   scale = 2,
 ): Promise<PageImage[]> {
   const pdfjs = await import("pdfjs-dist");
   ensurePdfjsWorker(pdfjs);
-  const doc = await pdfjs.getDocument({ data }).promise;
-  const out: PageImage[] = [];
-  for (let p = 1; p <= doc.numPages; p++) {
-    const page = await doc.getPage(p);
-    const viewport = page.getViewport({ scale });
-    const canvas = document.createElement("canvas");
-    canvas.width = Math.floor(viewport.width);
-    canvas.height = Math.floor(viewport.height);
-    const ctx = canvas.getContext("2d");
-    if (!ctx) continue;
-    await page.render({ canvas, viewport }).promise;
-    out.push({
-      url: canvas.toDataURL("image/png"),
-      width: canvas.width,
-      height: canvas.height,
-    });
+  let task: PdfLoadingTask | undefined;
+  try {
+    task = pdfjs.getDocument({ data: data.slice(0) });
+    const doc = await task.promise;
+    const out: PageImage[] = [];
+    for (let p = 1; p <= doc.numPages; p++) {
+      const page = await doc.getPage(p);
+      const viewport = page.getViewport({ scale });
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.floor(viewport.width);
+      canvas.height = Math.floor(viewport.height);
+      const ctx = canvas.getContext("2d");
+      if (!ctx) {
+        throw new Error(
+          "This page is too large to render — it exceeds the browser's drawing buffer limits.",
+        );
+      }
+      await page.render({ canvas, viewport }).promise;
+      out.push({
+        url: canvas.toDataURL("image/png"),
+        width: canvas.width,
+        height: canvas.height,
+      });
+      try {
+        page.cleanup();
+      } catch {
+        /* noop */
+      }
+    }
+    return out;
+  } finally {
+    if (task) {
+      try {
+        await task.destroy();
+      } catch {
+        /* noop */
+      }
+    }
   }
-  return out;
+}
+
+export interface PptSlide {
+  page: number;
+  bytes: Uint8Array;
+  width: number;
+  height: number;
+}
+
+export interface RenderPptOptions {
+  scale?: number;
+  maxCanvasArea?: number;
+  previewLimit?: number;
+  targets?: number[];
+  onPage?: (done: number, total: number) => void;
+}
+
+export interface RenderPptResult {
+  slides: PptSlide[];
+  previews: Array<{ page: number; url: string }>;
+  reduced: number;
+}
+
+export async function renderPptSlides(
+  data: ArrayBuffer,
+  opts: RenderPptOptions = {},
+): Promise<RenderPptResult> {
+  const scale = opts.scale ?? 2;
+  const maxArea = opts.maxCanvasArea ?? 15_000_000;
+  const previewLimit = opts.previewLimit ?? 12;
+  const pdfjs = await import("pdfjs-dist");
+  ensurePdfjsWorker(pdfjs);
+  let task: PdfLoadingTask | undefined;
+  try {
+    task = pdfjs.getDocument({ data: data.slice(0) });
+    const doc = await task.promise;
+    const targetList =
+      opts.targets && opts.targets.length > 0
+        ? opts.targets
+        : Array.from({ length: doc.numPages }, (_, i) => i + 1);
+    const slides: PptSlide[] = [];
+    const previews: Array<{ page: number; url: string }> = [];
+    let reduced = 0;
+    for (let i = 0; i < targetList.length; i++) {
+      const pageNum = targetList[i];
+      const page = await doc.getPage(pageNum);
+      const base = page.getViewport({ scale: 1 });
+      const w = base.width * scale;
+      const h = base.height * scale;
+      let factor = scale;
+      if (w * h > maxArea) {
+        factor = scale * Math.sqrt(maxArea / (w * h));
+      }
+      const maxDim = 16_000;
+      const dimFactor = Math.min(maxDim / (base.width * factor), maxDim / (base.height * factor));
+      if (dimFactor < 1) {
+        factor = factor * dimFactor;
+        reduced += 1;
+      } else if (w * h > maxArea) {
+        reduced += 1;
+      }
+      const viewport = page.getViewport({ scale: factor });
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.floor(viewport.width);
+      canvas.height = Math.floor(viewport.height);
+      const ctx = canvas.getContext("2d");
+      if (!ctx) {
+        throw new Error(
+          "This page is too large to render — it exceeds the browser's drawing buffer limits.",
+        );
+      }
+      await page.render({ canvas, viewport }).promise;
+      if (previews.length < previewLimit) {
+        const thumbs = 320;
+        const k = Math.min(thumbs / canvas.width, thumbs / canvas.height);
+        const tCanvas = document.createElement("canvas");
+        tCanvas.width = Math.max(1, Math.floor(canvas.width * k));
+        tCanvas.height = Math.max(1, Math.floor(canvas.height * k));
+        const tCtx = tCanvas.getContext("2d");
+        if (tCtx) {
+          tCtx.drawImage(canvas, 0, 0, tCanvas.width, tCanvas.height);
+          previews.push({ page: pageNum, url: tCanvas.toDataURL("image/png") });
+        }
+      }
+      const blob = await new Promise<Blob | null>((resolve) =>
+        canvas.toBlob(resolve, "image/png"),
+      );
+      if (!blob) {
+        throw new Error("Could not encode the rendered slide image.");
+      }
+      slides.push({
+        page: pageNum,
+        bytes: new Uint8Array(await blob.arrayBuffer()),
+        width: canvas.width,
+        height: canvas.height,
+      });
+      try {
+        page.cleanup();
+      } catch {
+        /* noop */
+      }
+      if (opts.onPage) opts.onPage(i + 1, targetList.length);
+    }
+    return { slides, previews, reduced };
+  } finally {
+    if (task) {
+      try {
+        await task.destroy();
+      } catch {
+        /* noop */
+      }
+    }
+  }
 }
 
 interface PdfTextItem {
@@ -326,7 +462,7 @@ const theRel =
   "http://schemas.openxmlformats.org/officeDocument/2006/relationships";
 const prRel = "http://schemas.openxmlformats.org/package/2006/relationships";
 
-export function buildPptx(images: PageImage[]): Uint8Array {
+export function buildPptx(slides: PptSlide[]): Uint8Array {
   const parts: Zippable = {};
 
   parts["[Content_Types].xml"] = new TextEncoder()
@@ -339,7 +475,7 @@ export function buildPptx(images: PageImage[]): Uint8Array {
   <Override PartName="/ppt/slideMasters/slideMaster1.xml" ContentType="application/vnd.openxmlformats-officedocument.presentationml.slideMaster+xml"/>
   <Override PartName="/ppt/slideLayouts/slideLayout1.xml" ContentType="application/vnd.openxmlformats-officedocument.presentationml.slideLayout+xml"/>
   <Override PartName="/ppt/theme/theme1.xml" ContentType="application/vnd.openxmlformats-officedocument.theme+xml"/>
-  ${images.map((_, i) => `<Override PartName="/ppt/slides/slide${i + 1}.xml" ContentType="application/vnd.openxmlformats-officedocument.presentationml.slide+xml"/>`).join("\n  ")}
+  ${slides.map((_, i) => `<Override PartName="/ppt/slides/slide${i + 1}.xml" ContentType="application/vnd.openxmlformats-officedocument.presentationml.slide+xml"/>`).join("\n  ")}
 </Types>`);
 
   parts["_rels/.rels"] = new TextEncoder()
@@ -425,14 +561,14 @@ export function buildPptx(images: PageImage[]): Uint8Array {
 
   const sldIds: string[] = [];
   const sldRels: string[] = [];
-  images.forEach((img, i) => {
+  slides.forEach((slide, i) => {
     const num = i + 1;
-    parts[`ppt/media/image${num}.png`] = dataUrlToBytes(img.url);
+    parts[`ppt/media/image${num}.png`] = slide.bytes;
     const availW = SLIDE_W - MARGIN * 2;
     const availH = SLIDE_H - MARGIN * 2;
-    const k = Math.min(availW / img.width, availH / img.height);
-    const cx = Math.round(img.width * k);
-    const cy = Math.round(img.height * k);
+    const k = Math.min(availW / slide.width, availH / slide.height);
+    const cx = Number.isFinite(k) ? Math.round(slide.width * k) : availW;
+    const cy = Number.isFinite(k) ? Math.round(slide.height * k) : availH;
     const offX = Math.round((SLIDE_W - cx) / 2);
     const offY = Math.round((SLIDE_H - cy) / 2);
     parts[`ppt/slides/_rels/slide${num}.xml.rels`] = new TextEncoder()
@@ -481,7 +617,7 @@ ${sldRels.join("\n")}
 </p:defaultTextStyle>
 </p:presentation>`);
 
-  return zipSync(parts, { level: 6 });
+  return zipSync(parts, { level: 0 });
 }
 
 // ---------------------------------------------------------------- Word -> HTML (mammoth)

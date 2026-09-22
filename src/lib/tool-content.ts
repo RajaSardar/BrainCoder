@@ -183,6 +183,7 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     "relatedSlugs": [
       "image-to-pdf",
       "pdf-to-text",
+      "pdf-to-ppt",
       "pdf-ocr",
       "pdf-crop",
       "pdf-split"
@@ -413,57 +414,66 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ]
   },
   "pdf-to-ppt": {
-    "longDescription": "<p>PDF to PPT is a specialized converter that transforms PDF documents into editable Microsoft PowerPoint presentations. Instead of manually recreating slides from PDF content, this tool automatically splits and converts each page into a slide, preserving layouts, images, and text for easy editing. It's ideal for repurposing research papers into lecture slides, turning reports into presentations, or converting design mockups into editable PPTX files—all from your browser without any uploads.</p><p>The tool intelligently analyzes each PDF page and maps its content onto PowerPoint slide elements, maintaining the visual hierarchy and structure of your original document. Whether you're an educator building course materials, a consultant adapting a report for a client meeting, or a student preparing a presentation, PDF to PPT saves hours of manual work. The client-side processing ensures your work remains confidential from start to finish.</p>",
+    "longDescription": "<p>PDF to PPT turns each page of a PDF into its own slide in a 16:9 PowerPoint file — entirely in your browser. Every page is rendered as a high-resolution snapshot image placed on a full slide, so the finished deck looks exactly like your original document. Nothing is uploaded and no account is needed.</p><p>Use the Pages box to convert just the slice you need (for example 1-3,5), and set the image-quality slider to control sharpness: 1x keeps file sizes small, 3x renders crisper slides for projection. Preview up to the first 12 slides before you download. The exported slides are pictures, not editable text — if you need selectable or editable content instead, use PDF to Text or PDF to Markdown. Files can be up to 100 MB and 200 pages per run (PDF files generate one slide per page, so processing time grows with length).</p>",
     "features": [
-      "Convert PDF pages to editable PowerPoint slides",
-      "Preserves images, text boxes, and layout structure",
-      "Supports multi-page PDFs of any length",
-      "Export as .pptx files compatible with PowerPoint and Google Slides",
-      "100% client-side conversion with no data uploads",
-      "Free to use without registration or watermarks"
+      "Convert each PDF page into a full-slide snapshot image in a 16:9 .pptx",
+      "Convert a page range like 1-3,5, or the entire document",
+      "Slide image quality from 1x to 3x",
+      "Preview the first 12 rendered slides before you download",
+      "Exports .pptx files compatible with PowerPoint and Google Slides",
+      "Handles PDFs up to 100 MB and 200 pages per run",
+      "100% client-side conversion with no data uploads"
     ],
     "howTo": [
       {
         "step": "Upload PDF",
-        "description": "Drag and drop your PDF presentation or document into the converter tool."
+        "description": "Drag and drop your PDF into the converter, or click to browse and select it from your device."
       },
       {
-        "step": "Select Slide Options",
-        "description": "Choose whether each PDF page becomes one slide and set your preferred slide dimensions."
+        "step": "Choose Pages and Quality",
+        "description": "Set the image-quality slider (1x to 3x) and, optionally, enter a page range such as 1-3,5. The slides render automatically."
       },
       {
-        "step": "Convert to PPT",
-        "description": "Click the convert button and let the tool process your document into slides."
+        "step": "Review the Previews",
+        "description": "Check the slide previews. If they look right, adjust the range or quality — the deck re-renders as you go."
       },
       {
         "step": "Download Presentation",
-        "description": "Download the .pptx file and open it in PowerPoint or Google Slides for editing."
+        "description": "Click Download .pptx to save the deck. It opens in PowerPoint or Google Slides ready to present."
       }
     ],
     "faq": [
       {
-        "question": "Will I be able to edit the slides after conversion?",
-        "answer": "Yes. The output is a standard .pptx file with editable text boxes and images that you can modify in PowerPoint, Google Slides, or Keynote."
+        "question": "Can I edit the text on the slides after conversion?",
+        "answer": "No — each slide is a flat snapshot image, so the text cannot be selected or edited. If you need editable content, use PDF to Text or PDF to Markdown instead, which extract the wording you can paste into any presentation."
       },
       {
-        "question": "How accurate is the layout conversion?",
-        "answer": "The tool preserves the general layout and content positioning. Complex multi-column layouts may need some manual adjustment for optimal slide appearance."
+        "question": "Will the slides look like my original pages?",
+        "answer": "Yes. Every page is rendered as a clear image and fitted neatly inside a 16:9 slide, so the deck mirrors your document page for page."
       },
       {
         "question": "Can I convert specific pages only?",
-        "answer": "Yes, you can specify a page range to convert only the pages you need into slides."
+        "answer": "Yes. Enter a page range in the Pages box (for example 2-4 or 1,3,5) to convert only those pages, or leave it empty for the whole document."
+      },
+      {
+        "question": "How can I make sharper slides?",
+        "answer": "Raise the image-quality slider toward 3x. Higher settings produce crisper slides for projection but larger file sizes and slower rendering."
+      },
+      {
+        "question": "Are there size limits?",
+        "answer": "This tool handles PDFs up to 100 MB and up to 200 pages per run. For larger documents, split them with PDF Split first."
       },
       {
         "question": "Does it preserve animations and transitions?",
-        "answer": "PDFs don't contain animation or transition data, so those won't be converted. You can add them manually in PowerPoint after conversion."
+        "answer": "PDFs don't contain animation or transition data, and the slides are static images, so none are carried over. You can add them manually in PowerPoint after conversion."
       }
     ],
     "relatedSlugs": [
       "pdf-to-image",
-      "pdf-to-word",
+      "pdf-to-text",
       "pdf-to-markdown",
-      "pdf-merge",
-      "pdf-page-numbers"
+      "pptx-creator",
+      "pdf-to-word"
     ]
   },
   "pdf-rotate": {
