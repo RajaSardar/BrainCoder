@@ -456,9 +456,9 @@ export const TOOLS: ToolConfig[] = [
   {
     slug: "pdf-remove-blank-pages",
     name: "Remove Blank Pages",
-    tagline: "Delete empty PDF pages automatically",
+    tagline: "Detect and delete near-empty pages",
     description:
-      "Automatically detects blank pages by analyzing ink coverage and preselects them for removal — all in your browser.",
+      "Flags pages with negligible ink by coverage analysis, lets you review the selection, then rebuilds the PDF without them — all in your browser.",
     category: "Convert",
     icon: ScanLine,
     accent: "text-emerald-600",
@@ -467,9 +467,9 @@ export const TOOLS: ToolConfig[] = [
   {
     slug: "pdf-remove-pages",
     name: "PDF Delete Pages",
-    tagline: "Remove unwanted pages",
+    tagline: "Keep only the pages you want",
     description:
-      "Preview every page, tap the ones to remove, and download the PDF with just the pages you want to keep.",
+      "Preview every page, tap the ones to remove, and download a PDF rebuilt from just the pages you want to keep.",
     category: "Convert",
     icon: Scissors,
     accent: "text-red-600",
@@ -478,9 +478,9 @@ export const TOOLS: ToolConfig[] = [
   {
     slug: "pdf-watermark",
     name: "PDF Watermark",
-    tagline: "Stamp any text on every page",
+    tagline: "Stamp the same text on every page",
     description:
-      "Overlay configurable text watermarks (size, opacity, angle) across all pages of a PDF, fully client-side.",
+      "Overlay a centered bold-Helvetica text watermark with tunable size, opacity and angle on every page — fully client-side, up to 100 MB.",
     category: "Convert",
     icon: Droplets,
     accent: "text-sky-600",

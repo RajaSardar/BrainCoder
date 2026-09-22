@@ -591,8 +591,8 @@ export const GUIDES: Guide[] = [
       {
         heading: "Removing pages with a live preview",
         paragraphs: [
-          "The PDF Delete Pages tool renders thumbnails of every page so you can see exactly what you're removing. Click the pages you no longer need, then hit delete — the tool rebuilds the PDF from the pages you kept.",
-          "Multi-select, or choose page ranges when you want to drop a contiguous block like an annex.",
+          "The PDF Delete Pages tool renders a thumbnail of every page so you can see exactly what you're removing. Tap the pages you no longer need, then hit Delete pages — the tool rebuilds the PDF from the pages you kept and downloads it instantly.",
+          "Marked pages get a red border; tap one again to keep it. The rebuilt file keeps the content, links and layout of the pages that remain, though document-level bookmarks and metadata may not carry over. Files up to 100 MB and 200 pages are supported in one run.",
         ],
       },
       {
@@ -605,7 +605,86 @@ export const GUIDES: Guide[] = [
       {
         heading: "Private, like everything here",
         paragraphs: [
-          "Page deletion happens locally with pdf-lib. The pages you remove and the pages you keep never leave your browser, so even sensitive documents can be trimmed safely.",
+          "Page deletion runs entirely in your browser: pages are rendered with pdf.js for the previews, then the kept pages are reassembled by the in-app Rust/WASM core (with a JavaScript fallback). The pages you remove and the pages you keep never leave your device, so even sensitive documents can be trimmed safely.",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "how-to-remove-blank-pages-from-pdf",
+    title: "How to Remove Blank Pages from a PDF",
+    description:
+      "Find and delete near-empty pages in a PDF — a heuristic ink-coverage scan flags blanks, you review the selection, and one click rebuilds a cleaner file. Fully in your browser.",
+    keywords: [
+      "remove blank pages from pdf",
+      "delete empty pages from pdf",
+      "remove blank pages pdf online",
+      "delete blank pages in pdf",
+      "clean blank pages from pdf",
+    ],
+    toolSlug: "pdf-remove-blank-pages",
+    published: "2026-09-22",
+    updated: "2026-09-22",
+    readMinutes: 3,
+    sections: [
+      {
+        heading: "Where blank pages come from",
+        paragraphs: [
+          "Double-sided scans land with a stray empty sheet. Exports from design tools and emails leave trailing blank pages. Merging files can sprinkle extras in the middle. By hand, checking a long document page by page is tedious — an automatic scan that flags empties for you is much faster.",
+        ],
+      },
+      {
+        heading: "How blank detection works",
+        paragraphs: [
+          "Remove Blank Pages renders each page in your browser and measures its ink coverage. Pages with fewer than a fraction of a percent of dark pixels, and no extractable text, get a blank badge and are preselected for deletion.",
+          "It's a heuristic, not OCR: a page that's truly empty is caught easily, but light watermarks or a single tiny page number can influence the result. That's why nothing is ever removed without your click — you review the badges and toggle any page on or off before deleting.",
+        ],
+      },
+      {
+        heading: "Running a clean in one pass",
+        paragraphs: [
+          "Open the PDF, skim the flagged thumbnails, adjust the selection if needed, then hit Delete. The tool rebuilds the file from the pages you kept and downloads it instantly — the pages that remain keep their content, links and layout.",
+          "Because the output is a rebuilt file, document-level bookmarks and metadata may not carry over, so keep the original if you might need it. Files up to 100 MB and 200 pages are supported; larger documents can be split with PDF Split first.",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "how-to-add-a-text-watermark-to-a-pdf",
+    title: "How to Add a Text Watermark to a PDF",
+    description:
+      "Stamp CONFIDENTIAL, DRAFT or copyright text on every page of a PDF — centered, at whatever size, opacity and angle you choose, entirely in your browser.",
+    keywords: [
+      "add watermark to pdf",
+      "pdf watermark",
+      "stamp text on pdf",
+      "confidential watermark pdf",
+      "watermark pdf online",
+    ],
+    toolSlug: "pdf-watermark",
+    published: "2026-09-22",
+    updated: "2026-09-22",
+    readMinutes: 3,
+    sections: [
+      {
+        heading: "When a text watermark makes sense",
+        paragraphs: [
+          "A visible label tells readers a file is confidential, a draft, or under copyright before they get to the contents. Stamping the same text across every page covers your document even when someone jumps to the middle or sends just a few pages onward.",
+          "A watermark is a visual marking, not redaction: it doesn't stop text from being copied or selected. If you need to permanently remove content rather than overlay a label, redaction is the right tool.",
+        ],
+      },
+      {
+        heading: "Setting the stamp",
+        paragraphs: [
+          "PDF Watermark reads the page count the moment you open a file and gives you three controls: font size (12–120 pt), opacity (1–100%) and angle (−90° to 90°). The text is centered on every page and auto-shrinks to stay within the page width.",
+          "Watermarks use a fixed bold Helvetica in dark grey, so the output is predictable. The font covers Latin letters, numbers and common punctuation up to 80 characters; emoji and non-Latin scripts can't be encoded and will be flagged rather than silently mangled.",
+        ],
+      },
+      {
+        heading: "Stamping and downloading",
+        paragraphs: [
+          "Choose Add watermark → download and a watermarked copy of your file downloads instantly. Every page gets the same stamp, and rotated pages are handled correctly — the watermark picks up each page's rotation internally so it lands at the angle you asked for.",
+          "Password-protected files should be unlocked first, and the watermarked result isn't re-protected — add PDF Protect afterwards if you need encryption. Want color or per-page placement instead? PDF Editor offers custom colors and six positions.",
         ],
       },
     ],

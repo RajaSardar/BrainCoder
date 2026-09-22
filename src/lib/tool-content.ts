@@ -533,49 +533,49 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ]
   },
   "pdf-remove-pages": {
-    "longDescription": "<p>PDF Remove Pages is a precise, easy-to-use tool that lets you delete unwanted pages from any PDF document. Whether you need to strip out blank pages, remove confidential sections, trim excess content, or extract only the relevant portions of a lengthy document, this tool gives you granular control over what stays and what goes. The entire process runs in your browser, ensuring your sensitive documents never leave your device.</p><p>Simply upload your PDF, select the pages you want to remove by clicking on their thumbnails, and download the resulting clean document. The tool preserves all remaining content, formatting, and hyperlinks exactly as they were. It's the fastest way to clean up bloated PDFs, prepare documents for distribution, or create customized versions of longer reports—all without installing software or risking data exposure.</p>",
+    "longDescription": "<p>PDF Delete Pages trims a document down to only the pages you want. Every page is rendered as a thumbnail, you tap the ones to delete, and the tool rebuilds the file from the pages you kept. Nothing is uploaded — the whole operation runs in your browser.</p><p>The output is a standard PDF built from your kept pages, so on-page content, links and layout are preserved. Because the file is rebuilt rather than edited in place, document-level bookmarks and metadata may not survive, and password-protected files should be unlocked first. It handles PDFs up to 100 MB and 200 pages per run.</p>",
     "features": [
-      "Remove individual pages or page ranges from PDFs",
-      "Visual thumbnail preview for easy page selection",
-      "Preserve all content, formatting, and links in remaining pages",
-      "Support PDFs of any size and page count",
+      "Preview every page as a thumbnail and tap the ones to delete",
+      "Rebuild the PDF from just the pages you keep",
+      "Keep remaining page content, links and layout intact",
+      "Works with PDFs up to 100 MB and 200 pages",
       "100% browser-based with no server uploads",
       "Free to use with no registration required"
     ],
     "howTo": [
       {
-        "step": "Upload PDF",
-        "description": "Drag and drop your PDF or click to browse and select it from your device."
+        "step": "Open PDF",
+        "description": "Open the PDF you want to trim. Thumbnails of every page appear as they render."
       },
       {
-        "step": "Preview Pages",
-        "description": "View thumbnails of all pages in the document to identify which ones to remove."
+        "step": "Mark pages",
+        "description": "Tap any thumbnail to mark that page for deletion. Marked pages get a red border — tap again to keep a page."
       },
       {
-        "step": "Select Pages to Delete",
-        "description": "Click on pages to mark them for removal, or enter specific page numbers in the input field."
-      },
-      {
-        "step": "Remove and Download",
-        "description": "Confirm the deletion and download the resulting PDF with the selected pages removed."
+        "step": "Delete and download",
+        "description": "Choose Delete pages to rebuild the PDF from the remaining pages. The result downloads instantly."
       }
     ],
     "faq": [
       {
         "question": "Can I undo the page removal?",
-        "answer": "The original file is not modified. Always keep a backup of your original PDF before removing pages, as the operation is applied to the downloaded result."
+        "answer": "The original file is never modified. Keep a backup before removing pages, since the operation is applied to the downloaded result."
       },
       {
         "question": "Will removing pages affect the PDF structure?",
-        "answer": "The tool cleanly removes selected pages while maintaining the integrity of the remaining document structure, including bookmarks and links."
+        "answer": "On-page content, links and layout are kept. Because the file is rebuilt from your kept pages, document-level bookmarks and metadata such as author info may not be preserved."
       },
       {
         "question": "How many pages can I remove at once?",
-        "answer": "You can select and remove as many pages as you want in a single operation, whether it's one page or hundreds."
+        "answer": "Select as many as you like in a single run, up to 200 pages and 100 MB. Larger documents can be split with PDF Split first."
       },
       {
         "question": "Does this work with encrypted PDFs?",
         "answer": "Password-protected PDFs need to be unlocked first using our PDF Unlock tool before you can remove pages."
+      },
+      {
+        "question": "Can it detect blank pages?",
+        "answer": "Use Remove Blank Pages to auto-detect near-empty pages, instead of hunting through a long document manually."
       }
     ],
     "relatedSlugs": [
@@ -583,60 +583,67 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       "pdf-merge",
       "pdf-crop",
       "pdf-rotate",
+      "pdf-remove-blank-pages",
+      "pdf-unlock",
       "pdf-editor"
     ]
   },
   "pdf-watermark": {
-    "longDescription": "<p>PDF Watermark is a versatile tool that adds custom text watermarks to every page of your PDF documents. Whether you need to stamp 'CONFIDENTIAL' on sensitive files, mark drafts with 'DRAFT' watermarks, brand documents with your company name, or add copyright notices, this tool lets you create professional watermarks with full control over text, font, size, color, opacity, and positioning. All watermarking is performed client-side in your browser for complete privacy.</p><p>Customize your watermark placement with options for centered, diagonal, or corner positioning, and adjust transparency to ensure the watermark is visible without obscuring content. The tool processes your PDF in seconds, applying consistent watermarks across all pages with pixel-perfect accuracy. From business professionals protecting proprietary documents to educators marking course materials, PDF Watermark delivers a quick, free, and secure solution for all your watermarking needs.</p>",
+    "longDescription": "<p>PDF Watermark stamps the same text watermark on every page of a PDF. Open a file, type up to 80 characters, tune the size, opacity and angle, and download a watermarked copy — the whole operation runs in your browser with nothing uploaded.</p><p>Watermarks use a fixed bold Helvetica in dark grey so the output stays predictable: labels like CONFIDENTIAL, DRAFT or © Copyright render cleanly at any size from 12 to 120 pt. The text is centered on each page and auto-shrinks to stay within the page width. A watermark is a visual deterrent, not redaction — to permanently remove content, use PDF Redact. Password-protected files should be unlocked with PDF Unlock first, and the output isn't re-protected.</p>",
     "features": [
-      "Add custom text watermarks to all PDF pages",
-      "Adjustable font, size, color, and opacity settings",
-      "Multiple placement options: center, diagonal, corners",
-      "Apply watermarks consistently across all pages",
-      "100% client-side processing with no data uploads",
-      "Free with no sign-up, watermarks, or file limits"
+      "Stamp the same text watermark on every page",
+      "Tune size (12–120 pt), opacity (1–100%) and angle (−90° to 90°)",
+      "Fixed bold Helvetica in dark grey for predictable output",
+      "Page-orientation aware — watermarks match rotated pages and stay centered",
+      "Runs entirely in your browser; handles PDFs up to 100 MB",
+      "Free, with no account or sign-up"
     ],
     "howTo": [
       {
-        "step": "Upload PDF",
-        "description": "Drag and drop your PDF file into the watermark tool or click to select it."
+        "step": "Open PDF",
+        "description": "Open the PDF to watermark. The page count is read instantly."
       },
       {
-        "step": "Enter Watermark Text",
-        "description": "Type your watermark text and customize the font, size, color, and transparency."
+        "step": "Write the text",
+        "description": "Type up to 80 characters. Latin letters, numbers and common punctuation render cleanly in the built-in bold Helvetica font."
       },
       {
-        "step": "Choose Position and Rotation",
-        "description": "Select where the watermark appears on each page—center, diagonal, or specific corners."
+        "step": "Tune the look",
+        "description": "Pick the font size, opacity and angle with the sliders."
       },
       {
-        "step": "Apply and Download",
-        "description": "Click apply to add the watermark to all pages, then download your watermarked PDF."
+        "step": "Stamp and download",
+        "description": "Choose Add watermark → download. Every page gets the same stamp and the file downloads instantly."
       }
     ],
     "faq": [
       {
         "question": "Can I add different watermarks to different pages?",
-        "answer": "The standard tool applies the same watermark to all pages. For page-specific watermarks, use our PDF Editor tool which offers more granular control."
+        "answer": "This tool applies one watermark to every page. For page-specific watermarks and custom colors or placement, use our PDF Editor tool."
       },
       {
-        "question": "Will the watermark prevent text selection or copying?",
-        "answer": "Text watermarks are overlaid on the PDF content. They don't prevent text selection but serve as a visual deterrent and branding element."
+        "question": "Does the watermark prevent copying or selecting text?",
+        "answer": "No. A text watermark is a visual marking, not redaction. Use PDF Redact to permanently remove content from a PDF."
       },
       {
-        "question": "Can I adjust the watermark opacity?",
-        "answer": "Yes. You can set the opacity from fully transparent to fully opaque, allowing you to create subtle watermarks that don't obscure content."
+        "question": "What opacity range is available?",
+        "answer": "You can set the opacity anywhere from 1% (nearly invisible) to 100% (fully opaque)."
       },
       {
-        "question": "Does this work with all PDF types?",
-        "answer": "Yes. The tool works with any PDF regardless of its content—digital text, scanned images, or mixed content."
+        "question": "Which characters can I use?",
+        "answer": "The watermark uses a built-in bold Helvetica font, which covers Latin letters, numbers and common punctuation. Emoji, symbols and non-Latin scripts (like Chinese or Arabic) can't be encoded — the tool will tell you if your text uses unsupported characters."
+      },
+      {
+        "question": "Does this work with password-protected PDFs?",
+        "answer": "Unlock the file with PDF Unlock first and load the unlocked copy here. Note that the watermarked result is not re-protected — use PDF Protect afterwards if you need encryption."
       }
     ],
     "relatedSlugs": [
-      "pdf-page-numbers",
-      "pdf-protect",
+      "pdf-unlock",
+      "pdf-redact",
       "pdf-editor",
-      "pdf-creator",
+      "pdf-protect",
+      "pdf-page-numbers",
       "pdf-merge"
     ]
   },
@@ -1235,49 +1242,53 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ]
   },
   "pdf-remove-blank-pages": {
-    "longDescription": "<p>Remove Blank Pages is a cleanup tool that automatically finds and deletes empty pages from PDF documents. Blank pages commonly appear after scanning double-sided originals, exporting messy documents, or merging and splitting files—and removing them by hand is tedious when they're buried in a long document. This tool analyzes every page's ink coverage in your browser, flags pages that contain no visible content, and preselects them for removal so you can clean up the document in seconds.</p><p>You stay in control: blank pages are highlighted for review, and you can toggle any page on or off before exporting. The result is a compact PDF containing only pages with actual content—perfect for preparing documents for printing, archiving, or sharing.</p>",
+    "longDescription": "<p>Remove Blank Pages finds near-empty pages in a PDF and flags them so you can delete them in one pass. Blank pages commonly appear after scanning double-sided originals, exporting messy documents, or merging and splitting files — this tool analyzes every page's ink coverage in your browser, badges pages with negligible content, and preselects them for removal.</p><p>You stay in control: detection is a heuristic, so pages are only flagged — never removed without your click — and you can toggle any page on or off before deleting. The output is a rebuilt PDF with the selected pages gone; remaining content is kept as-is, though document-level bookmarks and metadata may not survive the rebuild. Password-protected files should be unlocked with PDF Unlock first. Handles PDFs up to 100 MB and 200 pages.</p>",
     "features": [
-      "Automatically detect blank pages by analyzing ink coverage",
-      "Blank pages preselected for removal with a clear visual badge",
-      "Fine-tune the selection by tapping any page before exporting",
-      "Works on scans, exports, and just about any PDF source",
-      "Preserves the layout and quality of remaining pages",
-      "100% client-side detection with no uploads"
+      "Detect near-empty pages by ink coverage and badge them blank",
+      "Blank pages are preselected — you review and toggle any page before deleting",
+      "Manual deletions work too: mark any page, blank or not",
+      "Runs entirely in your browser with no uploads",
+      "Works with PDFs up to 100 MB and 200 pages per run",
+      "Free, with no account or sign-up"
     ],
     "howTo": [
       {
-        "step": "Upload PDF",
-        "description": "Open the PDF you want to clean up. Every page is previewed as a thumbnail."
+        "step": "Open PDF",
+        "description": "Open the PDF to clean up. Every page renders as a thumbnail."
       },
       {
-        "step": "Review Blank Detection",
-        "description": "Pages with no meaningful content are marked blank and preselected for deletion."
+        "step": "Review detection",
+        "description": "Pages with negligible ink get a blank badge and are preselected. Detection is a heuristic — skim the badges before deleting anything."
       },
       {
-        "step": "Adjust Selection",
-        "description": "Tap any page to include or exclude it from the removal, and use Select all blank to reselect the detected pages."
+        "step": "Adjust the selection",
+        "description": "Tap any page to toggle it, or choose Select all blank pages to reselect the detected ones."
       },
       {
-        "step": "Download Clean PDF",
-        "description": "Export the document with the selected blank pages removed."
+        "step": "Delete and download",
+        "description": "Delete downloads a rebuilt PDF with the selected pages removed. At least one page must remain."
       }
     ],
     "faq": [
       {
         "question": "How does the tool decide a page is blank?",
-        "answer": "Each page is rendered and analyzed for ink coverage. Pages with almost no non-white pixels are classified as blank."
+        "answer": "Each page is rendered in your browser and its ink coverage is measured. Pages with fewer than a fraction of a percent of dark pixels — and no extractable text — are flagged blank. The check is a heuristic, not OCR."
       },
       {
         "question": "Will pages with small content be deleted?",
-        "answer": "Only pages with negligible ink are flagged. Pages containing real content stay safe and are never automatically removed—you must select pages to delete them."
+        "answer": "Only pages with negligible ink are flagged, and nothing is removed until you click Delete. Faint content like page numbers can influence the heuristic, so review the badges and toggle any page on or off before deleting."
       },
       {
-        "question": "Do remaining pages keep their quality?",
-        "answer": "Yes. Removal is lossless; the pages that remain keep their original content and formatting exactly as they were."
+        "question": "Are the remaining pages preserved exactly?",
+        "answer": "The kept pages keep their content, layout and links. Because the output is a rebuilt file, document-level bookmarks and metadata such as author info may not survive."
       },
       {
         "question": "Can I undo a mistaken selection?",
-        "answer": "Yes. Tap a selected page again to keep it, or use Select all blank to restore the automatic detection."
+        "answer": "Tap a selected page again to keep it. The original file is never modified, and each run downloads a new file — keep the original if you might need it back."
+      },
+      {
+        "question": "Does this work with protected PDFs?",
+        "answer": "Password-protected PDFs need to be unlocked with PDF Unlock first before blank pages can be detected and removed."
       }
     ],
     "relatedSlugs": [
@@ -1285,7 +1296,8 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       "pdf-merge",
       "pdf-split",
       "pdf-editor",
-      "pdf-compressor"
+      "pdf-compressor",
+      "pdf-unlock"
     ]
   },
   "pdf-overlay": {
@@ -1553,10 +1565,10 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     "relatedSlugs": [
       "pdf-split",
       "pdf-remove-pages",
+      "pdf-remove-blank-pages",
       "pdf-page-numbers",
       "pdf-watermark",
-      "pdf-crop",
-      "pdf-rotate"
+      "pdf-crop"
     ]
   },
   "pdf-split": {
@@ -1608,10 +1620,10 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     "relatedSlugs": [
       "pdf-merge",
       "pdf-remove-pages",
+      "pdf-remove-blank-pages",
       "pdf-to-image",
       "pdf-to-text",
-      "pdf-crop",
-      "pdf-rotate"
+      "pdf-crop"
     ]
   },
   "pdf-editor": {

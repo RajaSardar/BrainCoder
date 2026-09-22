@@ -860,8 +860,73 @@ Phase 2+ Target (NOT building now):
   guide `how-to-rotate-a-pdf`. 18/18 node rotation checks and 39/39
   production Chrome scenarios passed; production build passed (290 pages).
   Report: `audit/reports/pdf-rotate.md`.
-- Next: PDF Remove Pages (follows pdf-rotate in registry order). Remaining 95
-  tools have not completed this process.
+- PDF Remove Blank Pages: ten independent judges ran in parallel (all ten
+  returned). Component rebuilt on the team standard: detection renders every
+  page ONCE at 0.5 scale and reuses that raster for the thumbnail AND the
+  ink scan (stride-4 canvas read, alpha<40 treated as transparent, blank iff
+  `ink/visible < 0.001`, ink = luminance < 245) so a fully transparent or
+  all-white page is blank while faint headers ink past the strict 0.1%
+  threshold; a SECOND gate — real `getTextContent` text — keeps text-bearing
+  pages out of the blank set; detector results PRESELECT pages but nothing is
+  ever removed without a click. Hardened around it: 100 MB / 200-page caps,
+  runId guard, pdf.js task.destroy() + page.cleanup(), input reset +
+  resetState (stale pages/bytes cleared on error), friendly errors
+  (encrypted→PDF Unlock, invalid→"doesn't look like a valid PDF",
+  oversized→PDF Split), Delete disabled at zero selected, all-selected guard
+  ("nothing would be left"), honest `-edited.pdf` filename and a status that
+  says "Removed N pages — M remaining". A11y: fieldset legend, aria-pressed
+  page toggles, detected-blank aria-labels, role=alert/role=status,
+  aria-busy, slate-500 captions. Copy/SEO/guides honest: heuristic disclosed,
+  "never removed without your click", "exactly as they were"/"any size"
+  overclaims gone, reciprocal links onto and off pdf-merge / pdf-split
+  (related cards render top-6 only — caught by e2e and reordered); new guide
+  `how-to-remove-blank-pages-from-pdf`. 9/9 node detection checks + 38/38
+  production Chrome scenarios passed (incl. real 3-page fixture with a blank
+  middle); production build passed (292 pages). Report:
+  `audit/reports/pdf-remove-blank-pages.md`.
+- PDF Delete Pages/Remove Pages: ten independent judges ran in parallel (all
+  ten returned). Component rebuilt: page count is snapshotted at load and
+  never gallops; thumbnails render once each at 0.45 scale; output rebuilds
+  from your KEPT pages (content/layout/links kept; bookmarks + metadata
+  honestly disclosed as not guaranteed); selection order preserved;
+  100 MB / 200-page caps; runId + pdf.js task destroy/cleanup + input reset +
+  resetState; friendly encrypted/invalid/oversized errors; Delete disabled at
+  zero, all-selected guard ("nothing would be left"), honest
+  `-kept-pages.pdf` filename and "removed N — M remaining" status. A11y:
+  fieldset legend "Pages to delete", aria-pressed toggles, live regions,
+  aria-busy, slate-500. Copy/guide/SEO honest: the fake page-range input
+  how-to and "Confirm the deletion" step are gone, the guide now says the
+  tool rebuilds from kept pages (and only covers full page deletion, whole
+  doc at once); reciprocal link from Remove Blank Pages and on to Remove
+  Blank Pages/PDF Split; limits disclosed. 12/12 node checks + 34/34
+  production Chrome scenarios passed; build passed (292 pages). Report:
+  `audit/reports/pdf-remove-pages.md`.
+- PDF Watermark: ten independent judges ran in parallel (all ten returned).
+  Component rebuilt: redundant pdf.js parse dropped (pdf-lib alone loads once
+  and counts pages); text is a FIXED bold Helvetica in dark grey so the
+  preview-free output is predictable; rendering is centered with pdf-lib's
+  rotate-about-origin math (`p' = R·p + origin`, verified by probe) using the
+  half-text-width and a (ASC−DESC)/2 baseline offset; page `/Rotate` is
+  compensated (effAngle = normalize(user − rot), quarter-turns swap the fit
+  width); the normalizeAngle function itself was fixed — the old formula
+  mapped 45° → −45°; text auto-fits the page width; opacity clamped; a
+  WinAnsi preflight (`font.widthOfTextAtSize` throw) refuses emoji/marks with
+  a friendly "can't be encoded" role=alert instead of silent garbling;
+  100 MB cap, runId, friendly encrypted/invalid/oversized errors, honest
+  `-watermarked.pdf` filename and "stamped X across N pages at P%" status.
+  A11y: text input `<label for>` via useId, labelled size/opacity/angle
+  sliders, fieldset legend, live regions, aria-busy, slate-500. Copy/guide/
+  SEO honest: the corner-positioning and "adjustable font/color" claims are
+  gone (12–120 pt, 1–100% opacity, −90..90°, fixed bold Helvetica stated),
+  watermark is disclosed as a visual deterrent NOT redaction (→ PDF Redact)
+  and output is not re-protected (→ PDF Unlock); PDF Editor stays the honest
+  destination for color/placement (it has a real watermark feature — verified
+  in pdf-editor); reciprocal links reordered into the top-6 render window;
+  new guide `how-to-add-a-text-watermark-to-a-pdf`. 24/24 node watermark
+  checks + 34/34 production Chrome scenarios passed; build passed (292
+  pages). Report: `audit/reports/pdf-watermark.md`.
+- Next: PDF Page Numbers (follows pdf-watermark in registry order). Remaining
+  92 tools have not completed this process.
 - Hash Generator: ten independent judges ran in parallel (the architect report
   was not returned — aborted; its coverage supplied by functional/security/
   edge findings plus the harness). Component rebuilt on the team standard
