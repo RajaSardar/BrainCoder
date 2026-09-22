@@ -52,6 +52,7 @@ const TOOL_KEYWORDS: Record<string, string[]> = {
   "word-to-pdf": ["word to pdf", "convert word to pdf", "docx to pdf", "docx to pdf converter"],
   "pdf-to-text": ["pdf to text", "extract text from pdf", "pdf to txt", "convert pdf to text online"],
   "pdf-to-ppt": ["pdf to ppt", "pdf to powerpoint", "convert pdf to powerpoint online", "pdf to pptx converter", "pdf pages to slides"],
+  "pdf-rotate": ["rotate pdf", "pdf rotator", "rotate pdf pages online", "rotate pdf 90 degrees", "rotate pdf free", "rotate pdf counter clockwise", "pdf page orientation"],
   "text-to-pdf": ["text to pdf", "text to pdf converter", "convert txt to pdf", "plain text to pdf", "text file to pdf"],
   "md-to-html": ["markdown to html", "md to html converter", "convert markdown online"],
   "html-to-pdf": ["html to pdf online", "convert html to pdf", "webpage to pdf", "print html as pdf"],
@@ -225,6 +226,8 @@ export function toolJsonLd(tool: ToolConfig) {
       "Extract the embedded text layer of a PDF to plain text in reading order — optional page ranges, copy to clipboard or download as .txt, fully client-side",
     "pdf-to-ppt":
       "Render each PDF page as a full-slide snapshot image in a 16:9 PowerPoint with an optional page range, a 1–3x image-quality slider, previews of the first 12 slides, and a one-click .pptx download — fully client-side with nothing uploaded",
+    "pdf-rotate":
+      "Rotate every page of a PDF 90° clockwise, 90° counter-clockwise, or 180° in one click, with chained rotations continuing from the current orientation up to 270°, each result downloaded instantly — lossless and fully client-side with nothing uploaded",
     "text-to-pdf":
       "Word-wrapped A4 pages with automatic page breaks, a 10–24 pt font-size slider, a live character counter and a one-click download of a standard PDF generated entirely in your browser with nothing uploaded",
   };

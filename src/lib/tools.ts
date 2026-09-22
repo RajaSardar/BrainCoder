@@ -445,7 +445,7 @@ export const TOOLS: ToolConfig[] = [
   {
     slug: "pdf-rotate",
     name: "PDF Rotator",
-    tagline: "Rotate pages by 90°, 180° or 270°",
+    tagline: "Turn a sideways PDF the right way — every page at once",
     description:
       "Rotate every page of a PDF clockwise or counter-clockwise in one click, then download the result.",
     category: "Convert",

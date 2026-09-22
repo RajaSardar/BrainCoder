@@ -184,6 +184,7 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       "image-to-pdf",
       "pdf-to-text",
       "pdf-to-ppt",
+      "pdf-rotate",
       "pdf-ocr",
       "pdf-crop",
       "pdf-split"
@@ -477,52 +478,53 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ]
   },
   "pdf-rotate": {
-    "longDescription": "<p>PDF Rotator is a quick, straightforward tool that lets you rotate individual pages or entire PDF documents to the correct orientation. Whether you've received a sideways scan, need to flip upside-down pages, or want to adjust the orientation of specific pages in a mixed-orientation document, this tool handles it with ease. Rotate pages 90°, 180°, or 270° in either direction with a single click—all processed securely in your browser.</p><p>Mixed-orientation PDFs are a common headache when combining scanned documents from different sources. PDF Rotator lets you fix orientation on a per-page basis, ensuring your final document reads correctly from start to finish. The tool preserves all existing content, formatting, and quality while making the rotation adjustments. No uploads, no quality loss, no hassle—just clean, correctly oriented PDFs ready for printing or sharing.</p>",
+    "longDescription": "<p>PDF Rotator turns a sideways PDF the right way in one click. Load a document whose pages are rotated by 90° or 180°, pick a direction, and every page is rotated together—no per-page clicking and no preview needed. The result downloads instantly.</p><p>Rotation is a metadata-level operation: page content is not re-encoded, so text, images, and quality are preserved. Everything runs in your browser, and files never leave your device. If you need to reorient only some pages of a mixed-orientation document, PDF Editor shows page previews and lets you change individual pages instead.</p>",
     "features": [
-      "Rotate PDF pages by 90°, 180°, or 270° in either direction",
-      "Rotate individual pages or the entire document at once",
-      "Fix mixed-orientation PDFs on a per-page basis",
-      "Preserve all content, formatting, and image quality",
-      "100% client-side processing with no uploads",
-      "Free with no file size limits or watermarks"
+      "Rotate every page of a PDF 90° clockwise, 90° counter-clockwise, or 180° in one click",
+      "Chained rotations continue from the current orientation (three 90° turns reach 270°)",
+      "Lossless, metadata-only rotation that preserves text, images, and quality",
+      "Each result downloads instantly with a fresh filename",
+      "Works with scanned and digital PDFs alike",
+      "100% in your browser — no uploads (PDFs up to 100 MB)"
     ],
     "howTo": [
       {
-        "step": "Upload PDF",
-        "description": "Drag and drop your PDF file or click to select it from your device."
+        "step": "Open PDF",
+        "description": "Click Open PDF and choose the document from your device."
       },
       {
-        "step": "Select Pages to Rotate",
-        "description": "Click on individual pages to rotate them or use the rotate-all option for the entire document."
-      },
-      {
-        "step": "Choose Rotation Angle",
-        "description": "Select 90° clockwise, 90° counter-clockwise, or 180° for each page or the whole document."
+        "step": "Choose a Rotation Direction",
+        "description": "Select 90° clockwise, 90° counter-clockwise, or 180°. Every page is rotated together."
       },
       {
         "step": "Download Rotated PDF",
-        "description": "Preview the corrected orientation and download the rotated PDF."
+        "description": "The rotated PDF downloads instantly. To reorient further, pick another direction — each result continues from the current orientation."
       }
     ],
     "faq": [
       {
         "question": "Will rotating reduce the quality of my PDF?",
-        "answer": "No. Rotation is a lossless operation that simply changes the page orientation metadata. No content or quality is affected."
+        "answer": "No. Rotation only changes each page's orientation, so the page content itself is not re-encoded and quality is preserved. The tool rewrites the file with its own encoder to apply the change."
       },
       {
         "question": "Can I rotate just one page in a 50-page document?",
-        "answer": "Yes. The tool allows per-page rotation, so you can fix individual pages without affecting the rest of the document."
+        "answer": "This tool always rotates the whole document together. To rotate individual pages, use PDF Editor, which shows page previews and lets you change one page at a time."
       },
       {
         "question": "Does this work with scanned PDFs?",
-        "answer": "Yes. The tool works with any PDF regardless of its content type—digital text, scanned images, or a mix of both."
+        "answer": "Yes. Scanned pages are rotated exactly like any other, because the orientation change applies to the page itself rather than the text inside it."
       },
       {
-        "question": "Can I rotate pages in different directions?",
-        "answer": "Absolutely. Each page can be rotated independently in any direction, which is perfect for fixing mixed-orientation documents."
+        "question": "Can I reach a 270° rotation?",
+        "answer": "Yes. The three buttons produce 90°, 180°, and 270° out of the original orientation — for example, three 90° clockwise turns, or one 90° counter-clockwise turn, both end at 270°."
+      },
+      {
+        "question": "Are there size limits?",
+        "answer": "This tool handles PDFs up to 100 MB. Password-protected files can't be read directly — unlock them with PDF Unlock first."
       }
     ],
     "relatedSlugs": [
+      "pdf-to-image",
       "pdf-crop",
       "pdf-remove-pages",
       "pdf-merge",
@@ -1553,7 +1555,8 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       "pdf-remove-pages",
       "pdf-page-numbers",
       "pdf-watermark",
-      "pdf-crop"
+      "pdf-crop",
+      "pdf-rotate"
     ]
   },
   "pdf-split": {
@@ -1607,7 +1610,8 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       "pdf-remove-pages",
       "pdf-to-image",
       "pdf-to-text",
-      "pdf-crop"
+      "pdf-crop",
+      "pdf-rotate"
     ]
   },
   "pdf-editor": {

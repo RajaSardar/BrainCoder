@@ -319,6 +319,45 @@ export const GUIDES: Guide[] = [
     ],
   },
 {
+    slug: "how-to-rotate-a-pdf",
+    title: "How to Rotate a PDF: Turn a Sideways PDF the Right Way Online",
+    description:
+      "Rotate every page of a PDF 90° clockwise, 90° counter-clockwise, or 180° in one click. Lossless, fully in your browser, no uploads.",
+    keywords: [
+      "rotate pdf",
+      "pdf rotator",
+      "rotate pdf 90 degrees",
+      "rotate pdf pages online",
+      "rotate pdf 180 degrees",
+    ],
+    toolSlug: "pdf-rotate",
+    published: "2026-09-22",
+    updated: "2026-09-22",
+    readMinutes: 3,
+    sections: [
+      {
+        heading: "What this tool rotates",
+        paragraphs: [
+          "PDF Rotator reorients an entire document in one step. When you upload a PDF whose pages are sideways or upside down, clicking a direction rotates every page together — there's no per-page clicking and no preview. That makes it the fastest fix for a whole scan that came out rotated.",
+          "If you only need to fix some pages of a mixed-orientation document instead of all of them, PDF Editor shows page previews and lets you change individual pages. For whole-document fixes, this tool is the quickest option.",
+        ],
+      },
+      {
+        heading: "Choosing a direction",
+        paragraphs: [
+          "Three buttons cover every need: 90° clockwise, 90° counter-clockwise, and 180°. Each click downloads the result instantly, and subsequent clicks continue from the current orientation — so three 90° clockwise turns reach 270°, and one 90° counter-clockwise turn also lands at 270°.",
+          "Rotation is handled as page metadata, so the page content itself is not re-encoded: text, images, and quality are preserved, and files are processed locally in your browser with nothing uploaded.",
+        ],
+      },
+      {
+        heading: "Limits and edge cases",
+        paragraphs: [
+          "The tool accepts PDFs up to 100 MB. Password-protected documents can't be read directly — unlock them with PDF Unlock before loading them here. Scanned PDFs rotate exactly like any other, since the orientation change applies to the page itself rather than the text inside it.",
+        ],
+      },
+    ],
+  },
+{
     slug: "how-to-convert-html-to-pdf",
     title: "How to Convert HTML to PDF Online for Free",
     description:

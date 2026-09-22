@@ -837,7 +837,30 @@ Phase 2+ Target (NOT building now):
   new guide `how-to-convert-pdf-to-powerpoint`. 18/18 node structure checks
   and 40/40 production Chrome scenarios passed; production build passed
   (289 pages). Report: `audit/reports/pdf-to-ppt.md`.
-- Next: PDF Rotator (follows pdf-to-ppt in registry order). Remaining 96
+- PDF Rotator: ten independent judges ran in parallel (all ten returned).
+  Component rebuilt on the team standard: the redundant pdf.js page-count
+  parse is gone (pdf-lib alone loads once and counts pages), rotation now
+  ACCUMULATES on the current document instead of re-rotating the pristine
+  bytes (two 90° CW clicks really produce 180°), the angle math normalizes
+  to 0/90/180/270 so negative `/Rotate` values can never be serialized (the
+  old `(a + b) % 360` wrote `/Rotate -90`, then `/Rotate -180`),
+  `ignoreEncryption` is dropped (locked files are steered to PDF Unlock with
+  a friendly role=alert), a 100 MB cap rejects oversized files, each rotate
+  auto-downloads a distinct incremental filename, re-picking a file resets
+  state and the hidden input clears, a runId guard + disabled-when-busy
+  buttons + aria-busy close the stale-async races, errors/status use
+  role=alert/role=status live regions, rotate controls are a labelled
+  fieldset, captions rose slate-400→slate-500, and pdf-lib saves with
+  `updateFieldAppearances: false`. Copy/FAQ/SEO rewritten fully honest
+  (rotate-ALL only, 270° reachable via counter-clockwise, 100 MB noted,
+  per-page needs routed to PDF Editor — the old per-page/preview/
+  drag-and-drop/"no size limits" claims are gone); reciprocal links added
+  from pdf-to-image, pdf-merge and pdf-split (pdf-resize and pdf-editor
+  already linked it); SEO keywords + JSON-LD featureList override added; new
+  guide `how-to-rotate-a-pdf`. 18/18 node rotation checks and 39/39
+  production Chrome scenarios passed; production build passed (290 pages).
+  Report: `audit/reports/pdf-rotate.md`.
+- Next: PDF Remove Pages (follows pdf-rotate in registry order). Remaining 95
   tools have not completed this process.
 - Hash Generator: ten independent judges ran in parallel (the architect report
   was not returned — aborted; its coverage supplied by functional/security/
