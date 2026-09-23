@@ -731,6 +731,47 @@ export const GUIDES: Guide[] = [
     ],
   },
   {
+    slug: "how-to-crop-a-pdf",
+    title: "How to Crop a PDF Online (and What Cropping Actually Does)",
+    description:
+      "Trim unwanted margins from a PDF by percentage in your browser — a live page-1 preview, rotated pages handled automatically, and an honest look at why cropping keeps your file size roughly the same.",
+    keywords: [
+      "how to crop a pdf",
+      "crop pdf online",
+      "trim pdf margins",
+      "remove white space from pdf",
+      "cut pdf pages",
+      "crop pdf pages free",
+    ],
+    toolSlug: "pdf-crop",
+    published: "2026-09-23",
+    updated: "2026-09-23",
+    readMinutes: 3,
+    sections: [
+      {
+        heading: "The two ways to 'crop' a PDF",
+        paragraphs: [
+          "There are two different operations people call cropping. The first changes how a page displays by shrinking its visible boundary — content outside the edge stops showing but still exists inside the file, so the file size barely changes. The second permanently deletes content and rebuilds the PDF smaller. They have very different results.",
+          "The margin trimmer here does the first kind: it adjusts each page's crop box. That's almost always what people want when they say 'crop this PDF' — cutting the scanner's black border, tightening a wide margin, or removing white space around a scanned page without touching the text.",
+        ],
+      },
+      {
+        heading: "Setting margins by percentage",
+        paragraphs: [
+          "Four sliders cut the top, right, bottom and left edges by 0–45% each. A live overlay on the page-1 preview highlights exactly the area that will remain, so a 10% bottom cut shows as a pale band across the bottom of the preview.",
+          "The same percentages are applied to every page, which is deliberate: margin trimming is almost always uniform, and it keeps multi-page documents consistent. Because placement is computed from each page's own rotation, a document mixing portrait and landscape pages still keeps its intended visual margins everywhere.",
+        ],
+      },
+      {
+        heading: "Working with the result",
+        paragraphs: [
+          "A cropped PDF downloads as a new file — your original stays untouched, so you can compare or start over. Files up to 100 MB are supported, and password-protected PDFs need to be unlocked with the PDF Unlock tool first.",
+          "If content outside the crop matters to you, remember it's clipped, not deleted: view the original or restore the crop box to see it again. For genuinely removing sensitive material, use the PDF Redact tool instead, since cropping only changes what's visible.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "how-to-convert-csv-to-json",
     title: "How to Convert CSV to JSON Online (or JSON to CSV)",
     description:

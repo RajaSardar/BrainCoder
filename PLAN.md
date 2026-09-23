@@ -952,8 +952,34 @@ Phase 2+ Target (NOT building now):
   Chrome scenarios (incl. upright rotate=90 label on a rotated page, decoded
   glyph-run label verification, clamp, steering, honest copy); build passed
   (293 pages). Report: `audit/reports/pdf-page-numbers.md`.
-- Next: PDF Crop (follows pdf-page-numbers in registry order). Remaining 91
-  tools have not completed this process.
+- PDF Crop: ten judges returned — CRITICAL /Rotate mismatch (preview honors
+  rotation, crop via unrotated `getSize()` cut the wrong edges) and CRITICAL
+  MediaBox origin drop (`setMediaBox(x,y,w,h)` re-fixes origin at 0,0 so
+  `[100 100 …]` documents shift). Component rebuilt with a probe-verified
+  media→displayed mapping (pdf.js `viewport.convertToViewportPoint`: /Rotate 90
+  is the transpose, 180 mirrors x, 270 is (H−py, W−px)) and a per-page
+  CropBox-only rect: `setCropBox` keeps MediaBox + origin intact and
+  Trim/Bleed/ArtBox sync when present — all four rotations verified against the
+  overlay extents. `ignoreEncryption` dropped (probe: pdf-lib ignoreEncryption
+  output fails its own reload — `catalog.Pages is not a function`); real
+  encrypted fixtures throw on plain load → PDF Unlock steering. Two-parser
+  pipeline trimmed: single pdf-lib load models + measures the preview ratio,
+  pdf.js only rasteries page 1 transiently with `loadingTask.destroy()` and
+  `data.slice(0)`, preview failure degrades gracefully. Caps 100 MB/200 pages,
+  runId, resetState, input reset, busy-guard (no double-download), SAVE_OPTS,
+  yield every 50 pages. Honest control set: four 0–45% sliders, uniform across
+  pages (disclosed), page-1-only preview labeled, no drag/drop/per-page/units/
+  phantom-trim. A11y: fieldset, SliderField label-for, role=status/alert,
+  aria-busy, `role=img` kept-area overlay, slate-500 captions. Copy/SEO/guide:
+  drag-drop/interactive/per-page/inches/mm/px/trim lies deleted, non-destructive
+  FAQ ("clipped, not deleted — file size roughly the same"), PDF Unlock + PDF
+  Redact routes, new guide `how-to-crop-a-pdf`, keywords + featureList JSON-LD
+  added, relatedSlugs swapped pdf-to-image for pdf-scale-pages. 61/61 node
+  checks + 52/52 production Chrome scenarios (incl. CropBox math on a /Rotate-90
+  page, origin preserved, repeat crop, honest copy); build passed (293 pages,
+  28 guides). Report: `audit/reports/pdf-crop.md`.
+- Next: PDF Protect (follows pdf-crop in registry order). Remaining 90 tools
+  have not completed this process.
 - Hash Generator: ten independent judges ran in parallel (the architect report
   was not returned — aborted; its coverage supplied by functional/security/
   edge findings plus the harness). Component rebuilt on the team standard

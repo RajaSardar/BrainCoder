@@ -706,56 +706,60 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ]
   },
   "pdf-crop": {
-    "longDescription": "<p>PDF Cropper is a precision tool that lets you trim and adjust the margins of PDF pages. Whether you need to remove white space around scanned documents, crop out unwanted borders, resize page content for printing, or standardize margins across a document, this tool provides intuitive visual controls for exact cropping. The interactive crop interface lets you drag handles to define the exact area you want to keep, with real-time preview of the result.</p><p>Unlike basic cropping tools, PDF Cropper lets you apply different crop settings to individual pages or apply uniform cropping across the entire document. It's perfect for cleaning up scanned documents, preparing figures for publication, standardizing page dimensions, or removing scanner artifacts from page edges. All processing happens in your browser, so your documents remain completely private and secure.</p>",
+    "longDescription": "<p>PDF Cropper trims the top, right, bottom, and left margins of your PDF by percentage. Four sliders cut anywhere from 0–45% off each edge, a live overlay on a page-1 preview shows exactly what will be kept, and one click applies the same cut to every page in the document. It's built for the common cleanups: white space around scanned pages, wide borders, or scanner debris at the edges.</p><p>Cropping works per page, so a document with rotated or mixed-size pages keeps the intended visual margins everywhere: placement is computed from each page's own rotation. Everything runs in your browser — nothing is uploaded, and the cropped file downloads directly to your device. Cropping changes each page's visible boundary: content outside the new edge is clipped from view, not deleted from the file, so the file size stays roughly the same.</p>",
     "features": [
-      "Visually crop PDF pages with drag-and-drop handles",
-      "Apply uniform cropping across all pages or per-page adjustments",
-      "Remove white space, borders, and scanner artifacts",
-      "Set precise crop dimensions in inches, millimeters, or pixels",
-      "Real-time preview of cropped results",
-      "100% client-side processing with no file uploads"
+      "Cut top, bottom, left, and right margins by 0–45% per edge",
+      "Live preview of the kept area on page 1",
+      "The same percentages are applied to every page",
+      "Placement follows each page's rotation for consistent visual margins",
+      "Works on scanned documents, borders, and white space",
+      "100% client-side with no uploads or sign-ups"
     ],
     "howTo": [
       {
-        "step": "Upload PDF",
-        "description": "Drag and drop your PDF file or click to select it from your device."
+        "step": "Open PDF",
+        "description": "Click the Open PDF button to select a file up to 100 MB from your device."
       },
       {
-        "step": "Adjust Crop Area",
-        "description": "Use the visual crop handles to define the area you want to keep, or enter exact dimensions."
+        "step": "Set Margins",
+        "description": "Use the four sliders to set how much to cut from the top, bottom, left, and right edges."
       },
       {
-        "step": "Apply to Pages",
-        "description": "Choose to apply the crop to all pages or customize cropping for individual pages."
+        "step": "Check the Preview",
+        "description": "Page 1 shows which area will remain. The same percentages are applied to every page."
       },
       {
-        "step": "Download Cropped PDF",
-        "description": "Preview the result and download your cropped PDF document."
+        "step": "Crop and Download",
+        "description": "Click “Crop all pages” and the cropped PDF downloads automatically."
       }
     ],
     "faq": [
       {
         "question": "Does cropping permanently remove content?",
-        "answer": "Cropping adjusts the visible area of the page. The hidden content may still exist in the PDF data. For permanent removal, use the trim option which removes cropped content entirely."
+        "answer": "No. Cropping changes each page's visible boundary (the crop box). Anything outside it stops displaying, but the underlying PDF content can still be inside the file and may be recoverable by removing the crop or re-extracting content. This tool trims how the page looks, not the data behind it — the file size stays roughly the same. If you need to permanently remove content, use PDF Redact instead."
       },
       {
         "question": "Can I crop pages differently within the same document?",
-        "answer": "Yes. The per-page cropping option lets you set different crop boundaries for each page, which is useful for documents with mixed content sizes."
+        "answer": "No — every page gets the same percentage cut. That's deliberate: margin trimming is almost always uniform, and it keeps the output consistent. A preview of page 1 shows the kept area; if your pages are similarly proportioned, page 1 is representative, so download and spot-check a couple of later pages."
       },
       {
-        "question": "Will cropping affect text quality?",
-        "answer": "No. Cropping only changes the visible boundaries of the page. Text and image quality remain completely unaffected."
+        "question": "Does cropping work on rotated or landscape pages?",
+        "answer": "Yes. The crop is computed from each page's own rotation, so the same percentage of each displayed edge is removed even when a document mixes portrait and landscape pages."
       },
       {
-        "question": "Can I set crop dimensions in specific units?",
-        "answer": "Yes. You can specify crop dimensions in inches, millimeters, or pixels depending on your needs."
+        "question": "Why can't I open an encrypted PDF?",
+        "answer": "PDFs protected with a password aren't supported — the tool deliberately refuses to read them rather than risk corrupting them. Unlock the file with PDF Unlock first, then load the unlocked copy here."
+      },
+      {
+        "question": "Will my file be uploaded?",
+        "answer": "No. The PDF is read, cropped, and rebuilt entirely in your browser; the file never leaves your device."
       }
     ],
     "relatedSlugs": [
       "pdf-rotate",
-      "pdf-remove-pages",
-      "pdf-to-image",
       "pdf-page-numbers",
+      "pdf-scale-pages",
+      "pdf-remove-pages",
       "pdf-editor"
     ]
   },

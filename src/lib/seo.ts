@@ -53,6 +53,7 @@ const TOOL_KEYWORDS: Record<string, string[]> = {
   "pdf-to-text": ["pdf to text", "extract text from pdf", "pdf to txt", "convert pdf to text online"],
   "pdf-to-ppt": ["pdf to ppt", "pdf to powerpoint", "convert pdf to powerpoint online", "pdf to pptx converter", "pdf pages to slides"],
   "pdf-rotate": ["rotate pdf", "pdf rotator", "rotate pdf pages online", "rotate pdf 90 degrees", "rotate pdf free", "rotate pdf counter clockwise", "pdf page orientation"],
+  "pdf-crop": ["crop pdf online", "crop pdf", "trim pdf margins", "trim pdf online free", "remove white space from pdf", "cut pdf pages", "crop pdf pages free", "remove white margins from pdf"],
   "pdf-page-numbers": ["add page numbers to pdf", "pdf page numbers", "number pages in pdf", "add page numbers to pdf online", "insert page numbers into pdf", "start page numbers on page 2", "pdf page number tool"],
   "pdf-remove-blank-pages": ["remove blank pages from pdf", "delete blank pages pdf", "remove empty pages from pdf", "delete empty pdf pages", "clean blank pages pdf online", "remove white pages from pdf"],
   "pdf-remove-pages": ["delete pages from pdf", "remove pages from pdf", "delete pdf pages online", "remove page from pdf free", "trim pages from pdf"],
@@ -232,6 +233,8 @@ export function toolJsonLd(tool: ToolConfig) {
       "Render each PDF page as a full-slide snapshot image in a 16:9 PowerPoint with an optional page range, a 1–3x image-quality slider, previews of the first 12 slides, and a one-click .pptx download — fully client-side with nothing uploaded",
     "pdf-rotate":
       "Rotate every page of a PDF 90° clockwise, 90° counter-clockwise, or 180° in one click, with chained rotations continuing from the current orientation up to 270°, each result downloaded instantly — lossless and fully client-side with nothing uploaded",
+    "pdf-crop":
+      "Trim the top, right, bottom, and left margins of a PDF by 0–45% with four sliders, a live overlay on a page-1 preview showing exactly what stays, and one click that applies the same cut to every page following each page's own rotation — cropping is non-destructive and fully client-side with nothing uploaded",
     "pdf-remove-blank-pages":
       "Detect pages with negligible ink in a PDF, review them as thumbnails, toggle any page on or off, and rebuild the file without the selected pages — a heuristic-based blank-page detector that runs entirely in your browser with nothing uploaded",
     "pdf-remove-pages":
