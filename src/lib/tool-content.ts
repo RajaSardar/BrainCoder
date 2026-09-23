@@ -648,57 +648,61 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ]
   },
   "pdf-page-numbers": {
-    "longDescription": "<p>Add Page Numbers to PDF is a practical tool that automatically inserts page numbers into every page of your PDF document. Essential for multi-page documents that need professional organization, this tool lets you customize the number format, position, font style, and starting number. Whether you're preparing a legal brief, academic thesis, business report, or any lengthy document, page numbers make navigation and referencing effortless.</p><p>Choose from multiple positioning options—top-left, top-center, top-right, bottom-left, bottom-center, or bottom-right—and select from formats like plain numbers, 'Page X of Y', Roman numerals, and more. The tool applies numbers consistently across all pages while preserving your existing content and formatting. All processing happens locally in your browser, keeping your documents completely private.</p>",
+    "longDescription": "<p>Add Page Numbers to PDF inserts a label into every page of your document, so multi-page files stay easy to navigate whether they're used as an internal draft, submitted, or printed. Choose a corner (bottom center is the default), a font size between 8 and 24 points, whether to show a plain number or an “n / total” count, and an optional starting offset — the document's first page can read as 5 instead of 1, for example, without skipping any pages.</p><p>Labels are drawn as fixed dark-grey Helvetica in the edges of every page, and placement adjusts for each page's orientation, so portrait and landscape pages in the same document stay aligned and readable. Everything runs locally in your browser: nothing is uploaded, and files up to 100 MB with up to 200 pages are supported. There is no preview, so download and review the numbered file to confirm placement before distributing it.</p>",
     "features": [
-      "Add page numbers to all pages in a PDF",
-      "Multiple position options: top, bottom, left, center, right",
-      "Customizable number formats: numeric, Roman, 'Page X of Y'",
-      "Adjustable font, size, color, and starting number",
-      "Preserve existing content and formatting",
+      "Add a page number to every page of a PDF",
+      "Six corner positions: top or bottom, left, center, or right",
+      "Plain Arabic numerals or “n / total” labels",
+      "Adjustable font size (8–24 points) and starting number",
+      "Placement follows each page's rotation for aligned, readable numbers",
       "100% client-side with no uploads or sign-ups"
     ],
     "howTo": [
       {
-        "step": "Upload PDF",
-        "description": "Drag and drop your PDF document or click to select it from your device."
+        "step": "Open PDF",
+        "description": "Select a PDF up to 100 MB that you want to number. The page count is shown before you continue."
       },
       {
-        "step": "Configure Number Format",
-        "description": "Choose number style (numeric, Roman, 'Page X of Y'), starting number, and font settings."
+        "step": "Set Position and Labels",
+        "description": "Choose a position, font size, “n / total” toggle, and an optional starting number. Every page is still numbered — the offset only changes what the labels read."
       },
       {
-        "step": "Select Position",
-        "description": "Pick where page numbers appear: top or bottom, left, center, or right alignment."
+        "step": "Add Numbers",
+        "description": "Click “Add page numbers” and the labels are drawn into the edges of every page."
       },
       {
-        "step": "Apply and Download",
-        "description": "Add the page numbers and download your numbered PDF document."
+        "step": "Download",
+        "description": "The numbered PDF downloads automatically, ready to review."
       }
     ],
     "faq": [
       {
-        "question": "Can I use Roman numeral page numbering?",
-        "answer": "Yes. The tool supports standard Arabic numerals (1, 2, 3), Roman numerals (I, II, III), and the 'Page X of Y' format."
+        "question": "Can I start page numbers on page 2, skipping a cover page?",
+        "answer": "Yes — set “Start numbering at” to 0, or to 2 if you want to preserve a manuscript count. The page that is physically first will reuse the label 0, or will show 2 on the second page. Every page is still numbered; there is no “skip this page” option, so a cover page will carry a number."
       },
       {
-        "question": "Will page numbers overlap with existing content?",
-        "answer": "The tool places numbers in the page margins. If your content extends to the edges, you may want to use our PDF Cropper tool first to create margin space."
+        "question": "Do page numbers overlap with existing content?",
+        "answer": "Numbers are placed in the outermost edges of each page, in the smallest practical margin. If your own content already extends to the very edge of the page, a number may sit on top of it — the tool can't create margin space where none exists. Consider trimming crowded pages with PDF Cropper first, then numbering the result."
       },
       {
-        "question": "Can I skip numbering the first page?",
-        "answer": "You can set the starting number to begin numbering from any page, effectively skipping the title page or cover."
+        "question": "Does this work with landscape and portrait pages mixed together?",
+        "answer": "Yes. Placement is computed from each page's own rotation, so on a 90° or 270° landscape page the number still sits in the same visual corner and reads upright, matching every other page."
       },
       {
-        "question": "Does this work with landscape and portrait pages?",
-        "answer": "Yes. The tool correctly places page numbers regardless of individual page orientations within the document."
+        "question": "Can I use Roman numerals, colors, or fonts other than Helvetica?",
+        "answer": "No. Labels are always fixed dark-grey Helvetica in Arabic numerals. “Start numbering at” is the only formatting adjustment beyond position and size."
+      },
+      {
+        "question": "Why can't I open an encrypted PDF?",
+        "answer": "PDFs protected with a password aren't supported — the tool deliberately refuses to read them rather than risk corrupting them. Unlock the file with PDF Unlock first, then load the unlocked copy here."
       }
     ],
     "relatedSlugs": [
       "pdf-watermark",
       "pdf-merge",
       "pdf-split",
-      "pdf-page-numbers",
-      "pdf-editor"
+      "pdf-editor",
+      "pdf-crop"
     ]
   },
   "pdf-crop": {

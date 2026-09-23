@@ -925,8 +925,35 @@ Phase 2+ Target (NOT building now):
   new guide `how-to-add-a-text-watermark-to-a-pdf`. 24/24 node watermark
   checks + 34/34 production Chrome scenarios passed; build passed (292
   pages). Report: `audit/reports/pdf-watermark.md`.
-- Next: PDF Page Numbers (follows pdf-watermark in registry order). Remaining
-  92 tools have not completed this process.
+- PDF Page Numbers: ten independent judges ran in parallel (three hit API rate
+  limits on the first attempt and completed on retry). Component rebuilt:
+  pdf.js dropped (single pdf-lib parser — no worker/memcpy/second decode),
+  `ignoreEncryption` REMOVED so owner/password-protected files now fail loudly
+  and steer to PDF Unlock instead of being silently corrupted into
+  cleartext-residue PDFs (a valid RC4 fixture was produced to prove the old
+  path appended cleartext streams to an `/Encrypt` doc); a probe established
+  that `drawText` emits `Tm = R(θ)·p + origin` and that labels stay
+  screen-upright only with `rotate = +/Rotate` — `placement()` converts a
+  *visual* corner (48pt margin, 28pt bottom / 40pt top, right/center from real
+  text width, quarter-turn width swap) to the unrotated `(x,y,rotate)` per
+  rotation, so mixed portrait/landscape pages keep every number in the same
+  visual corner, upright. "n / total" total is honestly the last displayed
+  label (`startAt + pageCount − 1`), documented in copy/FAQ; start input
+  trunc+clamped 0–9999 (no NaN/decimals in output); the skip-first-page myth
+  and PDF-Cropper-remedy (cropping clips, doesn't create margin) are gone from
+  FAQ; caps 100 MB/200 pages with split-steering, runId, resetState, input
+  value reset, SAVE_OPTS, yield every 25 pages. A11y: fieldset/legend
+  "Numbering options" + "Position" group, six aria-pressed position buttons,
+  SliderField font size, useId label-for number input, live regions, aria-busy.
+  Copy/SEO/guide honest: Roman/"Page X of Y"/font-color/drag-and-drop claims
+  deleted, "start page numbers on page 2" keyword + featureList JSON-LD added,
+  relatedSlugs swapped self-reference for pdf-crop, new guide
+  `how-to-add-page-numbers-to-a-pdf`. 67/67 node checks + 47/47 production
+  Chrome scenarios (incl. upright rotate=90 label on a rotated page, decoded
+  glyph-run label verification, clamp, steering, honest copy); build passed
+  (293 pages). Report: `audit/reports/pdf-page-numbers.md`.
+- Next: PDF Crop (follows pdf-page-numbers in registry order). Remaining 91
+  tools have not completed this process.
 - Hash Generator: ten independent judges ran in parallel (the architect report
   was not returned — aborted; its coverage supplied by functional/security/
   edge findings plus the harness). Component rebuilt on the team standard

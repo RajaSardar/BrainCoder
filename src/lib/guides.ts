@@ -690,6 +690,47 @@ export const GUIDES: Guide[] = [
     ],
   },
   {
+    slug: "how-to-add-page-numbers-to-a-pdf",
+    title: "How to Add Page Numbers to a PDF",
+    description:
+      "Add a page number to every page of a PDF in one of six corner positions — with an “n / total” count, a starting offset, and placement that follows rotated pages, entirely in your browser.",
+    keywords: [
+      "add page numbers to pdf",
+      "pdf page numbers",
+      "number pages in pdf",
+      "add page numbers to pdf online",
+      "start page numbers on page 2",
+    ],
+    toolSlug: "pdf-page-numbers",
+    published: "2026-09-23",
+    updated: "2026-09-23",
+    readMinutes: 3,
+    sections: [
+      {
+        heading: "Why PDFs need page numbers",
+        paragraphs: [
+          "Long documents lose their way without page references. Adding page numbers makes contracts, reports, theses and meeting packs navigable, and lets readers say 'see page 14' with confidence.",
+          "Page numbers on a PDF are a form of editing, so you'll usually want them on a working copy: keep the original file as-is and number a duplicate for distribution.",
+        ],
+      },
+      {
+        heading: "Choosing a position and label",
+        paragraphs: [
+          "The tool offers six corner positions — bottom and top, each with left, center and right alignment. Bottom center is the default and suits most documents, while top corners are common for landscape or bound files.",
+          "Labels can be a plain number (1, 2, 3) or an “n / total” pair like 3 / 12, which helps readers know how much of the document is left. The font size runs from 8 to 24 points, and labels are drawn in fixed dark-grey Helvetica so output stays consistent.",
+        ],
+      },
+      {
+        heading: "Starting offsets and rotated pages",
+        paragraphs: [
+          "“Start numbering at” changes what the first label reads — set it to 0 for an unnumbered-looking cover, or to 2 if you want the physical second page to read 2. Every page is still numbered; there is no skip-one-page option.",
+          "Placement follows each page's own rotation, so a mixed document with portrait and landscape pages gets numbers that sit in the same visual corner and read upright everywhere. There is no preview, so download and review the file before sharing it.",
+          "Password-protected PDFs need unlocking first, and a numbered file can be protected afterwards with PDF Protect if you need encryption.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "how-to-convert-csv-to-json",
     title: "How to Convert CSV to JSON Online (or JSON to CSV)",
     description:
