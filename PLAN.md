@@ -978,8 +978,81 @@ Phase 2+ Target (NOT building now):
   checks + 52/52 production Chrome scenarios (incl. CropBox math on a /Rotate-90
   page, origin preserved, repeat crop, honest copy); build passed (293 pages,
   28 guides). Report: `audit/reports/pdf-crop.md`.
-- Next: PDF Protect (follows pdf-crop in registry order). Remaining 90 tools
-  have not completed this process.
+- PDF Protect: ten judges returned (encryption domain expert, functional,
+  architect, code reviewer, UX, business, security, a11y, SEO, perf).
+  Component rebuilt: real AES-256-R6 protection proven end-to-end (probe
+  decoded the `/P` permission bits in the `/Encrypt` dict — print bit set by
+  default, cleared when "Block printing" is checked); copy/UI freed of the
+  phantom "owner + user password" (lib `ownerPassword` defaults to
+  `userPassword`, so it IS a single-password design and is stated so); four
+  honest permission toggles (`allowPrinting/Copying/Modifying/Annotating`);
+  password enforced 5–127 chars with `maxLength=127` so the lib's SASLprep
+  truncation boundary can't be reached silently (+ confirm field); the
+  component PROVES the encryption by re-loading its own output with a plain
+  `PDFDocument.load` (must throw) before offering the download; uploads that
+  are already encrypted steer to Unlock PDF (`AlreadyEncryptedError` mapped);
+  caps 100 MB/200 pages, runId, busy guard, resetState, input reset, honest
+  `<src>-protected.pdf`. A11y: useId label-for ×2, two fieldsets, role=
+  alert/status, aria-busy, slate-500. Copy/SEO honest: drag-and-drop, "no
+  file size limits", "virtually unbreakable", "owner and user passwords" lies
+  deleted; AES-256 = Acrobat standard, restrictions "honored by Acrobat and
+  most desktop readers — some minimal/browser viewers ignore them", built-in
+  Chrome/Firefox viewers don't take PDF passwords at all (disclosed);
+  keywords + featureList JSON-LD + CUSTOM_TITLES fix ("Password Protect PDF
+  online — free PDF lock tool"). Shared fix: `download.ts` dropped its
+  redundant full-buffer copy (`new Blob([bytes as Uint8Array<ArrayBuffer>])`,
+  typed assertion; all 30+ callers proven `Uint8Array`). 16/16 node checks +
+  36/36 production Chrome scenarios; build passed (295 pages, 30 guides).
+  Report: `audit/reports/pdf-protect.md`.
+- PDF Unlock: ten judges returned. Component rebuilt: honest framing replaces
+  the "it stays in your browser" misframe — "If you know the password (or
+  only a restrictions password was set)… If you've forgotten it, no tool can
+  recover it."; decrypts via user AND owner password (both unlock a standard
+  PDF); empty password accepted + labelled for restrictions-only files;
+  output PROVEN by re-loading with a plain `PDFDocument.load` before
+  download; unsupported AES-128 (V=4) detected up front via `/V` on the
+  `/Encrypt` dict and refused with the supported set named (RC4-40/RC4-128/
+  AES-256); wrong-vs-blank-vs-not-protected each get their own plain-language
+  role=alert; `friendlyError` ordering fixed (this file doesn't look like a
+  valid PDF: the "Failed to read PDF:" prefix from `isEncrypted`
+  classification must not swallow the not-a-PDF branch) + fallback restored;
+  caps/runId/busy guard/password cleared on new file/resetState/honest
+  `<src>-unlocked.pdf`. A11y: useId label-for, fieldset "PDF password",
+  role=alert/status, aria-busy, slate-500. Copy/SEO honest: knows-the-
+  password gating, empty-password case, AES-128 no, Chrome/Firefox viewer
+  note, → Protect to re-lock; keywords + featureList + CUSTOM_TITLES;
+  guide slug fixed to the real `how-to-unlock-a-password-protected-pdf`
+  (e2e caught the wrong `how-to-unlock-a-pdf` destination). 15/15 node checks
+  + 33/33 production Chrome scenarios; build passed (295 pages). Report:
+  `audit/reports/pdf-unlock.md`.
+- PDF Metadata: ten judges returned. CRITICAL find: the XMP branch was dead
+  code — pdfjs 6 has no `getAll()`; the real path iterates the `metadata`
+  map directly with lowercased keys (`IsXFAPresent` → `isxfapresent`), Custom
+  rows rendered `"[object Map]"`, case-sensitive Info lookups missed keys,
+  `formatDate` invented dates (`D:2024` → `2024-01-01`), worker leaked.
+  Component rebuilt on the LIVE pdfjs API (legacy build, workerSrc set once,
+  `destroy()` in finally, typed `PDFDocumentLoadingTask`); `buildRows`
+  mirrors the discovered rules — iterate lowercased keys, Info wins over XMP,
+  **Custom branch runs before the skip check** (was dead), skip set fixed to
+  the real keys (`isxfapresent`, `issignaturespresent`, `pdfjsversion`,
+  `pdfjsrenderer`, `pdfformatversion`, `islinearized`, `isacroformpresent`,
+  `iscollectionpresent`); `formatDate` handles D:2024, D:20240830,
+  D:…+0530'30'→+05:30, `+05`→+05:00, ISO, unparseable→verbatim (nothing
+  invented); pdf-lib's auto `CreationDate`/`ModDate`=now hidden (always-
+  misleading); "No metadata" message fires only when rows are exactly
+  {Pages, Format}; truncation at 2000 chars; caps/runId/resetState; output as
+  bare `dl`/`dt`/`dd` pairs with keys verbatim; a11y useId/fieldset/
+  role=status/aria-busy. Copy/SEO honest: read-only (viewer, doesn't edit),
+  "nothing guessed, generated or invented", privacy FAQ; keywords +
+  featureList + CUSTOM_TITLES; new guide `how-to-view-pdf-metadata`. 37/37
+  node checks + 37/37 production Chrome scenarios; build passed (295 pages,
+  30 guides). Report: `audit/reports/pdf-metadata.md`. Wave 5: three tools
+  all green — the full e2e suite across all 37 harnesses passed apart from
+  `pdf-compressor`'s pre-existing Vercel-insights-404 network-classification
+  assertion (environmental; its feature + harness are untouched by this
+  wave). Build page count is now 295.
+- Next: PDF to Excel (follows pdf-metadata in registry order). Remaining 87
+  tools have not completed this process.
 - Hash Generator: ten independent judges ran in parallel (the architect report
   was not returned — aborted; its coverage supplied by functional/security/
   edge findings plus the harness). Component rebuilt on the team standard

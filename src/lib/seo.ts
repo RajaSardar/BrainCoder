@@ -54,6 +54,9 @@ const TOOL_KEYWORDS: Record<string, string[]> = {
   "pdf-to-ppt": ["pdf to ppt", "pdf to powerpoint", "convert pdf to powerpoint online", "pdf to pptx converter", "pdf pages to slides"],
   "pdf-rotate": ["rotate pdf", "pdf rotator", "rotate pdf pages online", "rotate pdf 90 degrees", "rotate pdf free", "rotate pdf counter clockwise", "pdf page orientation"],
   "pdf-crop": ["crop pdf online", "crop pdf", "trim pdf margins", "trim pdf online free", "remove white space from pdf", "cut pdf pages", "crop pdf pages free", "remove white margins from pdf"],
+  "pdf-protect": ["password protect pdf", "lock pdf with password", "add password to pdf", "protect pdf online", "encrypt pdf with password", "restrict pdf printing", "pdf permission restrictions"],
+  "pdf-unlock": ["unlock pdf", "unlock pdf online free", "remove password from pdf", "remove pdf password", "pdf password remover", "decrypt pdf online"],
+  "pdf-metadata": ["pdf metadata viewer", "view pdf metadata", "pdf metadata", "inspect pdf metadata", "pdf properties", "pdf creator checker", "when was a pdf created"],
   "pdf-page-numbers": ["add page numbers to pdf", "pdf page numbers", "number pages in pdf", "add page numbers to pdf online", "insert page numbers into pdf", "start page numbers on page 2", "pdf page number tool"],
   "pdf-remove-blank-pages": ["remove blank pages from pdf", "delete blank pages pdf", "remove empty pages from pdf", "delete empty pdf pages", "clean blank pages pdf online", "remove white pages from pdf"],
   "pdf-remove-pages": ["delete pages from pdf", "remove pages from pdf", "delete pdf pages online", "remove page from pdf free", "trim pages from pdf"],
@@ -147,6 +150,12 @@ export function toolTitle(tool: ToolConfig): string {
     convert: "conversion",
     generate: "generator",
   };
+  const CUSTOM_TITLES: Record<string, string> = {
+    "pdf-protect": "Password Protect PDF online — free PDF lock tool",
+    "pdf-unlock": "Unlock PDF online — remove a PDF password for free",
+    "pdf-metadata": "View PDF Metadata online — free PDF inspector",
+  };
+  if (CUSTOM_TITLES[tool.slug]) return CUSTOM_TITLES[tool.slug];
   const cat = tool.category.toLowerCase();
   const noun = CAT_NOUNS[cat];
   const suffix = noun
@@ -235,6 +244,12 @@ export function toolJsonLd(tool: ToolConfig) {
       "Rotate every page of a PDF 90° clockwise, 90° counter-clockwise, or 180° in one click, with chained rotations continuing from the current orientation up to 270°, each result downloaded instantly — lossless and fully client-side with nothing uploaded",
     "pdf-crop":
       "Trim the top, right, bottom, and left margins of a PDF by 0–45% with four sliders, a live overlay on a page-1 preview showing exactly what stays, and one click that applies the same cut to every page following each page's own rotation — cropping is non-destructive and fully client-side with nothing uploaded",
+    "pdf-protect":
+      "Require a password to open a PDF, encrypted locally with AES-256, plus optional restrictions that block printing, copying, editing or annotating; a 5–127 character password with confirmation and an honest note that restrictions rely on the reader; everything runs in your browser with nothing uploaded",
+    "pdf-unlock":
+      "Remove a known password from a PDF and download an unlocked copy — accepts either the open (user) or owner password, supports AES-256 (revision 6) and RC4, strips permission restrictions in the same pass, verifies the result is a valid unlocked PDF, and runs entirely on your device with nothing uploaded",
+    "pdf-metadata":
+      "Read the metadata a PDF actually stores — page count, title, author, subject, keywords, creator, producer, PDF-standard and XMP creation/modification dates, format version and any custom Info entries — deduplicated and shown with no invented values, fully in your browser with nothing uploaded",
     "pdf-remove-blank-pages":
       "Detect pages with negligible ink in a PDF, review them as thumbnails, toggle any page on or off, and rebuild the file without the selected pages — a heuristic-based blank-page detector that runs entirely in your browser with nothing uploaded",
     "pdf-remove-pages":

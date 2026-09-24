@@ -518,6 +518,53 @@ export const GUIDES: Guide[] = [
     ],
   },
   {
+    slug: "how-to-view-pdf-metadata",
+    title: "How to View a PDF's Metadata Online for Free",
+    description:
+      "Inspect what a PDF actually records — title, author, creator, producer and creation/modification dates. Runs entirely in your browser; nothing is uploaded.",
+    keywords: [
+      "view pdf metadata",
+      "check pdf metadata",
+      "pdf properties",
+      "pdf creator software",
+      "when was a pdf created",
+    ],
+    toolSlug: "pdf-metadata",
+    published: "2026-09-24",
+    updated: "2026-09-24",
+    readMinutes: 3,
+    sections: [
+      {
+        heading: "What PDF metadata contains",
+        paragraphs: [
+          "Most PDFs carry a small amount of embedded bookkeeping beyond the visible pages: a title, an author, the software that created the file (creator/producer), keywords, and creation and modification timestamps. Part lives in the Info dictionary, part in XMP metadata, and PDFs from different tools store different subsets.",
+          "That's useful for provenance: confirming who made a file, when, and with what tool — handy when auditing documents you've received or keeping track of files your own systems generate.",
+        ],
+      },
+      {
+        heading: "What the viewer shows",
+        paragraphs: [
+          "The PDF Metadata Viewer lists the page count first, then the title, author, subject, keywords, creator and producer whenever the file records them, followed by creation/modification dates (read from the Info dictionary or XMP) and any extra or custom entries it finds.",
+          "Fields the file doesn't store are skipped rather than shown as empty, and no values are invented — the list is exactly what's embedded in the PDF. If a file has no title, author or date metadata at all, the viewer says so.",
+        ],
+      },
+      {
+        heading: "Protected and permission-restricted PDFs",
+        paragraphs: [
+          "PDFs that only restrict printing or editing (no open password) can be inspected directly. Files locked with an open password must be opened with the password first — or unlocked with the Unlock PDF tool — before their metadata can be read.",
+          "All inspection happens in your browser: the file is never uploaded, which matters when you're auditing a document you didn't create.",
+        ],
+      },
+      {
+        heading: "What metadata won't tell you",
+        paragraphs: [
+          "Metadata records what the file's creator chose to write down. It won't reveal hidden layers or image EXIF, and author/creator fields can be blank, generic, or set to anything. Treat it as evidence of provenance, not proof of it.",
+          "The viewer is read-only — it doesn't edit or strip metadata. If you need to change embedded metadata, use dedicated desktop software that supports it.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "how-to-redact-a-pdf",
     title: "How to Redact a PDF Online for Free (Permanently Hide Text)",
     description:

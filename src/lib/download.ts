@@ -1,6 +1,5 @@
 export function downloadBlob(bytes: Uint8Array, filename: string, type = "application/pdf") {
-  const arr = new Uint8Array(bytes);
-  const blob = new Blob([arr], { type });
+  const blob = new Blob([bytes as Uint8Array<ArrayBuffer>], { type });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;

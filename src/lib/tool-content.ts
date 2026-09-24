@@ -764,49 +764,51 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ]
   },
   "pdf-protect": {
-    "longDescription": "<p>PDF Protect is a security-focused tool that adds password encryption to your PDF documents. Safeguard sensitive information by setting an owner password that prevents unauthorized opening, or add a permissions password that restricts printing, copying, and editing while still allowing viewing. The encryption happens entirely in your browser using industry-standard AES encryption—your password and document are never transmitted anywhere.</p><p>In a world where data breaches and unauthorized access are constant concerns, PDF Protect gives you control over who can access and modify your documents. Whether you're protecting financial reports, legal contracts, personal records, or proprietary business information, our tool applies robust encryption in seconds. It's the fastest, safest way to secure your PDFs without relying on third-party services or expensive software.</p>",
+    "longDescription": "<p>PDF Protect locks a PDF with a password so it can only be opened by people who know it. Pick a password, optionally restrict what recipients can do (printing, copying, editing or annotating), and download the encrypted copy. The encryption uses AES-256, the same standard Adobe Acrobat applies to protected documents, and everything happens in your browser — the file and your password never leave your device.</p><p>Use it for documents you own or are authorized to protect: quotes, statements, contracts, offer letters and anything where the recipient is known but the channel isn't private. Restrictions like blocking printing are honored by Adobe Acrobat and most desktop readers; some minimal or browser-based viewers ignore them, so treat them as a convenience rather than a hard guarantee.</p>",
     "features": [
-      "Encrypt PDFs with owner and user passwords",
-      "AES-256 encryption for maximum security",
-      "Restrict printing, copying, editing, and content extraction",
-      "Support for both open and permissions passwords",
-      "100% client-side encryption—passwords never leave your browser",
-      "Free with no registration or file size limits"
+      "Require a password to open a PDF, encrypted locally with AES-256",
+      "Optional restrictions: block printing, copying, editing or annotating",
+      "Runs entirely in your browser — the file and password never leave your device",
+      "Free, no account — files up to 100 MB and 200 pages"
     ],
     "howTo": [
       {
-        "step": "Upload PDF",
-        "description": "Drag and drop the PDF you want to protect or click to browse your device."
+        "step": "Open PDF",
+        "description": "Select the PDF you want to protect from your device."
       },
       {
-        "step": "Set Passwords",
-        "description": "Enter an owner password for full access control and optionally a user password to restrict opening."
+        "step": "Set a password",
+        "description": "Choose a password (at least 5 characters; 8+ recommended for anything sensitive) and confirm it."
       },
       {
-        "step": "Configure Permissions",
-        "description": "Choose which actions to restrict: printing, copying text, editing, or content extraction."
+        "step": "Pick restrictions (optional)",
+        "description": "Block printing, copying, editing or annotating — or leave them all open so recipients can do anything the document allows."
       },
       {
-        "step": "Apply Encryption",
-        "description": "Click protect to encrypt the PDF and download the secured document."
+        "step": "Protect & download",
+        "description": "Click “Protect PDF” and download the encrypted copy. It now opens only with your password."
       }
     ],
     "faq": [
       {
-        "question": "What's the difference between owner and user passwords?",
-        "answer": "A user password is required to open the PDF. An owner password controls permissions like printing and editing but doesn't prevent viewing unless set."
+        "question": "What kind of password does this add?",
+        "answer": "One password that must be entered to open the file. There's no separate 'permissions password' — the same password opens it, and the optional restrictions apply to everyone once they're in."
       },
       {
         "question": "How strong is the encryption?",
-        "answer": "The tool uses AES-256 encryption, which is the industry standard for document security and is virtually unbreakable with current technology."
+        "answer": "AES-256 — the industry-standard encryption Adobe Acrobat uses for protected PDFs. As always, the weak point is a short or predictable password, so use something strong and don't share it in the same message as the file."
       },
       {
         "question": "Can I remove the password later?",
-        "answer": "Yes, use our PDF Unlock tool to remove password protection from a PDF if you have the password."
+        "answer": "Yes. If you know the password, use our Unlock PDF tool to download a copy with the password removed."
       },
       {
-        "question": "Will protected PDFs open in all readers?",
-        "answer": "Yes. The encryption follows the standard PDF specification and is compatible with Adobe Acrobat, Preview, Chrome, and all major PDF readers."
+        "question": "Do printing and copying restrictions work in every reader?",
+        "answer": "Adobe Acrobat and most desktop readers enforce them. Some minimal or browser-based viewers ignore restrictions, so don't rely on them alone when distributing sensitive documents — a password is the stronger layer."
+      },
+      {
+        "question": "Will protected PDFs open in every viewer?",
+        "answer": "The encryption follows the PDF specification (AES-256, revision 6), so Adobe Acrobat and desktop apps like Preview and Foxit open it with the password. Chrome and Firefox's built-in PDF viewers don't accept passwords — open the file in a dedicated reader instead."
       }
     ],
     "relatedSlugs": [
@@ -818,49 +820,49 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ]
   },
   "pdf-unlock": {
-    "longDescription": "<p>PDF Unlock is a utility tool that removes password protection from encrypted PDF documents. If you've forgotten a password, need to edit a restricted PDF, or want to remove printing and copying restrictions from a document you own, this tool provides a straightforward solution. Simply upload your locked PDF, enter the correct password, and the tool will produce an unlocked version free of all restrictions—entirely within your browser.</p><p>The tool handles both types of PDF passwords: user passwords (required to open the document) and owner passwords (that restrict editing, printing, and copying). Once unlocked, your PDF becomes fully accessible and editable, compatible with any PDF reader or editor without restrictions. All decryption happens client-side, ensuring your password-protected documents and their passwords remain completely private.</p>",
+    "longDescription": "<p>PDF Unlock removes the password from a PDF you know the password to. Enter the password the file was locked with, and the tool writes an unlocked copy you can open, print and edit anywhere without re-authenticating. The open (user) password and the owner password both work, and files that only restrict printing or copying — rather than opening — can often be unlocked by leaving the password blank.</p><p>Decryption happens entirely on your device using the standard PDF algorithms (AES-256 and RC4). The file and password never leave your browser. If the PDF uses an encryption this tool doesn't support yet, like AES-128, you'll be told so honestly — open that one in Adobe Acrobat or Preview with the password instead.</p>",
     "features": [
-      "Remove user and owner passwords from PDFs",
-      "Eliminate printing, copying, and editing restrictions",
-      "Support for AES and RC4 encryption methods",
-      "Instant unlocking with no file size limits",
-      "100% client-side decryption with no data uploads",
-      "Free with no sign-up or watermarks"
+      "Remove a password you know from a PDF and download an unlocked copy",
+      "Accepts either the open (user) password or the owner password",
+      "Also strips permission restrictions (printing, editing, copying) in the same pass",
+      "Supports AES-256 (revision 6) and standard RC4 encryption",
+      "Runs entirely in your browser — nothing is uploaded",
+      "Free, no account — files up to 100 MB"
     ],
     "howTo": [
       {
-        "step": "Upload Locked PDF",
-        "description": "Drag and drop your password-protected PDF or click to select it from your device."
+        "step": "Open Locked PDF",
+        "description": "Select the password-protected PDF from your device."
       },
       {
-        "step": "Enter Password",
-        "description": "Type the known password that protects the PDF document."
+        "step": "Enter the password",
+        "description": "Type the password the file was locked with — the open password or the owner password both work. If it's restricted but opens without a password, leave the field empty."
       },
       {
-        "step": "Unlock Document",
-        "description": "Click the unlock button to remove all password protection and restrictions."
+        "step": "Unlock",
+        "description": "The tool decrypts the file locally and verifies the result is a valid unlocked PDF."
       },
       {
-        "step": "Download Unlocked PDF",
-        "description": "Download the unlocked PDF that can now be opened, edited, and printed without restrictions."
+        "step": "Download",
+        "description": "Save the unlocked copy — it now opens, prints and edits without a password."
       }
     ],
     "faq": [
       {
         "question": "What if I don't know the password?",
-        "answer": "You must know the password to unlock a PDF. This tool removes protection given the correct password—it cannot crack or guess forgotten passwords."
+        "answer": "You must know the password to unlock a PDF. This tool removes protection given the correct password — it cannot crack or recover forgotten passwords, and any tool that claims to should be treated with suspicion."
       },
       {
-        "question": "Can I unlock a PDF without the user password?",
-        "answer": "No. The user password is required to decrypt and unlock the document. You need the password that was set when the PDF was protected."
+        "question": "Which password should I enter?",
+        "answer": "Either the open (user) password or the owner password unlocks the file. Files that only restrict printing/copying/editing — with no open password — can often be unlocked by leaving the password field empty."
       },
       {
-        "question": "Will unlocking affect the document content?",
-        "answer": "No. Unlocking only removes password protection and restrictions. All content, formatting, and quality remain exactly the same."
+        "question": "Does unlocking change the document?",
+        "answer": "No. Unlocking only removes the password protection and any permission restrictions. Content, layout and quality remain exactly the same."
       },
       {
-        "question": "Does this work with all PDF encryption?",
-        "answer": "The tool supports standard PDF encryption methods including AES-256, AES-128, and RC4. Very rare or custom encryption schemes may not be supported."
+        "question": "Which encryption methods are supported?",
+        "answer": "AES-256 (revision 6) and standard RC4. AES-128 and rare custom schemes aren't supported by this tool yet — open those in Adobe Acrobat or Preview with the password instead."
       }
     ],
     "relatedSlugs": [
@@ -872,49 +874,45 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ]
   },
   "pdf-metadata": {
-    "longDescription": "<p>PDF Metadata Viewer is a diagnostic tool that inspects and displays the hidden metadata embedded in PDF documents. Every PDF contains metadata fields like author name, creation date, modification date, title, subject, keywords, and software used to create it. This tool reveals all of that information in a clean, readable format, giving you complete visibility into a PDF's background information and history.</p><p>Understanding PDF metadata is valuable for document forensics, verifying file authenticity, identifying original creators, checking modification timestamps, and managing document libraries. Whether you're an IT professional auditing document workflows, a legal expert establishing document provenance, or simply curious about a PDF's hidden details, PDF Metadata Viewer provides instant, comprehensive results. The inspection happens entirely in your browser—your PDF is never uploaded or stored anywhere.</p>",
+    "longDescription": "<p>PDF Metadata Viewer reads the metadata a PDF actually stores — the page count, plus title, author, subject, keywords, creator, producer and creation/modification dates when the document records them. It reads the standard Info dictionary, the common XMP fields, and any extra or custom entries, and lists exactly what it finds. Nothing is invented: fields a file doesn't store are skipped rather than shown as empty.</p><p>The inspection runs entirely in your browser using the same PDF engine that powers the page renderer — the file is never uploaded. This is a read-only viewer: it's for checking the provenance of documents you receive, auditing workflows, or simply spotting what creators a file claims.</p>",
     "features": [
-      "View complete PDF metadata: author, title, subject, keywords",
-      "Display creation and modification timestamps",
-      "Identify the software used to create or modify the PDF",
-      "View PDF version and encryption status",
-      "100% client-side inspection with no file uploads",
-      "Free with no registration or limits"
+      "Page count, title, author, subject, keywords, creator and producer",
+      "Creation and modification dates (PDF-standard and XMP)",
+      "Common XMP fields when the Info dictionary lacks them",
+      "Extra and custom Info-dict entries, listed in one place",
+      "PDF format version when the file records it",
+      "Runs entirely in your browser — free, nothing uploaded (files up to 100 MB)"
     ],
     "howTo": [
       {
-        "step": "Upload PDF",
-        "description": "Drag and drop your PDF file or click to select it from your device."
+        "step": "Open PDF",
+        "description": "Select a PDF from your device."
       },
       {
-        "step": "View Metadata",
-        "description": "The tool instantly displays all embedded metadata fields in an organized layout."
+        "step": "View metadata",
+        "description": "The viewer lists the fields the file actually stores, starting with the page count."
       },
       {
-        "step": "Review Details",
-        "description": "Examine author information, dates, keywords, PDF version, and creation software."
-      },
-      {
-        "step": "Copy or Export",
-        "description": "Copy specific metadata fields or export the complete metadata report."
+        "step": "Review details",
+        "description": "Check the title, author, creation and modification dates, and any custom entries. Fields the file doesn't store simply aren't listed."
       }
     ],
     "faq": [
       {
         "question": "Can I edit metadata with this tool?",
-        "answer": "This is a viewer tool designed for inspection only. To modify metadata, use our PDF Editor tool which supports metadata editing."
+        "answer": "No — this is a read-only viewer. Editing embedded metadata isn't offered anywhere on this site yet, so use dedicated desktop tools if you need to change or remove it."
       },
       {
         "question": "What if a PDF has no metadata?",
-        "answer": "Some PDFs have minimal or no embedded metadata. The tool will show which fields are empty or missing from the document."
+        "answer": "The viewer shows what exists — at minimum the page count — and notes when no title, author or date fields were found. Empty fields are skipped rather than shown, so the list is what's really in the file."
       },
       {
         "question": "Can metadata reveal who created a PDF?",
-        "answer": "Yes. The author and creator fields often contain the name of the person or software that generated the PDF, depending on how it was created."
+        "answer": "Often, yes. The author and creator fields usually name the person or software that produced the file, depending on how it was made — though they can be blank, generic or set to anything."
       },
       {
-        "question": "Does this work with encrypted PDFs?",
-        "answer": "Basic metadata can often be read even from encrypted PDFs. For fully encrypted files, you may need to unlock them first."
+        "question": "Does this work with protected PDFs?",
+        "answer": "Files that only limit permissions (with no open password) can be inspected directly. Files locked with an open password must be opened with the password first, or unlocked with our Unlock PDF tool."
       }
     ],
     "relatedSlugs": [
