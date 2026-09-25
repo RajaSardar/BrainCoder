@@ -1265,6 +1265,138 @@ export const GUIDES: Guide[] = [
       },
     ],
   },
+  {
+    slug: "how-to-convert-pdf-to-excel",
+    title: "How to Convert a PDF Table to Excel (XLSX or CSV)",
+    description:
+      "Turn a text-based PDF's tables into a spreadsheet. Learn which PDFs convert cleanly, how the column detection works, and when to run OCR first.",
+    keywords: [
+      "pdf to excel",
+      "convert pdf to excel",
+      "pdf to xlsx",
+      "pdf to csv",
+      "extract table from pdf",
+    ],
+    toolSlug: "pdf-to-excel",
+    published: "2026-09-25",
+    updated: "2026-09-25",
+    readMinutes: 3,
+    sections: [
+      {
+        heading: "Text-based PDFs only",
+        paragraphs: [
+          "PDF to Excel reads the embedded text layer of a PDF — the actual words a PDF editor put on the page. Documents created by Word, Excel, a browser's Print to PDF, or invoice and report software have such a text layer. Scanned or photographed pages do not: they are pictures, so there is nothing to read.",
+          "If you select a scanned PDF, the tool tells you and points to PDF OCR. Run OCR there first, then convert the recognized text file to spreadsheets here, or simply reuse the OCR tool's .txt output.",
+        ],
+      },
+      {
+        heading: "How the columns are detected",
+        paragraphs: [
+          "The tool groups the page's words into lines by their vertical position, using the exact text coordinates the PDF stores rather than the visible table rules. Because gridlines themselves are ignored, it is this positioning that defines the table.",
+          "A large horizontal gap between words — more than about 24 points, roughly a third of an inch — starts a new column. Uniform tables with clearly separated columns convert cleanly. Columns that butt against each other, spanning cells, or rows that merge across columns come out differently than the visual layout and usually need a quick cleanup in Excel.",
+        ],
+      },
+      {
+        heading: "Download, then check the data",
+        paragraphs: [
+          "Every extracted cell is exported as text: a cell that looks like a number is a label, not a numeric value, so sums and charts may need a one-step conversion in Excel (select the column, then convert text to numbers). This is deliberate — values are never interpreted as formulas, so a pasted dashboard formula from the PDF cannot run unexpectedly on open.",
+          "Preview the grid on the page first; the preview shows the first 200 rows. Large documents are capped at 100 MB and 200 pages, keeping the conversion fast and the tab responsive. Nothing is uploaded — the whole conversion runs in your browser.",
+        ],
+      },
+      {
+        heading: "When the extraction looks wrong",
+        paragraphs: [
+          "Two common causes: the PDF uses a multi-column page layout where side-by-side columns interleave into one line, or the source PDF was generated in a way that made its text coordinates unreliable. For tightly designed layouts, consider running OCR first for a flatter text stream, then converting that text here.",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "how-to-convert-pdf-to-markdown",
+    title: "How to Convert a PDF to Markdown (.md)",
+    description:
+      "Extract a PDF's text layer into Markdown for docs, wikis, READMEs and LLM prompts. Learn what the tool preserves, when to run OCR first, and how to avoid scrambled layouts.",
+    keywords: [
+      "pdf to markdown",
+      "convert pdf to markdown",
+      "pdf to md",
+      "pdf to text online",
+      "extract markdown from pdf",
+    ],
+    toolSlug: "pdf-to-markdown",
+    published: "2026-09-25",
+    updated: "2026-09-25",
+    readMinutes: 3,
+    sections: [
+      {
+        heading: "A text extractor, not a visual replica",
+        paragraphs: [
+          "PDF to Markdown reads the embedded text layer of a PDF and re-flows it into Markdown: words are grouped into lines by their on-page position, blanks are kept as paragraph breaks, and short lines are offered as headings or bullets where the pattern justifies it. It is best suited to reports, papers, specs and documentation that already have a clean text layer.",
+          "Because headings and lists are guesses, the tool says so — the .md is a text document you can edit, not a substitute for the original layout. Bold, italic, links, images, tables and code blocks are not preserved. For a closer visual match, convert to PDF to Word instead.",
+        ],
+      },
+      {
+        heading: "Pick a text-based PDF",
+        paragraphs: [
+          "Choose a file whose words you can already select and copy — that is the text layer doing the work. Password-protected files must be unlocked first with PDF Unlock. If you can't select any text on the page, it is a scan: there is no text layer, the pages are marked as having no text, and the tool links to PDF OCR to recognize the content first.",
+          "Single-column documents convert most reliably. Two-column layouts and rotated pages can interleave or mirror the reading order despite the tool's rotation-aware sorting. When ordering matters and the layout is complex, review the preview before trusting the file.",
+        ],
+      },
+      {
+        heading: "Use the output",
+        paragraphs: [
+          "Download the .md for READMEs, wikis, note apps or to feed into an AI tool, or download the .html rendering of the same extract for quick reading. A page separator (---) marks where each PDF page ended, and pages with no extractable text are skipped with a note in the UI.",
+          "Nothing is uploaded. The PDF is parsed and re-flowed entirely in your browser, within a 100 MB and 200-page cap.",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "how-to-ocr-a-pdf",
+    title: "How to OCR a PDF (Turn Scans into Text)",
+    description:
+      "Recognize printed text in scanned PDFs with browser-based Tesseract OCR in 12 languages. Learn what OCR can and can't do, and when PDF to Text is the better tool.",
+    keywords: [
+      "ocr pdf",
+      "ocr pdf online",
+      "scan pdf to text",
+      "extract text from scanned pdf",
+      "tesseract ocr",
+    ],
+    toolSlug: "pdf-ocr",
+    published: "2026-09-25",
+    updated: "2026-09-25",
+    readMinutes: 3,
+    sections: [
+      {
+        heading: "Is OCR the right tool?",
+        paragraphs: [
+          "OCR recognizes text in pages that have no readable text layer — scans, photographs, and faxes. The test is simple: if you cannot select or copy the words on the page, the text is trapped inside images and OCR is the right tool.",
+          "If you can already select the words, the PDF has a text layer and PDF to Text will convert it exactly and instantly. OCR of a text-based PDF would slow things down and introduce recognition errors for no benefit — the tool even notices and suggests the faster route.",
+        ],
+      },
+      {
+        heading: "What OCR can and cannot do",
+        paragraphs: [
+          "OCR turns each page image into text via Tesseract. Printed documents at a decent scan resolution (150–300 DPI) usually recognize almost everything. Blurred pages, unusual fonts, handwriting, and low-resolution scans will have errors, so always skim the result before relying on it.",
+          "The output is a plain-text result you copy or download as .txt. Your original PDF is never modified, and the tool does not embed a text layer back into it. If you need the text inside a new PDF, paste the recognized text into Text to PDF, or open it in a word processor and export a fresh PDF.",
+        ],
+      },
+      {
+        heading: "Choose the language",
+        paragraphs: [
+          "Pick the document's main language from the 12 supported: English, Spanish, French, German, Italian, Portuguese, Russian, Hindi, Arabic, Chinese (simplified), Japanese and Korean. The first run of a language downloads that language's recognition model (~1.5–3 MB) into your browser from this site and caches it, so later runs are instant.",
+          "OCR is fully client-side: your PDF is rendered and recognized in your browser and never uploaded. Files up to 100 MB and 200 pages are supported; the model download on first use needs an internet connection.",
+        ],
+      },
+      {
+        heading: "After OCR",
+        paragraphs: [
+          "Skim the per-page result, fix obvious misreads, then copy or download. Because each page is recognized independently, a page marker (--- Page N ---) keeps the reading order clear in the .txt. Multi-column pages may read across both columns in each line; if the layout is complex, editing order in the text is usually faster than re-rendering.",
+        ],
+      },
+    ],
+  },
 ];
 
 const guideBySlug = new Map(GUIDES.map((g) => [g.slug, g]));

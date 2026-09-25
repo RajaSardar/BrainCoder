@@ -557,7 +557,7 @@ export const TOOLS: ToolConfig[] = [
     name: "PDF to Markdown",
     tagline: "PDF text into .md or HTML",
     description:
-      "Convert the text layer of a PDF into clean Markdown or HTML that keeps headings, lists and paragraph structure.",
+      "Extract the text layer of a PDF into Markdown or HTML with best-effort headings, lists and paragraph breaks.",
     category: "Convert",
     icon: BookMarked,
     accent: "text-violet-600",
@@ -568,7 +568,7 @@ export const TOOLS: ToolConfig[] = [
     name: "OCR PDF",
     tagline: "Read text from scanned PDFs",
     description:
-      "Recognize printed text in scanned PDF pages with on-device Tesseract.js — fully private, no uploads.",
+      "Recognize printed text in scanned PDF pages with on-device Tesseract — nothing is uploaded, and language models load from this site.",
     category: "Convert",
     icon: ScanText,
     accent: "text-blue-600",

@@ -37,6 +37,9 @@ export default function ImageOcr() {
     try {
       const Tesseract = await import("tesseract.js");
       const worker = await Tesseract.createWorker(lang, 1, {
+        workerPath: "/ocr/worker.min.js",
+        corePath: "/ocr/",
+        langPath: "/ocr/traineddata/",
         logger: (m: { status: string; progress: number }) => {
           if (m.status) setProgress(`${m.status}… ${m.progress ? Math.round(m.progress * 100) : 0}%`);
         },

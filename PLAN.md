@@ -1051,8 +1051,35 @@ Phase 2+ Target (NOT building now):
   `pdf-compressor`'s pre-existing Vercel-insights-404 network-classification
   assertion (environmental; its feature + harness are untouched by this
   wave). Build page count is now 295.
-- Next: PDF to Excel (follows pdf-metadata in registry order). Remaining 87
-  tools have not completed this process.
+- Wave 6: three tools all green. PDF to Excel (36th tool), PDF to Markdown
+  (37th) and PDF OCR (38th) each returned all ten judges and closed every gap.
+  pdf-to-excel: two real bugs found by fixtures — pdf.js synthesizes
+  whitespace-only " " items whose width equals the column gap (so column
+  splits never fired) and viewport Y grows downward (so y-descending sorting
+  reversed later pages); both fixed (skip `!str.trim()` items, sort y-then-x
+  ascending), plus CSV formula-injection neutralization (apostrophe prefixes
+  for =/+-/@), an .xlsx built by hand from one row model (inlineStr cells,
+  real `dimension`, fflate zip), merged-cells disclosure. pdf-to-markdown:
+  shared reading-order pipeline with the excel tool, pitch-based blank-line
+  detection ("Pages 1 have no selectable text" + OCR steer), best-effort
+  heading heuristic, honest "does not reproduce tables/bold/italic/links/
+  images/code" copy and a real rendered .html download. PDF OCR: fully
+  on-device tesseract.js from self-hosted /ocr/ assets (worker + 3 wasm cores
+  + 12 traineddata gz), e2e proved zero external-origin requests and real
+  recognition ("Hello OCR" from an embedded-TTF fixture), honest .txt-only
+  framing, ImageOcr.tsx also purged of the jsDelivr default. Friendly-error
+  routing fixed across all three (`userFacing`/`toUiError` so real engine
+  `Error` throws stop leaking raw messages). Node checks 90/90 across the
+  three mirrors; e2e 41/41 (excel), 33/33 (markdown), 28/28 (ocr) — and this
+  wave's full-suite regression ran **every** browser harness green: the 12
+  port-gated harnesses re-passed on 3788/3790/3791 and pdf-compressor's
+  long-standing "Vercel-insights-404" network-classification failure was
+  honestly resolved by classifying `/_vercel/speed-insights` as app-owned
+  analytics traffic (15/15). Reports:
+  `audit/reports/pdf-to-excel.md`, `pdf-to-markdown.md`, `pdf-ocr.md`. Build
+  page count is now 298 (32 guides).
+- Next: PDF Compare (follows pdf-ocr in registry order). Remaining 84 tools
+  have not completed this process.
 - Hash Generator: ten independent judges ran in parallel (the architect report
   was not returned — aborted; its coverage supplied by functional/security/
   edge findings plus the harness). Component rebuilt on the team standard

@@ -57,6 +57,9 @@ const TOOL_KEYWORDS: Record<string, string[]> = {
   "pdf-protect": ["password protect pdf", "lock pdf with password", "add password to pdf", "protect pdf online", "encrypt pdf with password", "restrict pdf printing", "pdf permission restrictions"],
   "pdf-unlock": ["unlock pdf", "unlock pdf online free", "remove password from pdf", "remove pdf password", "pdf password remover", "decrypt pdf online"],
   "pdf-metadata": ["pdf metadata viewer", "view pdf metadata", "pdf metadata", "inspect pdf metadata", "pdf properties", "pdf creator checker", "when was a pdf created"],
+  "pdf-to-excel": ["pdf to excel", "convert pdf to excel", "pdf to xlsx", "pdf to csv", "extract table from pdf", "pdf spreadsheet converter", "convert pdf table to excel"],
+  "pdf-to-markdown": ["pdf to markdown", "convert pdf to markdown", "pdf to md", "pdf to html text", "extract text as markdown from pdf", "markdown from pdf"],
+  "pdf-ocr": ["ocr pdf", "ocr pdf online", "scan pdf to text", "extract text from scanned pdf", "pdf to text converter", "recognize text in pdf", "tesseract pdf ocr"],
   "pdf-page-numbers": ["add page numbers to pdf", "pdf page numbers", "number pages in pdf", "add page numbers to pdf online", "insert page numbers into pdf", "start page numbers on page 2", "pdf page number tool"],
   "pdf-remove-blank-pages": ["remove blank pages from pdf", "delete blank pages pdf", "remove empty pages from pdf", "delete empty pdf pages", "clean blank pages pdf online", "remove white pages from pdf"],
   "pdf-remove-pages": ["delete pages from pdf", "remove pages from pdf", "delete pdf pages online", "remove page from pdf free", "trim pages from pdf"],
@@ -154,6 +157,9 @@ export function toolTitle(tool: ToolConfig): string {
     "pdf-protect": "Password Protect PDF online — free PDF lock tool",
     "pdf-unlock": "Unlock PDF online — remove a PDF password for free",
     "pdf-metadata": "View PDF Metadata online — free PDF inspector",
+    "pdf-to-excel": "PDF to Excel — convert a PDF table to XLSX or CSV free",
+    "pdf-to-markdown": "PDF to Markdown — extract PDF text into .md free",
+    "pdf-ocr": "OCR PDF online — recognize text in scanned PDFs free",
   };
   if (CUSTOM_TITLES[tool.slug]) return CUSTOM_TITLES[tool.slug];
   const cat = tool.category.toLowerCase();
@@ -260,6 +266,12 @@ export function toolJsonLd(tool: ToolConfig) {
       "Add a page number to every page of a PDF in one of six corner positions, with a 8–24 pt size slider, a plain or “n / total” label, an optional starting number offset, and placement that follows each page's own rotation so mixed portrait/landscape files stay aligned — fixed dark-grey Helvetica, fully client-side with nothing uploaded",
     "text-to-pdf":
       "Word-wrapped A4 pages with automatic page breaks, a 10–24 pt font-size slider, a live character counter and a one-click download of a standard PDF generated entirely in your browser with nothing uploaded",
+    "pdf-to-excel":
+      "Reconstruct a PDF's text layer into spreadsheet rows and columns, split cells at layout gaps, preview the grid, and download as .xlsx or .csv — cells exported as text, entirely in your browser with nothing uploaded",
+    "pdf-to-markdown":
+      "Extract a PDF's text layer into a Markdown file (or its HTML rendering) with best-effort headings, bullet lists and paragraph breaks, preserving reading order for rotated pages, computed entirely in your browser with nothing uploaded",
+    "pdf-ocr":
+      "Recognize printed text in scanned or image-based PDF pages with on-device Tesseract in 12 languages (English, Spanish, French, German, Italian, Portuguese, Russian, Hindi, Arabic, Chinese, Japanese, Korean), copy or download the result as .txt — your file never leaves your browser",
   };
   const featureList =
     TOOL_FEATURE_LIST[tool.slug] ??

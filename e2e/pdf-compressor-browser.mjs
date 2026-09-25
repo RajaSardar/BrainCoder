@@ -88,7 +88,7 @@ context.on("request", (request) => {
   const searchable = Buffer.concat([Buffer.from(`${decodeURI(url)}\n${JSON.stringify(headers)}\n`), body || Buffer.alloc(0)]);
   const leak = probes.some((probe) => searchable.includes(probe));
   const pathname = new URL(url).pathname;
-  const category = /\/(?:_vercel|_next)\/(?:insights|analytics)|google-analytics\.com|googletagmanager\.com/.test(url)
+  const category = /\/(?:_vercel|_next)\/(?:speed-insights|insights|analytics)|google-analytics\.com|googletagmanager\.com/.test(url)
     ? "analytics"
     : request.method() === "GET" && (pathname.startsWith("/_next/static/") || ["/icon.svg", "/manifest.webmanifest", "/sw.js"].includes(pathname) || ["stylesheet", "image", "font", "script", "manifest"].includes(request.resourceType()))
       ? "asset"

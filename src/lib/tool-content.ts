@@ -924,164 +924,162 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ]
   },
   "pdf-to-excel": {
-    "longDescription": "<p>PDF to Excel is a powerful data extraction tool that identifies and converts tables within PDF documents into editable Microsoft Excel spreadsheets. Whether you're pulling financial data from reports, extracting statistical tables from research papers, or converting invoice tables into editable formats, this tool uses intelligent table detection to map PDF content into structured Excel cells with rows and columns preserved.</p><p>The tool analyzes each page of your PDF, identifies tabular data structures, and exports them as .xlsx files ready for use in Excel, Google Sheets, or any spreadsheet application. Unlike simple text extraction, PDF to Excel maintains the relationship between cells, columns, and rows so your data is immediately usable for analysis, calculations, and reporting. All processing is client-side, ensuring your sensitive financial or business data stays completely private.</p>",
+    "longDescription": "<p>PDF to Excel reads the text layer of a PDF and reconstructs its lines into spreadsheet cells. It groups words into lines by their position on the page, then splits each line into columns wherever a large horizontal gap separates words — so simple tabular layouts like financial reports, product lists or data sheets come out as rows and columns you can open in Excel, Google Sheets or any spreadsheet app. Output can be downloaded as .xlsx or .csv.</p><p>It works from the PDF's embedded text layer — text-based PDFs (created by Word, Excel, browsers or invoice software) convert well; scanned or photographed PDFs have no text layer and need our PDF OCR tool first. The layout rules are best-effort: uniform column tables convert cleanly, but merged cells, spanning rows, and tight multi-column pages may need manual cleanup in the spreadsheet. Every cell is exported as text, so numbers arrive as labels rather than formulas. All processing is client-side — nothing is uploaded.</p>",
     "features": [
-      "Extract tables from PDF into editable Excel spreadsheets",
-      "Intelligent table detection for complex layouts",
-      "Preserve row and column structure in output",
-      "Support multi-page documents with multiple tables",
-      "Export as .xlsx files compatible with Excel and Google Sheets",
-      "100% client-side processing with no data uploads"
+      "Reconstruct a PDF's text lines into spreadsheet rows and columns",
+      "Split cells at column gaps on the page (best-effort layout rules)",
+      "Export as .xlsx or .csv, up to 200 pages and 100 MB",
+      "Runs entirely in the browser — nothing is uploaded",
+      "Preview the extracted grid before downloading",
+      "Cells are exported as text (safe to open, never formulas)"
     ],
     "howTo": [
       {
-        "step": "Upload PDF",
-        "description": "Drag and drop your PDF containing tables or click to select it from your device."
+        "step": "Open PDF",
+        "description": "Choose a text-based PDF that contains a table you want as a spreadsheet."
       },
       {
-        "step": "Detect Tables",
-        "description": "The tool scans your PDF and identifies all table structures on each page."
+        "step": "Review the grid",
+        "description": "The extracted rows and columns appear in a preview. Split cells at large horizontal gaps; tight columns may merge."
       },
       {
-        "step": "Review and Select",
-        "description": "Preview the detected tables and select which ones to extract if needed."
-      },
-      {
-        "step": "Download Excel File",
-        "description": "Download the .xlsx file with your extracted table data ready for spreadsheet use."
+        "step": "Download",
+        "description": "Download the result as .xlsx or .csv. Cells are text, so sums may need a conversion step."
       }
     ],
     "faq": [
       {
-        "question": "How accurate is the table extraction?",
-        "answer": "Accuracy depends on how clearly the tables are defined in the PDF. Well-structured tables with clear borders and alignment extract with very high accuracy."
+        "question": "Does it work on scanned PDFs?",
+        "answer": "No — a scanned PDF has no text layer, so nothing can be read. Use our PDF OCR tool first to recognize the text, then convert the result here."
       },
       {
-        "question": "Can it handle merged cells?",
-        "answer": "The tool attempts to handle merged cells and complex table structures, though very complex layouts may require some manual adjustment in Excel."
+        "question": "How well does it extract tables?",
+        "answer": "Well-structured tables with a clean text layer — like reports, invoices and price lists — come out close to the original. Merged cells and spanning rows are not reproduced: each text line becomes one spreadsheet row, and each large horizontal gap starts a new column."
       },
       {
-        "question": "Does it work with scanned PDFs?",
-        "answer": "For scanned PDFs, use our OCR PDF tool first to add a text layer, then convert the resulting PDF to Excel for best results."
+        "question": "Will my numbers be usable for calculations?",
+        "answer": "Every cell is exported as text, so a '1,200' cell is a label, not a numeric value. In Excel you can convert columns to numbers in one step."
       },
       {
-        "question": "Can I extract multiple tables at once?",
-        "answer": "Yes. The tool detects and can extract all tables from all pages in a single operation."
+        "question": "Can it handle multiple tables or pages?",
+        "answer": "Every page's text lines are extracted into the same sheet, separated by a blank row. There is no table-by-table selection."
+      },
+      {
+        "question": "Is my data uploaded?",
+        "answer": "No. The PDF is read entirely in your browser and never leaves your device."
       }
     ],
     "relatedSlugs": [
-      "pdf-to-text",
-      "pdf-to-word",
       "pdf-ocr",
-      "pdf-to-markdown",
-      "pdf-to-image"
-    ]
-  },
-  "pdf-to-markdown": {
-    "longDescription": "<p>PDF to Markdown is a conversion tool that transforms PDF documents into clean, structured Markdown or HTML format. Ideal for developers, technical writers, and content creators who need to repurpose PDF content for websites, documentation platforms, or GitHub repos, this tool extracts text while preserving headings, lists, code blocks, tables, and other structural elements in Markdown syntax.</p><p>Markdown is the universal format for documentation, README files, blogs, and wikis. Converting PDF to Markdown lets you reuse existing documents in modern content workflows without manual reformatting. The tool handles headings, bold and italic text, bulleted and numbered lists, blockquotes, links, and table structures. All conversion happens client-side in your browser, keeping your source material completely private and secure.</p>",
-    "features": [
-      "Convert PDF content to clean Markdown syntax",
-      "Preserve headings, lists, tables, and text formatting",
-      "Output as .md or .html files",
-      "Maintain document structure and reading order",
-      "Support for bold, italic, links, and blockquotes",
-      "100% client-side conversion with no uploads"
-    ],
-    "howTo": [
-      {
-        "step": "Upload PDF",
-        "description": "Drag and drop your PDF document or click to select it from your device."
-      },
-      {
-        "step": "Choose Output Format",
-        "description": "Select Markdown (.md) or HTML (.html) as your desired output format."
-      },
-      {
-        "step": "Convert Document",
-        "description": "Click the convert button and let the tool extract and format the content."
-      },
-      {
-        "step": "Download Output",
-        "description": "Copy the generated Markdown to your clipboard or download it as a file."
-      }
-    ],
-    "faq": [
-      {
-        "question": "How well does it handle tables in PDF?",
-        "answer": "The tool converts tables to Markdown table syntax with proper alignment. Complex tables with merged cells may need minor manual cleanup."
-      },
-      {
-        "question": "Will images from the PDF be included?",
-        "answer": "The tool extracts text and structural formatting. Images in the PDF are referenced but not embedded in the Markdown output."
-      },
-      {
-        "question": "Is this useful for GitHub READMEs?",
-        "answer": "Absolutely. If you have documentation in PDF format, this tool converts it to Markdown suitable for GitHub repos, wikis, and documentation sites."
-      },
-      {
-        "question": "Does it preserve code blocks?",
-        "answer": "The tool attempts to detect and preserve code-like content in code block formatting, though it works best with clearly formatted source material."
-      }
-    ],
-    "relatedSlugs": [
       "pdf-to-text",
+      "pdf-to-markdown",
       "pdf-to-word",
-      "text-to-pdf",
-      "pdf-to-excel",
       "pdf-to-ppt"
     ]
   },
-  "pdf-ocr": {
-    "longDescription": "<p>PDF OCR is an advanced optical character recognition tool that extracts text from scanned PDFs, photographed documents, and image-based PDFs. If you've ever struggled with a PDF where you can't select, copy, or search the text because it's just a scanned image, PDF OCR transforms it into a fully searchable, selectable, and editable document. The OCR processing runs in your browser, keeping your sensitive documents completely private.</p><p>The tool analyzes each page image, recognizes characters and words using advanced OCR algorithms, and adds an invisible text layer to the PDF. The result is a document that looks identical to the original but now supports text selection, copy-paste, search, and compatibility with text extraction tools. From digitizing archived paper records to making scanned contracts searchable, PDF OCR is essential for anyone working with image-based documents.</p>",
+  "pdf-to-markdown": {
+    "longDescription": "<p>PDF to Markdown extracts the text layer of a PDF into Markdown (.md), with an .html rendering of the same text. It groups the extracted words into lines using their position on the page, keeps paragraph breaks, and makes best-effort guesses at headings and bullet lists. It is a fast way to get the prose of a well-structured document (reports, papers, documentation) into a Markdown-based workflow — READMEs, wikis, AI prompts, note tools.</p><p>The extraction is honest about what it is: a text-layer reader with layout heuristics, not a visual replica. It does not reproduce tables, bold/italic styling, links, images or code blocks, and multi-column or rotated pages may come out scrambled. Scanned PDFs have no text layer and need our PDF OCR tool first; password-protected files need PDF Unlock. All conversion happens in your browser — nothing is uploaded.</p>",
     "features": [
-      "Extract text from scanned PDFs and image-based documents",
-      "Add searchable text layer to scanned PDFs",
-      "Support for multiple languages in OCR recognition",
-      "Maintain original layout and formatting of scanned pages",
-      "100% client-side OCR processing with no uploads",
-      "Free with no registration, watermarks, or file limits"
+      "Extract a PDF's text layer into Markdown and .html",
+      "Best-effort headings and bullet lists, paragraph breaks preserved",
+      "Rotation-aware reading order for straight documents",
+      "Up to 200 pages and 100 MB, entirely in the browser",
+      "No uploads — nothing leaves your device"
     ],
     "howTo": [
       {
-        "step": "Upload Scanned PDF",
-        "description": "Drag and drop your scanned or image-based PDF into the OCR tool."
+        "step": "Open PDF",
+        "description": "Choose a text-based PDF with a readable text layer."
       },
       {
-        "step": "Select Language",
-        "description": "Choose the primary language of the document for optimal character recognition accuracy."
+        "step": "Convert",
+        "description": "The text layer is re-flowed into Markdown with heading and list heuristics. Review the preview."
       },
       {
-        "step": "Run OCR",
-        "description": "Click the OCR button and wait as the tool processes each page to recognize text."
+        "step": "Download",
+        "description": "Download the .md file, or the .html rendering of the same text."
+      }
+    ],
+    "faq": [
+      {
+        "question": "Does it preserve tables, styling, images or code?",
+        "answer": "No. Markdown output contains the extracted text with best-effort headings and bullet lists. Bold/italic, links, images, tables and code blocks are not reproduced — treat the output as text, not a visual copy."
       },
       {
-        "step": "Download Result",
-        "description": "Download the OCR-processed PDF with selectable, searchable text or extract to plain text."
+        "question": "What if my PDF looks scrambled?",
+        "answer": "Multi-column layouts and rotated pages are the weak point: text from different columns can interleave. A single-column document with a clean text layer converts most reliably."
+      },
+      {
+        "question": "Does it work with scanned PDFs?",
+        "answer": "No — a scan has no text layer. Use our PDF OCR tool first to recognize the text, then convert again here or use its .txt output."
+      },
+      {
+        "question": "Is the .html a copy of the original page?",
+        "answer": "No — it renders the extracted Markdown as a simple web page. It is a reading aid, not a visual replica of the PDF."
+      }
+    ],
+    "relatedSlugs": [
+      "pdf-to-text",
+      "pdf-to-excel",
+      "pdf-ocr",
+      "pdf-unlock",
+      "text-to-pdf"
+    ]
+  },
+  "pdf-ocr": {
+    "longDescription": "<p>PDF OCR recognizes text in scanned and image-based PDFs. Each page is rendered as an image and run through Tesseract (client-side), and the recognized text is delivered as a .txt file you can copy or download. It is the right first step for a document that has no selectable text at all — a scan, a photo, a fax.</p><p>OCR is not perfect: clarity, fonts and scan quality all matter, so skim the result before relying on it. Text-based PDFs already have a readable text layer and are better served by our PDF to Text tool, which is faster and nearly exact. The first use of each language downloads its model (~1.5–3 MB) into your browser from this site; models are cached afterward. Your file is never uploaded, and everything runs locally.</p>",
+    "features": [
+      "Recognize text from scanned and image-based PDF pages into .txt",
+      "12 languages: English, Spanish, French, German, Italian, Portuguese, Russian, Hindi, Arabic, Chinese, Japanese, Korean",
+      "Per-page progress, copy or download the result",
+      "Up to 100 MB and 200 pages",
+      "Model downloads from this site (cached after first use) — your file never leaves your browser"
+    ],
+    "howTo": [
+      {
+        "step": "Open PDF",
+        "description": "Choose a scanned or image-based PDF — one where you currently cannot select any text."
+      },
+      {
+        "step": "Pick the language",
+        "description": "Choose the document's main language. The model downloads on first use (~1.5–3 MB) and is cached afterward."
+      },
+      {
+        "step": "OCR",
+        "description": "Each page is rendered and recognized. Progress shows per page."
+      },
+      {
+        "step": "Copy or download",
+        "description": "Skim the recognized text, then copy it or download the .txt file."
       }
     ],
     "faq": [
       {
         "question": "How accurate is the OCR?",
-        "answer": "Accuracy depends on scan quality. Clear, well-scanned documents with standard fonts typically achieve 95-99% accuracy. Low-resolution or handwritten documents may have lower accuracy."
+        "answer": "Good scans of printed documents with standard fonts usually recognize almost everything. Blurred, low-resolution or handwritten pages will have errors — always skim the result."
       },
       {
         "question": "What languages are supported?",
-        "answer": "The tool supports major world languages including English, Spanish, French, German, Chinese, Japanese, Korean, and many more."
+        "answer": "English, Spanish, French, German, Italian, Portuguese, Russian, Hindi, Arabic, Chinese (simplified), Japanese and Korean."
       },
       {
-        "question": "Will OCR change how my PDF looks?",
-        "answer": "No. The OCR adds an invisible text layer underneath the existing page images. The visual appearance remains exactly the same."
+        "question": "Does OCR change my PDF?",
+        "answer": "Your original file is never modified. The recognized text is offered as a separate .txt download or copy — no text layer is written back into the PDF."
       },
       {
-        "question": "Can OCR handle multi-column layouts?",
-        "answer": "Yes. The tool is designed to recognize text in complex layouts including multi-column pages, sidebars, and mixed text-image content."
+        "question": "My PDF already has selectable text — is this the right tool?",
+        "answer": "No. If you can already select the words, use PDF to Text instead: it is much faster and essentially exact. OCR is for pages with no text layer (scans and photos)."
+      },
+      {
+        "question": "Is my document uploaded anywhere?",
+        "answer": "No. OCR runs entirely in your browser. On first use of a language it downloads that language's recognition model (~1.5–3 MB) from this site so it can run locally; your file never leaves your device."
       }
     ],
     "relatedSlugs": [
       "pdf-to-text",
       "pdf-to-excel",
+      "pdf-to-markdown",
       "pdf-to-word",
-      "pdf-to-image",
       "image-to-pdf"
     ]
   },
