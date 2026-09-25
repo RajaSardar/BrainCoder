@@ -26,6 +26,7 @@ const CATEGORY_KEYWORDS: Record<string, string[]> = {
 };
 
 const TOOL_KEYWORDS: Record<string, string[]> = {
+  "pdf-redact": ["redact pdf", "redact pdf online free", "black out text in pdf", "remove sensitive information from pdf", "pdf redaction tool", "hide text in pdf", "redact pdf without uploading"],
   "pdf-compressor": ["compress pdf online", "reduce pdf file size", "shrink pdf", "pdf compressor free", "make pdf smaller"],
   "image-compressor": ["compress image online", "reduce image file size", "compress jpg", "compress png", "compress webp online", "make image smaller", "compress avif online", "image compressor free"],
   "image-resizer": ["resize image online", "image resizer free", "resize jpg png webp", "reduce image dimensions", "resize photo online", "resize image to 1920x1080", "image resizer aspect ratio lock", "resize image without uploading"],
@@ -60,6 +61,8 @@ const TOOL_KEYWORDS: Record<string, string[]> = {
   "pdf-to-excel": ["pdf to excel", "convert pdf to excel", "pdf to xlsx", "pdf to csv", "extract table from pdf", "pdf spreadsheet converter", "convert pdf table to excel"],
   "pdf-to-markdown": ["pdf to markdown", "convert pdf to markdown", "pdf to md", "pdf to html text", "extract text as markdown from pdf", "markdown from pdf"],
   "pdf-ocr": ["ocr pdf", "ocr pdf online", "scan pdf to text", "extract text from scanned pdf", "pdf to text converter", "recognize text in pdf", "tesseract pdf ocr"],
+  "pdf-compare": ["compare pdf online", "pdf diff tool", "compare two pdf files", "what changed between pdfs", "text difference in pdf documents", "pdf comparison free"],
+  "pdf-auto-redact": ["auto redact pdf", "automatically redact a pdf", "redact pdf online free", "black out words in pdf", "hide sensitive text in pdf", "redact names in pdf", "pdf redaction tool"],
   "pdf-page-numbers": ["add page numbers to pdf", "pdf page numbers", "number pages in pdf", "add page numbers to pdf online", "insert page numbers into pdf", "start page numbers on page 2", "pdf page number tool"],
   "pdf-remove-blank-pages": ["remove blank pages from pdf", "delete blank pages pdf", "remove empty pages from pdf", "delete empty pdf pages", "clean blank pages pdf online", "remove white pages from pdf"],
   "pdf-remove-pages": ["delete pages from pdf", "remove pages from pdf", "delete pdf pages online", "remove page from pdf free", "trim pages from pdf"],
@@ -160,6 +163,9 @@ export function toolTitle(tool: ToolConfig): string {
     "pdf-to-excel": "PDF to Excel — convert a PDF table to XLSX or CSV free",
     "pdf-to-markdown": "PDF to Markdown — extract PDF text into .md free",
     "pdf-ocr": "OCR PDF online — recognize text in scanned PDFs free",
+    "pdf-compare": "Compare PDFs online — free PDF text diff tool",
+    "pdf-auto-redact": "Auto-Redact PDF online — black out sensitive words free",
+    "pdf-redact": "Redact PDF Online — free blackout tool, nothing uploaded",
   };
   if (CUSTOM_TITLES[tool.slug]) return CUSTOM_TITLES[tool.slug];
   const cat = tool.category.toLowerCase();
@@ -272,6 +278,12 @@ export function toolJsonLd(tool: ToolConfig) {
       "Extract a PDF's text layer into a Markdown file (or its HTML rendering) with best-effort headings, bullet lists and paragraph breaks, preserving reading order for rotated pages, computed entirely in your browser with nothing uploaded",
     "pdf-ocr":
       "Recognize printed text in scanned or image-based PDF pages with on-device Tesseract in 12 languages (English, Spanish, French, German, Italian, Portuguese, Russian, Hindi, Arabic, Chinese, Japanese, Korean), copy or download the result as .txt — your file never leaves your browser",
+    "pdf-compare":
+      "Upload 2–5 PDFs and compare their embedded text layers page by page against the file you mark as original, with added and removed lines highlighted, optional ignore-case and ignore-whitespace matching, a show-changes-only filter, a downloadable .txt diff report, and a 100 MB / 200 page-per-file cap — computed entirely in your browser with nothing uploaded",
+    "pdf-auto-redact":
+      "Find every occurrence of a name, number or phrase in a PDF's text layer and cover it with a solid black box — case-insensitive by default with optional whole-word and regex modes, red-marked page previews, a per-page match count and a confirm step before anything is drawn, capped at 100 MB / 200 pages / 100 matches per file and computed entirely in your browser with nothing uploaded",
+    "pdf-redact":
+      "Draw one or more black redaction rectangles on each page preview, or add regions by exact page / x / y / width / height in points; regions are physically stamped into the page so covered text can no longer be seen, searched, or copy-pasted, with per-page region lists, remove and clear actions, an honest limits disclaimer, a 100 MB file cap and 200-page region editing — entirely in your browser with nothing uploaded",
   };
   const featureList =
     TOOL_FEATURE_LIST[tool.slug] ??

@@ -1084,165 +1084,173 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ]
   },
   "pdf-compare": {
-    "longDescription": "<p>PDF Compare is a side-by-side document comparison tool that highlights the differences between two PDF files. Essential for legal professionals reviewing contract revisions, editors checking document changes, or anyone who needs to identify what's different between two versions of a PDF, this tool provides a clear, visual diff that shows additions, deletions, and modifications between documents.</p><p>The tool performs a detailed comparison of both text content and visual layout, presenting changes in an easy-to-read format with highlighted differences. Whether you're verifying that only intended changes were made, checking for unauthorized modifications, or simply need to see what changed between document versions, PDF Compare delivers accurate, comprehensive results entirely within your browser. No sensitive documents are ever uploaded to external servers.</p>",
+    "longDescription": "<p>PDF Compare lets you check what changed between versions of a PDF by comparing their embedded text layers page by page. Add two to five PDFs, mark which one is the original, and the tool lines each other file up page by page against it, highlighting lines that were added (green) and removed (red) with a side-by-side view.</p><p>This is a text-layer comparison, not a visual or pixel diff. It reads the actual words stored in each PDF and compares them, so it is ideal for verifying that a contract, report or spec changed only in the intended places. Layout shifts, font or color changes, and swapped images are not reported because they are not text. Scanned, image-only pages contain no selectable text, so they are shown as empty and unchanged. Pages are matched on the shortest shared page count — pages that exist in only one file are not compared.</p><p>Comparison runs entirely in your browser. Files up to 100 MB and 200 pages each are supported, and the honest limit holds: matching is line-based, extra spaces are already collapsed when lines are read, and reordering a paragraph counts as removing and re-adding its lines. A downloadable .txt report summarises every change against each revision.</p>",
     "features": [
-      "Compare two PDFs and highlight all differences",
-      "Detect text changes: additions, deletions, and modifications",
-      "Visual layout comparison for formatting changes",
-      "Side-by-side and overlay comparison views",
-      "Generate a summary report of all changes found",
-      "100% client-side comparison with no file uploads"
+      "Compare 2–5 PDFs at once, page by page, against the file you mark as original",
+      "Added and removed lines highlighted in a side-by-side view",
+      "Optional ignore-case and ignore-whitespace matching, plus a show-changes-only filter",
+      "Download a .txt diff report named after the original file",
+      "Encrypted or damaged PDFs are rejected up front with clear guidance — unlock with the Unlock PDF tool first",
+      "Nothing is uploaded — files up to 100 MB and 200 pages each"
     ],
     "howTo": [
       {
-        "step": "Upload Original PDF",
-        "description": "Drag and drop the original or base version of your PDF document."
+        "step": "Add the original PDF",
+        "description": "Use Add PDF and choose the base version of your document. Files up to 100 MB and 200 pages each are accepted."
       },
       {
-        "step": "Upload Modified PDF",
-        "description": "Upload the second version of the PDF that you want to compare against the original."
+        "step": "Add the revised PDFs",
+        "description": "Add the other versions you want to check, up to five PDFs in total. An encrypted or damaged file is rejected the moment you add it."
       },
       {
-        "step": "Run Comparison",
-        "description": "Click compare to analyze both documents and identify all differences."
+        "step": "Mark the original",
+        "description": "Select Original on whichever PDF is the base. Every other file is compared against it, page by page."
       },
       {
-        "step": "Review Changes",
-        "description": "Examine the highlighted differences in the side-by-side comparison view."
+        "step": "Compare and review",
+        "description": "Click Compare PDFs. Page through each result to see removed and added lines, or download a .txt report of every change."
       }
     ],
     "faq": [
       {
-        "question": "Can I compare PDFs with different page counts?",
-        "answer": "Yes. The tool handles PDFs of different lengths and will highlight pages that exist in one document but not the other."
+        "question": "Does it compare layouts, images or fonts?",
+        "answer": "No. PDF Compare reads and compares the embedded text layer of each page only. A reformatted text block, a changed font, or a replaced image is not reported unless its words changed too."
       },
       {
-        "question": "Does it detect image changes?",
-        "answer": "The tool primarily compares text content and layout structure. Significant image changes may be flagged based on positional and size differences."
+        "question": "What if the PDFs have different page counts?",
+        "answer": "Only the shortest shared page count is compared. The tool tells you how many pages each file has and shows a note when they differ; pages that exist in only one file are not compared by design."
       },
       {
-        "question": "How does it handle formatting changes?",
-        "answer": "Text formatting changes like font size or style modifications are detected and highlighted alongside content changes."
+        "question": "My PDF is a scan — will it compare?",
+        "answer": "Scanned or photographed pages have no text layer, so there is nothing to read or compare; they appear empty and unchanged. If you need the words, run PDF OCR first to recognize text, then compare the recognized file."
       },
       {
-        "question": "Can I export the comparison results?",
-        "answer": "Yes. You can generate a summary report of all differences found between the two documents."
+        "question": "How accurate is the diff?",
+        "answer": "It is exact for the text that was extracted: a line is added, removed, or unchanged based on the words the PDF stores. Reordered lines count as removed plus added, extra spaces are collapsed, and matching is per page with optional ignore-case and ignore-whitespace toggles."
       }
     ],
     "relatedSlugs": [
-      "pdf-redact",
-      "pdf-metadata",
       "pdf-to-text",
+      "pdf-metadata",
+      "pdf-redact",
       "pdf-merge",
-      "pdf-editor"
+      "diff-checker"
     ]
   },
   "pdf-redact": {
-    "longDescription": "<p>PDF Redact is a security-focused tool that permanently removes sensitive content from PDF documents by blacking out selected areas. Unlike simply covering content with a black rectangle—which can often be removed to reveal the underlying text—true redaction permanently deletes the redacted content from the PDF file, making it unrecoverable. This is essential for compliance with privacy regulations like GDPR, HIPAA, and FOIA requirements.</p><p>Whether you need to hide personal information like names and Social Security numbers, obscure financial figures, remove confidential business data, or censor portions of documents before public release, PDF Redact provides precise control over what gets permanently removed. Draw redaction boxes over any content, preview the result, and download a clean PDF where the redacted information is completely and irreversibly eliminated from the file structure.</p>",
+    "longDescription": "<p>Redact PDF covers private content by physically stamping a solid black rectangle into each page — the box is part of the page, not an overlay a reader can click away. Covered text can no longer be seen, selected, searched, or copy-pasted, which makes a real difference versus drawing a shape on top of the document.</p><p>Be honest about the limits: redaction blackens the area but does not delete the underlying text from the file, and anything outside the boxes you draw is left untouched. Metadata, form field values, annotations, and text elsewhere on a page all survive. So redaction is permanent for practical purposes — not a forensic guarantee — and you should re-open the downloaded file in a desktop reader and confirm every box covers its target before sharing. Password-protected PDFs should be unlocked with PDF Unlock first. Everything runs in your browser: nothing is uploaded, files up to 100 MB are supported, and region editing works on up to 200 pages.</p>",
     "features": [
-      "Permanently remove sensitive content from PDFs",
-      "Draw redaction areas over text, images, and any content",
-      "True redaction that removes underlying data (not just overlays)",
-      "Black out or white out redaction styles",
-      "Preview redacted document before finalizing",
-      "100% client-side redaction with no data uploads"
+      "Draw one or more black regions on any page, or add them by exact page, x, y, width and height in points",
+      "Redaction is physically stamped into the page — covered text can't be selected, searched, or copy-pasted",
+      "Per-page region list with remove and clear-page actions, and a live region count",
+      "States the honest limits: text stays in the file under the box, and content outside boxes is not removed",
+      "PDFs up to 100 MB, with region editing on up to 200 pages per file",
+      "100% client-side — the file never leaves your device"
     ],
     "howTo": [
       {
-        "step": "Upload PDF",
-        "description": "Drag and drop the PDF containing sensitive information you need to redact."
+        "step": "Open PDF",
+        "description": "Choose the PDF containing the information you need to hide. Files up to 100 MB are supported; password-protected files should be unlocked with the Unlock PDF tool first."
       },
       {
-        "step": "Mark Redaction Areas",
-        "description": "Draw boxes over the content you want to permanently remove—text, images, or specific regions."
+        "step": "Mark redaction regions",
+        "description": "On each page, drag a rectangle over the sensitive content, or add a region by exact numbers — page, X, Y, width and height in points from the page's top-left corner."
       },
       {
-        "step": "Preview Result",
-        "description": "Review the redacted document to ensure all sensitive content is properly covered."
+        "step": "Redact and download",
+        "description": "Click Redact to physically stamp the black rectangles into the page, then download the <source>-redacted.pdf file with the number of boxes applied."
       },
       {
-        "step": "Download Redacted PDF",
-        "description": "Apply the redactions permanently and download the cleaned PDF file."
+        "step": "Re-check before sharing",
+        "description": "Open the downloaded file in a desktop reader and confirm every box covers its target. Content outside the boxes — metadata, form values, hidden text — is not removed, and this tool does not delete the covered text from the file."
       }
     ],
     "faq": [
       {
-        "question": "Is the redaction truly permanent?",
-        "answer": "Yes. Unlike overlaying a black box, this tool removes the underlying content data from the PDF structure, making redacted information unrecoverable."
+        "question": "Does this tool delete the covered text from the file?",
+        "answer": "No. Redaction stamps a solid black rectangle into the page, so the covered area can no longer be seen, selected, searched, or copy-pasted in a normal reader — but the underlying text stays in the file. Blanks drawn with presentation tools are removable; these boxes are part of the page. If you need certified removal of glyph data, use dedicated desktop redaction software."
       },
       {
-        "question": "Can I redact specific words within a paragraph?",
-        "answer": "You can draw precise redaction boxes at any position, allowing you to target specific words, numbers, or regions within text blocks."
+        "question": "Is the redaction permanent?",
+        "answer": "For practical purposes in everyday viewers, yes — once downloaded, normal tools can't lift the box. It is not a forensic guarantee: specialized software could in principle recover the underlying bytes. Treat it as strong visual redaction, not cryptographic erasure."
       },
       {
-        "question": "Will redaction affect the rest of the document?",
-        "answer": "No. Redaction only removes the content within the marked areas. All other content, formatting, and page structure remain intact."
+        "question": "Can I redact without a mouse?",
+        "answer": "Yes. Add any region with the number fields — page, X, Y, width and height in points, measured from the top-left corner of the page. The file picker, region list, and export are also fully keyboard-operable."
       },
       {
-        "question": "Is this suitable for legal or compliance purposes?",
-        "answer": "PDF Redact performs true content removal suitable for compliance with GDPR, HIPAA, and other regulations. However, always verify with your compliance team for specific legal requirements."
+        "question": "What is not removed by redaction?",
+        "answer": "Anything your rectangles don't cover: document metadata, annotations, form field values, and text elsewhere on a page. The tool only blackens the regions you define. Re-open the output in a desktop reader and check each box before sharing."
+      },
+      {
+        "question": "My PDF is password-protected — will this work?",
+        "answer": "No. Redact PDF can't open encrypted files. If you know the password, remove it with the Unlock PDF tool first, then redact the unlocked copy."
       }
     ],
     "relatedSlugs": [
+      "pdf-auto-redact",
       "pdf-protect",
       "pdf-unlock",
       "pdf-metadata",
-      "pdf-watermark",
-      "pdf-editor"
+      "pdf-to-text"
     ]
   },
   "pdf-auto-redact": {
-    "longDescription": "<p>Auto-Redact PDF is a privacy tool that finds and permanently blackens every occurrence of a word or phrase across a PDF document in one click. Instead of scanning pages by eye, type a name, account number, email address, or any sensitive term and the tool instantly highlights every matching occurrence—then exports a PDF where each match is covered with a solid black box. This is ideal for scrubbing personal data from large documents: names in contracts, email addresses in shared reports, payment details in invoices, or regulated identifiers that must not be exposed.</p><p>The search runs directly on the document's text layer using precise word positioning, so matches are detected on every page, even inside dense paragraphs. Redaction boxes are padded slightly around each match to fully cover the glyphs. Because all detection and processing happens in your browser, your documents and the sensitive terms you search for never leave your device.</p>",
+    "longDescription": "<p>Auto-Redact PDF finds every occurrence of a name, account number, email address or phrase in a PDF and covers each one with a solid black box, so you don't have to hunt through pages by eye. Type one word, phrase or regex, skip the page previews with red highlights, confirm what will be covered, and download a new PDF with black boxes drawn over every match.</p><p>Matching reads the PDF's text layer. It is case-insensitive by default (turn on Case-sensitive if you need exact case), and you can require whole words or switch to regex. A match anywhere in a text chunk is covered with one box over the whole chunk, padded around the glyphs. Everything runs in your browser: the PDF and the terms you search for never leave your device.</p><p>Be clear about what this does and doesn't do. The boxes hide matched text from view and from normal select, copy and search — but the covered words still exist below the boxes in the file, and any metadata is untouched. This is not a forensically sanitized erasure, only matching finds text layer content, so scanned pages, text drawn as outlines, or phrases split across text runs can be missed. Verify the output before you share it.</p>",
     "features": [
-      "Search for a word or phrase and redact every match automatically",
-      "Multi-word phrase matching with exact word boundary detection",
-      "Redaction boxes padded around each occurrence for full coverage",
-      "Per-page match counts with a visual preview of detected areas",
-      "Run multiple searches and exclude pages when needed",
-      "100% client-side processing with no uploads"
+      "Type a word, phrase, or regex and cover every match with a black box",
+      "Case-insensitive by default, with optional case-sensitive and whole-word matching",
+      "Per-page match counts and a preview showing exactly what will be covered",
+      "A confirm step — nothing is drawn until you approve the match list",
+      "Runs entirely in your browser with no uploads",
+      "Handles PDFs up to 100 MB and 200 pages"
     ],
     "howTo": [
       {
-        "step": "Upload PDF",
-        "description": "Open the PDF document containing sensitive text you want to remove."
+        "step": "Open a PDF",
+        "description": "Choose a PDF up to 100 MB and 200 pages. Encrypted files are rejected — unlock them with PDF Unlock first."
       },
       {
-        "step": "Enter Search Term",
-        "description": "Type a name, number, email, or phrase and click Find matches. Every occurrence is highlighted across all pages."
+        "step": "Enter a term",
+        "description": "Type a word, phrase, or regular expression. Matching is case-insensitive unless you turn Case-sensitive on."
       },
       {
-        "step": "Review Matches",
-        "description": "Browse page previews to confirm the highlighted areas cover exactly what you want redacted."
+        "step": "Review every match",
+        "description": "Page previews highlight each match in red, with a count per page. Confirm before anything is drawn."
       },
       {
-        "step": "Download Redacted PDF",
-        "description": "Export the PDF with every matching occurrence covered by a black redaction box."
+        "step": "Download the redacted copy",
+        "description": "A new PDF is saved as <source>-redacted.pdf with solid black boxes over every confirmed match. Your original file is never modified."
       }
     ],
     "faq": [
       {
-        "question": "How does auto-redaction find words on a page?",
-        "answer": "The tool reads the PDF's embedded text layer, builds positioned word boxes, and matches your search phrase against them—so matches are found even inside dense paragraphs."
+        "question": "Does Auto-Redact delete the matched text from the file?",
+        "answer": "No. It draws solid black boxes over each match, so the text can't be seen, selected, copied or searched in a PDF viewer — but the covered words still exist below the boxes in the file, and document metadata such as author or dates is untouched. For text that must be truly destroyed, keep using a redaction workflow that erases the underlying content, and verify the result."
       },
       {
-        "question": "Can I restrict redaction to certain pages?",
-        "answer": "Yes. After searching, you can exclude specific pages whose matches you want to keep, then export the rest."
+        "question": "What will the search miss?",
+        "answer": "Matching reads the PDF's text layer only. Scanned pages without an OCR text layer won't be searched (see PDF OCR first), text that a font draws as outlines or images can't be matched, and some PDF exports split a phrase across multiple text runs and could miss it. That's why the red preview and per-page counts exist — check them before confirming."
       },
       {
-        "question": "Is the redaction reversible?",
-        "answer": "No. Redaction draws solid boxes directly into the document structure, permanently covering the matched content in the exported file."
+        "question": "Is matching case-insensitive?",
+        "answer": "Yes, by default. A search for 'john smith' also finds 'John Smith' and 'JOHN SMITH'. Turn on Case-sensitive for exact-case matching, or Whole word only to ignore partial hits such as '48' inside '48102'."
+      },
+      {
+        "question": "One box per match or one per word?",
+        "answer": "When a term matches anywhere inside a text chunk, the whole chunk is covered by one padded box. The box is deliberately larger than the match, which is safer but means a little extra text may be covered too."
       },
       {
         "question": "Does it work on scanned documents?",
-        "answer": "The matching relies on the text layer. Scanned PDFs without OCR text may need to be converted with our OCR tool first."
+        "answer": "Only pages with a text layer can be searched. A scanned PDF stores words as images, so there is nothing to match — run PDF OCR on it first, then auto-redact the recognized copy."
       }
     ],
     "relatedSlugs": [
       "pdf-redact",
-      "pdf-protect",
       "pdf-unlock",
-      "pdf-watermark",
-      "pdf-editor"
+      "pdf-metadata",
+      "pdf-protect",
+      "pdf-ocr"
     ]
   },
   "pdf-remove-blank-pages": {

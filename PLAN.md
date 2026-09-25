@@ -1078,8 +1078,38 @@ Phase 2+ Target (NOT building now):
   analytics traffic (15/15). Reports:
   `audit/reports/pdf-to-excel.md`, `pdf-to-markdown.md`, `pdf-ocr.md`. Build
   page count is now 298 (32 guides).
-- Next: PDF Compare (follows pdf-ocr in registry order). Remaining 84 tools
-  have not completed this process.
+- Wave 7: three tools all green. PDF Compare (39th tool), PDF Redact (40th)
+  and PDF Auto-Redact (41st) each returned all ten judges and closed every
+  gap. pdf-compare: rebuilt diff engine — up to 5 PDFs with a labelled
+  "original" radio each, page-by-page text-layer diff (shared reading-order
+  pipeline), only-differences filter, page navigation, added/removed line
+  styling, `<orig>-diff-report.txt` download; the `%PDF-` magic-byte
+  preflight made invalid-file handling deterministic (pdf.js's in-browser
+  throw text differs from the Node build's "Invalid PDF structure") and an
+  encrypted file is preflighted with pdf.js getDocument so it steers to
+  Unlock PDF instead of pdf-lib's misleading "No PDF header found".
+  pdf-redact: drag-to-draw boxes + a keyboard-accessible numeric fallback
+  (Page/X/Y/W/H in points from the top-left), RENDER_SCALE 1.5, SAVE_OPTS
+  {updateFieldAppearances:false, addDefaultPage:false}; burn-in proven in the
+  downloaded file's content stream (`1 0 0 1 x y cm`, `0 0 m`, `h f Q`, and
+  NO `re` operator); capture must be Uint8Array because pdf-lib rejects
+  Buffer; download `<src>-redacted.pdf`; copy/guide honestly state covered
+  text is "not removed from the file" — visual erasure, not forensic.
+  pdf-auto-redact: plain-term + regex modes (case-sensitive, whole-word),
+  per-page match previews with a confirm step ("Redact N region(s)"), a
+  disclosed 100-match cap, `<base>-redacted.pdf`; matching reads only the
+  text layer so scans/outlines can be missed (disclosed). All three:
+  friendly-error routing (encrypted → Unlock steer, non-PDF → invalid),
+  caps 100 MB / 200 pages, honest /tools copy + JSON-LD, two new guides
+  (compare, auto-redact) and the redact guide strengthened → build 300
+  pages (34 guides). E2e 56/56, 51/51, 44/44, stable across repeat runs;
+  the two transient failures were Playwright's ~100ms polling missing
+  sub-200ms busy windows on fast hardware — the progress assertions now use
+  MutationObserver recorders. Reports: `audit/reports/pdf-compare.md`,
+  `pdf-redact.md`, `pdf-auto-redact.md`. Node checks 43/31/34 across the
+  three mirrors.
+- Next: PDF Overlay, PDF Flatten, PDF Remove Annotations (parallel
+  three-way). Remaining 84 tools have not completed this process.
 - Hash Generator: ten independent judges ran in parallel (the architect report
   was not returned — aborted; its coverage supplied by functional/security/
   edge findings plus the harness). Component rebuilt on the team standard

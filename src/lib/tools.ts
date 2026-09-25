@@ -577,9 +577,9 @@ export const TOOLS: ToolConfig[] = [
   {
     slug: "pdf-compare",
     name: "PDF Compare",
-    tagline: "Spot differences between PDFs",
+    tagline: "Spot text differences between PDFs",
     description:
-      "Upload two PDFs and get a page-by-page pixel diff with changed regions highlighted in red.",
+      "Compare the text layers of 2–5 PDFs page by page, with added and removed lines highlighted against the original — all in your browser.",
     category: "Convert",
     icon: GitCompareArrows,
     accent: "text-fuchsia-600",

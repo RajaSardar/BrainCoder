@@ -566,9 +566,9 @@ export const GUIDES: Guide[] = [
   },
   {
     slug: "how-to-redact-a-pdf",
-    title: "How to Redact a PDF Online for Free (Permanently Hide Text)",
+    title: "How to Redact a PDF Online for Free (Permanently Cover Text)",
     description:
-      "Black-out names, numbers and sensitive lines in a PDF so they're truly gone — not just covered. Runs 100% in your browser.",
+      "Black-out names, numbers and sensitive lines in a PDF so they can't be seen or copied — boxes are stamped into the page, not removable overlays. Runs 100% in your browser.",
     keywords: [
       "redact pdf",
       "black out text in pdf",
@@ -578,35 +578,35 @@ export const GUIDES: Guide[] = [
     ],
     toolSlug: "pdf-redact",
     published: "2026-09-15",
-    updated: "2026-09-15",
+    updated: "2026-09-25",
     readMinutes: 4,
     sections: [
       {
-        heading: "Redacting is not the same as covering",
+        heading: "Redacting is stamped in, not drawn over",
         paragraphs: [
-          "Real redaction destroys the underlying content — the text is removed from the file, leaving a blank or blacked-out area that cannot be recovered. That's what courts, HR and compliance teams require when sensitive details are removed from disclosed documents.",
-          "Slapping a black rectangle over text with a drawing tool only hides it visually; the text is still in the file and can be selected, searched and copy-pasted right out from underneath.",
+          "A real redaction blackens a region so thoroughly that the text can no longer be seen, selected, searched, or copy-pasted in a normal reader. The box is physically part of the page's content — an overlay drawn with a presentation tool, by contrast, can be selected and deleted to reveal the text underneath.",
+          "The Redact PDF tool burns each redaction rectangle into the page content stream. That's permanent for practical purposes: once downloaded, everyday viewers can't lift the box to recover what's under it. Be precise about what this means though — the covered text is not removed from the file; it still exists beneath the rectangle. Redaction here is visual erasure, not deletion of the glyph data, so this is not a certified, forensically guaranteed process, and anything outside the boxes you draw is left untouched.",
         ],
       },
       {
-        heading: "Redacting in the browser, privately",
+        heading: "Controlling the redaction areas",
         paragraphs: [
-          "The Redact PDF tool rasterizes your pages locally and permanently burns the redaction into the document before you download it. The sensitive text no longer exists in the output file.",
-          "Because redaction is a privacy operation, it's a strong fit for a no-upload tool: you're handling names, addresses, account numbers and other data you never want leaving your device.",
+          "Open the PDF and each page renders as a preview. Drag a rectangle over the sensitive content on any page — you can draw several boxes on one page and across many pages. For exact placement, or if you're using a keyboard instead of a mouse, add a region by entering the page number and the X, Y, width, and height in points, measured from the page's top-left corner.",
+          "The tool lists every region on the current page with its coordinates, lets you remove individual boxes or clear the whole page, and shows the total count before you export. Files up to 100 MB are supported and region editing works on up to 200 pages. Everything runs locally — the file never leaves your device.",
         ],
       },
       {
-        heading: "Redacting specific terms automatically",
+        heading: "What redaction doesn't remove",
         paragraphs: [
-          "If the document is long or the same words appear many times — an email address, a client name, an invoice number — the Auto-Redact PDF tool finds every occurrence for you and redacts them all at once.",
-          "That removes the classic redaction mistake of missing one of ten identical mentions and leaking the information anyway.",
+          "Redaction only covers the rectangles you define. Text, images, annotations, form field values, and document metadata that sit outside those boxes are left exactly as they are — including invisible or watermarked text in other areas of the page.",
+          "The sensitive words are overwritten visually, not deleted: a sidecar text-layer for the covered area may still be readable by specialized tools, and PDF metadata such as author and title is untouched. Use the Auto-Redact PDF tool when the same term appears many times and you want every occurrence blackened in one pass, and always do a second check in a desktop reader that displays redaction areas before sharing the file.",
         ],
       },
       {
         heading: "Check before you share",
         paragraphs: [
-          "After redacting, open the output and confirm you can no longer select or search the removed text. Some viewers will happily still show cached search results if you forget to re-open.",
-          "Redacting a copy is the safe pattern: keep your original intact and share the redacted version only.",
+          "After redacting, open the downloaded PDF in a desktop reader and confirm you can no longer select or search the covered text, and that every box sits exactly over its target. Shared documents should also be checked for metadata you don't want to expose.",
+          "Redacting a copy is the safe pattern: keep your original intact and share the redacted version only. For regulated disclosures where the standard is certified removal of the underlying data, use dedicated desktop redaction software and follow your organization's process.",
         ],
       },
     ],
@@ -1393,6 +1393,100 @@ export const GUIDES: Guide[] = [
         heading: "After OCR",
         paragraphs: [
           "Skim the per-page result, fix obvious misreads, then copy or download. Because each page is recognized independently, a page marker (--- Page N ---) keeps the reading order clear in the .txt. Multi-column pages may read across both columns in each line; if the layout is complex, editing order in the text is usually faster than re-rendering.",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "how-to-compare-pdfs-online",
+    title: "How to Compare Two PDF Files for Changes",
+    description:
+      "Find out what changed between versions of a PDF by comparing their text layers page by page, in your browser. Learn what a text diff catches, what it misses, and how to read the results.",
+    keywords: [
+      "compare pdf online",
+      "pdf diff",
+      "compare two pdf files",
+      "what changed between pdfs",
+      "pdf comparison",
+    ],
+    toolSlug: "pdf-compare",
+    published: "2026-09-25",
+    updated: "2026-09-25",
+    readMinutes: 3,
+    sections: [
+      {
+        heading: "What a text diff actually compares",
+        paragraphs: [
+          "PDF Compare reads the embedded text layer of each PDF — the words a PDF editor actually stored on the page — and checks them line by line against the original you select. Lines found only in the original are marked removed (red); lines found only in the revised file are marked added (green). Everything is matched page by page, on the shortest shared page count.",
+          "Because the comparison is text-based, it is not a visual diff. A paragraph that changed font or color, an image that was swapped, a margin that was nudged, or a table's gridlines are not reported unless their words changed too. Scanned pages have no text layer at all, so they compare as empty and unchanged. That is by design: the tool only claims to compare words, not pixels.",
+        ],
+      },
+      {
+        heading: "Add the files and pick the original",
+        paragraphs: [
+          "Use Add PDF to choose two to five PDFs, up to 100 MB and 200 pages each. The first file you add becomes the original, but you can select Original on any file in the list before comparing. Every other file is then compared against it.",
+          "Encrypted or password-protected PDFs are rejected the moment you add them — unlock such files with PDF Unlock first. A file that is not a real PDF, or one with more than 200 pages, is also rejected up front so you are never left wondering why comparison failed.",
+        ],
+      },
+      {
+        heading: "Compare and read the results",
+        paragraphs: [
+          "Click Compare PDFs. Each revised file gets its own result card with a page-by-page view. Green lines are additions, red lines are removals, and unchanged lines stay neutral. Flip the page numbers to move through the document, turn on Only show changed lines to skip the noise, and use the ignore-case or ignore-whitespace options when drafts differ only in capitals or spacing.",
+          "Reordered text is reported as removed plus added: line matching is position-aware, so a paragraph that moved pages shows up as a removal on one page and an addition on another. If one file has more pages than the other, only the shortest shared page count is compared, and the tool says so.",
+        ],
+      },
+{
+        heading: "Download the report and check the rest",
+        paragraphs: [
+          "Download diff report (.txt) saves every change against every revised file, named after the original, for sharing or an audit trail. Because covers and empty pages can shift matches, skim the marked lines before relying on them, and re-check anything the comparison cannot see — images, fonts and layout — visually in the two PDFs.",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "how-to-auto-redact-pdf-online",
+    title: "How to Auto-Redact a Name or Number Everywhere in a PDF Online",
+    description:
+      "Find every occurrence of a name, account number, email or phrase across a PDF and cover each match with a black box — case-insensitive by default, with a preview and confirm step before anything is drawn.",
+    keywords: [
+      "auto redact pdf",
+      "automatically redact a pdf",
+      "black out words in a pdf",
+      "redact names in a pdf",
+      "cover sensitive text in a pdf",
+      "pdf redaction online",
+    ],
+    toolSlug: "pdf-auto-redact",
+    published: "2026-09-25",
+    updated: "2026-09-25",
+    readMinutes: 4,
+    sections: [
+      {
+        heading: "What auto-redaction actually does",
+        paragraphs: [
+          "Auto-Redact PDF searches a document's text for a word, phrase or regex and draws a solid black box over every match. The boxes keep text from being seen, selected, copied or searched in a normal PDF viewer, which is exactly what you want when a client name or invoice number appears ten times across a long contract.",
+          "Be clear about the boundary: the boxes sit on top of the text. The covered words still exist below them in the file, and document metadata such as author, title and creation date is not touched. This is a visual cover, not a forensic erasure. If content must be truly destroyed rather than just hidden, the Redact PDF tool and a proper review workflow are the right choice — and verify the output either way.",
+        ],
+      },
+      {
+        heading: "What the search can and can't see",
+        paragraphs: [
+          "Matching reads the PDF's text layer, so it can only find words the file actually stores as text. Scanned pages keep words as images and can't be searched — run PDF OCR first and auto-redact the recognized copy. Some fonts draw characters as outlines rather than text, and a few PDF exports split a phrase across several text runs; those cases can be missed. Check the red preview before confirming.",
+          "Search is case-insensitive by default: 'john smith' finds 'John Smith' too. Turn on Case-sensitive for exact case, Whole word only to ignore partial hits like '48' inside '48102', or switch to regex mode for patterns such as account-number shape.",
+        ],
+      },
+      {
+        heading: "Search, review, then confirm",
+        paragraphs: [
+          "Open a PDF up to 100 MB and 200 pages, type your term, and click Find matches. Pages with hits are shown with a red highlight over each match plus a per-page count, so you can flip through and see exactly what would be covered before anything is drawn.",
+          "A match anywhere inside a text chunk covers the whole chunk with one padded box. That is deliberately conservative — coverage is slightly larger than the match — but it means a box can cover a few nearby words too. When the match list looks right, click the confirm button and download a new file named <source>-redacted.pdf. Your original is never modified.",
+        ],
+      },
+      {
+        heading: "Budget, privacy, and the verify step",
+        paragraphs: [
+          "Each run is capped at 100 MB, 200 pages and 100 matches, and the confirm step stops you from blacking out the wrong page by accident. If more than 100 matches exist, only the first 100 are listed — narrow your term or regex, and the tool says so before you confirm.",
+          "Everything runs in your browser; the PDF and the terms you search for never leave your device. Keep your original untouched, share only the redacted copy, and before you send it, open the downloaded file and confirm the covered text can't be selected or searched.",
         ],
       },
     ],
