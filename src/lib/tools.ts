@@ -612,7 +612,7 @@ export const TOOLS: ToolConfig[] = [
     name: "PDF Overlay",
     tagline: "Stamp one PDF on top of another",
     description:
-      "Overlay a watermark, letterhead, or template PDF onto every page of another PDF with full control over position and opacity.",
+      "Stamp one PDF onto another — every page or a page range — with position presets, PDF-point offsets, opacity, and a live preview. Nothing is uploaded.",
     category: "Convert",
     icon: Blend,
     accent: "text-indigo-600",
@@ -621,7 +621,7 @@ export const TOOLS: ToolConfig[] = [
   {
     slug: "pdf-flatten",
     name: "Flatten PDF",
-    tagline: "Merge every page into a flat image",
+    tagline: "Lock each page down as one image",
     description:
       "Rasterize a PDF so each page becomes a single image — text is no longer selectable or editable, everything is locked into the page.",
     category: "Convert",
@@ -632,9 +632,9 @@ export const TOOLS: ToolConfig[] = [
   {
     slug: "pdf-remove-annotations",
     name: "Remove Annotations",
-    tagline: "Strip comments, highlights, and links",
+    tagline: "Strip comments, highlights, links and form fields",
     description:
-      "Removes all annotations from a PDF — comments, highlights, stamps, and links — while leaving the page content completely untouched.",
+      "Removes every annotation from a PDF — comments, highlights, stamps, links and form fields — while leaving the page content, text, images and layout untouched.",
     category: "Convert",
     icon: StickyNote,
     accent: "text-orange-600",
