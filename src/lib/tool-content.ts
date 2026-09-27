@@ -1313,49 +1313,72 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ]
   },
   "pdf-overlay": {
-    "longDescription": "<p>PDF Overlay lets you stamp one PDF on top of another, compositing content from two documents into a single file. It's perfect for watermarking pages with a logo or confidentiality label, adding a letterhead or footer to every sheet, placing a signature page onto a contract, or affixing approved-stamp overlays to templates. You choose a base PDF and an overlay PDF, then control exactly how the overlay is placed: stretched to fill the page, or fitted and positioned at the center, corners, or edges—with adjustable opacity so the stamping blends naturally with the underlying document.</p><p>Overlay pages can be mapped to your base document in two ways: paired to matching page numbers, or repeated cyclically across every page. The result is a standard PDF that opens in any reader, produced entirely within your browser for complete privacy.</p>",
+    "longDescription": "<p>PDF Overlay stamps one PDF on top of another. Open the base document that receives the stamp, open the stamp document — a logo, letterhead, confidentiality label, footer or an approved stamp page — and choose where it lands: stretched across the whole page, or fitted and anchored to the centre, top or bottom, left or right. Every preset except stretch scales the stamp to fit the page with its aspect ratio kept, so a small stamp grows to fill the sheet; the X and Y offsets then nudge it in PDF points, positive right and up, and opacity runs from a faint 5% watermark to solid 100%.</p><p>You choose which pages get stamped — the whole document or a range like 1-3,7 — and whether the stamp's pages cycle (base page 1 takes stamp page 1, page 2 takes stamp page 2, and so on, wrapping around) or whether its first page is repeated everywhere. A live preview shows the first page you are about to stamp, with the stamp drawn at the exact size, position and transparency it will get in the download, and a live readout gives the geometry in PDF points. If an offset would push the stamp completely off the page, the run is refused and names the page; if it only hangs over an edge, the preview says so before you export. A page that carries its own page rotation is stamped in that page's own coordinates, so the stamp turns with the page exactly as the page's text does.</p><p>Be clear about what the output is. The stamp page is embedded into each target page and drawn above the base content, so an ordinary reader cannot lift it off — but it is a real stamp, not a flattened picture. It is not a merge: nothing is renumbered or joined into one reading flow, and the base keeps its page count, text, links, annotations and form fields. If the stamp itself is built from real PDF text, that text is embedded as page content and stays visible, extractable and searchable in most readers. It is also not a way to hide content — the page underneath is completely unchanged, so this is the wrong tool for redaction; use PDF Redact for that. Because the result is a re-saved file, a digital signature on the base document does not survive the export. Both files are processed in your browser and neither is uploaded. Each file can be up to 100 MB and 200 pages, and password-protected files must be unlocked with PDF Unlock first.</p>",
     "features": [
-      "Stamp one PDF onto another page-by-page",
-      "Eight placement modes: stretch, center, corners, and edges",
-      "Adjustable opacity from 5% to 100%",
-      "Pair overlay pages by number or repeat them across the document",
-      "Compatible with watermarks, letterheads, signatures, and badges",
-      "100% client-side composition with no uploads"
+      "Two-file workflow: open the base PDF, then open the stamp PDF that goes on top",
+      "Eight position presets — stretch, centre, and the six top/bottom left/centre/right corners",
+      "X and Y offsets in PDF points, plus opacity from 5% to 100%",
+      "Stamp every page or just a range such as 1-3,7, with the selection validated as you type",
+      "Cycle the stamp's pages or repeat its first page on every target page",
+      "Stamped in each page's own coordinates, so a page with a 90 or 270 degree rotation turns its stamp too",
+      "Re-saving the file means a digital signature on the base document does not survive the export",
+      "Live preview of the first stamped page with a readout of the real geometry in PDF points",
+      "Up to 100 MB and 200 pages per file, 100% client-side — neither file is ever uploaded"
     ],
     "howTo": [
       {
-        "step": "Choose Base PDF",
-        "description": "Select the PDF that receives the overlay—the document your pages are drawn onto."
+        "step": "Open base PDF",
+        "description": "Choose the PDF that receives the stamp. Page 1 renders as a live preview once a stamp is open too. Files up to 100 MB and 200 pages are supported; password-protected files should be unlocked with PDF Unlock first."
       },
       {
-        "step": "Choose Overlay PDF",
-        "description": "Select the PDF that gets stamped on top, such as a watermark or letterhead."
+        "step": "Open stamp PDF",
+        "description": "Choose the PDF placed on top — a logo, letterhead, confidentiality label, footer or an approved stamp page. Its page size sets the stamp's proportions."
       },
       {
-        "step": "Configure Placement",
-        "description": "Pick a position, set the opacity, and choose whether overlay pages repeat or pair with base pages."
+        "step": "Place the stamp",
+        "description": "Pick a position preset, then nudge it with the X and Y offsets and set opacity. Presets other than stretch scale the stamp to fit the page with its aspect ratio kept. The preview and the geometry readout update as you go, and a stamp that would fall completely off the page is refused before anything is drawn."
       },
       {
-        "step": "Download Overlaid PDF",
-        "description": "Export the composited document with the overlay applied to every page."
+        "step": "Choose the pages",
+        "description": "Stamp every page, or switch to a page range such as 1-3,7 and see exactly which pages were selected. Choose whether the stamp's pages cycle across the base or whether its first page repeats everywhere."
+      },
+      {
+        "step": "Overlay and download",
+        "description": "Click Overlay. The <base>-overlaid.pdf downloads with the stamp composited into each chosen page — base page count, text, links, annotations and form fields intact."
       }
     ],
     "faq": [
       {
-        "question": "Can I use the overlay as a watermark?",
-        "answer": "Yes. Set a low opacity and pick a position like Center or Top center to stamp a translucent logo or label over each page."
+        "question": "Can I use the stamp as a watermark?",
+        "answer": "Yes. Drop the opacity to around 5-15% and pick centre or a corner. Remember the presets fit the stamp to the page, so a small logo is scaled up first — that is what makes it read as a page-wide watermark."
       },
       {
-        "question": "What if the overlay has fewer pages than the base?",
-        "answer": "Enable Repeat overlay pages to cycle the overlay across the base document, or leave it off to pair by page number."
+        "question": "The stamp has fewer pages than the base. What happens?",
+        "answer": "In cycle mode the stamp's pages wrap around: base page 1 takes stamp page 1, base page 2 takes stamp page 2, and once the stamp runs out it starts again from page 1. Choose the first-page-only option to repeat one stamp on every target page instead."
       },
       {
-        "question": "Is the output a standard PDF?",
-        "answer": "Yes. The result is a normal PDF with the overlay drawn into each page's content, viewable and printable in any reader."
+        "question": "Does the stamp hide anything underneath?",
+        "answer": "No. It is not a way to hide content: the base page underneath is unchanged and every base text layer, link, annotation and form field survives. It is also not a merge — the two documents are not joined into one reading flow and the base keeps its page count. If you need to conceal text, use PDF Redact or PDF Flatten instead."
       },
       {
-        "question": "Does overlay change the base content?",
-        "answer": "No. The base pages keep all their content; the overlay is composited on top at the position and opacity you choose."
+        "question": "Can someone remove the stamp or read its text?",
+        "answer": "An ordinary reader cannot simply lift the stamp off, because it is drawn into the page above the base content. But this is a real stamp, not a picture of one: if the stamp PDF contains real text, that text is embedded as page content and stays visible, extractable and searchable in most readers. Anything determined to remove embedded objects would also be able to alter your document, so treat this as a working mark, not a forensic seal."
+      },
+      {
+        "question": "Why did my stamp get bigger than I expected?",
+        "answer": "There is no size slider, and that is deliberate: every preset except Stretch to page always fits the stamp to the page — the shorter side sits flush and the aspect ratio is kept — so a small logo is enlarged to fill the sheet. If you need a specific stamp size, pre-size it in the stamp PDF itself, so the page you choose already has the proportions you want; Stretch to page is the other option, and it fills the page edge to edge while ignoring the stamp's proportions."
+      },
+      {
+        "question": "What happens if the stamp hangs off the page edge?",
+        "answer": "Partly off the page is allowed: the preview warns that the stamp will be cropped and the run still exports. Pushed completely off, the run is refused before anything is drawn and the message names the page, so you never get a silently blank result."
+      },
+      {
+        "question": "Can I stamp only some pages?",
+        "answer": "Yes. Switch from All pages to a page range and type numbers and ranges such as 1-3,7. The tool validates as you type, shows you exactly which pages were selected, and refuses a page that is past the end of the document."
+      },
+      {
+        "question": "Does this work with protected PDFs?",
+        "answer": "Password-protected PDFs must be unlocked with PDF Unlock first — the tool will not try to guess or bypass a password, and will point you to the unlock tool instead."
       }
     ],
     "relatedSlugs": [
@@ -1367,103 +1390,137 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ]
   },
   "pdf-flatten": {
-    "longDescription": "<p>Flatten PDF converts a vector PDF into a fully flattened document where every page becomes a single raster image. After flattening, text can no longer be selected, copied, or edited; form fields, layers, and interactive elements become part of the page's picture. This is extremely useful for locking a document's appearance before distribution: sharing a filled contract where recipients shouldn't alter or copy text, preparing files for printing services that want a single image per page, or removing hidden layers and metadata that could reveal edit history. Because the output is simply an image per page, it renders identically on every device and viewer.</p><p>The tool renders each page in your browser at a quality you choose — Draft, Normal, or High — and re-embeds the result at the original page size, so the flattened PDF keeps the same dimensions as the source. Choose the lowest quality that still looks sharp to keep your file size down.</p>",
+    "longDescription": "<p>Flatten PDF rasterizes a document: every page is rendered to a picture at the resolution you choose, and a new PDF is rebuilt with that single image on each page. The picture is all there is, so text can no longer be selected, searched, copied, edited or re-flowed — and for the same reason links, form fields, comments, annotations, layers and hidden text are gone. That is what makes a flattened copy a fixed record of what the page looked like at the moment you flattened it, which is what you want when the recipient must not be able to alter or extract the content.</p><p>Because each page becomes an image, the output is normally much larger than the source. Three raster settings control that trade-off: Screen renders at 96 DPI as JPEG for the smallest file, Balanced at 150 DPI JPEG for everyday viewing and email, and Print at 200 DPI as lossless PNG for the sharpest result. Screen and Balanced are lossy, so very small type can show compression artifacts when zoomed in; Print is lossless and the largest file. Page size is preserved and a rotated page comes out in the orientation you see, with the rotation baked into the picture — but the rebuilt file carries none of the source's bookmarks, link targets, form structure or document metadata, and no OCR text layer is added back. Very large pages are rendered below the chosen DPI instead of failing, and the tool tells you when that happens. Files up to 100 MB and 200 pages are supported and everything runs in your browser: your PDF never leaves your device.</p>",
     "features": [
-      "Convert every page into a single image layer",
-      "Text becomes non-selectable and non-editable",
-      "Strip hidden layers, fields, and interactive content",
-      "Three output qualities to balance size and sharpness",
-      "Output keeps the original page size",
-      "100% client-side rendering with no uploads"
+      "Every page is rendered to one image, so text stops being selectable, searchable and copyable",
+      "Three disclosed raster settings: 96 DPI JPEG, 150 DPI JPEG, or 200 DPI lossless PNG",
+      "Output size and the change against the original are reported after every run",
+      "Original page size preserved, and a rotated page is flattened in the orientation you see",
+      "Links, form fields, comments, annotations, layers and source document metadata do not carry over",
+      "Up to 100 MB and 200 pages per file, 100% client-side — the file is never uploaded"
     ],
     "howTo": [
       {
-        "step": "Upload PDF",
-        "description": "Open the PDF you want to flatten into static image pages."
+        "step": "Open PDF",
+        "description": "Choose the PDF you want flattened into static image pages. Files up to 100 MB and 200 pages are supported; password-protected files should be unlocked with the PDF Unlock tool first."
       },
       {
-        "step": "Choose Quality",
-        "description": "Pick Draft, Normal, or High rendering: lower options produce smaller files."
+        "step": "Choose Raster Quality",
+        "description": "Pick Screen (96 DPI JPEG, smallest file), Balanced (150 DPI JPEG, the default) or Print (200 DPI lossless PNG, sharpest and largest). Lower DPI makes small print look softer; JPEG is lossy."
       },
       {
-        "step": "Flatten Document",
-        "description": "Click flatten and the tool renders every page into a single image layer."
+        "step": "Flatten Pages",
+        "description": "Click Flatten. Each page is rasterized in your browser and a new PDF is built with one image per page. Very large pages are rendered below the chosen DPI and reported afterwards rather than failing."
       },
       {
-        "step": "Download Flattened PDF",
-        "description": "Download the flattened PDF with the same page dimensions as the original."
+        "step": "Download the Flattened Copy",
+        "description": "The <source>-flattened.pdf downloads automatically, with the output size and the change against the original shown next to it. Open it and confirm nothing on the page still needs to be read or copied as text before you share it."
       }
     ],
     "faq": [
       {
-        "question": "What does flattening actually remove?",
-        "answer": "Flattening rasterizes each page, so selectable text, form fields, comments, layers, and interactive elements become part of the static image."
+        "question": "What does flattening actually do to my text?",
+        "answer": "Each page is rasterized to an image, so its text is no longer text in the file. It can no longer be selected, searched, copied, edited or re-flowed, and the page no longer carries selectable content at all. This is the intended effect — it is the reason to flatten a document. No OCR text layer is added back afterwards."
       },
       {
-        "question": "Will the output be larger than the original?",
-        "answer": "It can be, since images are less efficient than vector text. Use Draft or Normal quality for smaller files or only flatten when the trade-off is worth it."
+        "question": "Why is the flattened file bigger than the original?",
+        "answer": "Vector text and shapes are compact; a rendered picture is not. A page that was a few kilobytes of text can become hundreds of kilobytes of JPEG, so a flattened copy of a long document is commonly several times larger. Choose Screen for the smallest file, and only flatten when losing the text layer is worth the size."
       },
       {
-        "question": "Does flattening reduce quality?",
-        "answer": "High quality renders pages at 2× their display size, keeping text sharp. Very small font sizes may look less crisp than the vector original."
+        "question": "Which raster quality should I choose?",
+        "answer": "Balanced (150 DPI JPEG) suits on-screen reading and email. Screen (96 DPI JPEG) is the smallest but softens small print. Print (200 DPI lossless PNG) is the sharpest and the largest. Screen and Balanced are lossy JPEG, so very small type can show compression artifacts when zoomed in."
       },
       {
-        "question": "Can I still search the flattened document?",
-        "answer": "No. Once text is part of an image it can't be searched or copied — that's the point of flattening for locked documents."
+        "question": "What else is lost besides text?",
+        "answer": "Links, form fields, filled-in values, comments, highlights, stamps, annotations, layers and hidden text all become part of the picture. The rebuilt file also carries none of the source document's bookmarks or metadata such as author and title. If you need any of that, keep the original."
+      },
+      {
+        "question": "Are rotated and mixed-size pages handled correctly?",
+        "answer": "Yes. Each page is flattened in the orientation it is displayed, so a rotated page comes out upright as a reader would show it, and every page keeps its own dimensions. An unusually large page is rendered below the chosen DPI to stay inside the browser's canvas limit, and the result says how many pages were affected."
+      },
+      {
+        "question": "My PDF is password-protected — will this work?",
+        "answer": "No. Flatten PDF cannot open an encrypted file. If you know the password, remove it with the PDF Unlock tool first, then flatten the unlocked copy. Your original is never modified: every run produces a new download named <source>-flattened.pdf."
       }
     ],
     "relatedSlugs": [
       "pdf-to-image",
-      "pdf-editor",
-      "pdf-scale-pages",
+      "pdf-ocr",
+      "pdf-remove-annotations",
       "pdf-compressor",
       "pdf-redact"
     ]
   },
   "pdf-remove-annotations": {
-    "longDescription": "<p>Remove Annotations cleans the markup layer off a PDF while keeping the document content exactly as it is. PDFs often accumulate comments, highlights, underlines, stamps, sticky notes, and hyperlinks during review cycles — clutter that isn't appropriate for the final version shared with clients, printed, or archived. This tool removes every annotation from the document in one pass, producing a clean copy with the page content, layout, and quality untouched.</p><p>The tool reports how many annotations it found and on which pages before you remove them, so you know exactly what's being stripped. Because processing happens entirely in your browser, marked-up documents and the notes inside them never leave your device.</p>",
+    "longDescription": "<p>Remove Annotations cleans the markup layer off a PDF while keeping the document content exactly as it is. PDFs accumulate comments, highlights, underlines, stamps, sticky notes and hyperlinks during review cycles — clutter that is not appropriate for the final version shared with a client, printed, or archived. In a PDF, all of that lives in a separate annotation layer, and so do the form fields. This tool removes that layer in one pass, producing a clean copy whose page text, images and layout are untouched.</p><p>The tool reports the total it found plus a per-page breakdown before you confirm, so you know exactly what is about to be stripped, and it flags the cases that surprise people: a hyperlink is an annotation, so it goes too, and a filled form field usually keeps its value inside the field rather than on the page. If you only want the review markup gone and the fields still fillable, tick the keep-form-fields box and only the comments, highlights, stamps and links are removed. It is not a redaction tool — page content is left alone, so anything you need to hide is PDF Redact's job — and a digitally signed file comes out no longer signed. Everything runs in your browser, so a marked-up document and the notes inside it never leave your device.</p>",
     "features": [
-      "Remove comments, highlights, stamps, sticky notes, and links",
+      "Remove comments, highlights, stamps, sticky notes, popups, and links",
+      "Form fields are annotations too, so they go unless you keep them",
       "Per-page annotation counts shown before removal",
-      "Page content and layout remain completely untouched",
-      "Removes the form (AcroForm) entry for a fully clean file",
-      "Works on annotated PDFs from any source",
+      "Removed annotation objects are pruned from the file, not just unlinked",
+      "Page text, images and layout remain completely untouched",
+      "Bookmarks, file attachments and source metadata are left alone",
+      "100 MB and 200 page limits, disclosed before anything runs",
       "100% client-side processing with no uploads"
     ],
     "howTo": [
       {
-        "step": "Upload PDF",
-        "description": "Open the annotated PDF you want to clean up."
+        "step": "Open PDF",
+        "description": "Choose the marked-up PDF you want to clean up, up to 100 MB and 200 pages."
       },
       {
-        "step": "Review Annotation Count",
-        "description": "The tool shows how many annotations exist and on which pages."
+        "step": "Review the counts",
+        "description": "The tool shows the total it found, a per-page breakdown, and how many of each kind: markup, links, stamps and form fields."
       },
       {
-        "step": "Remove Annotations",
-        "description": "Click the remove button to strip all annotations from the document."
+        "step": "Keep the form fields if you need them",
+        "description": "Tick the keep-form-fields box to remove only the review markup and leave the fields fillable. Left unticked, the fields are removed as well."
       },
       {
-        "step": "Download Clean PDF",
-        "description": "Download the cleaned PDF with page content fully preserved."
+        "step": "Confirm the removal",
+        "description": "Press the remove button. The button states how many annotations it is about to strip, and the download only happens after you do."
+      },
+      {
+        "step": "Download the clean PDF",
+        "description": "You get <source-name>-no-annotations.pdf with the page content preserved, and a result panel you can download from again. There is no undo, so keep the original if the comments matter."
       }
     ],
     "faq": [
       {
         "question": "Does removing annotations delete any page content?",
-        "answer": "No. Only the annotation layer is removed. All text, images, and layout are preserved exactly as they were."
+        "answer": "No. Only the annotation layer is removed. Page content streams are not modified, so all text, images, and layout are preserved exactly as they were, and metadata, bookmarks and attachments are left alone."
       },
       {
         "question": "Are links removed too?",
-        "answer": "Yes. Links are implemented as annotations in PDF, so hyperlinks are removed along with comments and highlights."
+        "answer": "Yes. Links are implemented as annotations in PDF, so hyperlinks are removed along with comments and highlights. There is no way to keep the link text itself, because that text is ordinary page content."
       },
       {
-        "question": "Will form fields be affected?",
-        "answer": "The form structure is removed, so interactive fields become plain content. Filled-in visible values remain part of the page."
+        "question": "What happens to form fields and their values?",
+        "answer": "Interactive fields are widget annotations, so the default removes them and the AcroForm entry goes with them. A filled-in value normally lives inside the field, not on the page, so it disappears with the field. If the value was already flattened into the page content, it stays visible. Tick the keep-form-fields box to remove only the markup and keep the fields fillable."
+      },
+      {
+        "question": "What happens to a dynamic (XFA) form?",
+        "answer": "An XFA or JavaScript-driven form stores its field data and its fill-in behaviour in the same AcroForm entry the fields live in. Removing the fields removes that entry too, so the document stops behaving like a fillable form. Flatten such a document first, or read the values out, before you strip it."
       },
       {
         "question": "Can I undo the removal?",
         "answer": "No undo is available after download. Keep the original file if you may need the annotations later."
+      },
+      {
+        "question": "Does this help with redacting sensitive information?",
+        "answer": "No. This tool empties the annotation layer and leaves page content alone, so it is the right tool for cleaning up a marked-up review copy and the wrong one for removing private data. Text already drawn on the page, or hidden inside one, is untouched. Use PDF Redact for that, and re-check the output in a reader before you share it."
+      },
+      {
+        "question": "Is a digitally signed PDF still signed afterwards?",
+        "answer": "No. A signature covers the exact bytes that were signed, and removing annotations changes those bytes, so a signed PDF comes out of this tool no longer signed — even when only a single comment was deleted."
+      },
+      {
+        "question": "Are the annotations really gone, or just hidden?",
+        "answer": "The annotation objects are dropped from the document structure rather than merely hidden, so no reader shows them, and the objects they owned — comment popups, reply threads and appearance streams — are pruned from the file as well. A small amount of unreferenced data can survive in the file bytes; no conforming reader will display it."
+      },
+      {
+        "question": "What are the limits?",
+        "answer": "Files up to 100 MB and 200 pages. Password-protected PDFs are not handled here, so remove the password with PDF Unlock first. Nothing is uploaded — the work happens in your browser."
       }
     ],
     "relatedSlugs": [

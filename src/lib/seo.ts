@@ -27,6 +27,9 @@ const CATEGORY_KEYWORDS: Record<string, string[]> = {
 
 const TOOL_KEYWORDS: Record<string, string[]> = {
   "pdf-redact": ["redact pdf", "redact pdf online free", "black out text in pdf", "remove sensitive information from pdf", "pdf redaction tool", "hide text in pdf", "redact pdf without uploading"],
+  "pdf-flatten": ["flatten pdf", "flatten pdf online", "flatten pdf online free", "rasterize pdf", "convert pdf pages to images", "flatten pdf form", "make pdf text non selectable", "flatten pdf without uploading"],
+  "pdf-overlay": ["overlay pdf", "overlay pdf online", "stamp pdf onto another pdf", "stamp pdf", "add letterhead to pdf", "overlay one pdf on another", "watermark pdf with another pdf", "overlay pdf without uploading", "stamp pdf page range"],
+  "pdf-remove-annotations": ["remove annotations from pdf", "remove annotations from pdf online free", "remove highlights from pdf", "delete pdf comments", "remove pdf form fields", "remove pdf hyperlinks", "strip annotations from pdf", "remove pdf notes", "remove annotations without uploading"],
   "pdf-compressor": ["compress pdf online", "reduce pdf file size", "shrink pdf", "pdf compressor free", "make pdf smaller"],
   "image-compressor": ["compress image online", "reduce image file size", "compress jpg", "compress png", "compress webp online", "make image smaller", "compress avif online", "image compressor free"],
   "image-resizer": ["resize image online", "image resizer free", "resize jpg png webp", "reduce image dimensions", "resize photo online", "resize image to 1920x1080", "image resizer aspect ratio lock", "resize image without uploading"],
@@ -166,6 +169,9 @@ export function toolTitle(tool: ToolConfig): string {
     "pdf-compare": "Compare PDFs online — free PDF text diff tool",
     "pdf-auto-redact": "Auto-Redact PDF online — black out sensitive words free",
     "pdf-redact": "Redact PDF Online — free blackout tool, nothing uploaded",
+    "pdf-flatten": "Flatten PDF online — rasterize pages so text can't be copied",
+    "pdf-overlay": "Overlay PDF online — stamp one PDF onto another free",
+    "pdf-remove-annotations": "Remove PDF Annotations Online — strip comments, links & fields",
   };
   if (CUSTOM_TITLES[tool.slug]) return CUSTOM_TITLES[tool.slug];
   const cat = tool.category.toLowerCase();
@@ -284,6 +290,12 @@ export function toolJsonLd(tool: ToolConfig) {
       "Find every occurrence of a name, number or phrase in a PDF's text layer and cover it with a solid black box — case-insensitive by default with optional whole-word and regex modes, red-marked page previews, a per-page match count and a confirm step before anything is drawn, capped at 100 MB / 200 pages / 100 matches per file and computed entirely in your browser with nothing uploaded",
     "pdf-redact":
       "Draw one or more black redaction rectangles on each page preview, or add regions by exact page / x / y / width / height in points; regions are physically stamped into the page so covered text can no longer be seen, searched, or copy-pasted, with per-page region lists, remove and clear actions, an honest limits disclaimer, a 100 MB file cap and 200-page region editing — entirely in your browser with nothing uploaded",
+    "pdf-flatten":
+      "Rasterize every page of a PDF into a single image so the text can no longer be selected, searched, copied or edited — three disclosed settings (96 DPI JPEG, 150 DPI JPEG, 200 DPI lossless PNG), original page size and orientation preserved, output size and change vs. the original reported, links, form fields, annotations and source metadata not carried over, no OCR layer added, capped at 100 MB and 200 pages — computed entirely in your browser with nothing uploaded",
+    "pdf-overlay":
+      "Stamp one PDF onto another — every page or a range like 1-3,7 — with eight position presets (stretch, centre and six corners), X and Y offsets in PDF points, 5-100% opacity, cycle or repeat-first-page stamp mapping, a live preview of the first stamped page with a geometry readout, placement measured on each page's own visible box and page rotation, off-page refusals before anything is drawn, a disclosure that embedded stamp text stays extractable and searchable, a note that a digital signature on the base does not survive the re-save, and a 100 MB / 200 page cap per file — computed entirely in your browser with nothing uploaded",
+    "pdf-remove-annotations":
+      "Strip the whole annotation layer off a PDF — comments, highlights, underlines, stamps, sticky notes, popups, links and form fields — with the total and a per-page breakdown shown before you confirm, an optional keep-interactive-form-fields switch, the removed annotation objects and the popups, reply threads and appearance streams they owned pruned from the file rather than merely unlinked, page text, images, layout, bookmarks and source metadata left untouched, a result panel with a re-download, honest limits (a filled field value stored only in the field disappears with it, an XFA/JavaScript form loses its AcroForm entry, a signed file comes out no longer signed, and it is not a redaction tool), a 100 MB / 200 page cap — computed entirely in your browser with nothing uploaded",
   };
   const featureList =
     TOOL_FEATURE_LIST[tool.slug] ??

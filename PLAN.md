@@ -1108,8 +1108,44 @@ Phase 2+ Target (NOT building now):
   MutationObserver recorders. Reports: `audit/reports/pdf-compare.md`,
   `pdf-redact.md`, `pdf-auto-redact.md`. Node checks 43/31/34 across the
   three mirrors.
-- Next: PDF Overlay, PDF Flatten, PDF Remove Annotations (parallel
-  three-way). Remaining 84 tools have not completed this process.
+- Wave 8: three tools all green. PDF Overlay (42nd tool), Flatten PDF (43rd)
+  and PDF Remove Annotations (44th) each returned all ten judges and closed
+  every gap. pdf-overlay: rebuilt — base + stamp PDFs, eight position
+  presets, X/Y number offsets and an opacity control, all-pages or page-range
+  (comma/number/range parser with inline "2 pages selected: 1, 2." feedback),
+  pdf-lib embedPage + drawPage stamping with ExtGState /ca opacity proven in
+  the output (drawn over a real embedded `/Form` XObject — the regression
+  this tool had), partially-off-page stamps disclosed live ("part of the
+  stamp hangs off the page edge and will be cropped") while fully-off-page
+  placements are refused by page number before any output; honest copy (visual
+  overlay, not a merged text layer). pdf-flatten: rebuilt as real
+  rasterization — every page rendered by pdf.js to a canvas at a Screen/
+  Balanced/Print resolution choice (96/150 DPI JPEG, 200 DPI PNG with a
+  16 MP canvas budget that reports the effective DPI when a huge page is
+  downscaled), then embedded as images; the e2e proves the output page has
+  zero text items and one image XObject; honest copy discloses rasterization
+  is re-OCR-able (not redaction), drops text selection/search, links,
+  bookmarks, metadata and form values, and that the 200 DPI output is
+  substantially larger. pdf-remove-annotations: strips the annotation layer
+  (comments/highlights/stamps/links/form widgets) with a count shown before
+  confirm, save with useObjectStreams:false; the harness parses the
+  downloaded file and asserts zero annotation objects and an identical text
+  layer, that a field's /T value never leaks in raw-bytes searches, signed
+  PDFs come out unsigned and unreferenced bytes may survive (no forensic
+  scrub claim). All three: friendly-error routing (encrypted → Unlock PDF
+  steer + link, non-PDF → %PDF- preflight message, caps 100 MB / 200 pages),
+  runId-guarded async chains, role=status/alert + aria-busy, three new guides
+  → build 303 pages (37 guides). E2e (stable across repeat runs):
+  pdf-overlay 62/62, pdf-flatten 77/77, pdf-remove-annotations 89/89; node
+  checks 99/141/256 green. Three harness defects caught and fixed at
+  verification: the overlay page-range scenario filled "1-3" but asserted a
+  "2 of 3" success line; a full-page stamp cannot partially overhang at
+  offset +600 so the off-edge disclosure test now uses a -40 offset that
+  genuinely straddles; the fully-off-page refusal assertion compared against
+  `refused === false` (inverted). Reports: `audit/reports/pdf-overlay.md`,
+  `pdf-flatten.md`, `pdf-remove-annotations.md`.
+- Next: PDF Scale Pages, Markdown to HTML, HTML to PDF (parallel three-way).
+  Remaining 83 tools have not completed this process.
 - Hash Generator: ten independent judges ran in parallel (the architect report
   was not returned — aborted; its coverage supplied by functional/security/
   edge findings plus the harness). Component rebuilt on the team standard
