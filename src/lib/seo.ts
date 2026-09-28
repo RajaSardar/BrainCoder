@@ -30,6 +30,7 @@ const TOOL_KEYWORDS: Record<string, string[]> = {
   "pdf-flatten": ["flatten pdf", "flatten pdf online", "flatten pdf online free", "rasterize pdf", "convert pdf pages to images", "flatten pdf form", "make pdf text non selectable", "flatten pdf without uploading"],
   "pdf-overlay": ["overlay pdf", "overlay pdf online", "stamp pdf onto another pdf", "stamp pdf", "add letterhead to pdf", "overlay one pdf on another", "watermark pdf with another pdf", "overlay pdf without uploading", "stamp pdf page range"],
   "pdf-remove-annotations": ["remove annotations from pdf", "remove annotations from pdf online free", "remove highlights from pdf", "delete pdf comments", "remove pdf form fields", "remove pdf hyperlinks", "strip annotations from pdf", "remove pdf notes", "remove annotations without uploading"],
+  "pdf-scale-pages": ["scale pdf", "scale pdf pages", "resize pdf pages", "resize pdf page size", "change pdf page size", "scale pdf online free", "shrink pdf pages", "enlarge pdf pages", "make pdf page smaller", "scale pdf without uploading"],
   "pdf-compressor": ["compress pdf online", "reduce pdf file size", "shrink pdf", "pdf compressor free", "make pdf smaller"],
   "image-compressor": ["compress image online", "reduce image file size", "compress jpg", "compress png", "compress webp online", "make image smaller", "compress avif online", "image compressor free"],
   "image-resizer": ["resize image online", "image resizer free", "resize jpg png webp", "reduce image dimensions", "resize photo online", "resize image to 1920x1080", "image resizer aspect ratio lock", "resize image without uploading"],
@@ -71,8 +72,8 @@ const TOOL_KEYWORDS: Record<string, string[]> = {
   "pdf-remove-pages": ["delete pages from pdf", "remove pages from pdf", "delete pdf pages online", "remove page from pdf free", "trim pages from pdf"],
   "pdf-watermark": ["pdf watermark", "add watermark to pdf", "watermark pdf online", "pdf watermark text", "stamp text on pdf", "confidential watermark pdf"],
   "text-to-pdf": ["text to pdf", "text to pdf converter", "convert txt to pdf", "plain text to pdf", "text file to pdf"],
-  "md-to-html": ["markdown to html", "md to html converter", "convert markdown online"],
-  "html-to-pdf": ["html to pdf online", "convert html to pdf", "webpage to pdf", "print html as pdf"],
+  "md-to-html": ["markdown to html", "convert md to html online", "md to html converter", "markdown converter online", "convert markdown online", "markdown to html with preview", "sanitized markdown to html", "markdown to html download"],
+  "html-to-pdf": ["html to pdf", "convert html to pdf online", "html to pdf converter", "html markup to pdf", "paginate html as pdf"],
   "html-to-image": ["html to image", "html to png", "screenshot html online", "capture div as image"],
   "image-ocr": ["ocr online", "image to text", "extract text from image", "ocr jpg png", "photo to text"],
   "image-editor": ["image editor online", "edit photo in browser", "crop resize image", "online drawing"],
@@ -172,6 +173,9 @@ export function toolTitle(tool: ToolConfig): string {
     "pdf-flatten": "Flatten PDF online — rasterize pages so text can't be copied",
     "pdf-overlay": "Overlay PDF online — stamp one PDF onto another free",
     "pdf-remove-annotations": "Remove PDF Annotations Online — strip comments, links & fields",
+    "html-to-pdf": "HTML to PDF Online — convert HTML to a selectable-text A4 PDF, free",
+    "md-to-html": "Markdown to HTML Online — sanitized HTML with copy and .html download",
+    "pdf-scale-pages": "Scale PDF Pages Online — resize every page, text stays selectable",
   };
   if (CUSTOM_TITLES[tool.slug]) return CUSTOM_TITLES[tool.slug];
   const cat = tool.category.toLowerCase();
@@ -222,6 +226,10 @@ export function buildToolMetadata(tool: ToolConfig): Metadata {
 export function toolJsonLd(tool: ToolConfig) {
   const url = `${SITE_URL}/tools/${tool.slug}`;
   const TOOL_FEATURE_LIST: Record<string, string> = {
+    "md-to-html":
+      "CommonMark and GitHub-flavored conversion — headings, lists, tables, fenced code, task lists, strikethrough, quotes, links and images — where the fragment is sanitized against an allowlist before the HTML pane, the Preview tab, Copy and the standalone .html download all show the same string, with a disclosed 200,000 character cap and nothing uploaded",
+    "html-to-pdf":
+      "Headings, paragraphs, lists, tables, blockquotes and code laid out across A4 pages as real selectable text — no screenshots, no image embedding, 200 KB and 200 page caps, everything computed locally",
     "diff-checker":
       "Side-by-side and unified diff views, word- and character-level highlighting, ignore-case and whitespace options, unified-diff copy — all in your browser",
     "text-size-calculator":
@@ -294,6 +302,8 @@ export function toolJsonLd(tool: ToolConfig) {
       "Rasterize every page of a PDF into a single image so the text can no longer be selected, searched, copied or edited — three disclosed settings (96 DPI JPEG, 150 DPI JPEG, 200 DPI lossless PNG), original page size and orientation preserved, output size and change vs. the original reported, links, form fields, annotations and source metadata not carried over, no OCR layer added, capped at 100 MB and 200 pages — computed entirely in your browser with nothing uploaded",
     "pdf-overlay":
       "Stamp one PDF onto another — every page or a range like 1-3,7 — with eight position presets (stretch, centre and six corners), X and Y offsets in PDF points, 5-100% opacity, cycle or repeat-first-page stamp mapping, a live preview of the first stamped page with a geometry readout, placement measured on each page's own visible box and page rotation, off-page refusals before anything is drawn, a disclosure that embedded stamp text stays extractable and searchable, a note that a digital signature on the base does not survive the re-save, and a 100 MB / 200 page cap per file — computed entirely in your browser with nothing uploaded",
+    "pdf-scale-pages":
+      "Scale every page of a PDF by one percentage from 10% to 400%, with the page boxes (media, crop, bleed, trim, art), the content and the annotation geometry all scaled by the same factor so nothing is cropped or stretched, a live before/after page-size preview in points and inches, a uniform scale that preserves the aspect ratio, content scaled rather than rasterized so text stays selectable, searchable and copyable, page rotation and form fields kept, a result panel that reports the new page size, output size and any mixed page sizes, honest limits (not a page-size converter, a digital signature does not survive the re-save, and form-field appearance streams are not re-rendered), a 100 MB / 200 page cap, and password-protected files routed to PDF Unlock — computed entirely in your browser with nothing uploaded",
     "pdf-remove-annotations":
       "Strip the whole annotation layer off a PDF — comments, highlights, underlines, stamps, sticky notes, popups, links and form fields — with the total and a per-page breakdown shown before you confirm, an optional keep-interactive-form-fields switch, the removed annotation objects and the popups, reply threads and appearance streams they owned pruned from the file rather than merely unlinked, page text, images, layout, bookmarks and source metadata left untouched, a result panel with a re-download, honest limits (a filled field value stored only in the field disappears with it, an XFA/JavaScript form loses its AcroForm entry, a signed file comes out no longer signed, and it is not a redaction tool), a 100 MB / 200 page cap — computed entirely in your browser with nothing uploaded",
   };

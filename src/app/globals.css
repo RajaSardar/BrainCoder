@@ -104,3 +104,37 @@ body {
 }
 .md-preview img { max-width: 100%; border-radius: 8px; }
 .md-preview hr { border: none; border-top: 1px solid #e2e8f0; margin: 1.5em 0; }
+
+/* md-to-html preview: create a containing block so a pasted class/position
+   cannot cover the page. `transform` (not `contain: paint`) so it never clips
+   the pane's own content and `position: sticky` still works inside it. */
+[data-md-preview] {
+  position: relative;
+  transform: translateZ(0);
+}
+
+/* Highlight tokens — light pane. Each colour is >= 4.5:1 on #f8fafc. */
+.tok-comment { color: #64748b; }
+.tok-string { color: #b45309; }
+.tok-number { color: #6d28d9; }
+.tok-keyword { color: #be123c; }
+.tok-literal { color: #0f766e; }
+.tok-tag { color: #1d4ed8; }
+.tok-attr { color: #a16207; }
+.tok-property { color: #0f766e; }
+.tok-heading { color: #1d4ed8; font-weight: 700; }
+.tok-link { color: #0f766e; }
+.tok-emphasis { color: #be123c; font-style: italic; }
+
+/* Same tokens on the dark .md-preview pre background. */
+.md-preview pre .tok-comment { color: #94a3b8; }
+.md-preview pre .tok-string { color: #fbbf24; }
+.md-preview pre .tok-number { color: #c4b5fd; }
+.md-preview pre .tok-keyword { color: #fda4af; }
+.md-preview pre .tok-literal { color: #5eead4; }
+.md-preview pre .tok-tag { color: #93c5fd; }
+.md-preview pre .tok-attr { color: #fcd34d; }
+.md-preview pre .tok-property { color: #5eead4; }
+.md-preview pre .tok-heading { color: #93c5fd; }
+.md-preview pre .tok-link { color: #5eead4; }
+.md-preview pre .tok-emphasis { color: #fda4af; }

@@ -645,7 +645,7 @@ export const TOOLS: ToolConfig[] = [
     name: "Scale Pages",
     tagline: "Resize every page of a PDF",
     description:
-      "Scale all pages of a PDF by a percentage — page size and content are resized together, uniformly, right in your browser.",
+      "Scale all pages of a PDF by one percentage from 10% to 400% — page boxes, content and annotations scale together and uniformly, text stays selectable, in your browser.",
     category: "Convert",
     icon: Scaling,
     accent: "text-cyan-600",
@@ -656,7 +656,7 @@ export const TOOLS: ToolConfig[] = [
     name: "Markdown to HTML",
     tagline: "Convert Markdown to HTML",
     description:
-      "Paste Markdown, get clean HTML with syntax highlighting tokens and one-click copy.",
+      "Paste Markdown, get clean CommonMark/GFM HTML that is sanitized before you copy it, preview it, or download it as a standalone .html file.",
     category: "Convert",
     icon: Code2,
     accent: "text-sky-600",
@@ -665,9 +665,9 @@ export const TOOLS: ToolConfig[] = [
   {
     slug: "html-to-pdf",
     name: "HTML to PDF",
-    tagline: "Render HTML to a paginated PDF",
+    tagline: "Turn HTML into a text-based A4 PDF",
     description:
-      "Paste any HTML and download it as a nicely paginated A4 PDF — everything happens locally.",
+      "Paste HTML and download a paginated A4 PDF with real, selectable text — headings, lists, tables and all. Runs locally, nothing uploaded.",
     category: "Convert",
     icon: Printer,
     accent: "text-indigo-600",

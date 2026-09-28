@@ -361,38 +361,46 @@ export const GUIDES: Guide[] = [
     slug: "how-to-convert-html-to-pdf",
     title: "How to Convert HTML to PDF Online for Free",
     description:
-      "Turn pasted HTML into a clean, paginated A4 PDF right in your browser — perfect for reports, docs and printable pages.",
+      "Turn pasted HTML into a paginated A4 PDF with real, selectable text — what the converter keeps, what it drops, and how to write markup that converts cleanly.",
     keywords: [
       "html to pdf",
       "convert html to pdf",
       "html to pdf converter",
-      "web page to pdf",
-      "print page as pdf",
+      "html markup to pdf",
+      "selectable text pdf",
     ],
     toolSlug: "html-to-pdf",
     published: "2026-09-09",
     updated: "2026-09-09",
-    readMinutes: 3,
+    readMinutes: 4,
     sections: [
       {
-        heading: "Why convert HTML to PDF",
+        heading: "What kind of HTML to PDF this is",
         paragraphs: [
-          "PDF gives you a fixed, print-ready snapshot of content that stays identical on every device. Generating a PDF from HTML is a common way to produce invoices, reports, manuals, and documentation from markup that already exists.",
-          "HTML renders natively in the browser, so what you see while editing is very close to what lands in the final PDF.",
+          "There are two ways to turn a web page into a PDF. The first renders the page and captures it, which reproduces CSS but leaves you with a picture of text. The second reads the markup and writes the text into the PDF itself. BrainCoder does the second: the output is a text-based, searchable A4 document built with the standard PDF fonts, so it is smaller, accessible to screen readers, and usable for invoices, reports, specs and archived HTML emails.",
+          "Because it works on content rather than pixels, the conversion is predictable. Headings, paragraphs, lists, tables, blockquotes, preformatted code and horizontal rules are laid out across A4 pages, and bold, italic and monospace spans keep their emphasis.",
+        ],
+      },
+      {
+        heading: "What it does not reproduce",
+        paragraphs: [
+          "Advanced CSS and layout are simplified, not replicated. Colours, custom fonts, borders, background images, floats, grids, flexbox, positioning and inline styling are not carried into the PDF. Script and style blocks, images, embedded media, SVG and form controls are dropped, and the interface tells you how many elements were skipped so nothing disappears silently.",
+          "If you genuinely need a pixel-perfect copy of a rendered page, print to PDF from your browser instead — that path uses the browser's own layout engine. This tool is for the other case: taking markup that is already structured as a document and turning it into a clean, selectable PDF.",
         ],
       },
       {
         heading: "Converting locally, without a server",
         paragraphs: [
-          "The HTML to PDF tool renders your markup inside a hidden page that's sized to A4, applies normal CSS, and paginates the result before exporting it as a downloadable PDF.",
-          "This runs entirely in your browser, which keeps the conversion instant and private — nothing is sent to an external printing service.",
+          "Parsing, layout and PDF generation all run in your browser. The HTML is treated as text and is never rendered or executed as a page, so no script in it can run, and your content never leaves your device.",
+          "Each conversion accepts up to 200 KB of HTML and produces up to 200 pages. If the page cap is reached, the tool says so and stops rather than silently dropping the rest of your document.",
         ],
       },
       {
         heading: "Tips for clean page breaks",
         paragraphs: [
-          "Print pagination divides long content across A4 pages automatically. For the most predictable output, keep your markup simple and avoid fixed-height containers that force content off-page.",
-          "The exported file is a standard PDF, so it opens in any viewer and prints at the size you styled for.",
+          "Use real heading elements instead of styled paragraphs — the converter sizes them, bolds them and keeps them on the same page as the text that follows, so a heading never sits alone at the foot of a page.",
+          "Keep table cells short where you can. Columns are sized from their widest unbreakable content, and long cells wrap inside the column. Cells with inline text-align right are right-aligned, which is handy for amounts.",
+          "Expect a document title to become an H1 when your markup has none, and prefer text that fits the standard PDF fonts. Characters outside that set, and stray angle brackets that break nesting, are replaced with a question mark and counted in the report.",
         ],
       },
     ],
@@ -1600,6 +1608,53 @@ export const GUIDES: Guide[] = [
     ],
   },
   {
+    slug: "how-to-scale-pdf-pages",
+    title: "How to Scale PDF Page Size Without Cropping or Blurry Text",
+    description:
+      "Scale every page of a PDF by one percentage in your browser. Learn what a page scale really changes — page boxes, content and annotations — and what it does not do.",
+    keywords: [
+      "scale pdf",
+      "scale pdf pages",
+      "resize pdf pages",
+      "change pdf page size",
+      "make pdf page smaller",
+    ],
+    toolSlug: "pdf-scale-pages",
+    published: "2026-09-27",
+    updated: "2026-09-27",
+    readMinutes: 4,
+    sections: [
+      {
+        heading: "What a page scale actually changes",
+        paragraphs: [
+          "A page in a PDF is not one object. It is a coordinate system holding several page boxes, a content stream of drawing operators, and an annotation layer — and a reader only shows you what those three agree on. Scaling a page therefore means moving all three by the same factor, and the tool does exactly that: every box a page defines (media, crop, bleed, trim and art) is multiplied by the factor, the content stream is scaled, and annotation geometry — link rectangles, comment boxes, ink strokes, form-field widgets — is scaled with it.",
+          "This is why the result is a genuine page rather than a stretched picture. Nothing is cropped, the proportions are untouched, and because the content is scaled rather than re-rendered as an image, the text stays real text: selectable, searchable and copyable afterwards. A page rotation (the 90 or 270 degree flag a scanner or an exported file carries) is left exactly as it was, and it is honoured when the before/after sizes are reported, so a landscape-looking page is measured the way you see it.",
+        ],
+      },
+      {
+        heading: "Uniform means uniform: it is not a page-size converter",
+        paragraphs: [
+          "One uniform factor is applied to width and height together, from 10% to 400%. That is deliberate: a single factor cannot distort anything, so the aspect ratio of every page is preserved — half an A4 page is still the same shape as A4, just smaller. The preview shows the real before and after size in PDF points and inches, and names the paper size when the result lands on one, so you can see whether 50% of your page is worth choosing before you download anything.",
+          "What this is not is a paper-size converter. Turning a Letter page into A4 changes the proportions of the sheet, and that is a different job: use a page-size or crop tool for it. The same goes for shrinking one axis only, which would stretch the layout. If your goal is a different aspect ratio — a wide page for a screen, a narrower column for a booklet — a uniform scale will not get you there.",
+        ],
+      },
+      {
+        heading: "Running the scale and downloading",
+        paragraphs: [
+          "Open the PDF and the tool reports the page count, the file size and the first page's dimensions. Type a percentage or drag the slider — 50%, 75%, 150% and 200% are one click away — and the resulting page size updates live before anything is written. Press scale and the file is processed on your device: files up to 100 MB and 200 pages are supported, and a password-protected file is refused with a pointer to PDF Unlock rather than being written out in a broken state.",
+          "The download is named <source>-scaled-<percent>pct.pdf, and the result panel reports the new size of page 1, the output size and how it compares with the original. If the document mixes page sizes — a cover in Letter and a wide appendix — every page still gets the same factor, and the panel says so instead of implying a single uniform result. If the download is lost, the same file can be fetched again from that panel without re-running the tool.",
+        ],
+      },
+      {
+        heading: "Limits, and what to check afterwards",
+        paragraphs: [
+          "Two honest caveats. First, a digital signature covers the exact bytes that were signed, so re-saving a page invalidates it — if the file is signed, expect to sign the scaled copy again. Second, an interactive form field is kept with its value, but its appearance is scaled along with its box rather than re-rendered for the new size, which is what makes a filled field shrink with the page. Neither is a data loss, but both are worth knowing before you re-issue a signed or heavily filled document.",
+          "Open the scaled copy in a desktop reader and check a text page, a table and any form before you send it — very small percentages (under about 25%) make body text hard to read even though it is still perfectly sharp, and percentages above roughly 200% produce a page larger than most printers can print. Keep the original if you may need the old page size, because scaling is not reversible from the output. All of the work happens in your browser: the file is read, scaled and saved on your device, and nothing is uploaded.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "how-to-overlay-pdfs-online",
     title: "How to Overlay One PDF on Another (Stamp, Letterhead, Watermark)",
     description:
@@ -1649,6 +1704,62 @@ export const GUIDES: Guide[] = [
         paragraphs: [
           "Each file can be up to 100 MB and 200 pages, and the tool checks both before it starts rather than failing halfway through. Password-protected PDFs are outside its scope: remove the password with PDF Unlock, then stamp. A stamp that is itself a scanned image works fine — it is just placed as a picture rather than as text. One more limit worth knowing: the result is a re-saved file, so a digital signature on the base document does not survive the export. If the base is signed, expect to sign the overlaid copy again.",
           "All of the work happens in your browser. Both files are read locally, composited locally and saved locally; neither is uploaded, which matters most for the documents people most want stamped: unsigned contracts, internal drafts and anything under review before it goes out.",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "how-to-convert-markdown-to-html",
+    title: "How to Convert Markdown to HTML Online (Sanitized, Copy-Ready)",
+    description:
+      "Convert Markdown to HTML in your browser: CommonMark and GFM output, an allowlist sanitizer that runs before you copy, a preview of the exact same HTML, and a standalone .html download.",
+    keywords: [
+      "markdown to html",
+      "convert md to html online",
+      "markdown to html converter",
+      "markdown converter online",
+      "convert markdown to html",
+      "markdown to html with preview",
+    ],
+    toolSlug: "md-to-html",
+    published: "2026-09-28",
+    updated: "2026-09-28",
+    readMinutes: 4,
+    sections: [
+      {
+        heading: "What the converter actually does",
+        paragraphs: [
+          "Markdown is a compact way to write a document; HTML is what a browser reads. Markdown to HTML puts a Markdown pane on the left and the generated HTML on the right, and it updates as you type. The parser is CommonMark plus the GitHub extensions, so you get headings, paragraphs, ordered and unordered lists, tables with header rows, fenced code blocks that keep their language as a class, task lists, strikethrough, blockquotes, links and images with alt text — the constructs that appear in a README, a changelog or a documentation page.",
+          "The output is an HTML fragment, not a whole site: no <html>, <head> or <body>, and no stylesheet of its own. That is what you want when you are pasting into a CMS field, an email template, a JSX component or an existing page, because the fragment inherits the styles of whatever you drop it into. When you do want a file you can open on its own, the download button wraps the same fragment in a minimal standalone page.",
+        ],
+      },
+      {
+        heading: "The HTML is sanitized, and here is what that means",
+        paragraphs: [
+          "Markdown lets you write raw HTML, and that HTML is a real hole in a converter: a line of <script> in a README someone sent you would otherwise end up in your page. So the tool filters the whole result through an allowlist before it is displayed, copied or downloaded. Scripts, event handlers such as onclick, unsafe URLs including javascript: and data: values, iframes, <style> blocks, embedded SVG and form controls do not survive, and any tag outside the allowlist is unwrapped — its text stays, the tag goes. An <a> whose href was rejected keeps its words and loses the link. HTML comments and doctypes are dropped.",
+          "Allowlisted inline HTML is kept, because plenty of legitimate Markdown uses it: <mark>, <sub>, <sup>, <kbd>, <abbr> and <del> all pass through unchanged. A <mark> in a tutorial or a <kbd> in a keyboard-shortcut table is exactly why you wanted a converter rather than a regex. What does not pass is anything that can execute or phone home, and the tool says so on the page rather than leaving you to trust it.",
+          "Read the preview before you publish. A sanitizer is a filter over the HTML you wrote, not a guarantee about the page you are building: it cannot tell whether a heading level is right, whether a link points where you meant, or whether the fragment is safe in the specific place you are pasting it. A Content-Security-Policy is still the right defence for the page itself.",
+        ],
+      },
+      {
+        heading: "Copy, preview, and the standalone .html download",
+        paragraphs: [
+          "The HTML pane and the Preview tab are built from one string, so what you see rendered is exactly what you copy. That matters more than it sounds: converters that render from a different pass than they export regularly drift, and you end up debugging markup you never actually copied. Here, the same sanitized fragment feeds the pane, the preview, the clipboard and the file.",
+          "Copy puts that fragment on your clipboard. Download writes it into a standalone document — a doctype, a charset tag, one inline stylesheet for readable tables, quotes, code and images, and no scripts at all — which you can open, hand to a colleague or drop into a static host. The filename comes from the file you opened if you opened one, so notes.md becomes notes.html, and the name field is editable. When you are pasting rather than opening a file there is no source name at all, so the default is the placeholder markdown.html and the tool labels it as one. Path separators and other characters that are unsafe in a filename are replaced.",
+        ],
+      },
+      {
+        heading: "The optional highlight tokens, described accurately",
+        paragraphs: [
+          "Reading a code block in a wall of raw HTML is unpleasant, so there is a checkbox that wraps fenced code in span elements such as <span class=\"tok tok-keyword\">. It is off by default, and that default is the honest choice: leave it off and the HTML you copy and download is clean, and turn it on when you are scanning a long snippet and want the keywords, strings, numbers and comments to stand out.",
+          "The highlighter behind it is a small one built into the tool, not a full parser. It is regex-based and covers JavaScript, TypeScript, JSON, HTML, CSS, Python, shell, SQL, YAML and Markdown. On ordinary code it is genuinely useful; on unusual or deliberately obfuscated syntax it can mark something as a keyword that is not one, which is why it is opt-in and why the tokens are described as decoration rather than correctness. If you need exact, parser-grade highlighting for a language the tool does not know, keep it off and highlight in your editor.",
+        ],
+      },
+      {
+        heading: "Limits: the 200,000 character cap, and privacy",
+        paragraphs: [
+          "Input is capped at 200,000 characters. The editor stops accepting input at the cap and says so, and a file larger than that is refused with the limit spelled out rather than being silently truncated — a large specification or a whole documentation tree belongs in an editor with real file handling, not in a browser pane. The counters above the panes show characters in, words, characters of HTML out, the size of that HTML in bytes, and the heading count, so you can see what a conversion actually cost before you ship it.",
+          "Everything runs in this tab. The Markdown, the generated HTML and any file you open with Open .md file are read locally and never uploaded; there is no server-side conversion step to leak anything to. A genuinely unparsable input — an unclosed fence, pathological nesting — surfaces as a plain message asking you to look at the structure rather than a blank pane or a stack trace, and empty input is simply an empty state, not an error.",
         ],
       },
     ],

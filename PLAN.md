@@ -1144,8 +1144,55 @@ Phase 2+ Target (NOT building now):
   genuinely straddles; the fully-off-page refusal assertion compared against
   `refused === false` (inverted). Reports: `audit/reports/pdf-overlay.md`,
   `pdf-flatten.md`, `pdf-remove-annotations.md`.
-- Next: PDF Scale Pages, Markdown to HTML, HTML to PDF (parallel three-way).
-  Remaining 83 tools have not completed this process.
+- Wave 9: PDF Scale Pages (45th), Markdown to HTML (46th), HTML to PDF (47th).
+  All ten judges returned for each and every gap closed. PDF Scale Pages was
+  rebuilt from a fire-and-forget `page.scale()` on page 1 into a real
+  full-document in-place scale: every page's media box plus every optional box
+  it defines (crop, bleed, trim, art) read through `getInheritableAttribute`
+  and multiplied together — pdf-lib's own `setCropBox` leaves a custom crop
+  box alone, which would have shipped a Letter page whose content was scaled
+  inside a crop box that was not. Non-zero media origins are normalised
+  (content and page-space annotation geometry translated first, then
+  everything scaled, then re-based at 0,0); annotation `/Rect`, `/L`, `/CL`,
+  `/QuadPoints`, `/Vertices` and `/InkList` scale with the page;
+  `updateFieldAppearances: false` keeps a form field's appearance scaling with
+  its widget instead of re-rendering at the old glyph size. Also closed: the
+  old `ignoreEncryption: true` wrote a file whose `/Encrypt` dictionary pointed
+  at moved bytes (a corrupt download) — encrypted files are now refused and
+  steered to PDF Unlock; caps 100 MB / 200 pages enforced before any work;
+  10%–400% with presets and a live before/after preview in points and inches;
+  honest copy (uniform scale is not a page-size converter, real text is scaled
+  and never re-rendered, signatures do not survive, appearance streams are
+  scaled not regenerated, mixed-size documents disclosed).
+  Markdown to HTML: a real browser-safe converter (headings, lists, tables,
+  blockquotes, code fences with token highlighting, links auto/relative,
+  images to alt text, autolinks, emphasis/strong, strikethrough, line breaks),
+  HTML escaped before output, a strict sanitizer on the preview path (scripts,
+  handlers, `javascript:` URLs stripped) duplicates what the PDF/video pipelines
+  render, and the counters are honest (chars in/out, blocks, bytes). HTML to
+  PDF: a pure typescript text-based A4 PDF builder (Helvetica standard fonts,
+  real line wrapping across pages, table cells, bold/italic, ordered/unordered
+  lists, `&shy;`/`&nbsp;` replaced, alt text stands in for dropped images,
+  style/script blocks never reach the PDF, 200 KB input cap, byte-identical
+  re-renders, title metadata from the source `<title>`). Build 305 pages
+  (39 guides; the html-to-pdf guide pre-existed and was updated). Node checks
+  165/116/106 green; e2e green and stable across repeat runs: pdf-scale-pages
+  82/82, md-to-html 107/107, html-to-pdf 51/51. Verification caught and fixed
+  six harness defects plus one real component gap: the scale loop is
+  synchronous pdf-lib, so a `setTimeout` yield only every 25 pages was starved
+  by the microtask drain and the announced per-page progress never painted —
+  the loop now yields after every page and the role=status progress genuinely
+  announces; the scale harness asserted an exact "headings" text node (the
+  counter renders "N headings") and searched `[role=status]` for lines the
+  component correctly renders as visible result text; the html-to-pdf
+  "Download again" click missed the synchronous blob download (waitForEvent
+  after the click) and the rich sample fit one A4 page (padded to genuinely
+  paginate); the guide-naming check needed HTML-entity unescaping; the 375px
+  overflow check measured the whole document including the known tracking
+  residual of the site header, and is now scoped to `main#main`. Reports:
+  `audit/reports/pdf-scale-pages.md`, `md-to-html.md`, `html-to-pdf.md`.
+- Next: HTML to Image, Image OCR, Image Editor (parallel three). Remaining 80
+  tools have not completed this process.
 - Hash Generator: ten independent judges ran in parallel (the architect report
   was not returned — aborted; its coverage supplied by functional/security/
   edge findings plus the harness). Component rebuilt on the team standard

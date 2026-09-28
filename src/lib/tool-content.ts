@@ -1532,49 +1532,49 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ]
   },
   "pdf-scale-pages": {
-    "longDescription": "<p>Scale Pages resizes every page of a PDF by a percentage, scaling both the page size and its content together in perfect proportion. Whether you're shrinking a poster for sharing, enlarging a document for print, producing consistent page sizes from mixed sources, or fitting content into a specific dimension range, this tool gives you a uniform vector resize. Set a scale from 25% to 300% and the tool applies it to every page simultaneously, then downloads the resized PDF.</p><p>Unlike cropping, scaling keeps the full content in view — it simply makes the whole page larger or smaller. Because pdf-lib scales the underlying vector content (and annotations) rather than re-rendering, text stays crisp at every size. Everything is processed locally in your browser, so your documents never leave your device.</p>",
+    "longDescription": "<p>Scale Pages resizes every page of a PDF by one percentage, from 10% to 400%. The page is a coordinate system rather than a picture, so the tool scales the parts together: the page boxes a page defines (media, crop, bleed, trim and art), the content stream, and the geometry of annotations such as link boxes, comment boxes, ink strokes and form-field rectangles. That is why a scaled page is still a real page — nothing is cut off, nothing is stretched, and every page in the file gets the same factor at once.</p><p>The content is scaled, never re-rendered as a picture, so text stays real text: it remains selectable, searchable and copyable, and images and vector art are resampled by the same factor rather than being re-encoded. The same factor is applied to width and height, so the aspect ratio is preserved — 50% of an A4 page is the same shape at half the size. That also means this is not a page-size converter: to turn a page into A4 or Letter, or to change width and height independently, use a page-size or crop tool instead. Files up to 100 MB and 200 pages are supported, a password-protected file cannot be opened here, and because pages are scaled in place the output is the same document with its pages resized — bookmarks, links, form fields and document metadata come along, while a digital signature does not survive the re-save. Everything runs in your browser; nothing is uploaded.</p>",
     "features": [
-      "Scale all pages together from 25% to 300%",
-      "Page size and content scale in perfect proportion",
-      "Vector content stays crisp at any scale",
-      "Applies uniformly to every page in the document",
-      "Live page-size preview before you export",
+      "Scale every page together from 10% to 400%",
+      "Media, crop, bleed, trim and art boxes scale with the content, so nothing is cropped or stretched",
+      "Content is scaled, not rasterized — text stays selectable, searchable and copyable",
+      "Link boxes, comment boxes, ink strokes and form-field rectangles follow the page",
+      "Live before/after page-size preview in points and inches, with a real paper-size name when the size matches one",
       "100% client-side processing with no uploads"
     ],
     "howTo": [
       {
-        "step": "Upload PDF",
-        "description": "Open the PDF you want to resize. The first page's current size is shown."
+        "step": "Open PDF",
+        "description": "Open the PDF you want to resize. Its page count, file size and the first page's current size are shown."
       },
       {
         "step": "Set Scale",
-        "description": "Drag the slider to the desired percentage — the resulting page size updates live."
+        "description": "Type a percentage from 10% to 400% or drag the slider — the resulting page size updates live."
       },
       {
         "step": "Scale Document",
-        "description": "Click scale and every page is resized by the chosen factor."
+        "description": "Click scale and every page is resized by that one factor, with its page boxes and annotations moved to match."
       },
       {
         "step": "Download Scaled PDF",
-        "description": "Download the resized PDF with all pages scaled uniformly."
+        "description": "The scaled copy downloads as <source>-scaled-<percent>pct.pdf, and the result panel reports the new page size and output size."
       }
     ],
     "faq": [
       {
-        "question": "Is content scaled or cropped?",
-        "answer": "Scaled. Every page is resized along with its content, so nothing is cut off and proportions are preserved."
+        "question": "Is the page scaled or cropped?",
+        "answer": "Scaled. Every page is resized along with its content and its page boxes, so nothing is cut off and the proportions are preserved. This tool does not crop and does not change the paper size."
       },
       {
-        "question": "Will text stay sharp after scaling?",
-        "answer": "Yes. The vector content itself is scaled rather than re-rendered, so text and lines remain crisp at any size."
+        "question": "Will my text still be selectable after scaling?",
+        "answer": "Yes. The page content is scaled rather than re-rendered as an image, so text stays selectable, searchable and copyable — the opposite of flattening a PDF. Fonts, images and vector art are resampled by the same factor, and existing form fields keep their values."
       },
       {
-        "question": "Does the tool support different X and Y scales?",
-        "answer": "Currently scaling is uniform, keeping the aspect ratio intact so no distortion occurs. Use page resizing features for non-uniform layouts."
+        "question": "Can I scale width and height differently, or convert a page to A4?",
+        "answer": "No. One uniform factor is applied to both axes, which is what keeps the aspect ratio intact and stops anything from distorting. If you need a different paper size or a non-uniform change, use a page-size or crop tool instead."
       },
       {
-        "question": "Can I preview the result before exporting?",
-        "answer": "Yes. The tool shows the first page's current dimensions and the exact resulting size for your chosen percentage."
+        "question": "What happens to bookmarks, links, signatures and form fields?",
+        "answer": "Pages are scaled in place, so the document keeps its bookmarks, link targets, form fields and metadata. Two honest caveats: a digital signature covers the original bytes and does not survive a re-save, and an existing form field's appearance is scaled with its box rather than re-rendered for the new size."
       }
     ],
     "relatedSlugs": [
@@ -5233,87 +5233,122 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ]
   },
   "md-to-html": {
-    "longDescription": "<p>BrainCoder's Markdown to HTML converter instantly transforms Markdown text into clean, ready-to-use HTML code. Whether you're building a blog post, documentation page, email template, or any web content, this tool generates proper HTML with correct semantic tags, lists, links, images, and code blocks. Just paste your Markdown on the left and see the HTML output on the right — live and in real time.</p>\n<p>The converter supports the full Markdown syntax including headings, bold and italic text, ordered and unordered lists, blockquotes, code blocks with syntax hints, links, images, tables, and horizontal rules. It outputs clean, standards-compliant HTML that you can embed directly into web pages, content management systems, or email builders.</p>\n<p>All conversion happens in your browser, so your content stays private. There's no need to send your blog drafts, documentation, or proprietary content to external services. BrainCoder's converter is fast, accurate, and produces well-formatted HTML every time — making it an essential tool for developers, writers, and content creators.</p>",
+    "longDescription": "<p>BrainCoder's Markdown to HTML converter turns Markdown into an HTML fragment you can paste straight into a page, an email, a CMS field or a component. It parses CommonMark plus the GitHub extensions — headings, ordered and unordered lists, tables, fenced code with a language class, task lists, strikethrough, blockquotes, links and images with alt text — and the HTML pane updates as you type. A Preview tab renders exactly the same HTML, so the string you copy is the string you looked at.</p>\n<p>The output is sanitized before it is shown, copied or downloaded. Raw inline HTML inside your Markdown is rendered as HTML, then the whole document is filtered against an allowlist: <code>&lt;script&gt;</code>, event handlers such as <code>onclick</code>, unsafe URLs like <code>javascript:</code>, iframes, <code>&lt;style&gt;</code>, embedded SVG and form controls are removed, tags outside the allowlist are unwrapped (their text survives, the tag does not), an <code>&lt;a&gt;</code> that loses an unsafe URL keeps its text but loses the <code>href</code>, and HTML comments are dropped.</p>\n<p>There is an optional highlight step for reading code quickly: the checkbox wraps fenced code in <code>&lt;span class=\"tok tok-keyword\"&gt;</code> markup. It comes from a small built-in highlighter for JavaScript, TypeScript, JSON, HTML, CSS, Python, shell, SQL, YAML and Markdown — it is regex-based, not a full parser, so unusual syntax can be mis-marked. It is off by default, so the HTML you normally copy stays clean.</p>\n<p>Everything runs in this tab. The Markdown, the generated HTML and any file you open are read locally and nothing is uploaded. The input is capped at 200,000 characters — the editor stops accepting input at the cap and a larger file is refused with the limit stated. Copy writes the exact sanitized fragment; Download writes a standalone HTML document (a doctype, a charset tag, one inline stylesheet and no scripts) named after the file you opened, or after the name you type, with <code>markdown.html</code> as the disclosed placeholder when you are pasting.</p>",
     "features": [
-      "Real-time Markdown to HTML conversion as you type",
-      "Supports headings, lists, links, images, code blocks, and tables",
-      "Outputs clean, standards-compliant HTML",
-      "Copy HTML to clipboard or download as .html file",
-      "Live preview of rendered Markdown alongside HTML output",
-      "Fully client-side with no content uploaded"
+      "CommonMark and GitHub-flavored output: headings, lists, tables, fenced code, task lists, strikethrough, quotes, links and images",
+      "Every fragment is sanitized against an allowlist before you copy, preview or download it",
+      "HTML pane for the source and a Preview tab that renders exactly that same HTML",
+      "One-click copy of the exact sanitized fragment to your clipboard",
+      "Download a standalone .html file — doctype, charset, inline stylesheet, no scripts — named from the file you opened or an editable name",
+      "Optional, off-by-default highlight tokens for fenced code, from a small regex-based built-in highlighter",
+      "Fully client-side with nothing uploaded, and a disclosed 200,000 character cap"
     ],
     "howTo": [
       {
-        "step": "Write or Paste Markdown",
-        "description": "Enter your Markdown text in the left panel. You can type it directly or paste it from your editor, documentation, or notes."
+        "step": "Paste or open your Markdown",
+        "description": "Type or paste Markdown on the left, or use Open .md file to load a .md, .markdown, .mdown or .txt file from disk. The file is read inside the tab and the download name follows the file name. Input is capped at 200,000 characters."
       },
       {
-        "step": "View Generated HTML",
-        "description": "The HTML output updates in real time in the right panel. A rendered preview may also be available to show how the final content will look."
+        "step": "Read the HTML",
+        "description": "The HTML pane shows the sanitized fragment as you type. Switch to Preview to render exactly that HTML — both views are built from one string, so what you copy is what you saw."
       },
       {
-        "step": "Copy or Download HTML",
-        "description": "Click 'Copy HTML' to grab the code for pasting into your project, or download it as an .html file for later use."
+        "step": "Know what the sanitizer removed",
+        "description": "Raw inline HTML in your Markdown is kept as HTML, then filtered: scripts, event handlers such as onclick, unsafe URLs, iframes, styles, embedded SVG and form controls are removed, and tags outside the allowlist are unwrapped. The note under the panes repeats this list in the tool."
+      },
+      {
+        "step": "Copy or download",
+        "description": "Copy HTML puts the exact sanitized fragment on your clipboard. Download writes a standalone page around that same fragment, named from the source file or from the Download name field, whose default of markdown.html is a placeholder — this is a paste tool, so there is no file of its own."
       }
     ],
     "faq": [
       {
+        "question": "Is the output safe to paste into a page?",
+        "answer": "The fragment is filtered through an allowlist before it is shown, copied or downloaded: scripts, event handlers, unsafe URLs, iframes, styles, embedded SVG and form controls do not survive, and anything outside the allowlist is unwrapped. It is still HTML you wrote, so read the preview before publishing, and do not treat the sanitizer as a replacement for a Content-Security-Policy."
+      },
+      {
+        "question": "What happens to raw HTML written inside my Markdown?",
+        "answer": "Inline HTML is rendered as HTML first, then the allowlist filter runs over the whole document. Allowlisted tags such as <mark>, <sub> or <kbd> stay as they are, comments and doctypes are dropped, and every other tag is unwrapped so its text survives without the tag. A <a> that loses an unsafe URL keeps its text but loses the href."
+      },
+      {
         "question": "Does it support GitHub Flavored Markdown?",
-        "answer": "Yes. The converter handles GFM extensions including fenced code blocks, tables, task lists, and strikethrough text in addition to standard Markdown syntax."
+        "answer": "Yes. GFM tables, task lists, strikethrough, autolinks and fenced code blocks with a language class work on top of CommonMark. It adds no extensions of its own, and it is a converter rather than a static site generator: it emits an HTML fragment, not a site."
       },
       {
-        "question": "Can I use the HTML in email templates?",
-        "answer": "Yes. The generated HTML can be embedded in email templates. However, note that email clients have varying HTML support, so you may need to inline styles for best compatibility."
+        "question": "Is the code highlighting real?",
+        "answer": "There is a small built-in highlighter and it is honest about its limits: it is regex-based rather than a full parser, it covers JavaScript, TypeScript, JSON, HTML, CSS, Python, shell, SQL, YAML and Markdown, it can mis-mark unusual syntax, and it is off by default. Turn it on only when you want to read code in the pane — the tokens travel into the copied and downloaded HTML when you do."
       },
       {
-        "question": "Is my content uploaded?",
-        "answer": "No. All conversion happens entirely in your browser using JavaScript. Your Markdown and the generated HTML never leave your device."
+        "question": "Is my Markdown uploaded to a server?",
+        "answer": "No. Parsing, sanitizing, highlighting and reading the file all run in the tab, and nothing is uploaded. The 200,000 character cap is the only size limit."
+      },
+      {
+        "question": "Why is the download called markdown.html?",
+        "answer": "Because there is no source file when you paste — markdown.html is a placeholder and the tool says so under the name field. Open a file and the download becomes <source>.html (notes.md becomes notes.html), and you can edit the name at any time; path separators and other unsafe characters are replaced."
       }
     ],
     "relatedSlugs": [
+      "markdown-preview",
+      "html-minifier",
       "html-to-pdf",
       "html-to-image",
-      "notepad",
-      "text-to-pdf",
-      "word-to-pdf"
+      "notepad"
     ]
   },
   "html-to-pdf": {
-    "longDescription": "<p>BrainCoder's HTML to PDF converter transforms any HTML content into a downloadable PDF document — entirely in your browser. Whether you have a web page you want to save as PDF, an HTML email you need to archive, or generated HTML reports you want to distribute, this tool produces clean, well-formatted PDFs without sending your content to any server.</p>\n<p>The converter preserves the layout, styling, images, and formatting of your HTML content, producing professional-quality PDFs suitable for printing, sharing, or archiving. Simply paste your HTML code, preview the result, and click download to get your PDF. It handles complex layouts including tables, images, custom CSS, and multi-page content.</p>\n<p>This tool is invaluable for web developers generating reports, content creators archiving web content, businesses converting HTML invoices or receipts to PDF, and anyone who needs a quick HTML-to-PDF conversion without installing desktop software. All processing happens client-side for complete privacy.</p>",
+    "longDescription": "<p>BrainCoder's HTML to PDF converter turns pasted HTML into a downloadable, paginated A4 PDF — entirely in your browser. It reads your markup directly as text: headings, paragraphs, ordered and unordered lists, tables, blockquotes, preformatted code, horizontal rules, bold, italic, code spans and line breaks all become real, selectable text in the PDF. Nothing is sent to a server.</p>\n<p>This is a document converter, not a screenshot tool. Each run lays your content out across A4 pages with sensible margins, wraps long words, keeps headings with the text that follows them, and repeats table headers on every page a table spans. If your HTML has no <code>&lt;h1&gt;</code>, the document title you set is used as one.</p>\n<p>It is built for invoices, reports, specs, changelogs, generated documentation and archived HTML emails. Because it works on text rather than pixels, advanced CSS and layout are simplified rather than reproduced: colours, custom fonts, borders, backgrounds, images, floats, grids, flexbox, positioning and inline styling are not carried over. Script and style blocks are removed, so the PDF never contains them. Each conversion is capped at 200 KB of input and 200 pages of output, and both limits are reported in the interface.</p>",
     "features": [
-      "Convert any HTML code to a downloadable PDF file",
-      "Preserves CSS styling, images, tables, and layouts",
-      "Supports inline CSS and linked styles for accurate rendering",
-      "Handles multi-page content with proper page breaks",
-      "Preview HTML before converting to PDF",
-      "100% client-side — HTML content never leaves your browser"
+      "Convert HTML code to a paginated A4 PDF with real, selectable text",
+      "Understands headings, paragraphs, lists, tables, blockquotes, preformatted code and rules",
+      "Honours bold, italic and monospace spans, plus inline text-align on table cells",
+      "Keeps headings with the text below them and repeats table headers across pages",
+      "Shows the laid-out first page as text before you rely on the download",
+      "Reports dropped elements, replaced characters and the page cap instead of hiding them",
+      "Up to 200 KB of HTML and 200 pages per conversion",
+      "100% client-side — your HTML and the resulting PDF never leave your browser"
     ],
     "howTo": [
       {
-        "step": "Paste Your HTML",
-        "description": "Enter your HTML code in the input area. This can be a full HTML document or a fragment with inline styles."
+        "step": "Paste or open your HTML",
+        "description": "Type or paste markup into the source box, or open a .html file from disk. The input area shows how much of the 200 KB limit you have used."
       },
       {
-        "step": "Preview the Output",
-        "description": "The tool renders your HTML so you can preview exactly how the PDF will look. Adjust your HTML if needed."
+        "step": "Set the document title",
+        "description": "Give the file a title. It becomes the PDF title metadata and, if your markup has no <h1>, the document's first heading."
       },
       {
-        "step": "Download the PDF",
-        "description": "Click the 'Convert to PDF' button. The tool generates the PDF and triggers a download to your device."
+        "step": "Convert and check the report",
+        "description": "Click 'Convert to PDF'. The page count, the file name and the first page as it was laid out appear underneath, along with any warnings about skipped elements, characters that had to be replaced, or hitting the 200-page cap."
+      },
+      {
+        "step": "Download or re-download",
+        "description": "The PDF is generated and downloaded automatically. If you tweak the source and convert again, 'Download again' re-saves the last build."
       }
     ],
     "faq": [
       {
-        "question": "Does it support CSS styling in the HTML?",
-        "answer": "Yes. The converter renders CSS including inline styles, embedded styles, and some external styles. For best results, use inline or embedded CSS."
+        "question": "Is the PDF a screenshot or real text?",
+        "answer": "Real text. The PDF is drawn with the standard PDF fonts, so you can search, select, copy and read it aloud. Nothing is rasterized and no image is embedded."
+      },
+      {
+        "question": "Will it keep my CSS?",
+        "answer": "No. CSS is not applied, and that is deliberate. Structure and inline emphasis are converted; colours, fonts, borders, backgrounds, positioning, floats, grids and flexbox are not reproduced. If you need a pixel-perfect copy of a rendered page, print that page to PDF from your browser instead."
+      },
+      {
+        "question": "What happens to images, scripts and styles?",
+        "answer": "Script and style blocks, images, embedded media, SVG and form controls are dropped, and the count is reported after each conversion. An image with alt text leaves an '[image omitted: ...]' line so you can see what was there."
       },
       {
         "question": "Can it handle multi-page HTML content?",
-        "answer": "Yes. The tool automatically handles page breaks for content that exceeds a single page, producing a properly paginated PDF."
+        "answer": "Yes. Content flows onto additional A4 pages automatically, table headers repeat on each page a table spans, and output stops at 200 pages with a clear notice when the cap is reached."
+      },
+      {
+        "question": "Which characters are supported?",
+        "answer": "The standard PDF fonts cover WinAnsi. Characters outside that set, and characters that break nesting such as a stray < or &, are replaced with '?' and counted in the report rather than being dropped silently."
       },
       {
         "question": "Is my HTML content uploaded to a server?",
-        "answer": "No. The entire conversion process runs in your browser. Your HTML content and the resulting PDF never leave your device."
+        "answer": "No. Parsing, layout and PDF generation all run in your browser, and your HTML is never rendered or executed as a page. Your content and the resulting PDF never leave your device."
       }
     ],
     "relatedSlugs": [
@@ -5324,7 +5359,8 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       "notepad"
     ]
   },
-  "html-to-image": {
+  
+"html-to-image": {
     "longDescription": "<p>BrainCoder's HTML to image tool captures screenshots of HTML pages or elements, converting them into downloadable PNG or JPG images. Whether you need to capture a styled component, a full web page layout, a dashboard mockup, or an email template preview, this tool renders your HTML and captures it as a high-quality image — all within your browser.</p>\n<p>This is incredibly useful for designers sharing mockups with clients, developers documenting UI components, QA teams capturing bug reproductions, and content creators generating visual assets from HTML templates. The tool renders your HTML with full CSS support including fonts, colors, gradients, shadows, and responsive layouts, then captures the result as a crisp image.</p>\n<p>No server uploads are involved — the HTML rendering and image capture both happen locally in your browser. This means proprietary designs, confidential dashboards, and sensitive content stay on your device. It's a fast, private alternative to browser developer tools or third-party screenshot services.</p>",
     "features": [
       "Capture HTML/CSS as PNG or JPG images",
