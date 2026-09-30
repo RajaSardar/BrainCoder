@@ -5141,87 +5141,128 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ]
   },
   "image-editor": {
-    "longDescription": "<p>BrainCoder's photo editor is a browser-based image editing tool that lets you crop, rotate, flip, adjust brightness and contrast, and apply filters to your photos — all without uploading anything to a server. It's the perfect quick-edit tool for when you don't want to fire up a full desktop application or subscribe to an expensive design platform. Open it in your browser, make your edits, and download the result.</p>\n<p>The editor supports essential photo editing operations: crop to focus on the subject, rotate and flip for proper orientation, adjust brightness, contrast, and saturation for visual polish, and apply popular filters like grayscale, sepia, and blur. These are the most commonly needed edits for social media posts, profile pictures, document illustrations, and everyday photo adjustments.</p>\n<p>All editing happens locally in your browser, ensuring your personal photos and proprietary images never leave your device. There's no account required, no watermarks added, and no usage limits. BrainCoder's photo editor gives you the essential editing tools you need with the privacy and convenience you deserve.</p>",
+    "longDescription": "<p>BrainCoder's image editor is a canvas editor that runs entirely in this browser tab. Open a PNG, JPEG, GIF, WebP or BMP file and you can crop it, rotate it in 90&deg; steps, mirror it, resize it by a uniform percentage, adjust brightness, contrast and saturation, apply a filter, draw on it, and download the result as PNG, JPEG or WebP. The image is decoded and edited on your device and is never uploaded, so a passport photo, a client deliverable or a screenshot of something private stays on your machine.</p><p>The operations are exact rather than approximate. Rotation, mirroring and cropping move pixels: nothing is resampled, nothing softens, and a crop you set is stored in the image's own coordinates so it survives a later rotation or mirror. Resizing is the one operation that resamples, and it is the browser's own resampler &mdash; enlarging interpolates between the pixels you already have and cannot invent detail. That is not an AI upscaler, and this tool does not pretend to be one. One scale is applied to both axes, so an image is never stretched or squashed by a resize.</p><p>Adjustments and filters are computed per pixel in this tab, after the resize and before the annotations, and are baked into the downloaded file rather than being a view-only effect. Annotations &mdash; brush, line, rectangle, arrow and text &mdash; are recorded in the image's own coordinates, so a stroke you draw now is still in the same place after a later crop, rotation or resize, and it is stored in the file's output pixels so a thin stroke exports thin. They are also baked into the same single canvas the file is written from, so there is nothing to re-order, re-select or move afterwards, and no PSD to save.</p><p>The caps are stated rather than hidden, and every one of them refuses instead of quietly adjusting your image: 25 MB per input file, 16 megapixels and 8192 px per side on the output, an 8 px minimum on a side, and a 10%&ndash;400% scale range. An export that would not fit is refused with the largest scale that would, and the file you get back is the file that was measured. The format is read from the file's own header bytes, so a file that only <em>claims</em> to be a PNG is rejected before a decoder is handed it.</p><p>What this editor is not, in full: there are no layers, no PSD, no selection or healing tools, no AI, and no HEIC, AVIF or RAW support. Every download is encoded again from the pixels on screen, so re-exporting an untouched JPEG is a second lossy generation &mdash; PNG is the only lossless choice here. JPEG has no transparency, so transparent pixels are composited on white. The browser applies a photo's EXIF orientation flag on the way in and nothing else is carried out, so no camera, GPS, timestamp or ICC profile survives, and a wide-gamut photo can shift slightly in untagged sRGB. GIF and animated WebP arrive as their first frame only, and an animated file loses every frame after it.</p>",
     "features": [
-      "Crop images to any aspect ratio or custom dimensions",
-      "Rotate 90° increments and flip horizontally or vertically",
-      "Adjust brightness, contrast, and saturation with sliders",
-      "Apply filters: grayscale, sepia, blur, sharpen, and more",
-      "Preview edits in real time before downloading",
-      "No uploads, no accounts, no watermarks — fully private"
+      "Runs in this tab on a canvas: the image is decoded, edited and encoded on your device and is never uploaded",
+      "PNG, JPEG, GIF, WebP and BMP, identified from the file's real header bytes rather than its name or extension",
+      "Exact 90&deg; rotation, horizontal and vertical mirroring, and cropping &mdash; pixels move, nothing is resampled",
+      "A crop stored in the image's own coordinates, so it survives a later rotation or mirror",
+      "Uniform 10%&ndash;400% resize that applies one scale to both axes, so nothing is stretched",
+      "Brightness, contrast and saturation plus grayscale, sepia, invert, cool and warm filters, computed per pixel and baked into the export",
+      "Brush, line, rectangle, arrow and text annotations, recorded in the image's own coordinates and in output pixels",
+      "A 30-step undo, plus a reset that returns the image to exactly how it was opened",
+      "PNG, JPEG and WebP export, with the encoder's own 0.30&ndash;1.00 quality argument on the two lossy formats and no quality slider on PNG",
+      "A file name that says what is in it: real size, rotation, mirror, crop, scale, filter and whether it was adjusted or annotated",
+      "A crop you can type as well as drag, so every operation is reachable with a keyboard alone",
+      "Caps with real numbers, refused rather than adjusted: 25 MB in, 16 MP and 8192 px per side out, 8 px minimum per side"
     ],
     "howTo": [
       {
-        "step": "Upload Your Photo",
-        "description": "Drag and drop your image or click the upload button. The photo loads in the editor canvas with editing tools available in the toolbar."
+        "step": "Open an image",
+        "description": "Click Open image and choose a PNG, JPEG, GIF, WebP or BMP file. The format is confirmed from the file's header bytes before it is decoded, so a file that only pretends to be an image is refused up front. The file may be up to 25 MB, 16 megapixels and 8192 px on the long side, and an image past any of those is rejected with its real numbers rather than cropped or downsampled."
       },
       {
-        "step": "Make Your Edits",
-        "description": "Use the toolbar to crop, rotate, flip, or adjust visual properties. Apply filters from the filter menu. All changes preview in real time on the canvas."
+        "step": "Crop, rotate, mirror and resize",
+        "description": "Rotation and mirroring are exact &mdash; press 90&deg;, 180&deg; or 270&deg;, or mirror left&ndash;right or top&ndash;bottom, and pixels move without being resampled. Press Crop to see the whole frame, then drag a rectangle on it, or type X, Y, width and height and press Enter; a crop is at least 8 × 8 px, is clamped inside the image, and is kept in the image's own coordinates so a later rotation carries it. Set a scale from 10% to 400% with the slider, the field or a preset: one scale is applied to both axes, so the aspect ratio never changes."
       },
       {
-        "step": "Download the Result",
-        "description": "When you're happy with the edits, click 'Download' to save the edited image. Choose your preferred format (JPG or PNG) and the file saves directly to your device."
+        "step": "Adjust, filter and annotate",
+        "description": "Brightness, contrast and saturation run from &minus;100% to +100%, and the filters are grayscale, sepia, invert, cool and warm. Both are computed per pixel in this tab and baked into the download, not shown as a view-only effect. Choose Brush, Line, Rectangle, Arrow or Text and draw on the image; a stroke is simplified to at most 400 points, and a text stamp keeps the font and size it was placed with and is limited to 120 characters. Annotations are recorded in the image's own coordinates, so they travel through any later crop, rotation or resize."
+      },
+      {
+        "step": "Download, and check what you are getting",
+        "description": "Pick PNG, JPEG or WebP and press Download. The file is named for what it actually contains &mdash; for example photo-800x600-crop400x300-grayscale-annotated.png &mdash; so two different edits never collide. The result panel shows the exact file you downloaded, rendered from the same bytes, and any further edit clears it so a stale export cannot be saved again. PNG is lossless; JPEG and WebP are encoded at the quality you set, JPEG composites transparency on white, and if your browser has no WebP encoder you get PNG and the file is named for the bytes you actually received."
       }
     ],
     "faq": [
       {
-        "question": "Is this a replacement for Photoshop?",
-        "answer": "No — it's designed for quick, essential edits. For complex design work, layer editing, or advanced retouching, a full-featured editor like Photoshop is recommended. This tool covers the most common everyday needs."
+        "question": "Is my image uploaded to a server?",
+        "answer": "No. The file is read with the browser's own file API, decoded to a canvas in this tab, edited, and encoded back to a file in memory. There is no request for your image, no account, and nothing to install. Refresh the page and the pixels are gone."
       },
       {
-        "question": "Does it add watermarks to edited images?",
-        "answer": "No. Your edited images are downloaded clean with no watermarks, branding, or metadata added by the tool."
+        "question": "Does rotating, mirroring or cropping lose quality?",
+        "answer": "No. Those three operations move pixels: a rotation by 90&deg; or a mirror is an exact rearrangement, and a crop discards the pixels outside the rectangle. None of them resamples, so none of them softens the image. Resizing is the only operation that resamples, and enlarging it interpolates between the pixels you have &mdash; it cannot invent detail, and it is not an AI upscaler."
       },
       {
-        "question": "Can I undo edits?",
-        "answer": "Yes. The editor supports undo and redo, so you can step back through your changes at any point during the editing session."
+        "question": "Why was my download refused instead of just being made smaller?",
+        "answer": "Because you asked for a specific image and a different one is not what you asked for. The output is capped at 16 megapixels and 8192 px per side, with a minimum of 8 px per side. Rather than quietly shrinking the file, the editor refuses it and tells you the largest scale that would fit, or the crop to make first. The last render that did fit stays on screen while it is refused."
+      },
+      {
+        "question": "Can I undo an edit?",
+        "answer": "Yes &mdash; up to 30 changes, including a crop drag, which counts as one change rather than one per mouse movement. Reset edits returns everything at once: the rotation, the mirror, the crop, the scale, the adjustments, the filter and the annotations. There is no redo; undo is a step backwards through your own history for the image that is open right now."
+      },
+      {
+        "question": "What happens to my photo's metadata, colour profile and animation?",
+        "answer": "They do not survive. The browser decodes the pixels, and everything that is not pixels is dropped on the way in: no EXIF, no camera, no GPS, no timestamps, and no ICC profile. Output is untagged sRGB, so a wide-gamut photo can shift slightly. The one EXIF field that changes what you see is the orientation flag, and the browser applies it on the way in, so a sideways phone photo arrives upright. GIF and animated WebP are flattened to their first frame, and every frame after it is lost."
+      },
+      {
+        "question": "Does the export always match the preview?",
+        "answer": "It matches, with two disclosed differences. The on-screen canvas is capped at 1200 px on the long side so a large image still repaints, while the download is always rendered at the full output size &mdash; below that cap the two are the same pixels. And the encoder is a real one: re-exporting an untouched JPEG is a second lossy generation, so PNG is the only lossless choice here. The result panel shows the downloaded file itself, from the same bytes, so you can see which one you got."
+      },
+      {
+        "question": "Is this a replacement for Photoshop or GIMP?",
+        "answer": "No. It covers the everyday edits &mdash; crop, rotate, mirror, resize, adjust, filter, annotate, export &mdash; and does them locally with nothing installed. There are no layers, no PSD, no selection tools, no healing, no content-aware fill and no AI. For compositing, layer work or retouching, use a full editor."
       }
     ],
     "relatedSlugs": [
-      "image-compressor",
       "image-resizer",
-      "image-filters",
+      "image-compressor",
       "image-format-converter",
-      "image-ocr"
+      "image-filters",
+      "image-splitter"
     ]
   },
   "image-ocr": {
-    "longDescription": "<p>BrainCoder's image OCR tool extracts text from images using optical character recognition — right in your browser. Upload a photo of a document, screenshot, receipt, or any image containing text, and the tool will identify and extract all readable text for you to copy and use. It's perfect for digitizing printed documents, extracting text from screenshots, grabbing text from photos of whiteboards, and converting image-based content into editable text.</p>\n<p>The OCR processing happens entirely on your device, so sensitive documents like contracts, medical records, financial statements, and identification cards never leave your browser. This makes BrainCoder's OCR tool a privacy-first alternative to online OCR services that require uploading your documents to external servers.</p>\n<p>Supporting multiple languages and common fonts, this tool delivers reliable text extraction for most standard documents and images. Whether you're a student digitizing lecture notes, a professional extracting data from scanned forms, or anyone who needs text from an image, this tool provides fast, private, and accurate OCR processing.</p>",
+    "longDescription": "<p>BrainCoder's image OCR tool guesses the printed text in a picture and hands it back as plain text you can copy or download. Open a PNG, JPEG, GIF, WebP or BMP file, pick the language the text is written in, and press Extract — the recognizer runs as a WebAssembly build of Tesseract in your browser tab. Nothing is uploaded: the image, the recognizer and the language model are all read locally or served from this site's own origin, so a contract, a payslip, an ID or a whiteboard photo never reaches a server.</p><p>Twelve languages ship with the tool, each with its own model downloaded on that language's first use and then cached by your browser: English, Spanish, French, German, Portuguese, Italian, Russian, Hindi, Arabic, Chinese (simplified), Japanese and Korean. They are separate models, one per run — you cannot read a Danish page and its English header in a single pass, and each model is a real download you can see the size of before you start (English is about 3.0 MB gzipped, French about 0.7 MB, Japanese about 2.0 MB).</p><p>The limits are stated rather than hidden, and a file over any of them is refused with its actual numbers instead of being quietly cropped or shrunk: 25 MB per file, 16 megapixels per image and 8192 px on the long side. The format is confirmed from the file's own header bytes before the image is decoded, so a file that only <em>claims</em> to be a PNG is rejected instead of failing somewhere inside the recognizer. Output is cleaned up before you see it — CRLF and form-feed line breaks become plain newlines, runs of trailing spaces are trimmed and runs of blank lines are collapsed — and it is offered as clipboard text and as a <code>.txt</code> file named after your image.</p><p>What OCR is: a guess. Tesseract scores its own output, and this tool shows you that score with a plain description of what it means, because a number on its own tells you nothing. The engine is reliable on clean, straight, evenly lit printed text and it is unreliable on handwriting, stylised fonts, skew, shadows and low-contrast photographs. Two things happen to a very large photo that this tool does not control: the engine downsamples it before recognising, and the file's EXIF rotation flag is not applied, so a phone photo shot sideways comes out sideways. Scans at roughly 300 DPI and deskewed, evenly lit crops are the input this engine was built for — read every result over before you rely on it.</p>",
     "features": [
-      "Extract text from photos, screenshots, and scanned documents",
-      "Supports multiple languages and common font families",
-      "Works with JPG, PNG, WebP, and BMP image formats",
-      "Copy extracted text to clipboard with one click",
-      "Entirely client-side — documents never leave your device",
-      "No account required, no upload limits"
+      "Runs Tesseract as WebAssembly in this tab — the image is decoded and read on your device and is never uploaded",
+      "12 languages: English, Spanish, French, German, Portuguese, Italian, Russian, Hindi, Arabic, Chinese (simplified), Japanese and Korean, one model per run",
+      "Each language model is served from this site's own origin — not a third-party CDN — downloaded on that language's first use and cached by the browser afterwards, with its size shown before you start",
+      "PNG, JPEG, GIF, WebP and BMP, confirmed from the file's real header bytes before the image is decoded",
+      "Disclosed caps with real numbers on refusal: 25 MB per file, 16 megapixels per image, 8192 px on the long side — no silent cropping or downsampling",
+      "Live progress from the engine's five own stages, with a Cancel button that actually stops the run",
+      "The engine's own confidence score is reported with a plain description of what it means, not as a claim of accuracy",
+      "Copy the cleaned text in one click, or download a .txt named <image>-ocr-<language>.txt",
+      "Fully client-side, no account, and nothing to install"
     ],
     "howTo": [
       {
-        "step": "Upload an Image",
-        "description": "Click the upload button or drag and drop an image containing text. Supported formats include JPG, PNG, WebP, and BMP."
+        "step": "Open an image",
+        "description": "Click Open image and choose a PNG, JPEG, GIF, WebP or BMP file of a page, screenshot, receipt, invoice or photo of printed text. The format is read from the file's header bytes, so a file that only pretends to be an image is refused up front. The file may be up to 25 MB, 16 megapixels and 8192 px on the long side; an image past any of those is rejected with its real numbers."
       },
       {
-        "step": "Start Text Extraction",
-        "description": "The tool processes the image and extracts all recognizable text. This may take a few seconds depending on the image size and complexity."
+        "step": "Pick the language of the text",
+        "description": "Choose from 12 models — English, Spanish, French, German, Portuguese, Italian, Russian, Hindi, Arabic, Chinese (simplified), Japanese or Korean. One model runs per pass, and the panel shows how large that model's download is before you commit. It is fetched from this site's own origin on that language's first use and cached by the browser afterwards."
       },
       {
-        "step": "Copy the Extracted Text",
-        "description": "Review the extracted text in the output area. Click 'Copy' to send it to your clipboard, or download it as a text file."
+        "step": "Extract, and watch the real stages",
+        "description": "Press Extract text. The panel reports the recognizer's own stages — loading the engine, initializing it, downloading the language model, starting the API, recognizing text — with a percentage, and Cancel stops the run instead of leaving a WebAssembly thread working in the background. A large photo takes noticeably longer than a cropped scan."
+      },
+      {
+        "step": "Read the result over before you trust it",
+        "description": "The text is shown with character, word and line counts, the elapsed time, and the engine's confidence score with a description of what that score means — it is the recognizer's opinion of its own guesses, not a measurement of how much of your text is correct. Copy puts the cleaned text on your clipboard, and Download writes the same text to <image>-ocr-<language>.txt. Empty text is reported as a result too, with the fixes that usually help: a larger, straighter, better-lit scan of the same page."
       }
     ],
     "faq": [
       {
-        "question": "How accurate is the OCR?",
-        "answer": "Accuracy depends on image quality, text clarity, font type, and language. Clear, high-resolution images with standard fonts produce the best results. Handwriting and unusual fonts may be less accurate."
+        "question": "How accurate is this?",
+        "answer": "It is a guess, and the tool says so. Tesseract is strong on clean, straight, evenly lit printed text and weak on handwriting, stylised fonts, skew, shadows and low-contrast photographs. A scan at roughly 300 DPI beats a 12-megapixel phone photo, and the confidence score shown with each result is the recognizer's assessment of its own output, not a guarantee. Always read the extracted text over before relying on it."
       },
       {
-        "question": "Does it support languages other than English?",
-        "answer": "Yes. The OCR engine supports multiple languages including Spanish, French, German, Chinese, Japanese, and many others."
+        "question": "Which languages are supported, and can it read more than one at once?",
+        "answer": "Twelve, one model per run: English, Spanish, French, German, Portuguese, Italian, Russian, Hindi, Arabic, Chinese (simplified), Japanese and Korean. A single pass uses a single model, so a page with a Danish body and an English header needs two runs, and the model has to match the script of the text you want. The panel shows the download size of whichever model you pick."
       },
       {
-        "question": "Is my document uploaded to a server?",
-        "answer": "No. All OCR processing happens locally in your browser. Your images and extracted text never leave your device."
+        "question": "Is my image uploaded anywhere?",
+        "answer": "No. The image is decoded and recognized in your tab. The engine, its WebAssembly core and the language model are all served from this site's own origin rather than a third-party CDN, and the model is downloaded to your browser and cached there. The image bytes themselves never leave the device — refresh the page and they are gone."
+      },
+      {
+        "question": "Why was my image refused?",
+        "answer": "Three caps, all reported with your real numbers: 25 MB per file, 16 megapixels per image, and 8192 px on the long side. Separately, the file has to actually be a PNG, JPEG, GIF, WebP or BMP according to its header bytes — a renamed .txt or a corrupt file is rejected with that reason instead of failing later. This tool refuses rather than cropping or downsampling, so the file you get back is the file that was read."
+      },
+      {
+        "question": "Why is the text wrong, missing or sideways?",
+        "answer": "Three separate things. OCR quality follows the input: heavy skew, shadows, stylised fonts and handwriting are where it breaks. The engine downsamples a very large image before recognizing it, which is usually why a 12-megapixel phone photo does worse than a cropped scan. And EXIF rotation is not applied, so a photo shot sideways stays sideways — rotate it first and re-run."
       }
     ],
     "relatedSlugs": [
@@ -5361,41 +5402,41 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
   },
   
 "html-to-image": {
-    "longDescription": "<p>BrainCoder's HTML to image tool captures screenshots of HTML pages or elements, converting them into downloadable PNG or JPG images. Whether you need to capture a styled component, a full web page layout, a dashboard mockup, or an email template preview, this tool renders your HTML and captures it as a high-quality image — all within your browser.</p>\n<p>This is incredibly useful for designers sharing mockups with clients, developers documenting UI components, QA teams capturing bug reproductions, and content creators generating visual assets from HTML templates. The tool renders your HTML with full CSS support including fonts, colors, gradients, shadows, and responsive layouts, then captures the result as a crisp image.</p>\n<p>No server uploads are involved — the HTML rendering and image capture both happen locally in your browser. This means proprietary designs, confidential dashboards, and sensitive content stay on your device. It's a fast, private alternative to browser developer tools or third-party screenshot services.</p>",
+    "longDescription": "<p>BrainCoder's HTML to image tool paints a live preview of your markup on this page and re-draws it into a PNG, JPEG or WebP file that is saved straight to your device. You choose a capture width, a scale between 1x and 4x, and a format; the file is written from the same bytes you can copy to the clipboard or download again from the result panel.</p>\n<p>The scale is the honest part of this tool. It is the device-pixel multiplier, not a vague quality slider: at 2x, a 480 px wide box becomes a 960 px wide image, because every CSS pixel is painted as two image pixels. The preview shows the measured box before you commit, the projected output size is printed next to the control, and if the requested scale would exceed the 16 MP / 8192 px capture budget the tool lowers the scale — never below 1x — and tells you the number it actually used. It will not quietly render a smaller image and label it as the size you asked for.</p>\n<p>This is a re-draw, not a screen photograph. The renderer reads each element's computed style and repaints it with the canvas 2D API, which is why browsers can load your web fonts and lay out your flex and grid exactly as they already do, and why a handful of effects are missing: <code>filter</code>, <code>backdrop-filter</code>, <code>mix-blend-mode</code>, conic and repeating gradients, and <code>object-fit</code> are not painted. It does not use an SVG <code>foreignObject</code> either. Output is composited on white, cropped to the capture box, and an image served without CORS headers is left out rather than drawn blank.</p>\n<p>Your markup never leaves the browser. There is no upload, no request for your HTML, and no server-side rendering step — scripts, frames, form controls and inline SVG are removed before anything is drawn, and what the preview shows is exactly what the capture paints.</p>",
     "features": [
-      "Capture HTML/CSS as PNG or JPG images",
-      "Full CSS support including gradients, shadows, and custom fonts",
-      "Adjustable output resolution for crisp, high-quality captures",
-      "Capture specific elements or full-page layouts",
-      "Preview the rendered HTML before downloading",
-      "Entirely client-side — no content leaves your browser"
+      "Live capture-box preview that measures the real layout before you commit",
+      "PNG, JPEG and WebP output, with the lossless and lossy trade-offs spelled out",
+      "1x to 4x scale in half steps, projected to an exact pixel size before capture",
+      "Automatic download, plus a copy-to-clipboard and a re-download of the identical bytes",
+      "Pixel budget and single-side limit enforced with the effective scale always disclosed",
+      "Scripts, frames, form controls, inline SVG and unsafe URLs removed before rendering"
     ],
     "howTo": [
       {
-        "step": "Enter HTML Code",
-        "description": "Paste your HTML code (optionally with embedded CSS) into the input area. You can include a full document or just a component fragment."
+        "step": "Paste or open your HTML",
+        "description": "Paste markup into the source editor, open a .html file, or load the sample to see how the capture box behaves. Input is capped at 200 KB."
       },
       {
-        "step": "Preview and Adjust",
-        "description": "The tool renders your HTML in a preview pane. Adjust the code as needed to get the exact layout you want to capture."
+        "step": "Set the width, scale and format",
+        "description": "Pick a capture width between 240 and 1200 px and a scale from 1x to 4x. The measured box and the exact output size in pixels are shown as you type, and content wider than the box is refused instead of being cropped."
       },
       {
-        "step": "Capture and Download",
-        "description": "Click the capture button, choose your preferred format (PNG or JPG), and download the image to your device."
+        "step": "Capture and use the file",
+        "description": "The image is re-drawn, saved automatically, and offered again from the result panel. Copy it to the clipboard, or download the same bytes again under the same name."
       }
     ],
     "faq": [
       {
-        "question": "Does it support custom fonts and CSS?",
-        "answer": "Yes. The tool renders embedded CSS and commonly available system fonts. For custom web fonts, include them via @import or inline font declarations in your HTML."
+        "question": "What does the scale actually do?",
+        "answer": "It is the device-pixel multiplier. Every CSS pixel becomes that many image pixels, so a 480 px wide box at 2x produces a 960 px wide image. If the requested scale would break the 16 MP budget or the 8192 px single-side limit, the tool lowers it to the largest scale that fits and tells you which one it used. It never goes below 1x."
       },
       {
-        "question": "What image formats are supported?",
-        "answer": "The tool supports PNG (lossless, best for screenshots) and JPG (compressed, best for photos). Choose the format that fits your use case."
+        "question": "Will the image match my browser exactly?",
+        "answer": "It matches the layout, fonts, flexbox and grid that your browser has already resolved, because the tool repaints the same computed styles. It is not a photograph of the screen, and it does not paint filter, backdrop-filter, mix-blend-mode, conic or repeating gradients, or object-fit. Anything using those will come out different, so check the preview before shipping."
       },
       {
-        "question": "Is my HTML content uploaded?",
-        "answer": "No. Both the HTML rendering and image capture happen entirely in your browser. Nothing is sent to any external server."
+        "question": "Is my HTML uploaded anywhere?",
+        "answer": "No. The render and the capture both happen in this page, and no request is made for your markup. Note that a remote image or CSS url() in your HTML is fetched by your browser exactly as any page would fetch it, and an image without CORS headers is left out of the capture."
       }
     ],
     "relatedSlugs": [

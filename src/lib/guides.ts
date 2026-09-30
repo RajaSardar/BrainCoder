@@ -1608,6 +1608,67 @@ export const GUIDES: Guide[] = [
     ],
   },
   {
+    slug: "how-to-ocr-an-image",
+    title: "How to OCR an Image (and What It Gets Wrong)",
+    description:
+      "Read the printed text out of a photo, screenshot or scan in your browser. Learn what OCR actually does, why a big phone photo loses characters, and what to fix before you trust a result.",
+    keywords: [
+      "how to ocr an image",
+      "ocr an image online",
+      "how to extract text from an image",
+      "image to text converter",
+      "why is my ocr wrong",
+    ],
+    toolSlug: "image-ocr",
+    published: "2026-09-28",
+    updated: "2026-09-28",
+    readMinutes: 5,
+    sections: [
+      {
+        heading: "What OCR is, in one paragraph",
+        paragraphs: [
+          "Optical character recognition does not read. It guesses. The engine looks at shapes of dark pixels on a light background, compares each one against a model of how thousands of printed characters are shaped, and returns whichever characters it thinks it saw, along with a score for how sure it is about its own guesses. There is no understanding of your document, no dictionary of your company's names, and no second pass that notices a total is wrong. That is why every OCR tool on the market, including this one, needs you to read the result over.",
+          "Image OCR runs Tesseract as a WebAssembly build inside your browser tab. The image is decoded and recognized on your own device and is never uploaded, and the engine, its WebAssembly core and the language model are all served from this site's own origin rather than a third-party CDN. The model for the language you pick is downloaded the first time you use that language and cached by your browser afterwards.",
+        ],
+      },
+      {
+        heading: "What the tool does before it reads a single character",
+        paragraphs: [
+          "It checks three things, and each of them saves you a confusing failure later. The format is confirmed from the file's own header bytes rather than its name, so a .png that is really a text file or a truncated download is refused immediately with that reason instead of dying somewhere inside the recognizer. The file size is compared against a 25 MB cap. And the dimensions are read from the header and checked against a 16-megapixel budget and an 8192 px limit on the long side.",
+          "All three caps are refusals, not adjustments. A 20-megapixel photo is rejected with its real numbers, not quietly shrunk to fit — which means the file that gets read is the file you chose, at the size it actually is. If you hit a cap, the fix is on your side: crop to the text you want, or downscale a very large photo, and re-open it.",
+        ],
+      },
+      {
+        heading: "Why a 12-megapixel photo reads worse than a cropped scan",
+        paragraphs: [
+          "The single biggest cause of bad OCR is not a bad engine, it is a big input. Tesseract works on a page image scaled to roughly 300 DPI. Hand it a 4000-by-3000 photo of a page and it downsamples to its working size before it looks at anything — which throws away exactly the fine detail that distinguishes a comma from a full stop, a 1 from a 7, or an O from a 0. The characters that survive the downsample are the ones that were large to begin with; small print in a footer is the first thing to go.",
+          "So the ranking of inputs, best first, is: a scan or export at about 300 DPI, cropped to the text; a flatbed or phone-scanner scan at that resolution; a screenshot taken at native resolution; a phone photo of a printed page, which is fine if it is square-on and evenly lit and poor if it is not. The engine also assumes the text is horizontal, dark on light and not rotated — deskew a scan and it gets noticeably better.",
+        ],
+      },
+      {
+        heading: "The five things that reliably break it",
+        paragraphs: [
+          "Skew and perspective: a page photographed at an angle is the most common failure, because the engine models a flat, straight baseline. Shadows and uneven lighting produce gradients across the page, and a gradient is a character as far as the recognizer is concerned. Low contrast — grey text, a faded photocopy, a screenshot with light-grey helper text. Stylised and decorative fonts, where the recognizer has never seen the shapes in training. And handwriting, which is a different problem entirely: the models shipped here are trained on printed text, and cursive or joined-up writing is not what they are looking for.",
+          "One more that is not the image's fault: EXIF rotation is not applied. A photo taken in portrait and stored with a rotation flag is handed to the recognizer sideways, and it will return sideways text. Rotate the image before you open it, or accept that the output needs turning.",
+        ],
+      },
+      {
+        heading: "Reading the result, including the confidence number",
+        paragraphs: [
+          "Every run reports the engine's own confidence score alongside the text, with a plain description of what the band means. Read that number for what it is: the recognizer's opinion of how plausible its guesses were, averaged over the page. It is not a percentage of characters that are correct, and there is no OCR tool anywhere that can give you that, because the engine has no idea which of its guesses were wrong. A high score on a page with unusual words is not a guarantee, and a middling score on a very clean page often still reads perfectly.",
+          "The result panel gives you character, word and line counts and the elapsed time, and the text is cleaned up before you see it — Windows and form-feed line breaks become plain newlines, trailing spaces are trimmed and runs of blank lines collapse. Copy puts that text on your clipboard; Download writes the same bytes to a file named <image>-ocr-<language>.txt. If the result comes back empty, that is reported as a result rather than a silent failure, with the fixes that usually help: a larger, straighter, better-lit scan of the same page.",
+        ],
+      },
+      {
+        heading: "What this is not",
+        paragraphs: [
+          "It is not a document scanner, a form filler or a data extractor. It does not find invoice totals, read a table into columns, sort the lines into reading order for a multi-column page, or tell you which of two candidate readings is the right one — Tesseract is LSTM-based here, so it produces one guess per line, not a confidence-ranked list. It does not do handwriting. It does not OCR inside a PDF (that is a separate job, because a PDF needs its pages rasterized first), and it does not accept HEIC, AVIF, TIFF or SVG, which are not in the five supported formats.",
+          "All of the work happens in your browser. The image is read locally, recognized locally and saved locally, which matters most for exactly the documents people most want scanned: contracts, payslips, medical letters, ID cards and anything under review before it goes out. If you need higher fidelity than a single offline pass can give you — archival scanning, batch processing, layout-aware extraction — that is a different tool, and this one will not pretend otherwise.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "how-to-scale-pdf-pages",
     title: "How to Scale PDF Page Size Without Cropping or Blurry Text",
     description:
@@ -1709,6 +1770,78 @@ export const GUIDES: Guide[] = [
     ],
   },
   {
+    slug: "how-to-edit-an-image-online",
+    title: "How to Edit an Image Online (and What Changes Your Pixels)",
+    description:
+      "Crop, rotate, mirror, resize, adjust, filter and annotate an image in your browser. Learn which edits are exact, what a resize really does to detail, and what your file loses on the way out.",
+    keywords: [
+      "how to edit an image online",
+      "image editor online",
+      "crop an image in browser",
+      "rotate image without losing quality",
+      "resize image without uploading",
+      "add text to an image online",
+      "why did my exported image lose metadata",
+    ],
+    toolSlug: "image-editor",
+    published: "2026-09-29",
+    updated: "2026-09-29",
+    readMinutes: 5,
+    sections: [
+      {
+        heading: "What this editor does, in one paragraph",
+        paragraphs: [
+          "You open a PNG, JPEG, GIF, WebP or BMP file, and the browser decodes it into a canvas in this tab. From there you can crop it, rotate it in 90-degree steps, mirror it, resize it by a uniform percentage between 10% and 400%, adjust brightness, contrast and saturation, apply a filter, draw on it with a brush, line, rectangle, arrow or text tool, and download the result as PNG, JPEG or WebP. The image is decoded, edited and encoded on your own device. There is no request for your file, no account, and nothing to install.",
+          "The format is confirmed from the file's own header bytes before the pixels are decoded, so a file that only claims to be a PNG is refused with that reason rather than failing somewhere inside a decoder. Inputs are capped at 25 MB, 16 megapixels (16 MP) and 8192 px on the long side, and every one of those is a refusal with your real numbers, not a silent crop or downsample.",
+        ],
+      },
+      {
+        heading: "Which edits are exact, and which one is not",
+        paragraphs: [
+          "Three of the operations move pixels and are therefore exact. Rotating by 90, 180 or 270 degrees is an exact rearrangement of the pixel grid. Mirroring is a flip of that grid. Cropping discards the pixels outside the rectangle you chose. None of the three resamples, so none of them softens the image, and none of them loses a single pixel that stays in the frame. A quarter turn swaps the sides, which is why a rotated landscape photo exports as a portrait file with the dimensions swapped rather than being squeezed.",
+          "Resizing is the fourth operation, and it is the one that does resample. The tool uses the browser's own resampler, and enlarging an image means interpolating between the pixels you already have. You get a larger file with the same information in it, interpolated. That is not an AI upscaler, and no in-browser resampler is: a generative model would be guessing at detail that was never recorded. If you enlarge a photo and it looks soft, that is the honest result of the operation rather than a bug, and the number to watch is how far you push it.",
+          "One scale is applied to both axes. A tool that let you set width and height independently could stretch a face or bend a straight wall, and this one does not offer those controls, so the aspect ratio of the frame survives every resize down to the last pixel.",
+        ],
+      },
+      {
+        heading: "A crop you set is kept, wherever you rotate afterwards",
+        paragraphs: [
+          "A crop is stored in the image's own pixel coordinates, not in screen coordinates, and the same is true of every annotation. That is the detail most editors get wrong in a way you only notice later: crop a photo, then rotate it, and a crop stored against the screen moves to a different part of the picture. Here the crop rectangle is carried through the rotation and mirror as a geometric transform of its four corners, so a quarter turn moves the crop with the pixels it was cutting out.",
+          "Annotations behave the same way. A stroke, an arrow or a text stamp is recorded as coordinates in the image, so it is still in the same place after a later crop, rotation, mirror or resize, and it is stored in the file's output pixels so a thin line exports thin instead of fatter than it looked on screen. There is no separate layer for it either: annotations are baked into the same single canvas, which is why there is nothing to re-order and no PSD to save.",
+        ],
+      },
+      {
+        heading: "Why an over-budget export is refused instead of shrunk",
+        paragraphs: [
+          "If you ask for 400% on a frame that would come out at 48 megapixels, you have asked for a specific image. Silently handing back a smaller one is not a smaller version of the same request, it is a different file from the one you asked for, and a surprising one at that. So the output is capped at 16 megapixels and 8192 px per side, with a minimum of 8 px per side, and an export that does not fit is refused with the largest scale that would fit or the crop to make first. The last render that did fit stays on screen while the refusal is on it, and the download button stays clickable so it can repeat the reason in an alert rather than sitting there disabled and unexplained.",
+          "This is the same philosophy as the input caps: the file that comes back is the file that was measured. If you need a specific large output, the honest route is to crop to the part you need and then scale, or to downscale in two steps of a known factor each.",
+        ],
+      },
+      {
+        heading: "What your file loses on the way out",
+        paragraphs: [
+          "Three things, all of which are invisible until someone opens the file in a different program. First, every download is encoded again from the pixels on screen. That is unavoidable in a browser editor, and it has one consequence worth stating plainly: re-exporting an untouched JPEG is a second lossy generation, and the file will drift a little further from the original each time. PNG is the only lossless choice here, and for a photo you intend to keep editing, exporting PNG between stages is the way to stop the drift accumulating.",
+          "Second, nothing that is not pixels survives. The browser decodes the image, and the metadata goes at that moment: no EXIF, no camera, no GPS, no capture timestamp, and no ICC colour profile. The output is untagged sRGB, so a photo shot in a wide-gamut space can shift slightly in colour, and that shift is a conversion rather than a mistake. The one EXIF field that changes what you see is the orientation flag, and the browser does apply it on the way in, so a sideways phone photo arrives upright rather than needing a manual rotation.",
+          "Third, animation is not carried through. A GIF or an animated WebP is decoded to its first frame, so an animated file becomes a still image of frame one and every later frame is lost. There is no frame picker, because there is no frame selection in a single canvas. If you need a specific frame, extract it first and open that instead.",
+        ],
+      },
+      {
+        heading: "Choosing a format, and the quality slider that only sometimes matters",
+        paragraphs: [
+          "PNG is lossless and keeps transparency, and it is the largest of the three. JPEG is lossy, has no transparency channel, and composites transparent pixels on white, so a cut-out PNG saved as JPEG gets a white background rather than a black one or a hole. WebP is lossy at the quality you set, usually smaller than JPEG at the same perceived quality, and it keeps transparency, so it is usually the better choice for the web.",
+          "The quality slider is the encoder's own 0-to-1 argument, which is why it is disabled for PNG: there is nothing to lose, so a quality number would have no meaning. On the two lossy formats, 1.00 is the encoder's best effort and 0.30 is visibly soft. One more real detail: a canvas can refuse the format you asked for and hand back another. A browser without a WebP encoder returns a PNG from a WebP request, and rather than naming that file .webp this editor names it from the bytes that actually came back, and tells you the substitution happened.",
+        ],
+      },
+      {
+        heading: "What this editor is not",
+        paragraphs: [
+          "There are no layers, no PSD, no selection tools, no healing or content-aware fill, no clone stamping, and no AI of any kind. There is also no HEIC, AVIF or RAW support, so a photo straight out of an iPhone in HEIC has to be converted before it can be opened here, and a camera RAW needs its own converter first. The tool covers the everyday edits and does them locally, with nothing installed; for compositing, layer work or retouching, a full editor is the right tool.",
+          "Everything here happens in your browser. The file is read locally, decoded locally, edited locally and saved locally. That matters most for the images people most want to edit privately: an unredacted contract, an internal mockup, a screenshot of something that has not been announced, or a passport photograph.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "how-to-convert-markdown-to-html",
     title: "How to Convert Markdown to HTML Online (Sanitized, Copy-Ready)",
     description:
@@ -1760,6 +1893,68 @@ export const GUIDES: Guide[] = [
         paragraphs: [
           "Input is capped at 200,000 characters. The editor stops accepting input at the cap and says so, and a file larger than that is refused with the limit spelled out rather than being silently truncated — a large specification or a whole documentation tree belongs in an editor with real file handling, not in a browser pane. The counters above the panes show characters in, words, characters of HTML out, the size of that HTML in bytes, and the heading count, so you can see what a conversion actually cost before you ship it.",
           "Everything runs in this tab. The Markdown, the generated HTML and any file you open with Open .md file are read locally and never uploaded; there is no server-side conversion step to leak anything to. A genuinely unparsable input — an unclosed fence, pathological nesting — surfaces as a plain message asking you to look at the structure rather than a blank pane or a stack trace, and empty input is simply an empty state, not an error.",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "how-to-convert-html-to-image",
+    title: "How to Convert HTML to an Image (PNG, JPEG, WebP) in Your Browser",
+    description:
+      "Render HTML to a PNG, JPEG or WebP at an exact 1x-4x device-pixel scale: a measured capture-box preview, a disclosed pixel budget, a 200 KB cap, and an honest account of what a canvas 2D re-draw does not reproduce.",
+    keywords: [
+      "html to image",
+      "convert html to png online",
+      "html to jpg converter",
+      "html to webp converter",
+      "capture div as image",
+      "html snippet to image",
+    ],
+    toolSlug: "html-to-image",
+    published: "2026-09-28",
+    updated: "2026-09-28",
+    readMinutes: 5,
+    sections: [
+      {
+        heading: "What this converter actually does",
+        paragraphs: [
+          "You paste markup, choose a capture width, a scale and a format, and the tool re-draws that markup into an image and saves it. The capture width (240 to 1200 px) fixes the width of the box your content is laid out in, exactly as a container element would. The scale is the device-pixel multiplier, and it is the part most tools describe vaguely: at 2x, every CSS pixel is painted as two image pixels, so a 480 px wide box becomes a 960 px wide file. That is the same relationship between CSS pixels and device pixels that a retina display has, which is why 2x is the useful default for mockups, docs and anything with small text.",
+          "Because that arithmetic is exact, the tool can show it to you before you commit. The projection under the scale control prints the output size in pixels, and it is calculated the way the renderer calculates it - floor(css size x scale) - so the number you read is the number the canvas is allocated. There is no separate vague quality slider and no hidden resampling step that quietly produces a different size from the one you asked for.",
+        ],
+      },
+      {
+        heading: "The pixel budget, and why the scale moves on its own",
+        paragraphs: [
+          "There is a ceiling on the canvas the browser will allocate, and this tool fixes it at 16 megapixels total and 8192 pixels on any single side. Those two numbers handle different failures: the pixel budget is what the browser refuses to allocate, and the side limit is what some canvas implementations cap independently. When your requested scale would break either one, the tool does not refuse the capture and it does not pretend. It lowers the scale to the largest value that fits, tells you the scale you asked for and the scale actually used, and still writes the file.",
+          "Two things it will not do. It will never go below 1x, because rendering under 1x softens text to fake a size you did not request, and a smaller image quietly presented as the one you asked for is worse than an honest reduction. And if the content cannot fit the budget even at 1x, the capture is refused with the limit named, because at that point there is no honest scale left to offer. There is also a hard refusal for content wider than the capture box: the image is cropped to the box rather than reflowed, so the tool tells you the width you need instead of cropping a card in half.",
+        ],
+      },
+      {
+        heading: "Format, files, and the copy you get",
+        paragraphs: [
+          "PNG is lossless and the largest file, which makes it the right choice for UI, code, diagrams and flat colour. JPEG is lossy at quality 0.92 and has no transparency channel, so it suits photographs and gradients. WebP is lossy at the same quality, usually smaller than JPEG, and keeps transparency - but not every browser can encode it. If yours cannot, the canvas returns PNG instead; the tool says so, and the file is named after the bytes you actually received rather than the format you clicked, so the extension never lies about the contents.",
+          "The file is saved automatically when the capture finishes, and the result panel then offers the same bytes two more ways: copy to clipboard, and download again. Re-downloading is not a second render - it writes the identical buffer under the identical name, so the file you attach to an issue is provably the file in the panel. The name comes from the file you opened, so invoice.html becomes invoice-2x.png; pasted markup has no source name and is called capture-2x.png. Anything a filename cannot contain is replaced rather than passed through.",
+        ],
+      },
+      {
+        heading: "What a re-draw reproduces, and what it does not",
+        paragraphs: [
+          "This is a re-draw, not a photograph of your screen. The renderer copies the page into an offscreen iframe, reads each element's computed style and repaints it with the canvas 2D API. That is why the layout is right: flexbox and grid are painted the way your browser already resolved them, inline styles and class rules apply, a <style> block is honoured, borders, box-shadow, text-shadow, linear and radial gradients, tables, list markers and ::before/::after all come through, along with any web font the page has already loaded.",
+          "The same mechanism has real gaps, and they are listed on the tool itself rather than discovered afterwards. filter, backdrop-filter, mix-blend-mode, conic-gradient, the repeating gradients and object-fit are not painted. It does not use an SVG foreignObject, so content that depends on one will not survive. The output is composited on white, so a transparent PNG source still lands on white. An image served without CORS headers is left out of the capture rather than drawn blank, and a remote <img src> or CSS url() is fetched by your browser exactly as any page would fetch it. Finally, vw, vh and position: fixed resolve against the browser window rather than the capture width, so a layout that looks right in a full viewport can be cropped differently here.",
+        ],
+      },
+      {
+        heading: "What is removed before anything is drawn",
+        paragraphs: [
+          "Pasted markup is rebuilt from an allowlist before it is displayed or painted. Scripts, iframes, objects, embedded SVG, MathML, form controls and <canvas> elements are removed with their contents, every on* handler is stripped, and javascript: and vbscript: URLs are rejected in any URL attribute - including entity-encoded and whitespace-obfuscated spellings of the same thing. A <style> block is deliberately kept, because a class-based mockup is most of what people want to capture, and so are data: and aria- attributes. The id attribute is removed: it could collide with this page's own ids and hijack a label or a :target rule. Executable CSS constructs - expression(), -moz-binding, behavior: and @import - are scrubbed from both inline styles and kept style blocks.",
+          "The important part is that there is only one markup string. The preview and the capture both render the exact same sanitized output, so what you see on screen is what ends up in the file, and the one-line disclosure under the editor reports the real counts of what was removed. Input is capped at 200 KB.",
+        ],
+      },
+      {
+        heading: "Privacy, and when to reach for something else",
+        paragraphs: [
+          "Nothing is uploaded. Your markup is read in this tab, laid out in this tab, repainted in this tab and written to your downloads from this tab, and no request is made for your HTML. The one network traffic that can happen is whatever your own markup points at - a remote image or stylesheet - which your browser fetches as it would on any page.",
+          "If you need a full scrolling page, or a capture of something that is not currently in the DOM, or a renderer that reproduces filter and blend modes, use a headless browser screenshot or the browser's own capture instead: this tool is built for a bounded, self-contained box, and it is honest about that boundary rather than pretending otherwise.",
         ],
       },
     ],

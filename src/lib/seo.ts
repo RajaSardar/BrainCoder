@@ -74,9 +74,75 @@ const TOOL_KEYWORDS: Record<string, string[]> = {
   "text-to-pdf": ["text to pdf", "text to pdf converter", "convert txt to pdf", "plain text to pdf", "text file to pdf"],
   "md-to-html": ["markdown to html", "convert md to html online", "md to html converter", "markdown converter online", "convert markdown online", "markdown to html with preview", "sanitized markdown to html", "markdown to html download"],
   "html-to-pdf": ["html to pdf", "convert html to pdf online", "html to pdf converter", "html markup to pdf", "paginate html as pdf"],
-  "html-to-image": ["html to image", "html to png", "screenshot html online", "capture div as image"],
-  "image-ocr": ["ocr online", "image to text", "extract text from image", "ocr jpg png", "photo to text"],
-  "image-editor": ["image editor online", "edit photo in browser", "crop resize image", "online drawing"],
+  "html-to-image": [
+    "html to image",
+    "html to png",
+    "html to image converter online",
+    "convert html to png online",
+    "html to jpg converter",
+    "html to webp converter",
+    "capture div as image",
+    "html element to png",
+    "html snippet to image",
+    "html to 2x png",
+    "html mockup to image",
+    "convert html to image without uploading",
+  ],
+  "image-ocr": [
+    "ocr online",
+    "image to text",
+    "extract text from image",
+    "ocr jpg png",
+    "photo to text",
+    "ocr image online free",
+    "image to text converter free",
+    "ocr png jpg webp bmp",
+    "extract text from a photo",
+    "screenshot to text online",
+    "ocr scanned document online",
+    "ocr receipt image",
+    "ocr invoice image to text",
+    "ocr without uploading",
+    "private ocr browser",
+    "offline ocr tool",
+    "ocr webp image",
+    "ocr bmp image",
+    "ocr gif image",
+    "ocr handwriting image",
+    "ocr multiple languages online",
+    "ocr japanese image online",
+    "ocr chinese simplified image",
+    "ocr korean image online",
+    "ocr arabic image online",
+    "ocr hindi image online",
+    "ocr russian image online",
+    "scan to text converter",
+    "copy text from image online",
+    "image to txt download",
+    "tesseract ocr in browser",
+  ],
+  "image-editor": [
+    "image editor online",
+    "edit image in browser",
+    "crop image online",
+    "rotate image online",
+    "resize image online",
+    "flip image horizontally",
+    "image brightness contrast tool",
+    "grayscale sepia filter online",
+    "annotate image online",
+    "add text to image online",
+    "draw arrow on image",
+    "image jpeg webp png converter",
+    "compress after editing image",
+    "photo editor no upload",
+    "private image editor browser",
+    "offline image editor",
+    "crop png online free",
+    "image editor 16 mp",
+    "undo image edits",
+    "edit image without installing anything",
+  ],
   "jwt-decoder": ["jwt decoder online", "decode jwt token", "inspect jwt claims", "jwt header payload", "parse jwt"],
   "qr-code-generator": ["qr code generator online", "create qr code free", "free qr code generator no sign up", "qr code generator for url", "qr code with custom colors", "qr code svg download"],
   "csv-json": ["csv to json", "json to csv", "convert csv online", "csv json converter"],
@@ -161,6 +227,7 @@ export function toolTitle(tool: ToolConfig): string {
     generate: "generator",
   };
   const CUSTOM_TITLES: Record<string, string> = {
+    "html-to-image": "HTML to Image online — convert HTML to PNG, JPG or WebP",
     "pdf-protect": "Password Protect PDF online — free PDF lock tool",
     "pdf-unlock": "Unlock PDF online — remove a PDF password for free",
     "pdf-metadata": "View PDF Metadata online — free PDF inspector",
@@ -176,6 +243,10 @@ export function toolTitle(tool: ToolConfig): string {
     "html-to-pdf": "HTML to PDF Online — convert HTML to a selectable-text A4 PDF, free",
     "md-to-html": "Markdown to HTML Online — sanitized HTML with copy and .html download",
     "pdf-scale-pages": "Scale PDF Pages Online — resize every page, text stays selectable",
+    "image-ocr":
+      "OCR Online — read text from PNG, JPEG, GIF, WebP and BMP images in 12 languages, with the format confirmed from the file's real header bytes, disclosed 25 MB / 16 MP / 8192 px caps refused with their actual numbers, live progress from the recognizer's own five stages with a working Cancel, the engine's own confidence score reported as the engine's opinion rather than a claim of accuracy, one-click copy and a .txt download, and Tesseract running as WebAssembly on your device with the image never uploaded",
+    "image-editor":
+      "Image Editor Online — crop, rotate, mirror, resize, adjust, filter and annotate an image in your browser, then export PNG, JPEG or WebP, with exact geometry, a 30-step undo, disclosed 25 MB / 16 MP / 8192 px caps that refuse rather than shrink, and every limit stated",
   };
   if (CUSTOM_TITLES[tool.slug]) return CUSTOM_TITLES[tool.slug];
   const cat = tool.category.toLowerCase();
@@ -226,10 +297,16 @@ export function buildToolMetadata(tool: ToolConfig): Metadata {
 export function toolJsonLd(tool: ToolConfig) {
   const url = `${SITE_URL}/tools/${tool.slug}`;
   const TOOL_FEATURE_LIST: Record<string, string> = {
+    "image-ocr":
+      "OCR online that runs Tesseract as WebAssembly inside your tab — the image is decoded and read on your device and is never uploaded, and the engine, its WebAssembly core and the language model are all served from this site's own origin rather than a third-party CDN — 12 languages (English, Spanish, French, German, Portuguese, Italian, Russian, Hindi, Arabic, Chinese (simplified), Japanese and Korean), one model per run, downloaded on that language's first use and cached by the browser afterwards with its size shown before you start — PNG, JPEG, GIF, WebP and BMP, with the format confirmed from the file's real header bytes before the image is decoded — 25 MB per file, 16 megapixels per image and 8192 px on the long side, all three refused with the file's real numbers instead of a silent crop or downsample — live progress from the recognizer's own five stages and a Cancel that stops the run — the engine's own confidence score shown with a plain description of what it means, because OCR is a guess and a large photo is downsampled by the engine while EXIF rotation is not applied — one-click copy of the cleaned text and a .txt download named <image>-ocr-<language>.txt",
+    "image-editor":
+      "Image editor that runs in your browser with the image never uploaded — exact 90-degree rotation, horizontal and vertical mirroring, and cropping, which move pixels instead of resampling them — a uniform 10% to 400% resize that applies one scale to both axes so nothing is stretched — brightness, contrast and saturation plus grayscale, sepia, invert, cool and warm filters computed per pixel in this tab and baked into the export — brush, line, rectangle, arrow and text annotations recorded in the image's own coordinates, so they travel through a later crop, rotation or resize — a 30-step undo and a reset — PNG, JPEG and WebP export with the encoder's own 0.30 to 1.00 quality argument on the two lossy formats and no quality slider on PNG — a 25 MB input cap, a 16 megapixel and 8192 px per-side output budget, and an 8 px minimum side, every one refused with the largest scale that would fit rather than quietly shrunk — the file named for what it actually contains, and the honest list of what is not supported: no layers, no PSD, no healing, no AI upscaling, no HEIC, AVIF or RAW, GIF and animated WebP flattened to their first frame, and no EXIF, GPS, timestamp or ICC profile carried through",
     "md-to-html":
       "CommonMark and GitHub-flavored conversion — headings, lists, tables, fenced code, task lists, strikethrough, quotes, links and images — where the fragment is sanitized against an allowlist before the HTML pane, the Preview tab, Copy and the standalone .html download all show the same string, with a disclosed 200,000 character cap and nothing uploaded",
     "html-to-pdf":
       "Headings, paragraphs, lists, tables, blockquotes and code laid out across A4 pages as real selectable text — no screenshots, no image embedding, 200 KB and 200 page caps, everything computed locally",
+    "html-to-image":
+      "A live capture-box preview measured with ResizeObserver before anything is drawn, a device-pixel scale from 1x to 4x in half steps projected to an exact floor(css px x scale) output size, PNG, JPEG and WebP with the lossless and lossy trade-offs stated, a 16 MP pixel budget and an 8192 px single-side limit that lower the scale instead of refusing it — never below 1x, and always disclosed, automatic download plus clipboard copy and a re-download of the identical bytes, an allowlist sanitizer that removes scripts, frames, form controls, inline SVG, event handlers, javascript: URLs and executable CSS before the preview and the capture both render the same markup, overflow refused rather than silently cropped, white compositing, an honest note that this is a canvas 2D re-draw rather than a screen photograph and that filter, backdrop-filter, mix-blend-mode, conic and repeating gradients, object-fit and non-CORS images do not come through, a 200 KB input cap, and no request is ever made for your markup",
     "diff-checker":
       "Side-by-side and unified diff views, word- and character-level highlighting, ignore-case and whitespace options, unified-diff copy — all in your browser",
     "text-size-calculator":

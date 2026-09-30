@@ -46,3 +46,7 @@ e2e/out/
 
 # rust
 crates/core/target
+
+# tesseract.js drops an uncompressed model in the cwd when its Node API is
+# driven from an audit; the shipped models are the gzipped ones in public/ocr.
+/*.traineddata

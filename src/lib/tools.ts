@@ -676,9 +676,9 @@ export const TOOLS: ToolConfig[] = [
   {
     slug: "html-to-image",
     name: "HTML to Image",
-    tagline: "Screenshot HTML as PNG, JPG or WebP",
+    tagline: "Render HTML to PNG, JPG or WebP at 1–4x",
     description:
-      "Render pasted HTML into a downloadable image with configurable scale and format.",
+      "Re-draw pasted HTML into a PNG, JPEG or WebP at an exact 1x–4x device-pixel scale, inside the 16 MP budget. Composited on white and cropped to the capture box — it is a re-draw, not a screen grab, and runs locally with nothing uploaded.",
     category: "Convert",
     icon: Camera,
     accent: "text-purple-600",
@@ -689,7 +689,7 @@ export const TOOLS: ToolConfig[] = [
     name: "Image OCR & Text Extraction",
     tagline: "Extract text from images",
     description:
-      "Extract printed text from images using on-device Tesseract.js. Private — nothing is uploaded.",
+      "Read printed text out of a PNG, JPEG, GIF, WebP or BMP image in 12 languages, with Tesseract running as WebAssembly on your device. OCR is a guess, so the engine's own confidence score is shown.",
     category: "Convert",
     icon: ScanText,
     accent: "text-cyan-600",
@@ -698,9 +698,9 @@ export const TOOLS: ToolConfig[] = [
   {
     slug: "image-editor",
     name: "Image Editor",
-    tagline: "Draw, annotate & edit images",
+    tagline: "Crop, rotate, resize & annotate",
     description:
-      "Open an image and annotate with pen, shapes, arrows and text. Undo mistakes and export as PNG.",
+      "Crop, rotate, mirror, resize, adjust and annotate an image in your browser, then export PNG, JPEG or WebP. Over-budget exports are refused, not shrunk.",
     category: "Media & Design",
     icon: Paintbrush,
     accent: "text-pink-600",

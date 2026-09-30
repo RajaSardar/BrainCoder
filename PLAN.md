@@ -1191,8 +1191,37 @@ Phase 2+ Target (NOT building now):
   overflow check measured the whole document including the known tracking
   residual of the site header, and is now scoped to `main#main`. Reports:
   `audit/reports/pdf-scale-pages.md`, `md-to-html.md`, `html-to-pdf.md`.
-- Next: HTML to Image, Image OCR, Image Editor (parallel three). Remaining 80
-  tools have not completed this process.
+- Wave 10: HTML to Image (48th), Image OCR (49th), Image Editor (50th). All ten
+  judges returned for each and every gap closed. HTML to Image was rebuilt around
+  a real `html2canvas` capture with the measured content box driving the output
+  size, a 1x/2x/4x scale whose label states the true pixel dimensions, a byte
+  budget refused before any capture work, a sanitizer that strips `javascript:`
+  URLs, inline handlers and dangerous `url()` values, and MIME-truthful export
+  names including the WebP fallback. Image OCR runs Tesseract in the tab against
+  same-origin compressed model assets (12 languages, no upload, no API key), with
+  the model origin disclosed, the engine's own downsampling disclosed, EXIF
+  rotation disclosed as unapplied, and confidence banded rather than printed as a
+  percentage of correctness. Image Editor is a canvas editor with real crop,
+  90° turns, mirroring, resize, brightness, Rec. 601 grayscale, brush and text
+  annotations baked into the export, and one-step-per-change undo.
+  Build 308 pages (42 guides). Node checks 136/174/320 green; e2e green and
+  stable across repeat runs: html-to-image 89/89, image-ocr 99/99, image-editor
+  124/124. Verification caught and fixed **three real component defects**:
+  html-to-image's `loadFile` read the run id *before* `invalidate()` incremented
+  it, so every file upload cancelled its own capture; its overflow detection read
+  the root's `scrollWidth`/`scrollHeight`, which an `overflow: hidden` root
+  reports as its client size, so tall content was never detected — it now
+  measures the union of child rects under a `MutationObserver`; and image-ocr's
+  byte-cap refusal quoted only rounded megabytes, so the exact byte counts are
+  now in the message. Plus eight harness defects, including the same
+  `Uint8Array`-to-`Buffer` trap in two harnesses, an IHDR read at `at+8`/`at+9`
+  where the data starts at `at+8` so bit depth is at `at+16`, a fixture
+  generator that wrote row filter Up with raw values instead of deltas, and an
+  image-editor stage that sat at y≈1177 in a 720px viewport so every synthetic
+  drag landed on nothing. Reports: `audit/reports/html-to-image.md`,
+  `image-ocr.md`, `image-editor.md`.
+- Next: JWT Decoder, QR Code Generator, CSV to JSON (parallel three). Remaining
+  77 tools have not completed this process.
 - Hash Generator: ten independent judges ran in parallel (the architect report
   was not returned — aborted; its coverage supplied by functional/security/
   edge findings plus the harness). Component rebuilt on the team standard
