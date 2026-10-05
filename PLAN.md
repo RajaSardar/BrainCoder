@@ -1220,8 +1220,49 @@ Phase 2+ Target (NOT building now):
   image-editor stage that sat at y≈1177 in a 720px viewport so every synthetic
   drag landed on nothing. Reports: `audit/reports/html-to-image.md`,
   `image-ocr.md`, `image-editor.md`.
-- Next: JWT Decoder, QR Code Generator, CSV to JSON (parallel three). Remaining
-  77 tools have not completed this process.
+- Wave 11: JWT Decoder (51st), QR Code Generator (52nd), CSV to JSON (53rd). All
+  ten judges returned for each. The JWT Decoder was rebuilt from a page that
+  advertised verification and did none: it is now a decoder only, with strict
+  RFC 4648 base64url (no `=`/`+`/`/`, impossible lengths and non-canonical
+  trailing bits refused with the reason and position), fatal UTF-8, an RFC 7515
+  object-only JOSE header, a non-object payload allowed to decode, a 262,144
+  character cap checked before any work, relative *and* absolute claim readings
+  with toned exp/nbf/iat, and a "Decoded, not verified" banner above the input.
+  The QR Code Generator encodes from scratch (GF(256) Reed-Solomon, versions
+  1–40, all four levels, numeric/alphanumeric/byte modes with a real ECI header,
+  four-module quiet zone) and exports PNG and SVG from the same matrix. CSV to
+  JSON is a full RFC 4180 lexer with an allocation-free preflight that mirrors it,
+  caps refused with the real numbers, ragged rows padded with `null` and surplus
+  kept, duplicate headers renamed, and delimiter detection that reports its
+  sample and its confidence. Build 309 pages. Node checks 238/155/364 green; e2e
+  green and stable across repeat runs against the same production build on port
+  3801: jwt-decoder 41/41, qr-code-generator 112/112, csv-json 195/195.
+  Verification caught and fixed **five real product defects**: jwt-decoder's
+  segment-count refusal read "This input has 2." with no unit; its empty-signature
+  (`alg: "none"`) case was reported as "the segment is empty", which hides the one
+  fact that matters about that token; csv-json's `file.text()` silently stripped
+  the UTF-8 BOM, so the parser's `hadBom` was always false and the "a byte order
+  mark was skipped" disclosure could never appear for an opened file — it now
+  decodes `arrayBuffer()` with `ignoreBOM: true`; csv-json reported
+  "chosen by hand" for a single-column file that nothing was chosen for; and its
+  delimiter summary line branched on `confidence: "none"` alone, which is
+  overloaded between *detected nothing* and *the reader chose*, so a hand-picked
+  comma rendered as "no delimiter needed" directly above a note saying it was set
+  by hand — `CsvJsonConverted` now carries `delimiterMode` from the options that
+  produced it. The last one shipped green because the harness only asserted the
+  manual line was *not* labelled auto-detected, which the broken wording
+  satisfied; it now asserts the actual text in both directions. Plus nine
+  harness defects, including a `parseSvgRuns` destructuring bug
+  (`const [, x, y, w]` off a three-element array) that made `w` permanently
+  `undefined` and every SVG cell count zero, a PNG decoder that accepted only
+  colour type 2 when `canvas.toBlob` writes type 6, a capacity asserted against
+  level L (7,089) when the page defaults to M (5,596), page-wide
+  `role="alert"`/`role="status"` locators that counted Next.js's route announcer
+  and the shared CopyButton, and Chrome refusing the eleventh download in one page
+  unless its multiple-downloads prompt is answered. Reports:
+  `audit/reports/jwt-decoder.md`, `qr-code-generator.md`, `csv-json.md`.
+- Next: Wave 12, the next three tools from the registry. Remaining 74 tools have
+  not completed this process.
 - Hash Generator: ten independent judges ran in parallel (the architect report
   was not returned — aborted; its coverage supplied by functional/security/
   edge findings plus the harness). Component rebuilt on the team standard

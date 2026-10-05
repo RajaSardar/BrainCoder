@@ -828,40 +828,71 @@ export const GUIDES: Guide[] = [
   },
   {
     slug: "how-to-convert-csv-to-json",
-    title: "How to Convert CSV to JSON Online (or JSON to CSV)",
+    title: "How to Convert CSV to JSON Online (Without Losing a Column)",
     description:
-      "Turn table data into clean JSON (or the other way round) in your browser — delimiter-aware, header-aware, and completely private.",
+      "Convert CSV to JSON in your browser with a real RFC 4180 parser: quoted commas, embedded newlines, doubled quotes, CRLF, CR and LF, a UTF-8 BOM, honest delimiter detection, and every decision the converter made listed on screen.",
     keywords: [
       "csv to json",
       "convert csv to json online",
-      "json to csv",
-      "csv to json converter",
+      "csv json converter",
+      "csv parser online",
       "spreadsheet to json",
     ],
     toolSlug: "csv-json",
     published: "2026-09-15",
-    updated: "2026-09-15",
-    readMinutes: 3,
+    updated: "2026-10-01",
+    readMinutes: 5,
     sections: [
       {
-        heading: "Why convert CSV to JSON",
+        heading: "Why a one-line CSV to JSON converter gets it wrong",
         paragraphs: [
-          "CSV is how data lives in spreadsheets and exports; JSON is how most APIs and frontends expect it. Moving between the two is a daily chore for developers, analysts and automation work.",
-          "A converter that respects headers, quoted fields and delimiters turns a messy export into ready-to-fetch data in one step.",
+          "The reason people paste CSV into a converter and get back something subtly broken is almost never the JSON side. It is the CSV side. A cell that contains a comma has to be quoted; a quoted cell can contain a line break; a quote inside a quoted cell is written as two quotes; some exporters use semicolons or tabs because the data itself contains commas; some files start with a byte order mark; and Windows tools write CRLF while old Mac tools wrote a bare CR. Split the text on a comma and each of those turns a column into fragments or loses a row entirely.",
+          "So the first question when you choose one is not what it outputs but what it does with the awkward cases. This page writes the parser out by hand for exactly that reason, and the test below is whether it tells you what it found.",
         ],
       },
       {
-        heading: "Converting with structure in mind",
+        heading: "Paste it, and read the delimiter decision first",
         paragraphs: [
-          "The CSV ↔ JSON tool treats the first row as keys and maps every following row to an object, so your JSON mirrors the table instead of becoming a flat list of strings.",
-          "It handles the fiddly parts — comma, semicolon and tab delimiters, quoted values containing separators, and consistent types — so the output parses cleanly on the first try.",
+          "Paste the CSV or open a file - there is no sample data loaded on the page, so nothing you see can be confused with your own. Then read the delimiter line before you read anything else, because the wrong delimiter produces output that looks plausible and is completely wrong. Auto-detect scores comma, semicolon, tab and pipe over the first two dozen records and reports its confidence: high means the chosen delimiter appears in every sampled record and no other candidate appears at all, medium means it is the only candidate present but not in every record, and low means another delimiter also appears in the data - which usually means one of them is inside cell text. The header row is rendered above the output, so the fastest check is whether those keys look like your columns.",
+          "A file that is semicolon-separated or tab-separated converts the same way once you pick it by hand. Single-column files need no delimiter at all and the page says so rather than pretending to detect something.",
         ],
       },
       {
-        heading: "Both directions, in your browser",
+        heading: "What RFC 4180 actually promises, and where this one stops",
         paragraphs: [
-          "The same tool goes the other way: paste JSON and get a properly escaped CSV you can drop straight into Excel or Google Sheets.",
-          "Everything is parsed locally, which keeps the conversion instant and keeps proprietary data out of third-party services.",
+          "RFC 4180 is specific: fields separated by commas, records ended by CRLF, optional double quotes around any field, a doubled quote meaning one literal quote, and a line break allowed inside a quoted field. This parser does all of that, and it treats LF and a bare CR as record endings too, which is an extension rather than part of the specification.",
+          "There are three more extensions, all disclosed on the page: a leading UTF-8 byte order mark is skipped, a blank line is skipped rather than becoming an empty row, and a trailing line ending does not create an empty record. Each of those is what a spreadsheet does, which is why they are the defaults - but they are choices, and on a single-column file an empty line cannot be told apart from a row holding one empty cell.",
+          "One case is refused rather than guessed: a double quote in the middle of a field that was never quoted is not legal CSV, and accepting it quietly is how a delimiter inside a cell gets mistaken for a column break. The text is kept and the position is reported - record, field and character number - so you can go and look at the file rather than wondering what the tool did.",
+        ],
+      },
+      {
+        heading: "Every value is a string, and that is the point",
+        paragraphs: [
+          "The most consequential decision on the page is the one it refuses to make. No type is inferred. The string 00123 stays 00123, so a UK postcode, a phone number, a product code and a zero-padded identifier all survive. TRUE stays the five characters TRUE rather than becoming the boolean true. A date written 3/4/26 stays 3/4/26 instead of being rewritten as an ISO date in the wrong order. A number written with a thousands separator stays as it was written rather than becoming a number that means something different.",
+          "The only null values in the output are the cells a short row never had, and that is a different thing from an empty cell: an empty cell is something the CSV said, a missing cell is something it did not. If you want numbers, convert them where you consume the JSON, in code, where you can see the rule.",
+        ],
+      },
+      {
+        heading: "When rows and headers disagree",
+        paragraphs: [
+          "Real exports are messy, so the two common failures are handled in the open rather than smoothed over. A row with fewer fields than the header has keys gets JSON null in the missing cells, and a row with more fields keeps its extra values in an array under a name you can see in the output rather than dropping them. Both counts are reported, and the first affected row number is given so you can find it in your file.",
+          "Duplicate column names are the other one. Two columns called amount cannot both be amount in a JSON object - the second would silently overwrite the first - so the second becomes amount (2), the third amount (3), and if that would collide with a name already in use the counter keeps going. Every rename is listed on the page. The first occurrence always keeps the original name, which keeps the common case working the way your other exports do.",
+          "An empty header cell has no name to use, so it becomes columnN for its position. Surrounding whitespace on a header cell is trimmed before it becomes a key; the cell values themselves are never touched.",
+        ],
+      },
+      {
+        heading: "Caps, previews, and what the page will not do for you",
+        paragraphs: [
+          "Four caps are checked before any parsing work starts: 5,242,880 characters of pasted text, 5 MB per opened file, 20,000 rows, and 512 columns in a single row, plus 100,000 characters in one cell. Each is refused with its real numbers rather than truncated, because a truncated CSV converts into JSON that is wrong in a way nobody can see. The cell-length cap is the one people hit by accident - a CSV with a whole log file or a base64 blob in one cell.",
+          "Both panels on the page are labelled as previews and are deliberately bounded: a data table showing the first twenty rows and eight columns, and a JSON pane showing the first 20,000 characters. Copy and Download give you the complete document, and the byte count on screen is measured on that exact text, so what the number says is what the file contains. Re-parsing the downloaded file gives back the same document.",
+          "What it does not do is worth knowing before you rely on it: no Excel serial dates, no locale-aware numbers or currencies, no #N/A or other error values, no stripping of the leading apostrophe that marks a cell as text, no formula evaluation - =SUM(A1:A9) stays that literal string - and no encoding sniffing, so a Windows-1252 export arrives with U+FFFD characters and the page tells you how many it counted. It also does not convert JSON back to CSV; its old reverse mode was removed rather than left half-implemented, because a round trip that changes types on the way out is worse than no round trip.",
+        ],
+      },
+      {
+        heading: "Privacy",
+        paragraphs: [
+          "Your CSV is read with the browser's own file API and parsed in the tab. No request is made with your data, and nothing is uploaded - which matters more here than on most pages, because a CSV export is usually customer records, orders or an internal report. Same-origin static assets are all this page loads.",
+          "One thing to keep in mind as a general habit rather than a bug in this tool: a CSV cell can contain markup, and this page renders every cell as escaped text, so a cell holding a script tag shows you a script tag. That is the right behaviour, but it means the value of any converter you use - including this one - is exactly the value of its output.",
         ],
       },
     ],
@@ -920,8 +951,8 @@ export const GUIDES: Guide[] = [
     ],
     toolSlug: "qr-code-generator",
     published: "2026-09-15",
-    updated: "2026-09-16",
-    readMinutes: 4,
+    updated: "2026-10-01",
+    readMinutes: 7,
     sections: [
       {
         heading: "What a QR code is for",
@@ -931,24 +962,46 @@ export const GUIDES: Guide[] = [
         ],
       },
       {
-        heading: "Generating one in your browser",
+        heading: "How the standard actually works",
         paragraphs: [
-          "The QR Code Generator takes a URL or any snippet of text and renders the code locally with the qrcode library — the encoding happens on your device, so the content of the code never goes through a third party.",
-          "Download the result as a PNG for screens and documents, or grab the SVG version when you need an infinitely sharp vector for print materials.",
+          "The specification, ISO/IEC 18004, defines 40 versions. Version 1 is a 21×21 grid of modules and each step up adds four modules per side, so version 40 is 177×177 — 40 versions in total. A symbol also carries one of four error correction levels: L recovers about 7% of the codewords, M about 15%, Q about 25% and H about 30%.",
+          "The payload is split into blocks, each block gets Reed-Solomon error correction codewords appended, and the blocks are interleaved so that a scratch crossing several blocks damages them evenly rather than destroying one. On top of that sit the function patterns — the three finder squares, the timing lines, the alignment grid and the dark module — and finally eight candidate data masks are generated and scored so the least visually confusing one wins.",
         ],
       },
       {
-        heading: "Designing codes that scan every time",
+        heading: "Generating one in your browser",
         paragraphs: [
-          "Keep the surrounding quiet zone clear, size the code generously, and avoid putting text or logos on top of the pattern. High contrast between the squares and the background matters most.",
-          "Test the final version with your phone before printing in bulk — a QR checked once is worth a hundred reprinted signs.",
+          "The QR Code Generator encodes from scratch in TypeScript rather than delegating to a third-party package, and the whole thing runs on your device. Nothing about the code is sent anywhere, so a Wi-Fi password or a private link stays private.",
+          "One deliberate simplification: the tool picks a single mode for the whole string. Digits are cheapest, then uppercase alphanumeric, then UTF-8 bytes. A single lowercase letter in an otherwise uppercase string therefore pushes everything into byte mode and cuts capacity. Splitting a string across modes would fit more characters at the price of a denser, harder-to-scan code.",
+          "Text outside ASCII is written as UTF-8 bytes with no ECI header, which is the assumption most readers make. Some scanners decode those bytes differently and show garbled characters instead — worth testing if non-Latin text matters to you.",
+        ],
+      },
+      {
+        heading: "Capacity, and why your URL fits less than you expect",
+        paragraphs: [
+          "At error correction level L, version 40 holds 7,089 digits, 4,296 uppercase alphanumeric characters, or 2,953 bytes. A typical https:// URL is mostly lowercase, so it lands in byte mode and its real ceiling is closer to the byte figure. Raising the error correction level shrinks every one of these numbers.",
+        ],
+      },
+      {
+        heading: "Designing codes that scan",
+        paragraphs: [
+          "High contrast between the modules and the background matters most: aim for at least a 4:1 ratio, which means near-black on white rather than a pale tint. Keep the four-module quiet zone around the code — the tool includes it, and cropping it is one of the most common causes of a failure.",
+          "For print, judge the size by module rather than overall width. Each module needs about 0.5 mm or more for a phone camera to resolve it, which is roughly 83 mm across for a version 40 code and 40 mm for a version 4. Print at 300 dpi or better.",
+          "Use the SVG for print and for anything that will be resized: it is vector, so it scales without resampling. The PNG is a raster image and only looks sharp at the pixel size you exported.",
+          "Avoid inverting the colours. A light-on-dark code reads on many modern phones and fails on plenty of others, so treat it as a risk you have tested rather than a free stylistic choice.",
         ],
       },
       {
         heading: "Error correction and file format",
         paragraphs: [
-          "Error correction balances data density against damage resilience: L reserves the least space for recovery, M is a safe all-round default, and H keeps codes scannable even when printed on stickers or packaging that get scratched or handled.",
-          "The preview on screen stays one size; the download size slider controls the file itself. Choose PNG for digital use, SVG when you need resolution-independent print output.",
+          "Error correction balances data density against damage resilience: L reserves the least space for recovery, M is a safe all-round default, and H is worth the extra density for stickers and packaging that get scratched or handled.",
+          "Higher error correction repairs damage to the modules themselves. It cannot rescue glare, motion blur, a curved surface, or a code printed too small to resolve — those are optical problems, not data problems, and no level setting fixes them.",
+        ],
+      },
+      {
+        heading: "Testing before you print in bulk",
+        paragraphs: [
+          "Scan the finished code with the phone you expect to be used, under the lighting and at the distance it will actually be read. No generator can guarantee a code scans in every condition, and one test is worth a hundred reprinted signs.",
         ],
       },
     ],
@@ -1955,6 +2008,56 @@ export const GUIDES: Guide[] = [
         paragraphs: [
           "Nothing is uploaded. Your markup is read in this tab, laid out in this tab, repainted in this tab and written to your downloads from this tab, and no request is made for your HTML. The one network traffic that can happen is whatever your own markup points at - a remote image or stylesheet - which your browser fetches as it would on any page.",
           "If you need a full scrolling page, or a capture of something that is not currently in the DOM, or a renderer that reproduces filter and blend modes, use a headless browser screenshot or the browser's own capture instead: this tool is built for a bounded, self-contained box, and it is honest about that boundary rather than pretending otherwise.",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "how-to-decode-a-jwt",
+    title: "How to Decode a JWT (and Why Decoding Is Not Verifying)",
+    description:
+      "Split a JSON Web Token into header, payload and signature in your browser, read exp, nbf and iat as real dates, and see exactly where the line between decoding and verifying sits.",
+    keywords: [
+      "decode jwt",
+      "jwt decoder online",
+      "how to read a jwt payload",
+      "jwt expiration check",
+      "jwt claims online",
+    ],
+    toolSlug: "jwt-decoder",
+    published: "2026-09-30",
+    updated: "2026-09-30",
+    readMinutes: 4,
+    sections: [
+      {
+        heading: "Decoding is not verifying",
+        paragraphs: [
+          "A JWT is three base64url strings joined by dots: header, payload, signature. Encoding is not encryption, so the first two are readable by anyone holding the token - there is no key involved in reading them and no secret to obtain. That is the whole of what decoding gives you: the text somebody wrote into the token.",
+          "Verifying is a different operation with a different input. Verification takes the signature, the header and the payload, plus a key the issuer published (a shared secret for HMAC, a public key for RSA or ECDSA), and recomputes the cryptographic check. A token that decodes tells you nothing about whether that check would pass, because the signature segment is deliberately opaque to a decoder and the token's author chooses its contents freely. Anyone can mint a token whose payload reads {\"sub\":\"admin\",\"admin\":true}. So the honest label is decoded, not verified, and this page puts that on screen, in the structure report and in every answer here.",
+          "It also means this tool cannot confirm whether a token is expired for the service that issued it, whether the audience matches, or whether the issuer is who it claims to be. It shows what the token says about those things, which is useful for debugging, and it stops there. If you need a real answer, send the token to the service that issued it and let it run its own verification.",
+        ],
+      },
+      {
+        heading: "Paste it, and read the structure report",
+        paragraphs: [
+          "Paste a token into the field. Surrounding whitespace is removed, and a leading Bearer is stripped so that a header copied out of a request works as pasted; when either happens the page says so rather than quietly tidying your input. Input is capped at 262,144 characters (256 KB) and anything longer is refused with its real length and that limit, before a single byte is decoded.",
+          "The structure report lists every dot-separated segment with its encoded length, its decoded byte length and whether it decoded. That panel is where a bad token explains itself. A character outside the base64url alphabet is refused by name and position, which covers the three mistakes that account for nearly every failure: standard Base64 + and / where base64url expects - and _, an = padding character that base64url never uses, and a stray character pasted in from a log. The decoder also refuses a length that no base64 string can produce and a final character whose unused bits are not zero, rather than rounding them off. Segments that decode to bytes which are not valid UTF-8, or to text that is not valid JSON, are refused with that reason instead of printing replacement characters or a blank panel.",
+          "A five-segment input is recognised as a JWE - an encrypted token - and refused: decoding cannot open it without the decryption key. Anything that is not exactly three segments is refused with its real segment count. Nothing is guessed and nothing is half-decoded.",
+        ],
+      },
+      {
+        heading: "Reading the claims, and the dates that matter",
+        paragraphs: [
+          "The registered claims come first: iss, sub, aud, exp, nbf, iat and jti, then any private claims sorted by name. Claims the token does not carry are listed as not present, because an absent exp is very different from an exp nobody looked at.",
+          "The four NumericDate claims - exp, nbf, iat and auth_time - are seconds since the epoch, so each is shown twice: as an absolute UTC date and time, and as a reading. exp becomes expires in 2 hours or expired 3 days ago, with the countdown live rather than frozen at the moment you pasted; nbf becomes not valid for another 30 minutes or valid since 2 hours ago; iat tells you when the token was issued. If a claim arrives as a JSON string rather than a number, or as something that is not a date at all, or as a number no browser can turn into a date, the row says so instead of quietly printing a plausible-looking wrong date.",
+          "A long claim is truncated for display with its real character count and the instruction to use the copy button for all of it, and the payload being a JSON array or a bare scalar is described as what it is rather than treated as a broken claims object. None of this makes the values trustworthy: they are text from the token, and a token's author wrote every one of them.",
+        ],
+      },
+      {
+        heading: "Privacy, and the honest limits",
+        paragraphs: [
+          "Nothing is uploaded and no request is made with your token: decoding happens in your tab, and the page makes no network call of any kind. That is a statement about this page only. A JWT is a bearer credential - whoever holds it can present it as you - so do not paste a live token into anything, including this one, unless you are entitled to read it, and do not paste a token out of a production log.",
+          "What this tool cannot do is the list worth reading before you trust a claim: it does not verify signatures, it does not fetch a JWKS endpoint, it does not check an issuer or an audience, it cannot decrypt a JWE, and it does not follow a nested JWT inside a claim. It cannot tell you whether a token is authentic, only what it says.",
         ],
       },
     ],

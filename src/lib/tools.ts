@@ -708,10 +708,10 @@ export const TOOLS: ToolConfig[] = [
   },
   {
     slug: "jwt-decoder",
-    name: "JWT Decoder & Verifier",
-    tagline: "Decode and verify JWT tokens",
+    name: "JWT Decoder",
+    tagline: "Decode a JWT — read the claims, never verified",
     description:
-      "Decode JWT headers and payloads, inspect expiration, and verify HS256/384/512 signatures with a secret.",
+      "Split a JSON Web Token into header, payload and signature, decode base64url properly, and read exp, nbf and iat as real dates. Decodes only: no signature is checked, and the token never leaves your browser.",
     category: "Developer",
     icon: FileKey,
     accent: "text-orange-600",
@@ -730,10 +730,10 @@ export const TOOLS: ToolConfig[] = [
   },
   {
     slug: "csv-json",
-    name: "CSV ↔ JSON Converter",
-    tagline: "Convert spreadsheets to JSON and back",
+    name: "CSV to JSON Converter",
+    tagline: "RFC 4180 CSV parsed in your browser, with nothing hidden",
     description:
-      "Convert CSV to JSON, or JSON to CSV, with configurable delimiters. Handles quotes and newlines inside cells.",
+      "Convert CSV to JSON with a real RFC 4180 parser: quoted commas, embedded newlines, doubled quotes, CRLF, LF, CR and a UTF-8 BOM. Auto-detects comma, semicolon, tab or pipe and says how sure it is. Every value stays a string.",
     category: "Convert",
     icon: FileSpreadsheet,
     accent: "text-green-600",

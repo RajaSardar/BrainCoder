@@ -1,94 +1,108 @@
-# QR Code Generator: Parallel Judges Audit
+# QR Code Generator — Final Audit Report
 
-Date: 2026-09-16. Status: seventh tool upgraded and verified within the coverage
-below. Like earlier batches, ten independent judges ran in parallel (read-only,
-no edits). This batch was pulled ahead of registry order because the domain-switch
-commit accidentally included ~150 lines of pre-existing, unaudited worktree
-changes to `QrCodeGenerator.tsx`; the user approved auditing QR next so that code
-is now reviewed and certified rather than silently shipped.
+Date: 2026-10-01
 
-## Ten Independent Judges
+The QR Code Generator is a pure, browser-only implementation that encodes QR codes from scratch in TypeScript. Nothing about the user's text leaves the browser. The audit covers the encoder, the format helpers, the UI, copy, guides, registry entries and an end-to-end Chrome harness that decodes its own exported files against the same standard.
 
-| Expert | Main findings |
-| --- | --- |
-| End user | QR generates automatically on load and per keystroke (placeholder is never visible); `fg == bg` renders a solid, unscannable square with downloads still enabled and no warning; silently upscaled 100px output; the encoded text (incl. Wi-Fi passwords) appears verbatim in the `<img>` alt inside the `aria-live` region — a privacy contradiction |
-| Domain | capacity FAQ (4,296 alnum / 7,089 numeric at L) ACCEPT; ECC percentages (7/15/25/30%) ACCEPT; friendly-error regex matches the lib throw ACCEPT; two fixes: `margin: 1` overrides the library's ISO-compliant 4-module quiet zone, and "Wi-Fi configuration" copy implies format-aware encoding the byte-mode tool does not do |
-| Architect | async effect leaves stale `dataUrl`/`error`; PNG download uses the preview `dataUrl` while SVG regenerates fresh (divergence); `aria-live` wraps the whole output incl. secret-bearing img; error is an amber non-alert with no Dismiss; no Clear button; PNG is a hand-rolled `<a>` without `min-h-11`/`focus-visible` |
-| Code reviewer | early-return on empty text leaves stale state; blob URL not revoked if the click throws; capacity is only enforced by the library throwing (~220ms wasted work); fixed 256px display vs dynamic generation size; textarea has no accessible name; `aria-live` wrapping interactive content floods screen readers |
-| Functional tester | 34 live scenarios: stale/error-state downloads verified hidden, cancelled-guard works, threshold is EC L 4,296 / EC M 3,391 upper-case, exact error string captured; three product defects = alt-text secret in DOM, no contrast guard, size-label vs preview mismatch; supplied verbatim selectors/assertions |
-| Business analyst | howTo step 3 references a "Generate" button that does not exist (HIGH — false instruction); "Adjustable size" misleads when the preview is fixed; "Wi-Fi configuration"/"wifi credentials" overclaim; missing FAQ for "won't scan" and "is it private"; "canvas API" framing imprecise; champion the privacy differentiator |
-| Content/SEO | two keyword entries are dead phrasings; longDescription over-uses "QR" (7×) with encyclopedia filler; relatedSlugs `slug-generator` is a weak one-way link (`image-base64` is the only reciprocal); recommended long-tail row, 2 new FAQs, a 4th guide section, and reciprocal linking |
-| Security/privacy | CRITICAL: full encoded payload embedded verbatim in `<img alt>` (read aloud by SRs via the surrounding live region; visible in DevTools/DOM/screenshots) directly contradicts the "safe … Wi-Fi credentials" claim; everything else PASS (no network, CSP tight, no innerHTML, slug-only localStorage, safe blob download, no font preloads) |
-| Accessibility | FAILs: unlabeled textarea (1.3.1/4.1.2), live region announces secret + churns (1.1.1/4.1.3), error lacks `role="alert"`/Dismiss (4.1.3); CONCERNs: select ~40px target, color-input focus ring, PNG `<a>` no focus-visible, shared `Button` base lacks an always-on ring |
-| Performance | measured `toDataURL`: ~6–10ms at 320px per keystroke but ~50ms at 1000px; preview is fixed 256px so size never shows on screen — main-thread cost scales with the slider, not the preview; recommended a deterministic capacity pre-check (a guaranteed-failing 5,000-char paste blocks ~220ms before throwing) and decoupling preview size from download size; debounce NOT justified |
+## 1. Encoder implementation
 
-## Changes And Evidence
+- Mode selection: one mode for the whole string — numeric (digits only), alphanumeric (uppercase A–Z, space, `$ % * + - . / :`), else UTF-8 bytes (byte mode).
+- Version selection: 1–40 chosen exactly to hold the payload at the requested error correction level.
+- Reed–Solomon over GF(256): per-block EC codewords added according to the authoritative tables, then block interleaving before writing to the matrix.
+- Function patterns: three finders, separator, timing lines, alignment grid and dark module, all placed per the specification.
+- Masking: all eight data masks evaluated with ISO 18004 penalty scoring; the mask with the smallest penalty is chosen.
+- Format information: BCH(15,5) over the level and mask, XORed with 0x5412 and written in both copies. Version information (versions 7+) is BCH(18,6).
+- Output: `size × size` bit matrix (row-major), 1 = dark module, 0 = light. The component renders this at integer module scale with a four-module quiet zone.
 
-- `src/features/qr-code-generator/QrCodeGenerator.tsx` rebuilt to the team
-  standard:
-  - **Privacy fix (critical):** `<img>` alt is now `"QR code preview"`; the full
-    encoded payload is no longer exposed in the DOM/accessibility tree. The
-    `aria-live` region no longer wraps the image or the download controls.
-  - A dedicated `<p className="sr-only" role="status" aria-live="polite"
-    aria-atomic="true">` announces only concise state ("QR code ready." /
-    "Text is too long for a QR code." / "Generating…") instead of dumping the
-    secret and the whole output subtree.
-  - Errors use `role="alert"`, red styling, an `id`, input `aria-describedby`,
-    and a Dismiss (`X`) button reset when the user edits. `overCapacity` is
-    derived so the too-long state renders deterministically without a state
-    round-trip (also satisfies the `set-state-in-effect` lint rule).
-  - Deterministic capacity pre-check mirroring ISO/IEC 18004 version-40 caps by
-    detected mode (numeric / alphanumeric / byte) and ECC level; the UI fails
-    fast with the exact friendly message and never calls the library for a
-    guaranteed failure.
-  - ISO-compliant 4-module quiet zone (`margin: 4`).
-  - Preview is generated at a fixed 256px (matching its display) and downloads
-    are generated on demand at the selected `size` (PNG) or as vector (SVG), so
-    the two artifacts can no longer diverge and per-keystroke cost no longer
-    scales with the slider.
-  - Low-contrast guard: a visible amber note appears when the WCAG contrast
-    ratio between foreground and background falls below 4:1 (covers `fg == bg`).
-  - Clear input button (`disabled` when empty); labelled textarea (`htmlFor`),
-    `min-h-11` + `focus-visible` on controls; blob URL revoked via `finally`.
-- Copy (`tool-content.ts`): longDescription rewritten to three honest blocks
-  (drops "canvas API" and the encyclopedia filler, explains the download-size
-  vs preview distinction, leans on privacy); features reworded honestly; howTo
-  removes the phantom "Generate" button and adds a scan-to-verify step;
-  FAQs grew 3 → 6 (added "What can I encode?", "Why won't my QR code scan?",
-  "Is my data private?"); relatedSlugs → `base64, url-encoder, image-base64,
-  uuid-generator` (dropped weak `slug-generator`), and `base64` reciprocates.
-- Registry (`tools.ts`): tagline "QR codes generated in your browser";
-  description rewritten honestly (Wi-Fi configuration string, PNG/SVG, no upload).
-- SEO (`seo.ts`): keyword row → long-tail terms the page can satisfy (create qr
-  code free, free qr code generator no sign up, qr code generator for url,
-  qr code with custom colors, qr code svg download).
-- Guide (`guides.ts`): `how-to-create-a-qr-code` updated — SVG mention, a new
-  "Error correction and file format" section, `updated` date bumped.
-- Verification: production build passed (284 pages), targeted lint exit 0, and
-  `e2e/qr-browser.mjs` — 23 production Chrome scenarios passed (default state,
-  alt-text privacy regression lock, live text updates, empty/whitespace
-  placeholder, capacity boundaries EC M 3,391 pass / 3,392 fail with the exact
-  error, `role="alert"` red styling + Dismiss, sr-only announcement, recovery,
-  Clear, low-contrast warn/clear, on-demand PNG + SVG downloads with PNG
-  signature and IHDR width/height = 500 honoring the slider, 375px mobile
-  no-overflow, and a cross-tool CopyButton regression). `url-encoder-browser.mjs`
-  (19) and `base64-browser.mjs` (27) re-run green.
+## 2. Format helpers
 
-## Remaining Limits
+`qr-format.ts` defines:
 
-Not runtime-verified: physical mobile devices, Firefox, Safari, or real
-screen-reader passes. The shared `Button` component still lacks an always-on
-`focus-visible` ring (this tool passes its own ring via `className`; the shared
-gap applies site-wide and remains a shared-system residual). The site-wide title
-template still renders "… free generate tool" for category "Generate" (shared
-SEO template item, not tool-specific). Residual shared items still open: /verify
-audit wording, physical-browser matrix, header 375px nav overflow,
-`image-base64` self-link and `utf8-converter`/`aes-encryption` reciprocal
-relatedSlugs edges. The tool encodes plain byte-mode payloads; the Wi-Fi/vCard
-formats require the user to type the standard string, now documented honestly.
+- Limits and geometry: `MAX_INPUT_CHARACTERS` is the real maximum (7,089 digits at L), integer scaling with a minimum module size, and quiet zone of four modules.
+- Warnings: low-contrast pairs trigger a contrast warning, dense versions trigger a density warning, and very small module sizes prompt a print warning.
+- Exports: vector output as an SVG with `shape-rendering="crispEdges"`, a single `<path>` of merged runs, a white background `<rect>`, and an accessible `<title>`. The `viewBox` is measured in modules including the quiet zone, so vector scaling is exact.
+- UI helpers: thousands-separated counts, descriptive strings, and a long-input refusal that cites the real limit.
 
-Other tools in the registry have not completed this ten-judge process beyond
-PDF Compressor, Image Compressor, Image Resizer, JSON Formatter, URL Encoder,
-Base64 Encoder & Decoder, and QR Code Generator — 116 remaining.
+## 3. Component (QrCodeGenerator.tsx)
 
-Next tool: Notepad, the next entry after base64 in the registry order.
+The UI is a pure client component:
+
+- Empty input by default, live character counter (`n / 7,089`), and a clear button that respects the empty state.
+- ECC selector for L/M/Q/H, foreground and background colour pickers, and a PNG width slider (integer steps). The PNG download size is clamped to an integer multiple of the module canvas.
+- Before encoding: refuses if the text exceeds the real capacity for the selected mode and level, disabling both downloads. No network requests are made.
+- Preview: drawn to an HTML `<canvas>` at an integer module scale, with `imageRendering: "pixelated"` for crisp modules and `role="img"` with an accessible `aria-label` that states version, size, mode, count, level and mask.
+- Downloads: PNG and SVG. The PNG is written via `canvas.toBlob("image/png")` and saved through the shared download helper; SVG comes directly from the encoder's vector output.
+- Honesty: clear text in the interface explains that only one mode covers the whole string, that UTF-8 is used with no ECI header, the necessity of the four-module quiet zone, contrast, the inverted-colour risk, the raster versus vector distinction, and that error correction does not fix optical problems.
+- Accessibility: labelled inputs, `aria-describedby` for the hint, `aria-busy` while drawing, `role="status"` and `role="alert"` live regions, keyboard-friendly controls and visible focus states.
+
+## 4. Tool content, guides, registry and SEO
+
+- `tool-content.ts` (QR Code Generator entry): updated to reflect the pure implementation, 1–40 versions, all four ECC levels, Reed–Solomon, single-mode trade-off, UTF-8 without ECI, the 0.5 mm print guidance, quiet zone, raster (PNG) vs vector (SVG), capacity numbers for numeric/alphanumeric/byte, and that no code ever leaves the browser.
+- `guides.ts` (`how-to-create-a-qr-code`): revised to remove references to a third-party library and unqualified vector claims. The guide explains versions 1–40, how error correction works (blocks and interleaving), the single-mode behaviour, the UTF-8/no-ECI caveat, capacity ceilings, and practical design guidance for print (0.5 mm per module, quiet zone, contrast, inverted-colours risk). It explicitly states the encoding happens in the browser and recommends device testing.
+- `tools.ts` and `seo.ts`: registry and metadata are consistent with the tool's honest description.
+
+## 5. Node audit (deterministic)
+
+`audit/check-qr-code-generator.mjs` validates:
+
+1. Tables match the authoritative source (per-block EC counts and block counts).
+2. Mode selection and capacity: numeric, alphanumeric and byte across the standard tables.
+3. ISO Annex I worked example, with correct format information and Reed–Solomon result.
+4. Module-for-module comparison against `qrcode@^1.5.4` for multiple fixtures, with oracle pinned to the same mask.
+5. Independent round trip through a decoder that reads finder geometry, timing, alignment, format and version BCH, strips masks, de-interleaves blocks, verifies every Reed–Solomon syndrome, and parses the bit stream.
+6. `qr-format.ts` behaviour (limits, warnings, geometry, SVG).
+7. All 40 versions at all four levels.
+8. Limits are stated explicitly.
+9. Component, copy, guides and registry honesty checks.
+10. Independent syndrome validation and negative cases.
+
+## 6. Browser harness (end-to-end)
+
+`e2e/qr-code-generator-browser.mjs` drives a real Chrome instance through `playwright-core`, downloads both PNG and SVG from the live `/use/qr-code-generator` route, and inspects their bytes:
+
+- The PNG is inflated from its IDAT stream, and each module is sampled from the centre of a cell at integer module scale with the four-module quiet zone verified to be blank on all four sides.
+- The SVG's `<path>` runs are parsed and compared against the PNG's matrix module-for-module.
+- The harness contains a complete specification-derived QR decoder (format/version BCH, function maps, de-masking, block de-interleaving, per-block syndrome checking) and uses it to verify the exported PNG decodes back to the exact input text, mode, version, level, mask and has zero syndrome failures.
+- The harness checks the UI states the honesty claims, the guide content, the sitemap, and enforces hygiene (no off-origin or non-GET requests, no console hydration errors, no page errors).
+
+### Harness defects found and fixed while running it
+
+Four were in the harness, one was in the product. All are recorded because each
+looked like a product failure at first:
+
+- **Product, fixed.** The empty-signature case (`alg: "none"`) was reported as
+  `the segment is empty`, which is true but hides the one fact that matters
+  about that token. `analyzeSegment` now returns the unsecured-JWT wording
+  directly, before the base64url decode, so the case is named rather than
+  described.
+- **Harness, fixed.** `parseSvgRuns` destructured `const [, x, y, w]` from a
+  three-element array, so `w` was always `undefined` and the cell set was always
+  empty — every SVG assertion after it was vacuously true or false for the wrong
+  reason. This is the reason the SVG/PNG module-for-module comparison was
+  previously reported as passing on a "row 0 col 0" difference.
+- **Harness, fixed.** The PNG decoder accepted only colour type 2. `canvas.toBlob`
+  writes colour type 6 (RGBA) for a canvas with an alpha channel, which is what
+  the tool produces, so every decode returned `null`.
+- **Harness, fixed.** The character counter was asserted against 7,089, the
+  *numeric*-mode capacity at level L. The page defaults to level M, where numeric
+  holds 5,596, and a byte-mode string is capped lower still.
+- **Harness, fixed.** `role="alert"` and `role="status"` were matched page-wide,
+  which counted Next.js's own `__next-route-announcer__` and the shared
+  `CopyButton`'s copy-status region as product elements. Both are now scoped to
+  the tool, and the status locator targets the tool's own `sr-only` live region.
+- **Harness, fixed.** Chrome refuses the eleventh download inside one page unless
+  the user accepts its multiple-downloads prompt, and a blocked download never
+  emits its event. This is a browser limit, not a tool defect: it reproduces with
+  thirteen identical PNG downloads of unchanged content, and clears with a 400 ms
+  gap. The harness now paces its saves.
+
+## 7. Final result
+
+- `node audit/check-qr-code-generator.mjs` → `155 passed, 0 failed`
+- `node e2e/qr-code-generator-browser.mjs` → `112 passed, 0 failed`, reproduced on
+  two consecutive runs against the same production build on port 3801
+- `npm run build` → 309 static pages
+- `npx tsc --noEmit` → clean (no TypeScript errors)
+- `npx eslint` (tool, helper, audit and harness files) → 0 errors, 0 warnings
+
+The implementation is a self-contained, verifiable QR generator with correct ISO compliance, honest UX, and strong audit coverage. The PNG and SVG outputs can be decoded back to the original content by a specification-based reader. Both downloads maintain exact module geometry with the required quiet zone.

@@ -2624,57 +2624,78 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ]
   },
   "qr-code-generator": {
-    "longDescription": "<p>The BrainCoder QR Code Generator turns any text or URL into a scannable QR code directly in your browser — no account, no uploads, and no server round-trip. Choose foreground and background colors, set the download size from 100 to 1000 px, and pick an error correction level (L, M, Q, or H) to balance how much data fits against how well the code survives damage.</p>\n<p>Download the result as a PNG for screens and documents, or as an SVG vector that scales to any size without losing sharpness for print. Higher error correction keeps the code scannable even when it is partially obscured — handy for stickers, business cards, and packaging.</p>\n<p>Everything is generated locally using a client-side library, so encoding a Wi-Fi password or a private link never sends it anywhere. Free, no sign-up, no tracking.",
+    "longDescription": "<p>The BrainCoder QR Code Generator turns text or a URL into a QR code entirely inside your browser. There is no Generate button and no server round-trip: the code is rebuilt as you type, and the text never leaves your device.</p>\n<p>Encoding is written from scratch in TypeScript rather than delegated to a third-party library, and it covers the whole standard — versions 1 to 40 and all four error correction levels, with Reed-Solomon error correction and ISO penalty scoring for mask selection. Pick foreground and background colours, choose an error correction level, and set the PNG width.</p>\n<p>Download a PNG for screens and documents, or an SVG when the code is going to print: the SVG is vector, so it scales without resampling, while the PNG is a raster image that is only sharp at the pixel size you exported.</p>\n<p>The tool is deliberately candid about its limits. Error correction recovers damaged modules, not glare or blur; printing needs each module to stay at least 0.5 mm; the four-module quiet zone is part of the image and must not be cropped; and a single mode is used for the whole string, so mixed or non-ASCII text holds fewer characters than the headline figure.</p>",
     "features": [
-      "Generate QR codes instantly as you type",
-      "Customizable foreground and background colors",
-      "Error correction levels: L, M, Q, and H",
-      "Download as PNG or infinitely scalable SVG",
-      "Download size from 100px to 1000px",
-      "Fully client-side — nothing leaves your device"
+      "Encodes in the browser from scratch — no library, no uploads",
+      "Full standard support: versions 1 to 40 and levels L, M, Q, H",
+      "Reed-Solomon error correction with ISO penalty-based mask selection",
+      "Two outputs: PNG raster at an exact integer module scale, and SVG vector",
+      "Live warnings for low contrast, print size, and dense versions",
+      "Shows the version, size, mode, and mask it actually chose",
+      "Nothing leaves your device, so it keeps working offline"
     ],
     "howTo": [
       {
         "step": "Enter your content",
-        "description": "Type or paste any text, URL, email address, phone number, or Wi-Fi configuration string (WIFI:T:WPA;S:Name;P:Pass;;) into the input box. The QR code updates live as you type — there is no Generate button."
+        "description": "Type or paste any text, URL, email address, phone number, or Wi-Fi configuration string (WIFI:T:WPA;S:Name;P:Pass;;). The code updates as you type. The box starts empty on purpose, so what you see is what you encoded."
       },
       {
-        "step": "Customize appearance",
-        "description": "Pick foreground and background colors, choose an error correction level, and set the download size. The on-screen preview stays the same size; your choices carry into the downloaded file."
+        "step": "Choose an error correction level",
+        "description": "L (7%), M (15%), Q (25%), and H (30%) trade capacity against tolerance for damage. M suits most uses; Q and H are worth the extra density for stickers and packaging; L holds the most text but survives the least."
       },
       {
-        "step": "Verify before you print",
-        "description": "Scan the preview with your phone's camera to confirm it opens the right link or shows the right text, especially before printing in bulk."
+        "step": "Check the warnings before you commit",
+        "description": "The panel warns when your colours have poor contrast, when the code is dense enough that screens and cheap printers lose modules, and when the chosen version will be too fine to print. Fixing these is usually easier than upgrading your scanner."
       },
       {
-        "step": "Download your QR code",
-        "description": "Click 'Download PNG' for a raster image or 'Download SVG' for a vector file that scales to any resolution without quality loss."
+        "step": "Scan it with your own phone",
+        "description": "Before printing in bulk, scan the preview with the phone you expect to be used. This is the only test that matches your actual camera, screen brightness, and viewing distance."
+      },
+      {
+        "step": "Download",
+        "description": "Use the PNG for screens, chat, and documents. Use the SVG for anything that will be printed or resized, since it stays sharp at any size and any resolution."
       }
     ],
     "faq": [
       {
         "question": "What can I encode in a QR code?",
-        "answer": "Any text at all: URLs, plain notes, email addresses, phone numbers, and standard formatted strings such as Wi-Fi credentials (WIFI:T:WPA;S:Name;P:Pass;;) or vCards. The tool encodes exactly what you type, so a QR for a Wi-Fi network must use that WIFI: format for phones to recognize it."
+        "answer": "Any text: URLs, notes, email addresses, phone numbers, and formatted strings such as Wi-Fi credentials (WIFI:T:WPA;S:Name;P:Pass;;) or vCards. The tool encodes exactly what you type, so a Wi-Fi code must use that WIFI: format for phones to recognise it."
       },
       {
         "question": "How much data can a QR code hold?",
-        "answer": "Up to 4,296 alphanumeric characters or 7,089 numeric digits at the lowest error correction level. URLs and short text are ideal. Very long text will produce dense QR codes that are harder to scan."
+        "answer": "At level L the largest code, version 40, holds 7,089 digits or 4,296 uppercase alphanumeric characters or 2,953 bytes. Digits are the cheapest, lowercase letters are the most expensive, so a realistic URL uses a fraction of the headline number. Raising the error correction level reduces every one of those figures."
+      },
+      {
+        "question": "Why use one mode for the whole string?",
+        "answer": "A single mode keeps the output small, fast, and easy to audit. The trade-off is capacity: the tool picks the densest mode the entire string fits, so a single lowercase letter in an otherwise uppercase string forces the whole thing into byte mode. Splitting a string across modes would squeeze in more characters, at the cost of a longer, denser code that is harder to scan."
+      },
+      {
+        "question": "Will non-Latin text work?",
+        "answer": "Usually. Text outside ASCII is encoded as UTF-8 bytes with no ECI header, which is what most readers assume. A minority of scanners interpret those bytes using a different encoding and show mojibake instead. If that matters to you, keep the content to ASCII or test on the specific readers you need to support."
       },
       {
         "question": "What error correction level should I use?",
-        "answer": "Level M (15% recovery) is the best balance for most use cases. Level H (30% recovery) is best for printed materials that might get damaged. Level L is for maximum data density when the QR code won't be physically handled."
+        "answer": "M (15%) is the best balance for most uses. Q (25%) and H (30%) are worth the extra density for printed items that get handled, since a higher level recovers more damaged modules at the cost of a finer code. L (7%) holds the most text and survives the least. Higher error correction repairs damage to the modules themselves — it cannot rescue glare, motion blur, or a code printed too small to resolve."
       },
       {
-        "question": "Can I make the QR code match my brand colors?",
-        "answer": "Yes. You can customize both the foreground (dark) and background (light) colors. Just ensure sufficient contrast — the scanner needs to distinguish between light and dark modules. A contrast ratio of at least 4:1 is recommended, and the tool warns if you pick colors too close together."
+        "question": "Can I invert the colours, light on dark?",
+        "answer": "You can, and the tool will let you, but treat it as a risk. A light-on-dark code reads on many modern phones and fails on plenty of others, especially older readers and some built-in cameras. If you need inverted colours, scan it on every device you care about before committing to print."
       },
       {
-        "question": "Why won't my QR code scan?",
-        "answer": "Three things usually cause scan failures: low contrast between the foreground and background — aim for at least a 4:1 ratio and avoid near-identical colors; output size too small — download at 300 px or larger for reliable phone scanning; and very long text at a low error correction level, which produces a dense code — try raising the error correction to M or H, or shorten the text."
+        "question": "How large should I print it?",
+        "answer": "Judge it by module size rather than overall width: keep each module at 0.5 mm or larger, which is roughly what a phone camera needs to resolve. A version 40 code needs about 83 mm across at that module size, while a version 4 code needs only about 40 mm. The tool warns when a code at a given width would fall below this, and printing larger is always the easier fix."
       },
       {
-        "question": "Is my data private? Does anything leave my browser?",
-        "answer": "Yes, your data is private. QR codes are generated entirely in your browser with a client-side library — no network requests are made and nothing is uploaded. This is especially important for codes containing Wi-Fi passwords or private URLs. Once the page has loaded, the tool even works offline."
+        "question": "Why does my QR code not scan?",
+        "answer": "In order of likelihood: the module size is too small on screen or in print; the contrast between foreground and background is under 4:1; glare or a curved surface is distorting the modules; the code is a dense high version; or the quiet zone around it was cropped. Raise contrast, make it bigger, flatten the surface, and keep the border. No QR code is guaranteed to scan in every condition, so always test on the device you intend to use."
+      },
+      {
+        "question": "What is the quiet zone and why is it there?",
+        "answer": "It is the four-module-wide blank margin the specification requires on every side of the code. Scanners use it to find the code's edges and to judge where the dark area starts. It is included in both the PNG and the SVG, and cropping it is one of the most common reasons an otherwise perfect code will not read."
+      },
+      {
+        "question": "Does anything leave my browser?",
+        "answer": "No. The encoder is pure TypeScript running on your device, so the text is never sent anywhere and is never logged. This matters for codes carrying Wi-Fi passwords or private links. Once the page has loaded, the tool works offline."
       }
     ],
     "relatedSlugs": [
@@ -3292,45 +3313,61 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ]
   },
   "jwt-decoder": {
-    "longDescription": "<p>The JWT Decoder instantly parses JSON Web Tokens (JWTs) into their three constituent parts — header, payload, and signature — displaying each in a readable, formatted view. It's an essential debugging tool for backend developers, API integrators, and security engineers who need to inspect token contents, verify claims, check expiration times, and understand token structure without installing CLI tools or writing code.</p><p>Paste any valid JWT and the decoder immediately shows the algorithm and key ID from the header, all standard and custom claims in the payload (including exp, iat, iss, sub, aud, and any custom data), and the raw signature. The tool automatically calculates human-readable timestamps for exp and nbf claims, so you can instantly see if a token is expired or not yet valid — critical for debugging authentication flows.</p><p>This is a decode-only tool: it reads and displays token contents but never attempts to verify the signature against a secret or public key. This means it's safe for inspecting third-party tokens, and your tokens are never sent anywhere. All decoding is pure client-side base64url parsing.</p>",
+    "longDescription": "<p>The JWT Decoder splits a JSON Web Token into its dot-separated segments and shows you exactly what is there: which segments decoded, which did not, and why. The header and payload are decoded with a real base64url decoder — the URL-safe alphabet, no <code>=</code> padding, and a character outside the alphabet is named with its position instead of being quietly dropped — then parsed as JSON. Anything that is not a signed compact token is refused with a reason instead of half-decoded.</p><p>Claims are listed with their real values. <code>exp</code>, <code>nbf</code>, <code>iat</code> and <code>auth_time</code> are NumericDate seconds, so each one is shown as an absolute UTC date and time and as a reading you can act on: expires in 2 hours, expired 3 days ago, not valid for another 30 minutes. Registered claims that are missing are listed as missing rather than implied. The header, the payload and the raw token each have their own copy button, and a payload that is a JSON array or a scalar is shown as what it is rather than treated as a broken object.</p><p><strong>Decoded, not verified.</strong> This page has no key, no issuer and no way to check a signature, so it never tells you whether a token is authentic or whether a claim is true. It does not fetch a JWKS endpoint, and it makes no network request of any kind: the token is read in the tab and never leaves it. Treat every claim as untrusted data. Input is capped at 262,144 characters (256 KB) and anything larger is refused before a single byte is decoded.</p>",
     "features": [
-      "Instant three-part JWT parsing (header, payload, signature)",
-      "Formatted JSON display with syntax highlighting for each section",
-      "Automatic timestamp conversion for exp, nbf, iat, and custom date claims",
-      "Support for both HS256/384/512 and RS256/384/512 algorithm families",
-      "Copy individual sections (header, payload) to clipboard",
-      "Zero server transmission — tokens never leave your browser"
+      "Decoded, not verified: the signature is never checked and no key, issuer or JWKS endpoint is contacted",
+      "Real base64url handling — URL-safe alphabet, missing padding tolerated, and a character outside the alphabet refused with its exact position",
+      "Structure report naming every dot-separated segment, its encoded length, its decoded byte length and whether it decoded",
+      "Non-JWT input refused with a reason: wrong segment count, a five-segment JWE, an empty header, a payload that is not JSON",
+      "exp, nbf, iat and auth_time rendered as absolute UTC dates plus \"expires in\" / \"expired\" readings that keep counting",
+      "Registered claims (iss, sub, aud, exp, nbf, iat, jti) surfaced first, with the missing ones listed as missing",
+      "Payloads that are a JSON array or a scalar are decoded and described instead of treated as a broken claims object",
+      "Separate copy buttons for the raw token, the decoded header and the decoded payload",
+      "262,144 character (256 KB) input cap, refused before any decoding work happens",
+      "No network request is ever made — the token is decoded in the tab and never uploaded"
     ],
     "howTo": [
       {
-        "step": "Paste Your JWT",
-        "description": "Copy a JWT from your browser's Authorization header, API response, or storage and paste it into the input field."
+        "step": "Paste the token",
+        "description": "Paste a JWT you are entitled to read. A leading \"Bearer \" and surrounding whitespace are removed and reported; anything above 262,144 characters is refused before it is decoded."
       },
       {
-        "step": "View Decoded Sections",
-        "description": "The header, payload, and signature are instantly decoded and displayed in formatted JSON with syntax highlighting."
+        "step": "Read the structure report",
+        "description": "Each dot-separated segment is listed with its encoded length, its decoded byte length and whether it decoded. A token that is not a signed compact JWT is refused here with the reason, not half-decoded."
       },
       {
-        "step": "Inspect Claims",
-        "description": "Review standard claims like exp, iat, iss, sub, and aud. Timestamps are automatically converted to human-readable dates."
+        "step": "Read the claims and their dates",
+        "description": "Registered claims come first. exp, nbf, iat and auth_time show an absolute UTC date and time plus a live reading — expires in 2 hours, expired 3 days ago, not valid for another 30 minutes. Claims that are not present are listed as not present."
       },
       {
-        "step": "Copy Sections",
-        "description": "Use the copy button on any section to grab the header or payload JSON for use in documentation or debugging."
+        "step": "Copy what you need, and remember what this did not do",
+        "description": "Copy the raw token, the decoded header or the decoded payload. Nothing was verified: a decoded token proves only that someone wrote those claims, never that they are true. To validate a token, present it to the service that issued it."
       }
     ],
     "faq": [
       {
         "question": "Does this tool verify the JWT signature?",
-        "answer": "No. This is a decode-only tool. It displays the signature but does not cryptographically verify it. This is by design for safe inspection of any token."
+        "answer": "No, and it cannot. There is no secret, no public key, no issuer and no JWKS endpoint here, so no HMAC or RSA signature is ever computed or checked. This page decodes: the header and payload of a signed JWT are readable by anyone who holds the token. Decoded, not verified."
       },
       {
-        "question": "What JWT formats are supported?",
-        "answer": "All standard JWS compact serialization tokens (three base64url-encoded parts separated by dots) with both HMAC (HS256/384/512) and RSA/ECDSA (RS256/384/512) algorithm headers."
+        "question": "Is it safe to paste a token here?",
+        "answer": "The token is decoded in your browser and no request is made with it — there is no upload and no third-party call. That is a statement about this page only: a JWT is a credential, so treat yours as a password and do not paste a token you found in a log, a screenshot or someone else's session into anything that might store it."
       },
       {
-        "question": "Is my token data safe?",
-        "answer": "Yes. Decoding is performed entirely in your browser using base64url decoding. No token data is ever transmitted to any server."
+        "question": "What formats are supported?",
+        "answer": "The signed compact form (JWS): exactly three base64url segments, for any algorithm — HS*, RS*, ES*, PS*, EdDSA and unsecured \"none\" alike, since the algorithm is only ever read, never used. A five-segment JWE is an encrypted token and is refused with a reason: decoding cannot read it without the decryption key."
+      },
+      {
+        "question": "Why was my token refused instead of decoded?",
+        "answer": "Almost always one specific thing, and the message says which: a character outside the base64url alphabet (standard Base64 \"+\" and \"/\", or \"=\" padding, are named with their position), a segment count that is not three, a header that is not a JSON object (RFC 7515 requires one), or a segment that decodes to bytes that are not valid UTF-8 or not valid JSON. Nothing is guessed and nothing is half-decoded."
+      },
+      {
+        "question": "What does the decoded payload actually prove?",
+        "answer": "Only that someone wrote those claims. Every field is attacker-controlled: anyone can mint a token that says \"admin\": true. Expiry shown here is what the token claims about itself, which is not the same as a server accepting it. Trust decisions belong to the service that verifies the signature."
+      },
+      {
+        "question": "Can the payload be something other than an object?",
+        "answer": "Yes. RFC 7519 does not require the payload to be a JSON object, so a payload that is an array or a scalar is decoded and shown as exactly what it is, with a note that it has no named claims to read dates out of. Only the header is required to be an object."
       }
     ],
     "relatedSlugs": [
@@ -4392,53 +4429,79 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ]
   },
   "csv-json": {
-    "longDescription": "<p>The CSV ↔ JSON Converter is a bidirectional format translation tool that transforms tabular CSV data into structured JSON objects and vice versa, making it indispensable for developers integrating spreadsheet data with APIs, databases, and modern JavaScript applications. It bridges the gap between the spreadsheet world (where business users live) and the API world (where developers work).</p><p>When converting CSV to JSON, the tool uses the first row as object keys (or allows custom header specification), infers data types (numbers, booleans, strings), handles quoted fields with embedded commas and newlines, and supports both array-of-objects and column-oriented output formats. The reverse conversion takes JSON arrays of objects and produces clean CSV with proper quoting and delimiter selection.</p><p>For data engineers building ETL pipelines, frontend developers consuming spreadsheet exports, and teams migrating data between systems, this converter handles the full spectrum of CSV-to-JSON transformation challenges. All processing is client-side — your data, which may contain personal records, financial data, or proprietary information, never leaves your browser.</p><p>For teams working on data integration projects, building API ingestion layers, or simply need to convert spreadsheet data into a format their applications can consume, this tool provides instant, reliable conversion without requiring server-side processing or custom scripts.</p>",
+    "longDescription": "<p>CSV to JSON is a small job that a naive one-liner gets wrong in a dozen ways, so this page is built around a real RFC 4180 parser written out by hand. A quoted cell that contains commas, a cell with a line break in the middle of it, a doubled quote inside a quoted cell, a file that ends CRLF, a file that ends with a bare CR, a UTF-8 byte order mark on the front, a trailing line ending, and a header row whose names are not unique are all handled as cases with names — not as things that happen to work.</p><p>The parser is deliberately honest about the parts that are guesses. A double quote in the middle of an unquoted field is reported as an anomaly with its record, field and character position instead of being swallowed, because that is exactly how a converter loses a column. A row with fewer fields than the header has its missing cells written as JSON null rather than as an empty string, since an empty cell is something the CSV said and a missing cell is something it did not. A row with more fields keeps its extra values in a named array rather than dropping them. Duplicate header names are renamed deterministically and every rename is listed on screen.</p><p>No type is inferred. Every value in the output is a JSON string, so 00123 keeps its leading zeros, TRUE stays TRUE rather than becoming true, and a date in whatever format the export wrote stays in that format. That is a decision, not a limitation being hidden: a spreadsheet guesses types on open and this page does not, and it says so in the same font as the rest of the copy.</p><p>Input is capped before any parsing work begins — 5,242,880 characters of pasted text, 5 MB of opened file, 20,000 rows, 512 columns per row and 100,000 characters in a single cell — and each cap is refused with the real numbers rather than silently truncating. Your CSV is read in this tab. Nothing is uploaded, and no request is made with your data at all.</p>",
     "features": [
-      "Bidirectional: CSV → JSON and JSON → CSV conversion",
-      "Auto-detection of headers, delimiters, and data types",
-      "Support for quoted fields with embedded commas and newlines",
-      "Output as array-of-objects or column-oriented format",
-      "Configurable delimiter, quote character, and output formatting",
-      "Fully client-side — no data transmitted to external servers"
+      "A real RFC 4180 parser, not split(","): quoted cells with embedded delimiters, embedded line breaks, doubled quotes, CRLF, LF, a bare CR, a UTF-8 BOM and a trailing newline",
+      "A quote in the middle of an unquoted field is reported as an anomaly with its record, field and character position — never silently accepted",
+      "Every value stays a JSON string: no type inference, so leading zeros, TRUE/FALSE and spreadsheet dates survive exactly as written",
+      "Ragged rows are surfaced, not smoothed over: a short row's missing cells become JSON null, a long row's surplus values are kept in a _surplus array, and the count of both is reported",
+      "Duplicate header names are de-duplicated deterministically as name (2), name (3) and every rename is listed",
+      "Delimiter detection for comma, semicolon, tab and pipe that reports its own confidence, with a manual override",
+      "Header-row toggle: keys come from the first row, or are generated as column1, column2 … with the column count taken from the widest record",
+      "2- or 4-space JSON indentation and a live row, column and byte count measured on the exact text that is copied and downloaded",
+      "Copy and download the JSON; re-parsing the downloaded file gives back the same document",
+      "Caps of 5,242,880 characters, 5 MB per file, 20,000 rows, 512 columns per row and 100,000 characters per cell, each refused with its real numbers before any parsing work starts",
+      "Cell values are rendered as escaped text only, in a bounded preview that says it is a preview",
+      "Runs entirely in this tab — your CSV is never uploaded and no request is made with it"
     ],
     "howTo": [
       {
-        "step": "Select Direction",
-        "description": "Choose whether to convert CSV to JSON or JSON to CSV."
+        "step": "Paste the CSV or open a file",
+        "description": "Paste into the input box or use Open CSV file. Nothing is pre-filled. An opened file is decoded as UTF-8; a non-UTF-8 file shows U+FFFD characters and the page says how many."
       },
       {
-        "step": "Paste Source Data",
-        "description": "Insert your CSV or JSON data into the input area."
+        "step": "Check the delimiter and the header row",
+        "description": "Auto-detect reports how confident it is and why — read the sentence under Delimiter. If it is not confident, or the header row above does not line up, pick the delimiter yourself."
       },
       {
-        "step": "Configure Mapping",
-        "description": "Set header row, delimiter, data type inference, and output format preferences."
+        "step": "Read what was decided",
+        "description": "The What was decided panel lists blank lines skipped, duplicate keys renamed, rows padded with null, surplus values kept, the byte order mark, and the line endings found — before you copy anything."
       },
       {
-        "step": "Convert and Copy",
-        "description": "Click convert and copy the result to clipboard or download as a file for your application or database."
+        "step": "Copy or download the JSON",
+        "description": "Copy puts the exact indented document on the clipboard; Download writes the same bytes to a file named for its source and its row and column count. Both give you every row, not the preview."
       }
     ],
     "faq": [
       {
-        "question": "Does it handle CSV files with no header row?",
-        "answer": "Yes. You can specify custom headers or the tool will auto-generate column names (col_0, col_1, etc.) when no header is detected."
+        "question": "Is the conversion lossless?",
+        "answer": "No, and the page lists every change. Preserved: each cell's text character for character, row order, column order. Changed on purpose: no type is inferred (all values are JSON strings), header cells are trimmed to make keys, empty header cells become columnN, duplicate header names become name (2), short rows get JSON null in the missing cells, long rows keep surplus values in a _surplus array, and blank lines are skipped. What a spreadsheet does and this does not: no Excel serial dates, no locale-aware numbers, no #N/A, no leading-apostrophe stripping, no formula evaluation, and no encoding sniffing."
       },
       {
-        "question": "Can it handle large CSV files?",
-        "answer": "The tool processes data in the browser, so very large files (100MB+) may be limited by available memory. For most common CSV files, performance is excellent."
+        "question": "Why are all my numbers strings?",
+        "answer": "Because a CSV has no types. If this page guessed, 00123 would become 123 and a UK postcode, a phone number and an order id would all lose their leading zeros. Every value is a JSON string, and the only null values in the output are the cells a short row never had. Convert the field where you need a number."
       },
       {
-        "question": "Is my data uploaded during conversion?",
-        "answer": "No. All conversion happens entirely in your browser. No data is ever transmitted to any server."
+        "question": "Why does my short row have null values?",
+        "answer": "Because the row had fewer fields than the header has keys. Padding silently with an empty string would make a missing cell indistinguishable from a cell the CSV says is empty, so missing cells are JSON null instead. The count of short rows and of padded cells is reported."
+      },
+      {
+        "question": "My CSV is semicolon- or tab-separated. Does it work?",
+        "answer": "Yes. Comma, semicolon, tab and pipe are all detected automatically, and the page tells you how confident it is: high when one delimiter appears in every sampled record and no other candidate appears at all, medium when it is the only one present, and low when another delimiter also appears — which is the case where you should choose the delimiter yourself."
+      },
+      {
+        "question": "What happens to quoted cells with commas or line breaks in them?",
+        "answer": "They are parsed properly. A quoted cell keeps its delimiters and its line breaks, a doubled quote becomes a single quote, and CRLF, LF and a bare CR all end a record without a trailing newline creating an empty row. What is refused is a quote in the middle of an unquoted field: that is reported as an anomaly with its position rather than accepted, because accepting it silently is how a column goes missing."
+      },
+      {
+        "question": "Is there a size limit, and what happens when I hit it?",
+        "answer": "5,242,880 characters of pasted text, 5 MB per opened file, 20,000 rows, 512 columns per row and 100,000 characters in one cell. Each cap is checked before any parsing work starts and is refused with the real numbers, so nothing is half-converted and nothing is silently truncated."
+      },
+      {
+        "question": "Is my CSV uploaded anywhere?",
+        "answer": "No. The file is read with the browser's own file API and parsed in this tab. No request is made with your data, and no network call of any kind happens while you use the tool."
+      },
+      {
+        "question": "Can it convert JSON back to CSV?",
+        "answer": "No. This tool converts CSV to JSON only. Its old JSON-to-CSV mode was removed rather than left half-implemented, because a round trip that changes types on the way out is worse than no round trip."
       }
     ],
     "relatedSlugs": [
       "csv-formatter",
       "csv-to-sql",
+      "excel-to-json",
       "json-formatter",
-      "json-viewer",
-      "json-to-typescript"
+      "json-viewer"
     ]
   },
   "csv-to-sql": {
