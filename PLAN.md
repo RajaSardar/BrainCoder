@@ -1312,9 +1312,79 @@ Phase 2+ Target (NOT building now):
   locators pierce shadow roots it was matching Next.js's route announcer rather
   than the tool — scoped to `tool()`, which is the same defect class line 1260
   records for wave 11.
-- Next: Wave 12 continues with SQL Formatter and XML Formatter, the next two
-  unaudited registry tools (`case-converter` and `pdf-to-word` are excluded as
-  in-flight work). 54 of 124 registry tools are audited; **70 remain**.
+- Wave 12: SQL Formatter (55th) — the defect here is not a crash but a silent one:
+  a query with a missing `*/` came back with *different tokens than were pasted*,
+  because the comment body was read as arithmetic. 507 characters of broken input
+  produced a **16,961,223-character** error string from the library. The shipped
+  Tab option was `value="\t"` — two characters — so it emitted no tab at all, and
+  Copy was live on a failed format so an error string could reach the clipboard.
+  Added `sql-format.ts` (browser-free, so the audit runs the shipped code):
+  a dialect-aware preflight walks comment, string, dollar-quote and parenthesis
+  state *before* the library sees anything, and refuses rather than guesses —
+  unterminated block comment, nested comment in one of the seventeen dialects
+  that do not support nesting (formatted normally in the four that do:
+  postgresql, duckdb, db2i, transactsql), unterminated string or `$$`/`$tag$`
+  dollar quote, unbalanced or stray parentheses — each naming its own fault.
+  Result union `formatted | empty | invalid-sql | refused | internal` and the
+  pane derived as `result.kind === "formatted" ? result.sql : ""`, so an error can
+  never reach the clipboard or the download; the Node audit asserts that exact line
+  of source. Caps 100,000 chars / 200 paren levels / 64 nested-comment levels /
+  240-char errors, each refused with real numbers (the input cap was 10,000× too
+  high: a 195,897-char query took 1.1 s). 21 dialects with PostgreSQL default;
+  Oracle presented as Oracle PL/SQL. Component rebuilt: empty boot, aria-labels,
+  real `<label htmlFor>` on all four selects, `aria-busy`, output out of the tab
+  order, scoped `role="status"` carrying counts only, Copy/Download disabled
+  unless formatted. Copy rewritten — the comma-alignment, "all major dialects"
+  and proprietary-function claims were removed, the 8-space indent that did not
+  exist was dropped — with a five-section guide leading with the mangling failure
+  mode. Evidence: node audit 209/209; `tsc --noEmit` clean; eslint 0/0;
+  production Chrome harness 143/143 twice on the same build (27 sections).
+  Report: `audit/reports/sql-formatter.md`.
+- Wave 12: XML Formatter (56th) — one defect with two halves, which is why ten
+  judges all found it: the page reported **"Valid XML"** for documents that are
+  not XML, and minify mode skipped the check entirely, so the same input got
+  opposite answers depending only on which button was pressed. `<a/><b/>`,
+  `<a href=x/>`, a duplicate attribute, an undeclared entity, the bare word
+  `hello` and empty input were all "valid". Tag matching used `<[^>]*>`, so `>`
+  inside a quoted attribute ended the tag early; errors said
+  `expected </undefined>`. Worse than slow: quadratic in depth — a 68 KB document
+  threw a RangeError and a 112 KB one built a **488 MB** string and froze the tab.
+  Both files written new: `xml-format.ts` (846 lines) with a quote-aware
+  tokenizer that consumes attribute values atomically, and one
+  `checkWellFormed()` before formatting so the two modes can never disagree.
+  Structure is re-indented only inside elements whose children are all elements;
+  mixed content, `pre`, CDATA and attribute values are emitted byte for byte,
+  because in those elements the whitespace is the data. Comments kept by default.
+  The verdict is measured against **libxml2**, not against the author's memory —
+  a hand-written expectation list would only record the belief that was already
+  wrong — and `xmllint --noout` runs over the same corpus: **40/40 agree**, and the
+  one disagreement (`<?xml?>` after the root) was a real shipped bug, now fixed.
+  Caps 200,000 chars / 200 levels / 400,000 output; a 23,250-level bomb is refused
+  in under a millisecond, a 195,897-char legal document formats in 27 ms.
+  Registry renamed **XML Formatter & Validator** → **XML Formatter &
+  Well-Formness Check**, because it validates nothing; highlighting,
+  normalization, "handles all XML constructs correctly" and the 8-space indent all
+  removed, with a five-section guide on well-formed vs valid. Evidence: node audit
+  298/298; `tsc --noEmit` clean; eslint 0/0; production Chrome harness 270/270
+  twice on the same build (23 sections). Report:
+  `audit/reports/xml-formatter.md`.
+- Wave 12 regression: the same 312-page build carries waves 11 and 12's four other
+  tools with byte-identical source, so all six harnesses were run twice against
+  it — JWT 41/41, QR 112/112, CSV 195/195, JSON to TypeScript 150/150, SQL
+  143/143, XML 270/270 — and the Node audits still pass 238/364/397. Verification
+  found defects in the harnesses themselves, all recorded in the two new reports:
+  the XML mirror audit's own text extractor used `<[^>]*>` and so reproduced the
+  original bug (it ate `<not>` inside CDATA and truncated at `>` in an attribute);
+  minify's whitespace test was inverted and never removed anything; three
+  hand-written expectations were wrong rather than the tool (an 8-line document
+  asserted as 7, a 5-line prolog as 7, a self-closing element counted as a nesting
+  level); and two e2e checks asserted `/use/` sitemap entries, which the sitemap
+  does not emit by design. Added `/audit/.*-mirror/` to `.gitignore` so the
+  transpile targets cannot be committed.
+- Wave 12 complete. Next unaudited registry tools are `case-converter` and
+  `pdf-to-word` once their in-flight work lands (`PLAN.md` also still lists
+  `audit/TOOL-AUDIT-KIT.kt`, which is a typo for the real `.md`). 56 of 124
+  registry tools are audited; **68 remain**.
 - Hash Generator: ten independent judges ran in parallel (the architect report
   was not returned — aborted; its coverage supplied by functional/security/
   edge findings plus the harness). Component rebuilt on the team standard

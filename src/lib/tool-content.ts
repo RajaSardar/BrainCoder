@@ -3463,45 +3463,50 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ]
   },
   "sql-formatter": {
-    "longDescription": "<p>The SQL Formatter is a precision code beautifier that takes messy, minified, or inconsistently formatted SQL queries and transforms them into clean, readable, properly indented code. It supports all major SQL dialects — PostgreSQL, MySQL, SQL Server, Oracle, and SQLite — correctly handling dialect-specific syntax like backtick quoting, bracket identifiers, and proprietary functions.</p><p>Paste a long query from a log file, a tool output, or ORM-generated code and the formatter applies consistent capitalization of keywords, logical indentation of JOIN and subquery clauses, aligned comma-separated lists, and proper line breaks. The result is SQL that any team member can read and understand in seconds, reducing code review friction and debugging time.</p><p>The formatter runs entirely in your browser, which is especially important when working with production SQL that may contain table names, column names, or data samples that are sensitive. No query content is ever sent to an external server.</p>",
+    "longDescription": "<p>The SQL Formatter re-indents and re-cases a query you paste, across all 21 dialects the underlying formatter implements, and tells you plainly when it cannot read what you gave it. It parses CTEs, subqueries, JOIN chains, CASE expressions, window functions and INSERT ... SELECT without touching the contents of your string literals or comments.</p><p>The dialect selector matters more than any other setting here, because SQL is not one language. It decides whether <code class=\"font-mono\">\\</code> escapes the next character inside a quoted string, whether <code class=\"font-mono\">$$</code> opens a dollar-quoted body, and whether <code class=\"font-mono\">[brackets]</code> or backticks are identifiers. The page defaults to PostgreSQL, which accepts the widest range of pasted dialect, and it refuses rather than guess when a construct is ambiguous.</p><p>Everything happens in your browser. A query pulled from a log file, a customer record set or a production console routinely contains names worth keeping off a server, and nothing you type here is uploaded or sent anywhere.</p>",
     "features": [
-      "Support for PostgreSQL, MySQL, SQL Server, Oracle, and SQLite dialects",
-      "Consistent keyword capitalization (upper, lower, or preserved)",
-      "Proper indentation of JOINs, subqueries, CTEs, and CASE expressions",
-      "Comma-aligned column lists for improved readability",
-      "One-click copy to clipboard for pasting into your editor or IDE",
-      "Fully client-side processing with zero server transmission"
+      "All 21 dialects the formatter implements, from PostgreSQL and MySQL to DuckDB, Trino, ClickHouse and Oracle PL/SQL",
+      "Keyword casing set to UPPERCASE, lowercase, or left exactly as you wrote it",
+      "Indentation with 2 spaces, 4 spaces or a real tab character, plus 0, 1 or 2 blank lines between statements",
+      "Read the dialect before reading the SQL: backslash escapes, E-strings, dollar-quoted bodies, backtick and bracket identifiers are all recognised",
+      "Refuses what it would otherwise corrupt: unterminated comments and strings, unbalanced parentheses, and nested comments in dialects that do not nest them",
+      "Copy to the clipboard or download as a .sql file",
+      "Everything runs in your browser, so no query text is ever uploaded"
     ],
     "howTo": [
       {
-        "step": "Paste SQL Query",
-        "description": "Insert your minified, log-exported, or ORM-generated SQL into the input area."
+        "step": "Paste Your Query",
+        "description": "Put your minified, log-exported or ORM-generated SQL in the input box. Nothing is pre-filled, so what you see is only ever your own text."
       },
       {
-        "step": "Select Dialect",
-        "description": "Choose your target SQL dialect to ensure correct handling of dialect-specific syntax and quoting."
+        "step": "Choose the Dialect",
+        "description": "Pick the database your SQL is written for. This is not cosmetic: it decides how string escapes, quoted identifiers and dollar-quoted bodies are read. The default is PostgreSQL."
       },
       {
-        "step": "Format",
-        "description": "The query is instantly beautified with consistent casing, indentation, and line breaks."
+        "step": "Read the Result Panel",
+        "description": "The output updates as you type. A Formatted badge means the query parsed; Not formatted means the page refused it and said which cap or which construct stopped it, with a line and column where it has one."
       },
       {
-        "step": "Copy Output",
-        "description": "Use the copy button to grab the formatted SQL for use in your editor, migration files, or documentation."
+        "step": "Copy or Download",
+        "description": "Take the formatted SQL from the clipboard, or download it as formatted.sql."
       }
     ],
     "faq": [
       {
         "question": "Which SQL dialects are supported?",
-        "answer": "PostgreSQL, MySQL, SQL Server, Oracle, and SQLite. Each dialect handles its specific syntax quirks like identifier quoting and proprietary functions correctly."
+        "answer": "All 21 the underlying formatter implements: BigQuery, ClickHouse, Db2, Db2i, DuckDB, Hive, MariaDB, MySQL, N1QL, Oracle PL/SQL, PostgreSQL, Redshift, SingleStoreDB, Snowflake, Spark SQL, SQLite, Standard SQL, TiDB, Transact-SQL, SQL Server and Trino. The Oracle entry is PL/SQL specifically, which is what the formatter implements; it is not a claim about every form of Oracle SQL."
       },
       {
-        "question": "Does it handle complex queries with CTEs and subqueries?",
-        "answer": "Yes. Common Table Expressions, nested subqueries, correlated subqueries, and complex JOIN chains are all formatted with proper indentation."
+        "question": "What does it refuse, and why?",
+        "answer": "Three things it cannot do safely. An unterminated block comment: the formatter would read the comment text as arithmetic and hand back different SQL than you pasted, so it is refused instead. A nested block comment, in a dialect that does not support nesting: PostgreSQL, DuckDB, Db2i and SQL Server do support it and those queries are formatted normally. And unbalanced parentheses, which are counted and reported rather than passed to a parser that turns 507 characters into a 16-million-character error message. Size limits are 100,000 characters of input, 200 levels of parenthesis nesting and 64 levels of nested comment, each refused with its real number rather than truncated."
+      },
+      {
+        "question": "Does it check whether my SQL is correct?",
+        "answer": "No. It checks that your query can be read: names, strings, comments and brackets. It does not know your schema, so it cannot tell you that a column does not exist or that a JOIN is wrong, and it will not repair a query. Formatting and correctness are different jobs."
       },
       {
         "question": "Is my query data sent to a server?",
-        "answer": "No. All SQL formatting happens in your browser. Query text, table names, and column names never leave your device."
+        "answer": "No. Parsing and formatting both happen in this tab. Query text, table names and column names never leave your device, and no request is made with your data."
       }
     ],
     "relatedSlugs": [
@@ -3513,45 +3518,51 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ]
   },
   "xml-formatter": {
-    "longDescription": "<p>The XML Formatter transforms unstructured, minified, or inconsistently indented XML documents into clean, properly structured, human-readable markup. Whether you're working with SOAP responses, SVG files, configuration manifests (Maven pom.xml, Android layouts), or data interchange feeds, this tool applies consistent indentation, corrects self-closing tags, and normalizes attribute formatting for maximum readability.</p><p>The formatter handles all XML constructs correctly: processing instructions, CDATA sections, namespaces with prefix declarations, comments, and mixed content nodes. It validates the XML structure simultaneously, catching unclosed tags, mismatched namespace prefixes, and malformed entities with precise error reporting that pinpoints the exact location of the issue.</p><p>XML documents frequently contain business-critical data, internal system identifiers, and proprietary schemas. This tool processes everything in the browser with zero network transmission, ensuring your XML content remains private and secure at all times.</p>",
+    "longDescription": "<p>The XML Formatter re-indents the structure of a document and minifies it back down, and it checks well-formedness while it does. The parser reads quoted attribute values as single units, so a <code class=\"font-mono\">&gt;</code> inside an attribute is just a character, and a DOCTYPE with an internal subset of entity declarations is read whole rather than cut off at the first bracket.</p><p>What it will not do is rewrite your text. An element whose children are all elements gets indented; anything holding text, including <code class=\"font-mono\">pre</code> blocks, mixed content and CDATA, is reproduced byte for byte, because that text is the data and re-flowing it would change the document. Well-formedness is also not validity: this page checks that names, quoting, references, comments and nesting are legal, and it does not check your document against a DTD or an XSD.</p><p>Parsing happens in your browser. SOAP envelopes, SVG files and configuration manifests routinely carry internal hostnames and identifiers, and none of it is uploaded.</p>",
     "features": [
-      "Configurable indentation (tabs or 2/4/8-space widths)",
-      "Proper handling of namespaces, CDATA, processing instructions, and comments",
-      "Self-closing tag normalization and attribute formatting",
-      "Real-time XML validation with precise error location reporting",
-      "Minification mode for producing compact XML output",
-      "Full client-side processing — XML content never leaves your browser"
+      "Real well-formedness checking: element and attribute names, quoted attribute values, duplicate attributes, exactly one root element, matched tags and legal entity references",
+      "The same verdict in both modes \u2014 Format and Minify cannot contradict each other about one document",
+      "Structure is re-indented while text is left alone: pre blocks, mixed content and CDATA come out byte for byte",
+      "Indentation with 1, 2 or 4 spaces or a real tab character",
+      "Comments are kept by default, because deleting them should be your decision rather than the default",
+      "Errors report a line and a column",
+      "Copy to the clipboard or download as a .xml file",
+      "Everything runs in your browser, so no XML is ever uploaded"
     ],
     "howTo": [
       {
-        "step": "Paste XML Content",
-        "description": "Insert your raw, minified, or malformed XML into the editor area."
+        "step": "Paste Your XML",
+        "description": "Put minified or badly indented XML in the input box. Nothing is pre-filled, so what you see is only ever your own document."
       },
       {
-        "step": "Configure Formatting",
-        "description": "Set your preferred indentation width (spaces or tabs), and whether to preserve or strip comments."
+        "step": "Pick Format or Minify",
+        "description": "Format re-indents the structure and leaves text alone. Minify removes the whitespace between elements and keeps the text. Both run the same well-formedness check, so switching between them never changes the verdict about your document."
       },
       {
-        "step": "Format or Validate",
-        "description": "Click format to beautify the XML. If there's a parse error, the tool highlights the exact position."
+        "step": "Read the Result Panel",
+        "description": "A Well-formed badge means the document checked out and the element, comment and nesting counts are below it. Not well-formed names the problem and gives its line and column. Nothing was changed either way if the badge is not green."
       },
       {
         "step": "Copy or Download",
-        "description": "Copy the formatted XML to clipboard or download it as a properly encoded .xml file."
+        "description": "Take the result from the clipboard, or download it as formatted.xml."
       }
     ],
     "faq": [
       {
-        "question": "Does it support XML namespaces?",
-        "answer": "Yes. The formatter correctly handles namespace declarations, prefixed elements, and default namespaces without altering or stripping them."
+        "question": "What counts as well-formed here?",
+        "answer": "That there is exactly one root element; that every element and attribute name is a legal XML name; that every attribute value is quoted and no attribute is repeated; that every tag is matched and closed; that comments and CDATA sections are terminated legally; and that every &entity; reference is one of the five built-ins, a declared entity, or a numeric character reference. It is not a DTD or schema validation, and the copy says so rather than borrowing the word valid."
       },
       {
-        "question": "Can I validate XML while formatting?",
-        "answer": "Yes. The tool validates the XML structure and reports the exact line and column of any parse errors, making debugging fast."
+        "question": "Will formatting change my text content?",
+        "answer": "No. Only whitespace between elements is rewritten, and only inside elements whose children are all elements. Text content, pre blocks, CDATA and attribute values are copied through byte for byte, so the words in your document are the words that come out. If a document is mostly one element with text inside it, the output looks much like the input, and that is the intended behaviour rather than a failure."
       },
       {
-        "question": "Does it handle SOAP and SVG XML?",
-        "answer": "Yes. Any well-formed XML document — including SOAP envelopes, SVG graphics, and configuration files — is formatted correctly."
+        "question": "Does it handle SOAP, SVG and namespaces?",
+        "answer": "Prefixed and default namespaces, prefixed element names, namespace declarations, processing instructions, CDATA sections and DOCTYPE internal subsets are all read. What it does not do is resolve a namespace prefix to a URI or fetch an external DTD, so a document that depends on a schema for its meaning is checked for structure only."
+      },
+      {
+        "question": "Is my XML sent to a server?",
+        "answer": "No. Parsing and formatting both happen in this tab. No request is made with your document, which matters when it is a SOAP response or a manifest full of internal hostnames."
       }
     ],
     "relatedSlugs": [

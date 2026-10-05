@@ -104,9 +104,8 @@ all twelve pass.
 
 ### Defects found while running the harness, and what happened to each
 
-Two were real and were fixed; one was a defect in the harness itself and is
-recorded here because it is the kind that would otherwise be mistaken for a
-product bug:
+One was a defect in the harness itself. It is recorded here because it is the kind
+that would otherwise be mistaken for a product bug:
 
 1. **The harness asserted against page furniture instead of the tool.** The check
    "there is no `role=alert`" used an unscoped `page.locator('[role="alert"]')`.

@@ -753,9 +753,9 @@ export const TOOLS: ToolConfig[] = [
   {
     slug: "sql-formatter",
     name: "SQL Formatter",
-    tagline: "Format & beautify SQL queries",
+    tagline: "Re-indent a query, or be told why it can't be",
     description:
-      "Pretty-print unreadable SQL for MySQL, PostgreSQL, SQLite and more, with configurable keyword casing.",
+      "Pretty-print SQL across all 21 dialects the formatter implements, with keyword casing and indent width under your control. Refuses unterminated comments, unterminated strings and unbalanced parentheses rather than hand back SQL with different tokens than you pasted.",
     category: "Developer",
     icon: Database,
     accent: "text-violet-600",
@@ -763,10 +763,10 @@ export const TOOLS: ToolConfig[] = [
   },
   {
     slug: "xml-formatter",
-    name: "XML Formatter & Validator",
-    tagline: "Format, minify & validate XML",
+    name: "XML Formatter & Well-Formness Check",
+    tagline: "Re-indent structure, never rewrite text",
     description:
-      "Beautify or minify XML with live validation and clear errors on malformed markup.",
+      "Beautify or minify XML with a real well-formedness check: one root element, quoted attributes, no duplicates, matched tags and legal entity references, with the line and column of any problem. Text, pre blocks and CDATA are reproduced byte for byte, and both modes reach the same verdict.",
     category: "Developer",
     icon: FileCog,
     accent: "text-teal-600",

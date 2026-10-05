@@ -2110,6 +2110,137 @@ export const GUIDES: Guide[] = [
       },
     ],
   },
+  {
+    slug: "how-to-format-sql-online",
+    title: "How to Format SQL Online Without Uploading Your Query",
+    description:
+      "Pretty-print SQL across 21 dialects in your browser, and learn why an unterminated comment or a mismatched bracket is refused instead of reformatted.",
+    keywords: [
+      "format sql online",
+      "sql formatter",
+      "beautify sql query",
+      "sql pretty print",
+      "mysql query formatter",
+      "format postgres query",
+      "sql keyword uppercase",
+      "indent sql",
+      "sql formatter free",
+      "format sql without uploading",
+    ],
+    toolSlug: "sql-formatter",
+    published: "2026-10-05",
+    updated: "2026-10-05",
+    readMinutes: 4,
+    sections: [
+      {
+        heading: "What the formatter actually changes",
+        paragraphs: [
+          "It re-indents the statement and sets the case of keywords, and it does not rewrite what you wrote. Identifiers, string contents and numbers come out as they went in. Keyword casing is a display choice with a visible trade-off: UPPER CASE makes a long query easier to scan, while lower case keeps a diff small when the original was lower case, which matters more than it sounds if the file is under version control and someone else reviews it.",
+          "The default dialect is PostgreSQL and there are 21 to choose from: BigQuery, ClickHouse, Db2, Db2i, DuckDB, Hive, MariaDB, MySQL, N1QL, Oracle PL/SQL, PostgreSQL, Redshift, Spark, SQLite, standard SQL, TiDB, Trino, Transact-SQL, T-SQL, SingleStoreDB and Snowflake. The dialect decides the small things that differ between engines: how a backslash behaves inside a string, and whether a dollar-quoted body is a string or a language block. Pick the one you actually run it on, or the output can differ from what your database would accept.",
+        ],
+      },
+      {
+        heading: "1. Paste the statement",
+        paragraphs: [
+          "The box starts empty; use Load sample if you want something to look at first. Nothing is pre-filled, so what you see is only ever your own query.",
+          "The input limit is 100,000 characters. Past that the query is refused with its real size rather than truncated, because half a statement formats into SQL that still parses and is now wrong, and nothing in the output tells you that happened.",
+        ],
+      },
+      {
+        heading: "2. Choose a dialect and an indent",
+        paragraphs: [
+          "Set Language to your database, then pick an indent of 2 or 4 spaces or a real tab. The tab option inserts a tab character rather than a backslash followed by a t, which is the small thing that makes copied SQL from this page behave in an editor that shows whitespace.",
+        ],
+      },
+      {
+        heading: "3. Read the result",
+        paragraphs: [
+          "The output updates as you type, and the panel tells you how many characters came out of how many in. Copy takes the formatted statement to the clipboard; download writes a .sql file.",
+          "If the panel reports that the SQL could not be formatted, the output area stays empty and Copy stays disabled. There is no partial result to copy by accident, which is the point: an error message pasted into a terminal is worse than an empty box.",
+        ],
+      },
+      {
+        heading: "The three things it refuses, and why",
+        paragraphs: [
+          "An unterminated block comment is the important one. If you paste a query with a missing */ , a naive formatter reads the rest of the comment as arithmetic and hands back SQL whose tokens are not the ones you sent. That is the failure this page is built to prevent, so the comment state is tracked before any formatting and the query is refused instead.",
+          "A nested block comment is refused in dialects that do not support nesting, because the inner */ would close the outer comment early and change the statement. PostgreSQL, DuckDB, Db2i and SQL Server do support nesting, and those queries are formatted normally. And unbalanced parentheses are counted and reported rather than passed on, because a parser given 507 characters of broken input can return an error message over 16 million characters long — which is why the message here is capped at 240 characters and never rendered into the output box.",
+        ],
+      },
+      {
+        heading: "Caps, privacy, and what it is not",
+        paragraphs: [
+          "Four limits are checked before formatting starts: 100,000 characters of input, 200 levels of parenthesis nesting, 64 levels of nested comment, and the 240-character error message. Each is refused with its real number.",
+          "Formatting happens in this tab. No request is made with your query, which is the part that matters when the query is a WHERE clause full of values you are not supposed to be pasting anywhere. What this page does not do is tell you whether your query is correct, whether it uses a column that exists, or whether it would return what you meant. It reads the shape of the statement and lays it out; a query that formats perfectly can still be the wrong query.",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "how-to-format-xml-online",
+    title: "How to Format XML Online and Check It Is Well-Formed",
+    description:
+      "Beautify or minify XML in your browser with a real well-formedness check. Learn why your text and pre blocks come back byte for byte.",
+    keywords: [
+      "format xml online",
+      "xml formatter",
+      "beautify xml",
+      "xml pretty print",
+      "indent xml",
+      "xml minifier",
+      "check xml is well formed",
+      "xml syntax check",
+      "xml error line and column",
+      "format xml without uploading",
+    ],
+    toolSlug: "xml-formatter",
+    published: "2026-10-05",
+    updated: "2026-10-05",
+    readMinutes: 4,
+    sections: [
+      {
+        heading: "Well-formed is not valid",
+        paragraphs: [
+          "These are two different questions and most tools blur them. Well-formed means the document is legal XML: one root element, legal names, quoted attribute values, no repeated attribute, matched tags, legal references. Valid means it satisfies a particular grammar — a DTD or an XSD — and that requires the schema, which this page does not fetch.",
+          "So the badge says Well-formed, and it means exactly that. A document can be well-formed and still be meaningless to the service that consumes it, and it can be perfectly valid against its schema while having a typo in a value that no schema will catch. When you need schema validation, use a validator; when you need to read the structure, this is the right tool.",
+        ],
+      },
+      {
+        heading: "1. Paste your XML",
+        paragraphs: [
+          "The box starts empty; Load sample puts a small document in it if you want a starting point. Nothing is pre-filled.",
+          "Minified and hand-indented documents both work. Whatever the input looks like, the output is laid out from the structure rather than from the whitespace you happened to paste, so an element indented with three spaces and one indented with none come out consistent.",
+        ],
+      },
+      {
+        heading: "2. Format or Minify",
+        paragraphs: [
+          "Format re-indents and Minify does the reverse, and both run the same check first, so switching between them can never change the verdict about your document. If the badge is not green, the output area is empty and Copy is disabled — a document that is not well-formed produces nothing to copy.",
+          "Pick an indent of 1, 2 or 4 spaces or a real tab. Comments are kept by default, because deleting them should be your decision; tick Strip comments when you want them gone, and note that it applies to the output only, never to your input.",
+        ],
+      },
+      {
+        heading: "Why your text is not re-wrapped",
+        paragraphs: [
+          "This is the behaviour that surprises people, so it is worth stating plainly. Only whitespace between elements is rewritten, and only inside elements whose children are all elements. Anything holding text — a paragraph with a bold word in it, a pre block, a CDATA section, an attribute value — comes out byte for byte.",
+          "The reason is that in those elements the whitespace is the data. Reflowing Hello <b>world</b> into Hello<b>world</b> or breaking a line inside a pre block changes what the document says, and a formatter that changes meaning while claiming to clean up is worse than no formatter. The visible consequence is that a document that is mostly text may look barely different afterwards, and that is correct behaviour rather than a failure.",
+        ],
+      },
+      {
+        heading: "What the check catches",
+        paragraphs: [
+          "A second root element, an unquoted attribute value, the same attribute twice, a tag that closes the wrong element, an element or attribute name starting with a digit, an undeclared entity, text sitting outside the root, an unterminated comment or CDATA section, and a DOCTYPE with an unclosed internal subset. Errors report a line and a column, so you can go straight to the spot rather than hunting through the document.",
+          "Quoted attribute values are read as single units, which is why a > inside an attribute does not end the tag early. Namespace prefixes, default namespaces, processing instructions, CDATA sections and DOCTYPE internal subsets that declare entities are all handled. What is not done is resolving a namespace prefix to a URI or fetching an external DTD, so a document that depends on a schema for its meaning is checked for structure only.",
+        ],
+      },
+      {
+        heading: "Caps and privacy",
+        paragraphs: [
+          "Three limits are checked before any work starts: 200,000 characters of input, 200 levels of element nesting, and 400,000 characters of output. Deeply nested input is refused quickly rather than attempted — a 23,250-level document is a few tens of kilobytes but is a runaway for anything that recurses, which is why the nesting limit exists at all.",
+          "Parsing happens in this tab and nothing is uploaded. That is worth having in mind for the documents people actually paste here: SOAP responses, SVG from an internal service, Maven or Android manifests, an exported feed. Keep the source file anyway, so you can compare.",
+        ],
+      },
+    ],
+  },
 ];
 
 const guideBySlug = new Map(GUIDES.map((g) => [g.slug, g]));

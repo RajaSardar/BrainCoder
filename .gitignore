@@ -50,3 +50,8 @@ crates/core/target
 # tesseract.js drops an uncompressed model in the cwd when its Node API is
 # driven from an audit; the shipped models are the gzipped ones in public/ocr.
 /*.traineddata
+
+# audit/TOOL-AUDIT-KIT.md step 1: each Node audit transpiles the shipped TypeScript
+# into a throwaway mirror directory so the behavioural checks run the module the tab
+# runs. The mirror is a build artifact and must never be committed.
+/audit/.*-mirror/
