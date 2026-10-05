@@ -485,7 +485,9 @@ Phase 2+ Target (NOT building now):
 - User correction (2026-09-16): ten distinct expert agents per tool. They are
   read-only and independent, so they run in parallel; judges never wait on each
   other's output. Finish judging, upgrades and verification before the next tool.
-- Workflow: `audit/TOOL-AUDIT-KIT.md`. All 123 registry tools remain in scope.
+- Workflow: `audit/TOOL-AUDIT-KIT.md`. All 124 registry tools remain in scope
+  (counted from the `slug` entries in `src/lib/tools.ts`, which is the
+  authority; earlier drafts of this line said 123 and 127).
 - PDF Compressor: ten judges completed; engine/client/UI and related content
   upgraded. 73 regression tests and 15 production Chrome scenarios passed;
   production build passed (279 pages). Report: `audit/reports/pdf-compressor.md`.
@@ -1261,8 +1263,58 @@ Phase 2+ Target (NOT building now):
   and the shared CopyButton, and Chrome refusing the eleventh download in one page
   unless its multiple-downloads prompt is answered. Reports:
   `audit/reports/jwt-decoder.md`, `qr-code-generator.md`, `csv-json.md`.
-- Next: Wave 12, the next three tools from the registry. Remaining 74 tools have
-  not completed this process.
+- Wave 12: JSON to TypeScript (54th) — every judge independently found the same
+  defect, which is the point of running them in parallel: the page emitted
+  TypeScript that does not compile. Every object root finished with
+  `export type User = User` (TS2300 duplicate identifier), internal node-kind
+  tags reached the output as bare identifiers so a heterogeneous array produced
+  `array | object` (TS2552), a 54-byte 26-deep array drove 67,108,863 recursive
+  infer calls and froze the tab, `null` inferred to an optional `any` (turning a
+  required field optional), keys missing from merged arrays stayed required,
+  mixed arrays collapsed to `any[]`, sanitised key collisions became duplicate
+  members, Copy copied parse errors, both textareas were unnamed, the box booted
+  pre-filled with a sample, and the copy sold JSDoc/enums/generics/type-alias
+  toggles/prefix-suffix and "production-ready" phrasing that did not exist.
+  Replaced rather than patched, because the blocker was not one line but a design
+  that never checked its own output: split into `json-infer.ts` (inference only)
+  and `json-to-typescript.ts` (caps, error classification, name allocation,
+  emission, self-check), with `parseJsonShape`/`emitTypeScript` separated so a
+  rename re-emits without re-walking the document. One `export interface` per
+  object, path-named nested interfaces, `null` required, optional markers from
+  merged-array absence only, disagreeing shapes as real unions,
+  `Record<string, never>`/`unknown[]` for empty containers, sanitised keys
+  de-duplicated as `a_b`/`a_b_2`, reserved and interface-shadowing root names
+  replaced by `Root` with the substitution stated on screen, and caps of 200,000
+  chars / 64 levels / 200,000 values / 400,000 chars of output, each refused with
+  real numbers. Nothing is labelled Generated until a lexical sweep has confirmed
+  the emitted names are unique and resolve. Component: empty boot, Load sample and
+  Clear, real `<label htmlFor>` (deliberately not the shared `Field`, which
+  renders a `<p>` and names nothing), aria-labels, scoped sr-only `role="status"`,
+  parse message kept out of every live region because it quotes the reader's own
+  payload, Copy/Download disabled until there is code, interface/field/character
+  counts. Copy rewritten around the limit (a first draft from one sample, not a
+  schema) with a guide and a sixth FAQ; registry tagline, ten keywords, title,
+  description and JSON-LD rewritten to match. Evidence: node audit 397/397 with
+  at least 1,500 generated documents handed to the real TypeScript compiler in
+  one in-memory program; `tsc --noEmit` clean; eslint 0/0; production Chrome
+  harness 150/150 twice on the same build (23 sections); build 310 pages.
+  Re-checked by hand outside both harnesses: twelve documents including the
+  original blocker compiled under `strict` — all clean. Report:
+  `audit/reports/json-to-typescript.md`.
+- Wave 12 regression: the same 310-page build carries wave 11's three tools with
+  byte-identical source, so all four harnesses were run twice against it —
+  JWT 41/41, QR 112/112, CSV 195/195, JSON to TypeScript 150/150 — and the Node
+  audits still pass 238/155/364/397. This run is what substantiated the CSV
+  report's consecutive-runs wording, which had been asserted without a second
+  observed run. Two ESLint warnings the implementation agent had reported as
+  clean (unused `proseOf`, `bodyText`) were removed. One harness defect fixed:
+  the "no role=alert" check used an unscoped page locator, and since Playwright
+  locators pierce shadow roots it was matching Next.js's route announcer rather
+  than the tool — scoped to `tool()`, which is the same defect class line 1260
+  records for wave 11.
+- Next: Wave 12 continues with SQL Formatter and XML Formatter, the next two
+  unaudited registry tools (`case-converter` and `pdf-to-word` are excluded as
+  in-flight work). 54 of 124 registry tools are audited; **70 remain**.
 - Hash Generator: ten independent judges ran in parallel (the architect report
   was not returned — aborted; its coverage supplied by functional/security/
   edge findings plus the harness). Component rebuilt on the team standard

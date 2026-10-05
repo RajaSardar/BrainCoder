@@ -742,9 +742,9 @@ export const TOOLS: ToolConfig[] = [
   {
     slug: "json-to-typescript",
     name: "JSON to TypeScript",
-    tagline: "Generate TypeScript types from JSON",
+    tagline: "A first draft of the types, from one JSON sample",
     description:
-      "Drop in any JSON and get ready-to-use TypeScript interfaces with inferred nested and array types.",
+      "Paste one JSON sample and get one export interface for the root plus an interface for every nested object, with array elements merged and JSON null kept as a required null. Every generated name is checked for uniqueness and resolution before the result is called Generated. Nothing is uploaded.",
     category: "Developer",
     icon: FileJson,
     accent: "text-blue-600",

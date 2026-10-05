@@ -118,7 +118,10 @@ paragraph.
 
 1. **The Chrome harness has now been run.** `node e2e/csv-json-browser.mjs` ran
    against a production build served by `next@16.3.4 start -p 3801` and reported
-   **195 passed, 0 failed**, reproduced on consecutive runs. It expects a
+   **195 passed, 0 failed**. The two consecutive runs behind that wording were
+   re-executed on the 310-page build that carries this report, with the CSV
+   source byte-identical to the wave that fixed the manual-delimiter reporting,
+   and both runs reported 195/195. It expects a
    server on `http://localhost:3801` (`BASE_URL` overrides it). The 364-check
    Node mirror and the 195 browser assertions are now both executed evidence.
 2. **Defects found while running the harness, and what happened to each.** Four

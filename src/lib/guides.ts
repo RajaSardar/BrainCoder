@@ -2062,6 +2062,54 @@ export const GUIDES: Guide[] = [
       },
     ],
   },
+  {
+    slug: "how-to-convert-json-to-typescript-types",
+    title: "How to Turn JSON into TypeScript Types Without Guessing",
+    description:
+      "Generate TypeScript interfaces from one JSON sample: how array elements are merged, why a null field stays required, when a key becomes optional, and what the page refuses to invent.",
+    keywords: [
+      "json to typescript",
+      "json to ts interface",
+      "generate typescript types from json",
+      "typescript interface from json",
+      "json to ts union types",
+    ],
+    toolSlug: "json-to-typescript",
+    published: "2026-10-05",
+    updated: "2026-10-05",
+    readMinutes: 3,
+    sections: [
+      {
+        heading: "What one sample can tell you, and what it cannot",
+        paragraphs: [
+          "A JSON document carries values, not types. It says this key held the string 2024-01-01, and that string might be a date, an account code, a version, or a sentence. It says this key held 42, and 42 might be a count, an age, a price in cents or an identifier. Nothing inside the document distinguishes those, so any tool that writes date: Date or id: number has decided something for you on the strength of the shape of the value, and then presents it as though the data had said so.",
+          "That is why the right expectation for this page is a first draft. It reads the one sample you paste and describes that sample faithfully: which keys are present, which are numbers, which are strings, which are null, and how the nesting runs. It does not know your schema, your database or your API, and the fields your sample happens not to contain are not marked optional, because a sample cannot tell an absent key from a key the endpoint sometimes omits.",
+        ],
+      },
+      {
+        heading: "Paste the sample, name the root, read what it decided",
+        paragraphs: [
+          "Open the tool and paste one object, array or value. Nothing is pre-filled, so nothing on screen can be confused with your own data; Load sample puts a small example in the box when you want one. A single response from a single endpoint is a sample. If the fields you care about are missing, the types will be missing too, and the cheapest fix is a wider sample rather than a cleverer tool.",
+          "The root name box names the type the document itself becomes. A name that cannot be used as written is replaced rather than mangled: a TypeScript keyword such as class, or a built-in type such as Record that an interface declaration would shadow, becomes Root, and the page says which name it used and why instead of substituting silently. Renaming re-emits the declarations immediately, without re-reading the JSON, and the panel under the output gives you the interface count, the field count and the character count of exactly the text Copy and Download hand over.",
+        ],
+      },
+      {
+        heading: "The rules the output follows",
+        paragraphs: [
+          "The root object becomes one export interface, and every object nested inside it gets its own named interface, named for the path that reached it: User, then UserProfile, then UserProfileAddress. You get a flat list of declarations to read top to bottom rather than a wall of inline nested types, and no declaration that refers to a name the output does not define — the emitted names are checked for duplicates and for resolution before the result is allowed to say Generated.",
+          "An array of objects is merged into a single element shape. A key that was missing from at least one element is the only thing that becomes optional, and that is the only place in the whole conversion where a question mark can appear. Keys whose shapes disagree become a union of what was really seen, in parentheses when they sit inside an array, so a mixed array reads as (string | number)[] rather than any[]. A JSON null is a value rather than a hole: the field is required and its type includes null, because the sample has that key and that value, and dropping it would claim something your data does not say. An empty object becomes Record<string, never> and an empty array becomes unknown[], since an interface with no members would accept every object you could hand it.",
+          "Keys that are not legal identifiers are sanitized and written as quoted members, so a b becomes a_b and a leading digit gains an underscore, and two keys that clean to the same name are separated deterministically as a_b and a_b_2 rather than silently becoming one. What the output never contains is worth the same attention: no JSDoc, because a comment guessed from one value is a comment that will be wrong; no enums, no generics, no converters, and no type-alias mode, whatever an older version of this page may have claimed.",
+        ],
+      },
+      {
+        heading: "Caps, privacy, and what to do with the draft",
+        paragraphs: [
+          "Four caps are checked before any parsing or emission work starts: 200,000 characters of pasted text, 64 nesting levels, 200,000 values in the document, and 400,000 characters of generated code, which an array of objects can reach without the input ever being that long. Each is refused with its real numbers rather than truncated, because a truncated document produces types that look complete and are not. Your JSON is parsed and read in this tab: nothing is uploaded and no request is made with your data, which is the point when the payload is an API response containing someone else's records.",
+          "So use it for what it is. Paste a response, take the draft, then spend the saved time on the parts only you know: add the fields this one sample did not contain, narrow the strings that are really dates, UUIDs or enums, decide which numbers are amounts, and delete the interfaces for branches your code never handles. The copy compiles as written — that is checked, not promised, because the names in it are checked before it is called Generated — and the rest is editing you were always going to do.",
+        ],
+      },
+    ],
+  },
 ];
 
 const guideBySlug = new Map(GUIDES.map((g) => [g.slug, g]));

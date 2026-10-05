@@ -3379,53 +3379,87 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ]
   },
   "json-to-typescript": {
-    "longDescription": "<p>The JSON to TypeScript Interface converter automatically generates strongly-typed TypeScript interface definitions from any JSON structure. Instead of manually writing interface files for API responses, configuration objects, or database records, paste your JSON and get production-ready TypeScript code with proper nesting, optional markers, union types, and JSDoc-ready comments in seconds.</p><p>The converter intelligently infers types from actual values — strings become string, numbers become number, booleans become boolean, arrays derive their element type, and nested objects become sub-interfaces with proper naming. When a field has multiple types across array elements or is null, the tool generates accurate union types (string | number) or optional (?) modifiers, ensuring your generated types are correct on the first pass.</p><p>Whether you're scaffolding types for a new API integration, generating configuration schemas, or building a type-safe layer over an existing REST API, this tool eliminates hours of manual type definition work. All processing is client-side, so proprietary JSON payloads never leave your browser.</p>",
+    "longDescription": "<p>Type inference from a sample is a small job that most converters overstate. This one reads exactly the JSON you paste and nothing else: the root object becomes one <code>export interface</code>, and every object nested inside it becomes its own named interface, named for the path that reached it — <code>User</code>, then <code>UserProfile</code>, then <code>UserProfileAddress</code> — so the output is a set of flat declarations you can read top to bottom instead of a wall of inline nested types. The old version of this page finished every object document with <code>export type User = User;</code>, which is TS2300 Duplicate identifier and does not compile at all. There is no such line here, and nothing is labelled Generated until the emitted names have been checked for duplicates and for resolution.</p><p>The decisions it makes are the ones a sample can actually support, and they are stated rather than buried. An array of objects is merged into a single element shape: a key missing from at least one element is marked optional, and keys whose shapes disagree become a union of what was really seen, never <code>any</code>. A JSON null is a value rather than a hole, so it stays required and renders as <code>null</code> — an earlier version made it <code>any</code>, which quietly turned a required field into an optional one. Every number is <code>number</code>; a date, a UUID or an enum that arrives as a string reads as <code>string</code>, because nothing in a sample can tell those apart. An empty object is <code>Record&lt;string, never&gt;</code> and an empty array is <code>unknown[]</code>, since a member-less interface would accept every object you could pass it. A root name that is a TypeScript keyword, or a built-in type such as <code>Record</code> that an interface would shadow, falls back to <code>Root</code> and the page says so out loud instead of substituting quietly.</p><p>What it deliberately does not do is worth the same space as what it does. There is no JSDoc on each field, because a comment guessed from one value is a comment that will be wrong. There is no enums, no generics, no type-alias mode, no converters, and no date library. A key your sample does not contain is not marked optional, because the sample cannot know whether the field is absent, null, or simply not in the response you happened to paste. Copy the result into a <code>.ts</code> file and it compiles as written; widen the sample, or edit the interface, before you rely on it.</p><p>Input is capped before anything is parsed — 200,000 characters of pasted text, 64 nesting levels, 200,000 values in the document, and 400,000 characters of generated code, since an array of objects can imply more fields than the input has characters — and each cap is refused with the real numbers rather than silently truncating. Your JSON is read in this tab. Nothing is uploaded, and no request is made with your data at all.</p>",
     "features": [
-      "Automatic interface generation with proper nesting and naming conventions",
-      "Intelligent type inference: string, number, boolean, null, arrays, and unions",
-      "Optional (?) field markers for nullable or missing properties",
-      "Array element type detection with proper generic syntax",
-      "Configurable output: interfaces vs types, export keywords, naming style",
-      "Entirely client-side — no JSON data transmitted to external servers"
+      "One export interface for the root object and one named interface per nested object, named for the path that reached it — User, UserProfile, UserProfileAddress — with no inline nested types to unfold",
+      "The output is checked before it is called Generated: duplicate or unresolvable type names are reported as a stated problem instead of a green badge on code that would not compile",
+      "An array of objects is merged into one element shape; a key missing from any element is marked optional, and shapes that disagree become a union of what was actually seen",
+      "A JSON null is a value, so it stays required and renders as null — never any, and never an optional marker",
+      "Every number is number, and a date, UUID or enum that arrives as a string reads as string; nothing is guessed beyond what the sample shows",
+      "An empty object is Record<string, never> and an empty array is unknown[], because a member-less interface would accept every object",
+      "A root name that is a TypeScript keyword or a built-in type such as Record falls back to Root, and the page names the substitution and the reason",
+      "Keys that are not legal identifiers are sanitized and de-duplicated deterministically, so two keys that both clean to a_b become a_b and a_b_2 rather than a duplicate member",
+      "No JSDoc comments, no enums, no generics, no converters and no type-alias mode: the output is interfaces, and arrays are written as array types",
+      "Caps of 200,000 characters of input, 64 nesting levels, 200,000 values and 400,000 characters of generated code, each refused with its real numbers before anything is emitted",
+      "An interface count, a field count and a character count on screen, plus Copy, a .ts download named for the root type, Load sample and Clear",
+      "Runs entirely in this tab — your JSON is never uploaded and no request is made with it"
     ],
     "howTo": [
       {
-        "step": "Paste JSON Data",
-        "description": "Insert your JSON object, array, or API response into the input area."
+        "step": "Paste one JSON sample",
+        "description": "Paste a single object, array or value into the box, or use Load sample. Nothing is pre-filled, so nothing on screen can be confused with your data. One response from one endpoint is a sample, not a schema: the types describe what this document contains."
       },
       {
-        "step": "Generate Interfaces",
-        "description": "Click convert to produce TypeScript interface definitions with properly inferred types and nesting."
+        "step": "Name the root type",
+        "description": "Type the name you want in the root box. A name that is a TypeScript keyword, or a built-in an interface would shadow such as Record, becomes Root and the page says which name it used and why. Renaming re-emits the types without re-reading the JSON."
       },
       {
-        "step": "Configure Output",
-        "description": "Toggle options like export keyword, interface vs type alias, and prefix/suffix for generated names."
+        "step": "Read the counts, then read the code",
+        "description": "The panel under the output gives the interface count, the field count and the character count. Then read the code: optional markers mean a key was missing from at least one element of a merged array, a union means two shapes were really seen, and a field your sample never contained is not marked optional at all."
       },
       {
-        "step": "Copy to Clipboard",
-        "description": "One-click copy the generated TypeScript code to paste directly into your .ts files."
+        "step": "Copy or download, then tighten it",
+        "description": "Copy puts the exact text on the clipboard; Download writes the same bytes to a file named for the root type. The code compiles as written — then edit it: add the fields the sample was missing, narrow the strings that are really dates, IDs or enums."
       }
     ],
     "faq": [
       {
-        "question": "Does it handle nested objects?",
-        "answer": "Yes. Deeply nested JSON objects generate a hierarchy of named interfaces, with proper references between them."
+        "question": "Are these the right types for my API?",
+        "answer": "They are the right types for the sample you pasted, and nothing more. A key the sample does not contain is not marked optional, because the page cannot tell an absent key from a key the endpoint sometimes omits. A date, a UUID, a money amount and an enum name all read as string, because every one of them is a string in JSON. Treat the output as a first draft to edit — widen the sample, or write the fields in by hand."
       },
       {
-        "question": "What if a field has multiple possible types?",
-        "answer": "The tool generates TypeScript union types (e.g., string | number) for fields that contain different types across array elements or have null values."
+        "question": "Why is a field optional when my sample always had it?",
+        "answer": "Optional comes from exactly one place: a key that was missing from at least one element of an array whose elements were merged. If no field in your output is marked optional, then every key was present in every element you pasted, which is the correct reading of that sample."
       },
       {
-        "question": "Can I generate type aliases instead of interfaces?",
-        "answer": "Yes. There's an option to output type aliases instead of interface declarations, depending on your project's conventions."
+        "question": "Why is a null field required rather than optional?",
+        "answer": "Because null is a value your sample contains, not a field it lacks. The field has to be there and it holds null, so it is rendered as a required field whose type includes null. Treating it as a hole would let you leave the field out entirely, which is a different claim about your data and one the sample cannot support."
+      },
+      {
+        "question": "Why is there no comment above each field?",
+        "answer": "Because a comment written from one value is a comment that will be wrong. The page does not know that 2024-01-01 is a date rather than a string, that a UUID is an identifier rather than text, or that admin is one member of a fixed set. Add those yourself, where you know them."
+      },
+      {
+        "question": "Why did my root type get called Root?",
+        "answer": "Because the name you typed cannot be used as written. A TypeScript keyword such as class, or a built-in type such as Record that an interface declaration would shadow, is replaced by Root, and the page says which name it used and why. Type a different name and the output is re-emitted immediately."
+      },
+      {
+        "question": "What happens to keys with spaces, dashes or leading digits?",
+        "answer": "A key that is already a legal identifier is used as it is. Anything else is sanitized — a b becomes a_b, a leading digit gains an underscore — and the result is written as a quoted member name, which TypeScript allows. Two keys that clean to the same name are separated deterministically as a_b and a_b_2 rather than becoming a duplicate member."
+      },
+      {
+        "question": "Why is an empty object Record<string, never>?",
+        "answer": "Because {} in TypeScript means any non-nullish value, and an interface with no members at all accepts every object, which is the opposite of what an empty JSON object means. Record<string, never> is the type that says there are no properties here. An empty array becomes unknown[], because an empty array has no element to learn a type from."
+      },
+      {
+        "question": "Is there a size limit?",
+        "answer": "200,000 characters of pasted text, 64 nesting levels, 200,000 values in the document, and 400,000 characters of generated code. Each cap is checked before any parsing or emission work and is refused with the real numbers, so nothing is half-converted and nothing is silently truncated. A shorter sample, or one whose array elements share their keys, stays well under all four."
+      },
+      {
+        "question": "Is my JSON uploaded anywhere?",
+        "answer": "No. It is parsed and read in this tab by the page's own code. No request is made with your data and no network call of any kind happens while you use the tool, which matters here because an API response is often the thing you least want sent to a third party."
+      },
+      {
+        "question": "Can it output type aliases, enums or generics?",
+        "answer": "No. The output is interfaces, plus array types and unions where the sample really showed more than one shape. There is no alias mode, no enum inference, no generic parameters and no type-alias switch: an earlier version claimed those options and they never existed on this page."
       }
     ],
     "relatedSlugs": [
       "json-formatter",
       "json-viewer",
-      "json-xml",
-      "json-yaml",
-      "toml-json"
+      "csv-json",
+      "javascript-formatter",
+      "json-xml"
     ]
   },
   "sql-formatter": {
@@ -4501,7 +4535,7 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       "csv-to-sql",
       "excel-to-json",
       "json-formatter",
-      "json-viewer"
+      "json-to-typescript"
     ]
   },
   "csv-to-sql": {
