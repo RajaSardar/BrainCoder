@@ -1381,10 +1381,7 @@ Phase 2+ Target (NOT building now):
   level); and two e2e checks asserted `/use/` sitemap entries, which the sitemap
   does not emit by design. Added `/audit/.*-mirror/` to `.gitignore` so the
   transpile targets cannot be committed.
-- Wave 12 complete. Next unaudited registry tools are `case-converter` and
-  `pdf-to-word` once their in-flight work lands (`PLAN.md` also still lists
-  `audit/TOOL-AUDIT-KIT.kt`, which is a typo for the real `.md`). 56 of 124
-  registry tools are audited; **68 remain**.
+- Wave 13 complete: cron-parser (57), number-base (58), chmod-calculator (59). Ten judges ran per tool; blockers fixed, Node audits + browser harnesses added, reports written (`audit/reports/cron-parser.md`, `number-base.md`, `chmod-calculator.md`). Next unaudited registry tools are `case-converter` and `pdf-to-word` once their in-flight work lands. 59 of 124 registry tools are audited; **65 remain**.
 - Hash Generator: ten independent judges ran in parallel (the architect report
   was not returned — aborted; its coverage supplied by functional/security/
   edge findings plus the harness). Component rebuilt on the team standard
