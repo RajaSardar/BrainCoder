@@ -2241,6 +2241,120 @@ export const GUIDES: Guide[] = [
       },
     ],
   },
+  {
+    slug: "how-to-convert-px-to-rem",
+    title: "How to Convert PX to REM (and Back) Without Guessing",
+    description:
+      "Convert pixels to rem and rem to pixels in your browser for any root font-size. See the math, pick the right base, and read the reference table.",
+    keywords: [
+      "px to rem",
+      "convert px to rem",
+      "rem to px",
+      "px rem calculator",
+      "root font size",
+      "css rem explained",
+      "px to rem converter",
+      "rem to px converter",
+    ],
+    toolSlug: "px-rem",
+    published: "2026-10-10",
+    updated: "2026-10-10",
+    readMinutes: 4,
+    sections: [
+      {
+        heading: "What rem actually depends on",
+        paragraphs: [
+          "There is no single px-to-rem answer, because rem is defined relative to the root element. On a page that sets html { font-size: 16px }, 1rem is 16px, so 24px is 1.5rem. Change the root to 20px and 24px becomes 1.2rem. That is the whole point of rem: it does not fix a size, it follows the reader's setting.",
+          "Browsers start with a 16px root, and that is why examples everywhere assume 16. But a user who raises their browser's default font size, or a site that sets a different root, moves every rem on the page. The conversion is only meaningful once you know the base, which is why this tool asks for it up front.",
+        ],
+      },
+      {
+        heading: "1. Set the base font-size",
+        paragraphs: [
+          "Move the slider to the root font-size your CSS uses, from 8px to 24px. Sixteen is the browser default and the starting value. The readout beside the slider always shows what 1rem equals at the current setting.",
+          "If you are converting a value from a design file and the project uses the standard root, leave it at 16. If the project deliberately sets html { font-size: 62.5% } so that 1rem is 10px, set the slider to 10 and every result follows.",
+        ],
+      },
+      {
+        heading: "2. Convert in either direction",
+        paragraphs: [
+          "The Pixels to rem box divides your pixel value by the base; the rem to pixels box multiplies your rem value by it. Both results update as you type and each has its own copy button, so you can paste a value straight into your CSS.",
+          "If a field is empty, the result shows a dash and its copy button is disabled rather than copying that dash. A value larger than 1,000,000 is refused the same way, so a pasted junk number cannot produce a silently wrong result.",
+        ],
+      },
+      {
+        heading: "3. Check the reference table",
+        paragraphs: [
+          "Below the converters, 20 common pixel values are listed with their rem equivalents at the current base, and the Preview column renders each one at its true pixel height so you can see the scale rather than only read the numbers. Change the base and the whole table recomputes.",
+          "Because the preview uses real pixels while the rem column shows the equivalent, the table doubles as a quick check that your base is set the way you expect: at a 16px base, 12px is 0.75rem, and at a 10px base the same 12px is 1.2rem.",
+        ],
+      },
+      {
+        heading: "Precision, limits and privacy",
+        paragraphs: [
+          "Results are shown to six decimal places with trailing zeros removed, which is enough for the values real stylesheets use. At a 16px base, 14.5px is exactly 0.90625rem, and 1px is 0.0625rem. Values that repeat forever, such as 1px at a 24px base, are rounded at the sixth decimal rather than truncated mid-digit.",
+          "Everything is computed in this tab from the two numbers you type and the base you pick; nothing is sent anywhere. This tool converts px and rem only — em depends on a parent element and viewport units depend on the viewport, so they need different inputs.",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "http-status-codes-explained",
+    title: "HTTP Status Codes Explained: What 4xx and 5xx Really Mean",
+    description:
+      "A plain tour of the standard HTTP status code classes, with a searchable IANA reference you can filter by class from 1xx to 5xx.",
+    keywords: [
+      "http status codes",
+      "http status codes explained",
+      "http 404 meaning",
+      "http 500 meaning",
+      "4xx vs 5xx",
+      "http status code reference",
+      "http 429 meaning",
+      "list of http status codes",
+    ],
+    toolSlug: "http-status",
+    published: "2026-10-10",
+    updated: "2026-10-10",
+    readMinutes: 4,
+    sections: [
+      {
+        heading: "The first digit is the class",
+        paragraphs: [
+          "Every HTTP status code is three digits, and the first digit tells you which of five classes it belongs to. 1xx is informational — the request was received and the server is still working. 2xx is success. 3xx is redirection. 4xx is a client error. 5xx is a server error.",
+          "The class alone tells you who is likely at fault, which is often all you need before you reach for the exact code. The page groups every code by class so you can scan one band at a time, and the 1xx-5xx chips filter the list to a single class.",
+        ],
+      },
+      {
+        heading: "Client or server? 4xx vs 5xx",
+        paragraphs: [
+          "A 4xx means the request itself was the problem: a typo in a URL (404), a missing or bad credential (401, 403), a body that failed validation (422), or too many requests in a short window (429). Retrying the same request unchanged will usually fail the same way; fix the request first.",
+          "A 5xx means the request was fine but the server could not complete it: an unhandled exception (500), a broken upstream (502), an overloaded or down service (503), or an upstream that took too long (504). These are often transient, so a bounded retry with backoff is reasonable — but a persistent 500 is a server bug, not something the client can fix.",
+        ],
+      },
+      {
+        heading: "The codes you will actually meet",
+        paragraphs: [
+          "In day-to-day API work a handful of codes cover most traffic: 200 OK and 201 Created on success; 301 and 308 for permanent redirects and 302, 303, 307 for temporary ones; 304 Not Modified for cache validation; and on the error side 400, 401, 403, 404, 409, 410, 422 and 429.",
+          "The 5xx set is smaller but worth knowing by heart: 500, 502, 503 and 504. If you build retries and dashboards, those four plus 429 are the ones that drive your alerting.",
+        ],
+      },
+      {
+        heading: "Registered is not the same as universal",
+        paragraphs: [
+          "The codes shown here are the ones in the IANA HTTP Status Code Registry. That includes the WebDAV codes from RFC 4918 (207 Multi-Status, 423 Locked, 424 Failed Dependency, 507 Insufficient Storage) and newer registrations such as 425 Too Early and 451 Unavailable For Legal Reasons.",
+          "Many servers and CDNs also use private codes that are not in the registry — 599 for a network connect timeout is a common one. Those are tagged unofficial in the list so you never mistake a vendor convention for a standard.",
+        ],
+      },
+      {
+        heading: "Look one up",
+        paragraphs: [
+          "Type a number, a reason phrase or a word from the description to filter the list, or narrow it with the class chips. Each entry shows the registered reason phrase and a plain-English description of when it applies; for the exact normative wording, follow the RFC named in the IANA registry.",
+          "The whole reference is loaded as part of the page and the search runs in this tab. Nothing you type is sent anywhere.",
+        ],
+      },
+    ],
+  },
 ];
 
 const guideBySlug = new Map(GUIDES.map((g) => [g.slug, g]));

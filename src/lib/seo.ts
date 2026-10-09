@@ -152,8 +152,8 @@ const TOOL_KEYWORDS: Record<string, string[]> = {
   "cron-parser": ["cron expression parser online", "cron schedule generator", "next cron run", "cron expression explained"],
   "number-base": ["number base converter online", "hex to decimal", "binary to decimal", "octal to hex", "base converter"],
   "chmod-calculator": ["chmod calculator", "linux permissions calculator", "chmod 755 meaning", "file permissions converter"],
-  "px-rem": ["px to rem", "rem to px", "convert pixels to rem", "css unit converter"],
-  "http-status": ["http status codes list", "http status lookup", "list of http codes", "404 500 meaning"],
+  "px-rem": ["px to rem", "rem to px", "px to rem converter", "rem to px converter", "convert pixels to rem", "css unit converter", "root font size converter", "px rem calculator"],
+  "http-status": ["http status codes", "http status codes list", "http status lookup", "list of http codes", "http status code reference", "http 404 meaning", "http 500 meaning", "http 429 meaning"],
   "html-entities": ["html entity encode decode", "escape html online", "html special characters", "unicode escape"],
   "text-lines": ["sort lines online", "remove duplicate lines", "line sorter", "join lines", "format line list"],
   "text-size-calculator": ["text size calculator", "string size calculator", "json size calculator", "calculate bytes in text", "utf8 byte count", "character count tool", "minify json online", "text file size"],
@@ -395,6 +395,10 @@ export function toolJsonLd(tool: ToolConfig) {
       "Scale every page of a PDF by one percentage from 10% to 400%, with the page boxes (media, crop, bleed, trim, art), the content and the annotation geometry all scaled by the same factor so nothing is cropped or stretched, a live before/after page-size preview in points and inches, a uniform scale that preserves the aspect ratio, content scaled rather than rasterized so text stays selectable, searchable and copyable, page rotation and form fields kept, a result panel that reports the new page size, output size and any mixed page sizes, honest limits (not a page-size converter, a digital signature does not survive the re-save, and form-field appearance streams are not re-rendered), a 100 MB / 200 page cap, and password-protected files routed to PDF Unlock — computed entirely in your browser with nothing uploaded",
     "pdf-remove-annotations":
       "Strip the whole annotation layer off a PDF — comments, highlights, underlines, stamps, sticky notes, popups, links and form fields — with the total and a per-page breakdown shown before you confirm, an optional keep-interactive-form-fields switch, the removed annotation objects and the popups, reply threads and appearance streams they owned pruned from the file rather than merely unlinked, page text, images, layout, bookmarks and source metadata left untouched, a result panel with a re-download, honest limits (a filled field value stored only in the field disappears with it, an XFA/JavaScript form loses its AcroForm entry, a signed file comes out no longer signed, and it is not a redaction tool), a 100 MB / 200 page cap — computed entirely in your browser with nothing uploaded",
+    "px-rem":
+      "Bidirectional px to rem and rem to px conversion against a root font-size from 8px to 24px — both directions update as you type, 14.5px reads exactly 0.90625rem at a 16px base, each result has its own copy button (disabled when a field is empty or a value exceeds 1,000,000), and a reference table of 20 common pixel values with a live true-size text preview — all calculated in your browser with nothing uploaded",
+    "http-status":
+      "A searchable reference of the IANA-registered HTTP status codes from 1xx through 5xx — each shown with its registered reason phrase and a plain-English description — searchable by number, name or description word and filterable to a single class (1xx–5xx), with non-registered codes such as 599 clearly marked unofficial, WebDAV codes (207, 423, 424, 507) and newer registrations (425, 451) included, and everything loaded client-side with nothing transmitted",
   };
   const featureList =
     TOOL_FEATURE_LIST[tool.slug] ??

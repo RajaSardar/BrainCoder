@@ -810,7 +810,7 @@ export const TOOLS: ToolConfig[] = [
     name: "PX ↔ REM Converter",
     tagline: "Convert pixels to rem and back",
     description:
-      "Convert between px and rem for any base font size, with a reference table of common values.",
+      "Convert between px and rem for a configurable base font size, with a reference table of common values.",
     category: "Developer",
     icon: Ruler,
     accent: "text-emerald-600",
@@ -821,7 +821,7 @@ export const TOOLS: ToolConfig[] = [
     name: "HTTP Status Codes",
     tagline: "Every HTTP status, explained",
     description:
-      "A searchable reference of HTTP status codes with names, descriptions and unofficial badges.",
+      "A searchable IANA reference of HTTP status codes with registered reason phrases, plain-English descriptions and unofficial badges.",
     category: "Developer",
     icon: Server,
     accent: "text-rose-600",

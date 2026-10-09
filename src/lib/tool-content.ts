@@ -3690,45 +3690,49 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ]
   },
   "px-rem": {
-    "longDescription": "<p>The px to rem Converter is a precision front-end development utility that instantly converts between pixels (px) and rem units with configurable root font-size support. It's essential for responsive CSS development where rem-based sizing is required for accessibility compliance (WCAG), consistent scaling across user font preferences, and maintaining design system proportions across breakpoints.</p><p>Enter any pixel value and get the equivalent in rem, or enter a rem value to get the pixel equivalent — all calculated against your project's root font-size (defaulting to 16px, the browser standard). The tool also supports em units, calculates viewport-relative conversions, and handles fractional values with precision, so you never have to rely on imprecise mental math or wait for your CSS preprocessor to recompile.</p><p>For design-to-development handoff, this converter bridges the gap between design tools that output pixels and production CSS that requires relative units. All calculations are instant and client-side, with no uploads of your design specifications or CSS files.</p>",
+    "longDescription": "<p>The PX ↔ REM Converter turns pixel values into rem units and rem values back into pixels against a root font-size you control. Move the base slider anywhere from 8px to 24px — 16px, the usual browser default, is where it starts — and both directions update as you type.</p><p>REM is the root-relative CSS unit: 1rem is whatever the page's root font-size is, so rem-based layouts follow the reader's own font-size preference. That is why design systems hand off in pixels and ship in rem. Paste a pixel value to read its rem equivalent, or a rem value to read pixels; each result has its own copy button.</p><p>A reference table lists the conversion for 20 common pixel values at the current base, with a live Preview column that renders each size at its real pixel height, so you can check a whole spacing scale at once. Everything is calculated in your browser and nothing you type is sent anywhere.</p>",
     "features": [
-      "Bidirectional px ↔ rem conversion with configurable root font-size",
-      "Support for em, vw, vh, and other CSS unit conversions",
-      "Fractional value precision (e.g., 14.5px → 0.90625rem)",
-      "Batch conversion mode for multiple values at once",
-      "Quick-copy individual results or entire conversion tables",
-      "Client-side calculations — no data transmitted"
+      "Bidirectional px ↔ rem conversion against a base you set (8–24px)",
+      "Exact fractional results — 14.5px is 0.90625rem at a 16px base",
+      "Adjustable root font-size slider with a live 1rem readout",
+      "Reference table of 20 common pixel values at the current base, with a true-size text preview",
+      "Per-result copy buttons (disabled when a field is empty or invalid)",
+      "Client-side only — nothing you type is transmitted"
     ],
     "howTo": [
       {
-        "step": "Set Root Font Size",
-        "description": "Enter your project's root font-size (default is 16px). This is the base value all rem calculations use."
+        "step": "Set the base font size",
+        "description": "Move the slider to your project's root font-size. 16px is the browser default and the starting value; the range is 8–24px."
       },
       {
-        "step": "Enter Pixel Value",
-        "description": "Type any pixel value to instantly see the rem equivalent, or enter a rem value to convert the other direction."
+        "step": "Convert pixels to rem",
+        "description": "Type a pixel value in the Pixels → rem box and the rem equivalent appears on the right. Clear the box to remove the result."
       },
       {
-        "step": "Batch Convert",
-        "description": "Switch to batch mode and paste multiple pixel values (one per line or comma-separated) to convert them all at once."
+        "step": "Convert rem to pixels",
+        "description": "Type a rem value in the rem → pixels box to get the pixel equivalent. Both boxes use the same base."
       },
       {
-        "step": "Copy Results",
-        "description": "Click copy on any individual result or the entire batch table to paste directly into your CSS."
+        "step": "Copy a result or read the table",
+        "description": "Copy either result with its button, or read the reference table below for common pixel values at the current base."
       }
     ],
     "faq": [
       {
         "question": "Why use rem instead of pixels?",
-        "answer": "Rem units scale relative to the root font-size, which improves accessibility (users can change their browser's base font size) and makes responsive design more maintainable."
+        "answer": "Rem units scale relative to the root font-size, so they respect the reader's own font-size preference and keep spacing proportionate. Pixels stay fixed regardless of that setting."
       },
       {
-        "question": "What is the default root font-size?",
-        "answer": "16px, which is the browser default. Most CSS frameworks and design systems use 16px as the base, but you can configure it to match your project."
+        "question": "What base font-size should I use?",
+        "answer": "16px is the usual browser default and the tool's starting point. Set the slider to whatever your CSS sets on the root (html) element; the conversions follow it. This tool supports 8px to 24px."
       },
       {
-        "question": "Does it support viewport units like vw and vh?",
-        "answer": "Yes. The tool also converts between pixels and viewport-relative units (vw, vh, vmin, vmax) for responsive sizing."
+        "question": "Does it also convert em, vw or vh?",
+        "answer": "No. This tool converts px ↔ rem only. em is relative to the parent element's font-size rather than the root, and viewport units depend on the viewport, so they need different inputs."
+      },
+      {
+        "question": "Is anything I type uploaded?",
+        "answer": "No. The conversion runs entirely in your browser and nothing you type is sent to a server."
       }
     ],
     "relatedSlugs": [
@@ -3736,49 +3740,47 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       "css-formatter",
       "html-formatter",
       "html-minifier",
-      "markdown-preview"
+      "color-converter"
     ]
-  },
-  "http-status": {
-    "longDescription": "<p>The HTTP Status Code Lookup is a comprehensive reference tool that provides instant access to every HTTP response status code — from 1xx informational to 5xx server errors — along with their official descriptions, common use cases, and practical implementation guidance. It's the go-to reference for backend developers, API designers, and frontend engineers building robust error handling logic.</p><p>Search by numeric code (200, 404, 503), keyword (timeout, redirect, rate-limit), or browse the full categorized list. Each entry includes the official RFC name, a plain-English description of when the status is appropriate, common causes, and whether the response is cacheable. The tool also covers the full WebDAV extension status codes (207 Multi-Status, 422 Unprocessable Entity) and newer additions like 425 Too Early and 451 Unavailable for Legal Reasons.</p><p>Whether you're debugging a failing API integration, designing a REST API's error contract, or building a retry strategy in your client code, this reference gives you the precise information you need without hunting through RFCs. Everything loads client-side — no tracking, no accounts, no data submission.</p>",
+  },  "http-status": {
+    "longDescription": "<p>The HTTP Status Code Lookup is a searchable reference of the status codes in the IANA HTTP Status Code Registry — from 1xx informational through 5xx server errors — each with its registered reason phrase and a plain-English description of when it applies.</p><p>Search by number (429), by name (Too Many Requests) or by a word from the description (timeout, redirect, rate), or narrow the list to a single class with the 1xx–5xx chips. The reference covers the WebDAV codes defined by RFC 4918 (207, 423, 424, 507), the older informational codes, and newer additions such as 425 Too Early and 451 Unavailable For Legal Reasons. Codes that are not in the registry, like 599, are clearly marked unofficial.</p><p>It is a quick plain-English lookup, not a replacement for the specification: where the exact normative wording matters, follow the RFC listed in the IANA registry. Everything loads client-side with no tracking and nothing submitted.</p>",
     "features": [
-      "Complete HTTP status code reference (1xx through 5xx) with official descriptions",
-      "Search by code number, keyword, or category",
-      "Cacheability information for each status code",
-      "Common causes and practical usage guidance per status",
-      "Includes WebDAV and newer status codes (425, 451, etc.)",
-      "Client-side — no data transmitted, loads instantly"
+      "Every IANA-registered HTTP status code from 1xx through 5xx, with plain-English descriptions",
+      "Search by number, reason phrase or a word from the description",
+      "Filter to a single class (1xx–5xx) or show them all",
+      "Non-registered codes such as 599 clearly labelled unofficial",
+      "Client-side — loads instantly, nothing transmitted"
     ],
     "howTo": [
       {
-        "step": "Search by Code or Keyword",
-        "description": "Type a status code number (e.g., 429) or a keyword (e.g., redirect) to filter the list instantly."
+        "step": "Search for a code or phrase",
+        "description": "Type a status code number (429) or a word (redirect, timeout) into the search box to filter the list as you type."
       },
       {
-        "step": "Browse by Category",
-        "description": "Click a category header (1xx, 2xx, 3xx, 4xx, 5xx) to see all status codes in that class."
+        "step": "Filter by class",
+        "description": "Use the 1xx–5xx chips to show a single class, or All to see every code."
       },
       {
-        "step": "View Details",
-        "description": "Click any status code to see its full description, common causes, cacheability, and RFC reference."
-      },
-      {
-        "step": "Copy for Documentation",
-        "description": "Use the copy button to grab a formatted status code entry for your API documentation or error handling code."
+        "step": "Read an entry",
+        "description": "Each card shows the code, its registered reason phrase and when the status applies. Codes that are not in the IANA registry are tagged unofficial."
       }
     ],
     "faq": [
       {
-        "question": "Does this include WebDAV and non-standard status codes?",
-        "answer": "Yes. The reference includes all standard HTTP status codes plus common WebDAV extensions and newer codes like 425 Too Early and 451 Unavailable for Legal Reasons."
+        "question": "Which status codes are included?",
+        "answer": "The codes in the IANA HTTP Status Code Registry, from 1xx through 5xx, plus 599 — which some proxies use — clearly marked unofficial. Purely vendor-specific codes (for example Cloudflare's non-standard 5xx codes) are not listed."
       },
       {
-        "question": "How do I know if a response is cacheable?",
-        "answer": "Each status code entry includes cacheability information — whether the response can be cached by default, requires validation, or must not be cached."
+        "question": "Does this include WebDAV and newer codes?",
+        "answer": "Yes. It includes the WebDAV codes from RFC 4918 (207, 423, 424, 507) and newer registrations such as 425 Too Early and 451 Unavailable For Legal Reasons."
       },
       {
-        "question": "Can I use this as an API design reference?",
-        "answer": "Absolutely. The tool provides guidance on when to use each status code, helping you design consistent and correct REST API error contracts."
+        "question": "What does the 'unofficial' tag mean?",
+        "answer": "The code is not in the IANA registry. It may appear in some servers or proxies but is not a standard HTTP status code."
+      },
+      {
+        "question": "Is it a full RFC reference?",
+        "answer": "No. It gives the registered reason phrase and a plain-English meaning for each code. For the exact normative wording, follow the RFC listed in the IANA registry."
       }
     ],
     "relatedSlugs": [
