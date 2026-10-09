@@ -5,10 +5,10 @@ import { StyledTextarea, CopyButton } from "@/components/ui";
 
 function words(text: string): string[] {
   const cleaned = text
-    .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
-    .replace(/[_\-\s.]+/g, " ")
+    .replace(/([\p{Ll}\p{N}])(\p{Lu})/gu, "$1 $2")
+    .replace(/[^\p{L}\p{N}]+/gu, " ")
     .trim();
-  return cleaned ? cleaned.split(" ") : [];
+  return cleaned ? cleaned.split(/\s+/) : [];
 }
 
 function cap(s: string): string {
@@ -91,6 +91,7 @@ export default function CaseConverter() {
         value={input}
         onChange={(e) => setInput(e.target.value)}
         placeholder="Type or paste text…"
+        aria-label="Text to convert"
       />
 
       <div className="grid sm:grid-cols-2 gap-3">

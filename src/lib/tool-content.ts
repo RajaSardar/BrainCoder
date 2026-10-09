@@ -2952,45 +2952,49 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ]
   },
   "number-base": {
-    "longDescription": "<p>The BrainCoder Number Base Converter transforms numbers between binary (base 2), octal (base 8), decimal (base 10), hexadecimal (base 16), and any custom base from 2 to 64. This is essential for programmers, computer scientists, and anyone working with different number systems.</p>\n<p>Understanding number bases is fundamental to computing. Binary represents data at the hardware level, hexadecimal provides a compact human-readable form of binary, and decimal is the base we use in everyday life. This tool converts between all of them instantly, showing all representations simultaneously so you can see how the same value appears in different bases.</p>\n<p>The converter also handles fractional numbers (like 3.14 in different bases), signed integers (two's complement), and large numbers. It displays the bit-length and provides grouping options for readability. All conversions happen locally in your browser — no data is transmitted.",
+    "longDescription": "<p>The Number Base Converter reads an integer in any base from 2 to 36 and shows the same value in binary, octal, decimal and hexadecimal, plus its Unicode code point. Type the digits, choose the base they are written in, and every representation appears at once.</p>\n<p>Conversion uses arbitrary-precision BigInt arithmetic, so values far larger than 64 bits stay exact — there is no floating-point rounding to hide. A leading + or - sets the sign, and the radix prefixes 0b, 0o and 0x are stripped only when they match the base you selected: 0b11 is binary in base 2, while in base 16 the digits 0b are an ordinary hexadecimal number worth 0xB11.</p>\n<p>Fractions, two's complement and bit-length or grouping views are not offered; this is an integer base converter, not a fixed-width register display. Everything runs in the tab — nothing you type is uploaded.",
     "features": [
-      "Convert between binary, octal, decimal, and hex",
-      "Custom base support (2-64)",
-      "Fractional number conversion",
-      "Signed integer (two's complement) display",
-      "Bit-length and grouping information",
-      "All conversions client-side"
+      "Binary, octal, decimal and hexadecimal output for one value, plus its Unicode code point",
+      "Input base selectable from 2 to 36",
+      "Arbitrary-precision BigInt — exact well beyond 64 bits",
+      "Leading + or -, with 0b / 0o / 0x stripped only when they match the selected base",
+      "An invalid digit is reported and named rather than the value being guessed",
+      "Client-side only — no number leaves your browser"
     ],
     "howTo": [
       {
         "step": "Enter a number",
-        "description": "Type a number in any base — the tool auto-detects binary (0s and 1s), octal (0-7), decimal, or hex (0-9, A-F) based on the input."
+        "description": "Type the digits you want to convert. They may be binary, octal, decimal, hexadecimal or any base up to 36; the selector says which."
       },
       {
-        "step": "Select source base if needed",
-        "description": "If the auto-detection is incorrect, manually select the base your number is in using the base selector."
+        "step": "Choose the input base",
+        "description": "Set the base the digits are written in. A matching prefix (0b, 0o, 0x) is optional and is stripped; a prefix for a different base is treated as ordinary digits."
       },
       {
-        "step": "View all representations",
-        "description": "The tool instantly shows your number in binary, octal, decimal, hexadecimal, and any custom base you specify."
+        "step": "Read every representation",
+        "description": "Binary, octal, decimal, hexadecimal and the Unicode code point update as you type. Values outside U+0000 to U+10FFFF show a dash for the code point."
       },
       {
         "step": "Copy any representation",
-        "description": "Click the copy button next to any base representation to grab it for use in your code, calculations, or documentation."
+        "description": "Click the copy button next to any base representation to grab it for your code, calculations or documentation."
       }
     ],
     "faq": [
       {
-        "question": "Why do programmers use hexadecimal?",
-        "answer": "Hexadecimal (base 16) provides a compact representation of binary data. Each hex digit represents exactly 4 bits, making it easy to convert between hex and binary. 'FF' in hex is '11111111' in binary — much shorter to read and write."
+        "question": "Which bases are supported?",
+        "answer": "Base 2 through base 36. The output always names binary (2), octal (8), decimal (10) and hexadecimal (16) no matter which base you typed the number in."
       },
       {
-        "question": "What is two's complement?",
-        "answer": "Two's complement is the standard way to represent negative integers in binary. To negate a number, you flip all bits and add 1. For example, -1 in 8-bit two's complement is 11111111. This tool can show signed representations."
+        "question": "Does it handle negative numbers?",
+        "answer": "Yes. A leading minus sign sets the sign, and the sign is carried into every representation. It shows a signed value, not a two's complement bit pattern."
       },
       {
         "question": "Can I convert fractional numbers?",
-        "answer": "Yes. Enter a decimal number with a fractional part (like 3.14) and see how it's represented in binary, hex, and other bases. Note that some fractions that are exact in decimal become repeating fractions in binary (like 0.1)."
+        "answer": "No. Only integers are converted. A decimal point is reported as an invalid digit for the selected base rather than being silently dropped."
+      },
+      {
+        "question": "Why is 0x10 an error in base 10?",
+        "answer": "The prefix is stripped only when it matches the selected base. In base 10, x is not a digit, so 0x10 is refused instead of being reinterpreted as 16. Select base 16 to read it as hexadecimal."
       }
     ],
     "relatedSlugs": [
@@ -3574,45 +3578,53 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ]
   },
   "cron-parser": {
-    "longDescription": "<p>The Cron Expression Parser is a developer and sysadmin essential that takes a cron expression and produces a human-readable explanation of exactly when the job will run — including the next 5 scheduled execution times. It bridges the gap between cryptic five-field cron syntax and the practical understanding you need to verify that a scheduled task will fire at the intended moments.</p><p>Supporting standard 5-field cron (minute, hour, day-of-month, month, day-of-week), extended 6-field cron with seconds, and special expressions like @yearly, @monthly, @weekly, @daily, and @hourly, the parser correctly interprets ranges (1-5), steps (*/5, 1-10/2), lists (1,3,5), and named day/month abbreviations. It handles edge cases like February 30th gracefully, reporting invalid expressions clearly.</p><p>For DevOps engineers, SREs, and backend developers managing cron jobs across servers, this tool eliminates the need to mentally decode expressions or install CLI utilities. Everything runs client-side — your cron schedules and server configuration details stay on your machine.</p>",
+    "longDescription": "<p>The Cron Expression Parser reads a crontab expression and answers the two questions people actually have: what does this schedule mean, and when does it run next. It shows each parsed field on its own line and lists the next runs from your browser's clock, in your local time or in UTC.</p><p>It handles the standard five fields (minute, hour, day-of-month, month, day-of-week), six fields with a leading seconds field, and the macros @yearly, @annually, @monthly, @weekly, @daily and @hourly. Ranges (1-5), steps (*/5, 1-10/2), lists (1,3,5), names such as mon or mar, and both 0 and 7 for Sunday all parse. Day-of-week 0 and 7 are shown as a single Sunday rather than twice.</p><p>Impossible dates are refused when the expression is parsed rather than silently skipped: February 30 or April 31 comes back as a plain-English explanation of why no such run exists, instead of a run time that can never happen. Everything runs client-side — the schedule you are debugging never leaves your machine.</p>",
     "features": [
-      "Standard 5-field and extended 6-field (with seconds) cron parsing",
-      "Special expressions: @yearly, @monthly, @weekly, @daily, @hourly",
-      "Support for ranges, steps, lists, and named day/month abbreviations",
-      "Next 5 execution times computed from the current moment",
-      "Clear human-readable description of each cron field",
+      "Five-field, six-field (seconds first) and @macro expressions",
+      "The next 1 to 20 runs, chosen with a slider and computed from the current second",
+      "Each parsed field listed separately, including the seconds field for a six-field expression",
+      "Local time by default, with a UTC toggle",
+      "Ranges, steps, lists, names like mon and mar, and 0 or 7 for Sunday",
       "Client-side processing with zero server calls"
     ],
     "howTo": [
       {
-        "step": "Enter Cron Expression",
-        "description": "Type or paste your cron expression (e.g., 0 2 * * 1-5 or @weekly) into the input field."
+        "step": "Enter a Cron Expression",
+        "description": "Type or paste an expression such as 0 2 * * 1-5, a six-field one like */15 * * * * *, or a macro such as @weekly. The example chips load one of each."
       },
       {
-        "step": "View Description",
-        "description": "The tool instantly shows a plain-English description of what the expression means in each field."
+        "step": "Read the parsed fields",
+        "description": "Each field is listed on its own line with its values, so you can see that 0 18 * * 1-5 means hour 18 and Monday to Friday rather than guessing at the order."
       },
       {
-        "step": "See Next Executions",
-        "description": "A list of the next 5 dates and times the cron job will run is displayed, computed from the current time."
+        "step": "Check the next runs",
+        "description": "The upcoming runs are listed from the current time, 5 by default and up to 20 from the slider, in your local time zone or UTC."
       },
       {
-        "step": "Fix Invalid Expressions",
-        "description": "If the expression is syntactically invalid, a clear error message explains what's wrong and suggests a correction."
+        "step": "Fix what does not parse",
+        "description": "An expression that cannot run reports why — an out-of-range value, an unknown name, or a date such as February 30 that never occurs — and the results area stays empty."
       }
     ],
     "faq": [
       {
         "question": "Does it support seconds in cron expressions?",
-        "answer": "Yes. Standard 5-field cron and extended 6-field cron with a leading seconds field are both supported."
+        "answer": "Yes. Use six fields with seconds first, for example */15 * * * * * for every 15 seconds. The seconds field is listed with the others in the parsed-fields panel, so a six-field expression is never described as if it were five."
       },
       {
         "question": "How are the next execution times calculated?",
-        "answer": "The tool uses the current browser time as the starting point and computes the next 5 future execution moments based on the cron expression."
+        "answer": "They start from your browser's clock at the moment you look, and are recomputed as time passes, so a run that has just fired drops off the list. Times are shown in your local time zone, with a UTC toggle."
       },
       {
         "question": "What happens with invalid cron expressions?",
-        "answer": "The parser detects syntax errors and displays a clear message identifying the problem field and suggesting how to fix it."
+        "answer": "The parser reports the problem — a value outside its range, an unrecognised name, or a combination that can never occur such as February 30 — and no run times are shown until the expression parses."
+      },
+      {
+        "question": "Does it support @daily, @weekly and the other macros?",
+        "answer": "Yes: @yearly, @annually, @monthly, @weekly, @daily and @hourly are accepted. @reboot and @midnight are not — @reboot refers to a boot event rather than a time, and @midnight is not one of the aliases the parser resolves, so use 0 0 * * * instead."
+      },
+      {
+        "question": "What about a year field, or seconds in the middle?",
+        "answer": "Five or six fields are supported. A seventh field (year) is rejected as too many fields, and seconds must come first when there are six fields — the same order cron itself uses."
       }
     ],
     "relatedSlugs": [
@@ -3624,45 +3636,49 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ]
   },
   "chmod-calculator": {
-    "longDescription": "<p>The chmod Permission Calculator is an indispensable utility for Linux, macOS, and Unix developers who need to convert between symbolic permission notation (rwxr-xr-x) and numeric octal notation (755) quickly and accurately. It eliminates the mental math and potential errors when setting file and directory permissions via the command line, preventing the common mistakes that lead to \"permission denied\" errors or dangerous over-permissioning.</p><p>Select individual permissions (read, write, execute) for owner, group, and others by clicking toggle buttons, and see both the symbolic string and octal number update in real time. The tool also provides the exact chmod command to apply, handles special modes like setuid, setgid, and sticky bit, and shows recommended permission values for common use cases like web server directories, SSH keys, and configuration files.</p><p>This is a pure calculator with no server interaction. Your file paths and server configuration details remain entirely on your machine — critical for security teams auditing permissions in sensitive environments.</p>",
+    "longDescription": "<p>The chmod Calculator converts between the two ways Unix file permissions are written: the symbolic triplet rwxr-xr-x and the three-digit octal value 755. Toggle read, write and execute for the owner, group and others, and the octal number, the symbolic string and the chmod mode expression update as you go.</p><p>The third output is the mode expression chmod itself accepts — u=rwx,g=rx,o=rx — ready to place in a command such as chmod u=rwx,g=rx,o=rx file. A category with nothing ticked is written u=- rather than left blank, so the expression stays valid. Preset chips cover 400, 600, 644, 664, 700, 755 and 777, and the octal box also accepts a value you type.</p><p>This is a permissions calculator for the nine permission bits only: it does not set setuid, setgid or the sticky bit, and it cannot read or change any file. Everything runs in the tab — no file path or permission data leaves your machine.</p>",
     "features": [
-      "Interactive permission grid with clickable read/write/execute toggles",
-      "Real-time symbolic (rwxr-xr-x) and octal (755) notation output",
-      "setuid, setgid, and sticky bit support with warnings for dangerous combinations",
-      "Ready-to-copy chmod command generated automatically",
-      "Recommended permissions for common scenarios (web roots, SSH keys, cron files)",
+      "Toggle read, write and execute for owner, group and others",
+      "Live octal (755), symbolic (rwxr-xr-x) and chmod-style (u=rwx,g=rx,o=rx) output",
+      "Type a three-digit octal value or pick a preset from 400 to 777",
+      "A category with no bits set is written u=- so the mode stays valid",
+      "Copy any of the three representations",
       "Client-side only — no permission data transmitted anywhere"
     ],
     "howTo": [
       {
-        "step": "Toggle Permissions",
-        "description": "Click the read, write, and execute boxes for owner, group, and others to set the desired permissions."
+        "step": "Toggle permissions",
+        "description": "Tick or untick read (4), write (2) and execute (1) for owner, group and others. The three outputs update immediately."
       },
       {
-        "step": "View Octal and Symbolic",
-        "description": "The numeric octal value (e.g., 755) and symbolic string (e.g., rwxr-xr-x) update instantly as you change selections."
+        "step": "Read the octal and symbolic forms",
+        "description": "The numeric value (755) and the symbolic string (rwxr-xr-x) are the same permissions written in the two notations."
       },
       {
-        "step": "Review Special Bits",
-        "description": "Optionally enable setuid, setgid, or sticky bit, with contextual warnings about security implications."
+        "step": "Or type an octal mode",
+        "description": "Type a three-digit value such as 644 into the octal box and the checkboxes follow. Digits 8 and 9 are refused because this is octal, and a value applies only once all three digits are entered."
       },
       {
-        "step": "Copy the Command",
-        "description": "Click copy to get the ready-to-paste chmod command (e.g., chmod 755 script.sh) for your terminal."
+        "step": "Copy the chmod mode",
+        "description": "Copy the chmod-style expression (u=rwx,g=rx,o=rx) and use it as the mode argument to chmod."
       }
     ],
     "faq": [
       {
         "question": "What is the difference between symbolic and octal chmod notation?",
-        "answer": "Symbolic notation uses letters (rwx) to describe permissions per category. Octal uses numbers (0-7) where each digit is a sum of read (4), write (2), and execute (1)."
+        "answer": "Symbolic notation uses letters (rwx) per category; octal uses digits where read is 4, write is 2 and execute is 1. 755 and rwxr-xr-x describe the same permissions."
       },
       {
-        "question": "Should I be careful with setuid and setgid?",
-        "answer": "Yes. setuid and setgid on executables grant elevated privileges. The tool warns you when these bits are enabled to prevent accidental security risks."
+        "question": "Does it handle setuid, setgid or the sticky bit?",
+        "answer": "No. The calculator covers the nine read/write/execute bits only. Those special bits are the leading fourth digit of a mode (for example 4755) and are outside this tool's scope."
       },
       {
-        "question": "Does it support recursive chmod commands?",
-        "answer": "The tool generates the chmod command with your selected permissions. You can add -R for recursive application yourself, but the calculator focuses on per-file permission values."
+        "question": "Is a partially typed octal value applied?",
+        "answer": "No. The checkboxes change only when all three digits are present, so typing 6 on the way to 644 does not briefly set the wrong permissions."
+      },
+      {
+        "question": "Does it generate a full chmod command?",
+        "answer": "It gives the mode argument — u=rwx,g=rx,o=rx — which you place in a command such as chmod u=rwx,g=rx,o=rx file. It does not ask for or need a file path."
       }
     ],
     "relatedSlugs": [
